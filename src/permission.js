@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken, setMenu, getMenu } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -28,7 +28,21 @@ router.beforeEach(async(to, from, next) => {
       // 判断用户是否有角色
       const hasRoles = store.getters.name !== ''
       if (hasRoles) {
-        next()
+        const menu = getMenu()
+        // 目前暂时无法理解
+        if (menu) {
+          next()
+        } else {
+          // 获取用户信息
+          await store.dispatch('user/getInfo')
+          // 构造动态路由【菜单和权限】
+          // const accessRoutes = await store.dispatch('permission/generateRoutes', ['admin'])
+          const accessRoutes = await store.dispatch('menu/getMenus')
+          // 动态添加路由
+          router.addRoutes(accessRoutes)
+          setMenu('menu')
+          next({ ...to, replace: true })
+        }
       } else {
         try {
           // 获取用户信息
@@ -38,7 +52,7 @@ router.beforeEach(async(to, from, next) => {
           const accessRoutes = await store.dispatch('menu/getMenus')
           // 动态添加路由
           router.addRoutes(accessRoutes)
-
+          setMenu('menu')
           next({ ...to, replace: true })
         } catch (error) {
           // 如果异常，跳转到登陆页面

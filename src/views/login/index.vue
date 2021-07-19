@@ -21,6 +21,7 @@
           type="text"
           tabindex="1"
           autocomplete="on"
+          clearable
         />
       </el-form-item>
 
@@ -38,6 +39,7 @@
             name="password"
             tabindex="2"
             autocomplete="on"
+            clearable
             @keyup.native="checkCapslock"
             @blur="capsTooltip = false"
           />
@@ -61,6 +63,7 @@
               type="text"
               tabindex="3"
               autocomplete="on"
+              clearable
               @keyup.enter.native="handleLogin"
             />
           </el-col>
@@ -155,6 +158,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
+        // console.log(route)
         const query = route.query
         if (query) {
           this.redirect = query.redirect
@@ -182,9 +186,9 @@ export default {
     // 获取二进制图片流并显示，该方法可以获取到图片流但无法正确显示
     getVerifyCode() {
       // alert('ok')
+      this.loginForm.verifyCode = ''
       this.loginForm.uuid = uuidv4().split('-')[0] // ⇨ '9b1deb4d'
       this.image_verify_code = process.env.VUE_APP_BASE_API + '/login/verificationCode?creationTime=' + this.loginForm.uuid
-      console.log(this.image_verify_code)
       // 调用验证码请求方法
       // getVerifyCode(this.uuid).then(response => {
       //   console.log('response', response)
@@ -214,7 +218,10 @@ export default {
           // 调用登陆的方法
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
+              // 带查询参数的编程式导航，query是一个对象，是查询
               this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              // 强制刷新
+              // this.$router.go(0)
               this.loading = false
             })
             .catch(() => {
@@ -223,7 +230,7 @@ export default {
             })
         } else {
           this.getVerifyCode()
-          console.log('error submit!!')
+          // console.log('error submit!!')
           return false
         }
       })

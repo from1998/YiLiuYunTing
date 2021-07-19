@@ -16,7 +16,7 @@ export function isExternal(path) {
  */
 export function validUsername(str) {
   // 不在验证数组里的用户将无法通过登陆验证
-  const valid_map = ['yiliuyunting', 'editor', 'admin']
+  const valid_map = ['yiliuyunting', 'editor']
   return valid_map.indexOf(str.trim()) >= 0
 }
 

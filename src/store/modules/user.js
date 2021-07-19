@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, removeMenu } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
@@ -73,6 +73,7 @@ const actions = {
         commit('SET_ROLES', [])
         commit('SET_PERMISSIONS', [])
         removeToken()
+        removeMenu()
         resetRouter()// 重置路由
         dispatch('tagsView/delAllViews', null, { root: true })
 
