@@ -1,6 +1,6 @@
 
 const tokens = {
-  admin: {
+  yiliuyunting: {
     token: 'admin-token'
   },
   editor: {
