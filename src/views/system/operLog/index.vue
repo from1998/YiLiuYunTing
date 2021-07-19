@@ -136,9 +136,9 @@
     <!-- 分页控件开始 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.pageNum"
+      :current-page="queryParams.page"
       :page-sizes="[5,10,20,30]"
-      :page-size="queryParams.pageSize"
+      :page-size="queryParams.size"
       layout="total,sizes,prev,pager,next,jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -169,10 +169,11 @@ export default {
       businessTypeOptions: [],
       // 时间
       dateRange: [],
+      time: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        size: 10,
         title: undefined,
         operName: undefined,
         status: undefined,
@@ -182,6 +183,7 @@ export default {
   },
   // 初始化
   created() {
+    this.dateRange = this.timeDefault()
     // 查询条件的状态
     this.getDataByType('sys_common_status').then(res => {
       this.statusOptions = res.data
@@ -195,12 +197,25 @@ export default {
   },
   // 自定义方法
   methods: {
+    // 默认时间
+    timeDefault() {
+      const date = new Date()
+      // 通过时间戳计算
+      let defalutStartTime = date.getTime() // 转化为时间戳
+      let defalutEndTime = date.getTime()
+      const startDateNs = new Date(defalutStartTime)
+      const endDateNs = new Date(defalutEndTime)
+      // 月，日 不够10补0
+      defalutStartTime = startDateNs.getFullYear() + '-' + ((startDateNs.getMonth() + 1) >= 10 ? (startDateNs.getMonth() + 1) : '0' + (startDateNs.getMonth() + 1)) + '-' + (startDateNs.getDate() >= 10 ? startDateNs.getDate() : '0' + startDateNs.getDate())
+      defalutEndTime = endDateNs.getFullYear() + '-' + ((endDateNs.getMonth() + 1) >= 10 ? (endDateNs.getMonth() + 1) : '0' + (endDateNs.getMonth() + 1)) + '-' + (endDateNs.getDate() >= 10 ? endDateNs.getDate() : '0' + endDateNs.getDate())
+      return [defalutStartTime, defalutEndTime]
+    },
     // 查询操作日志
     getOperLogList() {
       this.loading = true
       listForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-        this.operLogTableList = res.data
-        this.total = res.total
+        this.operLogTableList = res.data.list
+        this.total = res.data.total
         this.loading = false
       })
     },
@@ -218,15 +233,15 @@ export default {
       this.ids = selection.map(item => item.operId)
       this.multiple = !selection.length
     },
-    // 分页pageSize变化时触发
+    // 分页size变化时触发
     handleSizeChange(val) {
-      this.queryParams.pageSize = val
+      this.queryParams.size = val
       // 重新查询
       this.getOperLogList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.pageNum = val
+      this.queryParams.page = val
       // 重新查询
       this.getOperLogList()
     },

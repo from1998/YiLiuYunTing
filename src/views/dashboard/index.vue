@@ -24,7 +24,8 @@ export default {
   },
   created() {
     if (!this.roles.includes('yiliuyunting')) {
-      this.currentRole = 'editorDashboard'
+      // this.currentRole = 'editorDashboard'
+      this.currentRole = 'adminDashboard'
     }
   }
 }
