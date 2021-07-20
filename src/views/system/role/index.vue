@@ -239,8 +239,8 @@ export default {
     getRoleList() {
       this.loading = true // 打开遮罩
       listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-        this.roleTableList = res.data
-        this.total = res.total
+        this.roleTableList = res.data.list
+        this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },

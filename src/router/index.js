@@ -51,57 +51,58 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
-  }, {
-    path: '/depot',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: 'depot',
-    meta: { title: '车厂设置', icon: 'el-icon-s-tools' },
-    children: [
-      {
-        path: 'carInfo',
-        name: 'CarInfo',
-        component: () => import('@/views/depot/carInfo/index'),
-        meta: { title: '车厂信息' }
-      },
-      {
-        path: 'carConfig',
-        name: 'CarConfig',
-        component: () => import('@/views/depot/carConfig/index'),
-        meta: { title: '车厂配置' }
-      },
-      {
-        path: 'charge',
-        name: 'Charge',
-        component: () => import('@/views/depot/charge/index'),
-        meta: { title: '收费规则' }
-      },
-      {
-        path: 'watchhouse',
-        name: 'Watchhouse',
-        component: () => import('@/views/depot/watchhouse/index'),
-        meta: { title: '岗亭设置' }
-      },
-      {
-        path: 'lane',
-        name: 'Lane',
-        component: () => import('@/views/depot/lane/index'),
-        meta: { title: '车道设置' }
-      },
-      {
-        path: 'security',
-        name: 'Security',
-        component: () => import('@/views/depot/security/index'),
-        meta: { title: '保安管理' }
-      },
-      {
-        path: 'carport',
-        name: 'Carport',
-        component: () => import('@/views/depot/carport/index'),
-        meta: { title: '车位管理' }
-      }
-    ]
   }
+  // , {
+  //   path: '/depot',
+  //   component: Layout,
+  //   redirect: 'noRedirect',
+  //   name: 'depot',
+  //   meta: { title: '车厂设置', icon: 'el-icon-s-tools' },
+  //   children: [
+  //     {
+  //       path: 'carInfo',
+  //       name: 'CarInfo',
+  //       component: () => import('@/views/depot/carInfo/index'),
+  //       meta: { title: '车厂信息' }
+  //     },
+  //     {
+  //       path: 'carConfig',
+  //       name: 'CarConfig',
+  //       component: () => import('@/views/depot/carConfig/index'),
+  //       meta: { title: '车厂配置' }
+  //     },
+  //     {
+  //       path: 'charge',
+  //       name: 'Charge',
+  //       component: () => import('@/views/depot/charge/index'),
+  //       meta: { title: '收费规则' }
+  //     },
+  //     {
+  //       path: 'watchhouse',
+  //       name: 'Watchhouse',
+  //       component: () => import('@/views/depot/watchhouse/index'),
+  //       meta: { title: '岗亭设置' }
+  //     },
+  //     {
+  //       path: 'lane',
+  //       name: 'Lane',
+  //       component: () => import('@/views/depot/lane/index'),
+  //       meta: { title: '车道设置' }
+  //     },
+  //     {
+  //       path: 'security',
+  //       name: 'Security',
+  //       component: () => import('@/views/depot/security/index'),
+  //       meta: { title: '保安管理' }
+  //     },
+  //     {
+  //       path: 'carport',
+  //       name: 'Carport',
+  //       component: () => import('@/views/depot/carport/index'),
+  //       meta: { title: '车位管理' }
+  //     }
+  //   ]
+  // }
 ]
 export const asyncRoutes = [
   {

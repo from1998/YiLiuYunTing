@@ -200,6 +200,7 @@ export default {
     this.getDictTypeList()
     // 使用全局的根据字典类型查询字典数据的方法查询字典数据
     this.getDataByType('sys_normal_disable').then(res => {
+      debugger
       this.statusOptions = res.data
     })
   },
@@ -209,8 +210,8 @@ export default {
     getDictTypeList() {
       this.loading = true // 打开遮罩
       listForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-        this.dictTypeTableList = res.data
-        this.total = res.total
+        this.dictTypeTableList = res.data.list
+        this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },
