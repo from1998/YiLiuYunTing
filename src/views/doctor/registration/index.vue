@@ -300,7 +300,7 @@ export default {
       }
       this.loading = true
       getPatientByIdCard(this.patientParams.idCard).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         this.patientParams = res.data
         this.patientParams.age = this.getAge(res.data.birthday.substring(0, 10))
         this.loading = false
@@ -351,7 +351,7 @@ export default {
     handleRegistration() {
       const tx = this
       tx.$refs['form'].validate(vaid => {
-        console.log(vaid)
+        // console.log(vaid)
         if (vaid) {
           tx.$confirm('是否确认给【' + this.patientParams.name + '】进行挂号?', '提示', {
             confirmButtonText: '确定',

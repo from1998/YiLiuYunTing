@@ -98,9 +98,9 @@
     <!-- 分页控件开始 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.pageNum"
+      :current-page="queryParams.page"
       :page-sizes="[5, 10, 20, 30]"
-      :page-size="queryParams.pageSize"
+      :page-size="queryParams.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -175,8 +175,8 @@ export default {
       dateRange: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        size: 10,
         dictName: undefined,
         dictType: undefined,
         status: undefined
@@ -200,7 +200,6 @@ export default {
     this.getDictTypeList()
     // 使用全局的根据字典类型查询字典数据的方法查询字典数据
     this.getDataByType('sys_normal_disable').then(res => {
-      debugger
       this.statusOptions = res.data
     })
   },
@@ -231,15 +230,15 @@ export default {
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    // 分页pageSize变化时触发
+    // 分页size变化时触发
     handleSizeChange(val) {
-      this.queryParams.pageSize = val
+      this.queryParams.size = val
       // 重新查询
       this.getDictTypeList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.pageNum = val
+      this.queryParams.page = val
       // 重新查询
       this.getDictTypeList()
     },

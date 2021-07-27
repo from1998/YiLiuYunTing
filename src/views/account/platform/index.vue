@@ -2,41 +2,35 @@
   <div class="app-container">
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="角色名称" prop="roleName">
+      <el-form-item label="账号名称" prop="accountName">
         <el-input
-          v-model="queryParams.roleName"
-          placeholder="请输入角色名称"
+          v-model="queryParams.accountName"
+          placeholder="请输入账号名称"
           clearable
           size="small"
           style="width:240px"
         />
       </el-form-item>
-      <el-form-item label="权限字符" prop="roleCode">
+      <el-form-item label="手机号码" prop="phoneCode">
         <el-input
-          v-model="queryParams.roleCode"
-          placeholder="请输入权限字符"
+          v-model="queryParams.phoneCode"
+          placeholder="请输入手机号码"
           clearable
           size="small"
           style="width:240px"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="可用状态"
-          clearable
-          size="small"
-          style="width:240px"
-        >
+      <el-form-item label="权限设置" prop="power">
+        <el-select v-model="queryParams.power" placeholder="请选择">
           <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
+            v-for="item in powerOptions"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间">
+      <!-- <el-form-item label="修改时间">
         <el-date-picker
           v-model="dateRange"
           size="small"
@@ -47,7 +41,7 @@
           start-placeholde="开始日期"
           end-placeholde="结束日期"
         />
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -66,27 +60,27 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <!-- <el-col :span="1.5">
         <el-button type="warning" icon="el-icon-thumb" size="mini" :disabled="single" @click="handleSelectMenu">分配权限</el-button>
-      </el-col>
+      </el-col> -->
     </el-row>
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="roleTableList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="角色ID" align="center" prop="roleId" />
-      <el-table-column label="角色名称" align="center" prop="roleName" />
-      <el-table-column label="权限编码" align="center" prop="roleCode" />
-      <el-table-column label="显示顺序" align="center" prop="roleSort" />
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
+      <el-table-column label="账号" align="center" prop="account" />
+      <el-table-column label="账号名称" align="center" prop="accountName" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="手机号码" align="center" prop="phoneCode" />
+      <el-table-column label="权限设置" prop="power" align="center" :formatter="statusFormatter" />
+      <el-table-column label="修改时间" align="center" prop="createTime" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleSelectMenu(scope.row)">分配权限</el-button>
+          <!-- <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleSelectMenu(scope.row)">分配权限</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -113,27 +107,30 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" placeholder="请输入角色名称" clearable size="small" />
+        <el-form-item label="账号" prop="account">
+          <el-input v-model="form.accountName" placeholder="请输入账号" clearable size="small" />
         </el-form-item>
-        <el-form-item label="权限编码" prop="roleCode">
-          <el-input v-model="form.roleCode" placeholder="请输入权限字符" clearable size="small" />
+        <el-form-item label="账号名称" prop="accountName">
+          <el-input v-model="form.accountName" placeholder="请输入账号名称" clearable size="small" />
         </el-form-item>
-        <el-form-item label="显示顺序" prop="roleSort">
-          <el-input-number v-model="form.roleSort" clearable size="small" />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.accountName" placeholder="请输入姓名" clearable size="small" />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-              :value="dict.dictValue"
-            >{{ dict.dictLabel }}</el-radio>
-          </el-radio-group>
+        <el-form-item label="手机号码" prop="phoneCode">
+          <el-input v-model="form.phoneCode" placeholder="请输入手机号码" clearable size="small" />
+        </el-form-item>
+        <el-form-item label="权限设置" prop="power">
+          <el-select v-model="form.power" placeholder="请选择">
+            <el-option
+              v-for="item in powerOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -142,36 +139,12 @@
       </span>
     </el-dialog>
     <!-- 添加修改弹出层结束 -->
-
-    <!-- 分配权限和菜单弹出层开始 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="selectMenuOpen"
-      width="400px"
-      center
-      append-to-body
-    >
-      <el-tree
-        ref="menu"
-        :data="menuOptions"
-        show-checkbox
-        node-key="menuId"
-        highlight-current
-        empty-text="加载中，请稍后"
-        :props="{id:'menuId',children:'children',label:'menuName'}"
-      />
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSelectMenuSubmit">确 定</el-button>
-        <el-button @click="cancelSelectMenu">取 消</el-button>
-      </span>
-    </el-dialog>
-    <!-- 分配权限和菜单弹出层结束 -->
   </div>
 </template>
 <script>
 // 引入api
-import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
-import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
+import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds } from '@/api/system/role'
+// import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
 
 export default {
   // 定义页面数据
@@ -193,43 +166,63 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
-      // 状态数据字典
-      statusOptions: [],
+      // 权限下拉列表
+      powerOptions: [
+        {
+          value: '1',
+          label: '超级管理员'
+        }, {
+          value: '2',
+          label: '财务'
+        }, {
+          value: '3',
+          label: '会计'
+        }
+      ],
       // 日期范围
       dateRange: [],
       // 查询参数
       queryParams: {
         page: 1,
         size: 10,
-        roleName: undefined,
-        roleCode: undefined,
-        status: undefined
+        accountName: '',
+        phoneCode: undefined,
+        power: ''
       },
       // 表单数据
       form: {},
       // 表单校验
       rules: {
-        roleName: [
-          { required: true, message: '角色名称不能为空', trigger: 'blur' }
+        account: [
+          { required: true, message: '账号不能为空', trigger: 'blur' }
         ],
-        roleCode: [
-          { required: true, message: '权限编码不能为空', trigger: 'blur' }
+        accountName: [
+          { required: true, message: '账号名称不能为空', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '姓名不能为空', trigger: 'blur' }
+        ],
+        phoneCode: [
+          { required: true, message: '手机号码不能为空', trigger: 'blur' }
+        ],
+        power: [
+          { required: true, message: '权限设置不能为空', trigger: 'blur' }
         ]
       },
       // 是否打开分配权限的弹出层
-      selectMenuOpen: false,
+      // selectMenuOpen: false,
       // 菜单树的数据
       menuOptions: [],
       // 当前选中持角色ID
-      currentRoleId: undefined
+      currentAccountId: undefined
     }
   },
   // 勾子
   created() {
     // 使用全局的根据字典类型查询字典数据的方法查询字典数据
-    this.getDataByType('sys_normal_disable').then(res => {
-      this.statusOptions = res.data
-    })
+    // this.getDataByType('sys_normal_disable').then(res => {
+    //   this.powerOptions = res.data
+    // })
     // 查询表格数据
     this.getRoleList()
   },
@@ -274,17 +267,17 @@ export default {
     },
     // 翻译状态
     statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
+      return this.selectDictLabel(this.powerOptions, row.status)
     },
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
       this.reset()
-      this.title = '添加角色信息'
+      this.title = '添加账号'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改角色信息'
+      this.title = '修改账号'
       const roleId = row.roleId || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
@@ -299,7 +292,7 @@ export default {
     // 执行删除
     handleDelete(row) {
       const roleIds = row.roleId || this.ids
-      this.$confirm('此操作将永久删除该角色数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该账号, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -352,48 +345,47 @@ export default {
     reset() {
       this.resetForm('form')
       this.form = {
-        roleId: undefined,
-        roleName: undefined,
-        roleCode: undefined,
-        roleSort: 0,
-        remark: undefined,
-        status: '0'
+        account: '',
+        accountName: '',
+        name: '',
+        phoneCode: null,
+        power: null
       }
-    },
-    // 打开分配权限和菜单的弹出层
-    handleSelectMenu(row) {
-      this.currentRoleId = row.roleId || this.ids[0]
-      this.title = '分配权限和菜单'
-      this.selectMenuOpen = true
-      // 查询所有可用的菜单
-      selectMenuTree().then(res => {
-        this.menuOptions = this.handleTree(res.data, 'menuId')
-      })
-      // 根据角色ID查询当前角色拥有的哪些菜单权限
-      getMenuIdsByRoleId(this.currentRoleId).then(res => {
-        this.$refs.menu.setCheckedKeys(res.data)
-      })
-    },
-    // 保存角色和菜单权限的关系
-    handleSelectMenuSubmit() {
-      // 获取选中的keys
-      const checkedKeys = this.$refs.menu.getCheckedKeys()
-      // 获取半选的keys
-      const halfCheckKeys = this.$refs.menu.getHalfCheckedKeys()
-      // 组合成最后的keys
-      const finalKey = halfCheckKeys.concat(checkedKeys)
-      // console.log(finalKey)
-      saveRoleMenu(this.currentRoleId, finalKey).then(res => {
-        this.msgSuccess('分配成功')
-      }).catch(() => {
-        this.msgSuccess('分配失败')
-      })
-    },
-    // 关闭分配权限和菜单的弹出层
-    cancelSelectMenu() {
-      this.selectMenuOpen = false
-      this.menuOptions = []
     }
+    // 打开分配权限和菜单的弹出层
+    // handleSelectMenu(row) {
+    //   this.currentAccountId = row.roleId || this.ids[0]
+    //   this.title = '分配权限和菜单'
+    //   this.selectMenuOpen = true
+    //   // 查询所有可用的菜单
+    //   selectMenuTree().then(res => {
+    //     this.menuOptions = this.handleTree(res.data, 'menuId')
+    //   })
+    //   // 根据角色ID查询当前角色拥有的哪些菜单权限
+    //   getMenuIdsByRoleId(this.currentAccountId).then(res => {
+    //     this.$refs.menu.setCheckedKeys(res.data)
+    //   })
+    // },
+    // 保存角色和菜单权限的关系
+    // handleSelectMenuSubmit() {
+    //   // 获取选中的keys
+    //   const checkedKeys = this.$refs.menu.getCheckedKeys()
+    //   // 获取半选的keys
+    //   const halfCheckKeys = this.$refs.menu.getHalfCheckedKeys()
+    //   // 组合成最后的keys
+    //   const finalKey = halfCheckKeys.concat(checkedKeys)
+    //   console.log(finalKey)
+    //   saveRoleMenu(this.currentAccountId, finalKey).then(res => {
+    //     this.msgSuccess('分配成功')
+    //   }).catch(() => {
+    //     this.msgSuccess('分配失败')
+    //   })
+    // },
+    // // 关闭分配权限和菜单的弹出层
+    // cancelSelectMenu() {
+    //   this.selectMenuOpen = false
+    //   this.menuOptions = []
+    // }
   }
 }
 </script>

@@ -52,57 +52,6 @@ export const constantRoutes = [
       }
     ]
   }
-  // , {
-  //   path: '/depot',
-  //   component: Layout,
-  //   redirect: 'noRedirect',
-  //   name: 'depot',
-  //   meta: { title: '车厂设置', icon: 'el-icon-s-tools' },
-  //   children: [
-  //     {
-  //       path: 'carInfo',
-  //       name: 'CarInfo',
-  //       component: () => import('@/views/depot/carInfo/index'),
-  //       meta: { title: '车厂信息' }
-  //     },
-  //     {
-  //       path: 'carConfig',
-  //       name: 'CarConfig',
-  //       component: () => import('@/views/depot/carConfig/index'),
-  //       meta: { title: '车厂配置' }
-  //     },
-  //     {
-  //       path: 'charge',
-  //       name: 'Charge',
-  //       component: () => import('@/views/depot/charge/index'),
-  //       meta: { title: '收费规则' }
-  //     },
-  //     {
-  //       path: 'watchhouse',
-  //       name: 'Watchhouse',
-  //       component: () => import('@/views/depot/watchhouse/index'),
-  //       meta: { title: '岗亭设置' }
-  //     },
-  //     {
-  //       path: 'lane',
-  //       name: 'Lane',
-  //       component: () => import('@/views/depot/lane/index'),
-  //       meta: { title: '车道设置' }
-  //     },
-  //     {
-  //       path: 'security',
-  //       name: 'Security',
-  //       component: () => import('@/views/depot/security/index'),
-  //       meta: { title: '保安管理' }
-  //     },
-  //     {
-  //       path: 'carport',
-  //       name: 'Carport',
-  //       component: () => import('@/views/depot/carport/index'),
-  //       meta: { title: '车位管理' }
-  //     }
-  //   ]
-  // }
 ]
 export const asyncRoutes = [
   {
@@ -205,6 +154,89 @@ export const asyncRoutes = [
           title: '挂号费用设置',
           icon: 'international'
         }
+      }
+    ]
+  },
+  {
+    path: '/depot',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: '/depot',
+    meta: { title: '车厂设置', icon: 'el-icon-s-tools' },
+    children: [
+      {
+        path: 'carInfo',
+        component: () => import('@/views/depot/carInfo/index'),
+        name: '/depot/carInfo',
+        meta: { title: '车厂信息', icon: 'list' }
+      },
+      {
+        path: 'carConfig',
+        component: () => import('@/views/depot/carConfig/index'),
+        name: '/depot/carConfig',
+        meta: { title: '车厂配置', icon: 'list' }
+      },
+      {
+        path: 'charge',
+        component: () => import('@/views/depot/charge/index'),
+        name: '/depot/charge',
+        meta: { title: '收费规则', icon: 'list' }
+      },
+      {
+        path: 'watchhouse',
+        component: () => import('@/views/depot/watchhouse/index'),
+        name: '/depot/watchhouse',
+        meta: { title: '岗亭设置', icon: 'list' }
+      },
+      {
+        path: 'lane',
+        component: () => import('@/views/depot/lane/index'),
+        name: '/depot/lane',
+        meta: { title: '车道设置', icon: 'list' }
+      },
+      {
+        path: 'security',
+        component: () => import('@/views/depot/security/index'),
+        name: '/depot/security',
+        meta: { title: '保安管理', icon: 'list' }
+      },
+      {
+        path: 'carport',
+        component: () => import('@/views/depot/carport/index'),
+        name: '/depot/carport',
+        meta: { title: '车位管理', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/account',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: '/account',
+    meta: { title: '账号管理', icon: 'el-icon-s-tools' },
+    children: [
+      {
+        path: 'platform',
+        component: () => import('@/views/account/platform/index'),
+        name: '/account/platform',
+        meta: { title: '平台账号', icon: 'list' }
+      },
+      {
+        path: 'agent',
+        component: () => import('@/views/account/agent/index'),
+        name: '/account/agent',
+        meta: { title: '代理商账号', icon: 'list' }
+      },
+      {
+        path: 'estate',
+        component: () => import('@/views/account/estate/index'),
+        name: '/account/estate',
+        meta: { title: '物业账号', icon: 'list' }
+      }, {
+        path: 'plot',
+        component: () => import('@/views/account/plot/index'),
+        name: '/account/plot',
+        meta: { title: '小区账号', icon: 'list' }
       }
     ]
   },

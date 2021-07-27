@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
+// impsort { validUsername } from '@/utils/validate'
 import { v4 as uuidv4 } from 'uuid'
 // 导入验证码请求接口
 // import { getVerifyCode } from '@/api/user'
@@ -114,7 +114,7 @@ export default {
   // components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
-      if (!validUsername(value)) {
+      if (value.length === 0) {
         callback(new Error('请输入正确的用户名或密码'))
       } else {
         callback()
@@ -137,7 +137,7 @@ export default {
     return {
       image_verify_code: '',
       loginForm: {
-        username: 'yiliuyunting',
+        username: 'admin',
         password: '123456',
         verifyCode: '',
         uuid: ''

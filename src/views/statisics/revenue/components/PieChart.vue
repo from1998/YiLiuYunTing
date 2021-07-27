@@ -49,7 +49,7 @@ export default {
     }
   },
   mounted() {
-    console.log(this.propPieData)
+    // console.log(this.propPieData)
     this.pieData = this.propPieData
     this.$nextTick(() => {
       this.initChart()

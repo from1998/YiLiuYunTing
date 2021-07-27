@@ -1,6 +1,6 @@
 <template>
   <div>
-    车厂设置
+    物业账号
   </div>
 </template>
 <script>

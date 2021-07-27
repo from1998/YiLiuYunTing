@@ -1134,7 +1134,7 @@ export default {
       this.submitCareOrder.careOrder.patientId = this.careHistory.patientId
       this.submitCareOrder.careOrder.patientName = this.careHistory.patientName
       this.submitCareOrder.careOrder.chId = this.careHistory.chId
-      console.log(this.submitCareOrder)
+      // console.log(this.submitCareOrder)
       this.loading = true
       saveCareOrderItem(this.submitCareOrder).then(res => {
         this.loading = false

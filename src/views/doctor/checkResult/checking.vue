@@ -220,7 +220,7 @@ export default {
         this.checkResultList = res.data
         this.loading = false
         this.total = res.total
-        console.log(this.total)
+        // console.log(this.total)
       }).catch(() => {
         this.msgError('查询失败')
         this.loading = false
@@ -258,7 +258,7 @@ export default {
     },
     // 完成检查
     handleSubmit() {
-      console.log(this.fileListJsonObj)
+      // console.log(this.fileListJsonObj)
       const tx = this
       tx.$confirm('是否确定完成检查，数据提交之后不能再修改?', '提示', {
         confirmButtonText: '确定',
@@ -302,7 +302,7 @@ export default {
     handleUploadSuccess(response, file, fileList) {
       console.log('success', response, file, fileList)
       this.fileListJsonObj.push(response.data)
-      console.log(this.fileListJsonObj)
+      // console.log(this.fileListJsonObj)
     },
     // 上传失败之后的回调
     handleUploadError() {

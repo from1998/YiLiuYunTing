@@ -188,7 +188,7 @@ export default {
         this.checkResultList = res.data
         this.loading = false
         this.total = res.total
-        console.log(this.total)
+        // console.log(this.total)
       }).catch(() => {
         this.msgError('查询失败')
         this.loading = false

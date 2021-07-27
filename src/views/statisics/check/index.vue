@@ -158,7 +158,7 @@ export default {
   methods: {
     // 点击tab事件
     handleClick() {
-      console.log(this.activeName)
+      // console.log(this.activeName)
       if (this.activeName === 'check') {
         this.listCheck()
       } else {
