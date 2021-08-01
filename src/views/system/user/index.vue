@@ -2,24 +2,9 @@
   <div class="app-container">
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="所属部门" prop="deptId">
-        <el-select
-          v-model="queryParams.deptId"
-          placeholder="请选择部门"
-          clearable
-          size="small"
-          style="width:240px"
-        >
-          <el-option
-            v-for="dict in deptOptions"
-            :key="dict.deptId"
-            :label="dict.deptName"
-            :value="dict.deptId"
-          />
-        </el-select></el-form-item>
-      <el-form-item label="用户姓名" prop="userName">
+      <el-form-item label="用户姓名" prop="username">
         <el-input
-          v-model="queryParams.userName"
+          v-model="queryParams.username"
           placeholder="请输入用户姓名"
           clearable
           size="small"
@@ -28,40 +13,28 @@
       </el-form-item>
       <el-form-item label="手机号" prop="phone">
         <el-input
-          v-model="queryParams.phone"
+          v-model="queryParams.mobile"
           placeholder="请输入手机号"
           clearable
           size="small"
           style="width:240px"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="状态" prop="state">
         <el-select
-          v-model="queryParams.status"
+          v-model="queryParams.state"
           placeholder="可用状态"
           clearable
           size="small"
           style="width:240px"
         >
           <el-option
-            v-for="dict in statusOptions"
+            v-for="dict in stateOptions"
             :key="dict.dictValue"
             :label="dict.dictLabel"
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width:240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholde="开始日期"
-          end-placeholde="结束日期"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -86,7 +59,7 @@
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleResetPwd">重置密码</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-thumb" size="mini" :disabled="single" @click="handleSelectRole">分配角色</el-button>
+        <el-button type="success" icon="el-icon-thumb" size="mini" :disabled="single" @click="handleAddPak">车场配置</el-button>
       </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->
@@ -112,22 +85,19 @@
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column label="用户ID" align="center" prop="userId" />
-      <el-table-column label="用户姓名" align="center" prop="userName" />
-      <el-table-column label="部门" align="center" prop="deptId" :formatter="deptFormatter" />
-      <el-table-column label="手机号码【登陆身份】" width="180" align="center" prop="phone" />
-      <el-table-column label="性别" align="center" prop="phone" :formatter="sexFormatter" />
-      <el-table-column label="年龄" align="center" prop="age" />
-      <el-table-column label="是否排班" align="center" prop="schedulingFlag" :formatter="schedulingFlagFormatter" />
-      <el-table-column label="级别" prop="userRank" align="center" :formatter="userRankFormatter" />
-      <el-table-column label="背景" prop="background" align="center" :formatter="backgroundFormatter" />
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
+      <el-table-column label="用户ID" align="center" prop="id" />
+      <el-table-column label="用户姓名【登陆账号】" align="center" prop="username" width="200" />
+      <el-table-column label="真实姓名" align="center" prop="realName" />
+      <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
+      <el-table-column label="状态" prop="state" align="center" :formatter="stateFormatter" />
+      <el-table-column label="角色" prop="role" align="center" :formatter="roleFormatter" />
       <el-table-column label="创建时间" align="center" prop="createTime" width="200" />
+      <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="200" />
       <el-table-column label="操作" align="center" width="250">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.userId!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button v-if="scope.row.userId!=1" type="text" icon="el-icon-thumb" size="mini" @click="handleSelectRole(scope.row)">分配角色</el-button>
+          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-thumb" size="mini" @click="handleSelectRole(scope.row)">角色配置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -135,9 +105,9 @@
     <!-- 分页控件开始 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.pageNum"
+      :current-page="queryParams.page"
       :page-sizes="[5, 10, 20, 30]"
-      :page-size="queryParams.pageSize"
+      :page-size="queryParams.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -156,44 +126,26 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-row>
           <el-col :span="12">
-            <el-form-item label="姓名" prop="userName">
-              <el-input v-model="form.userName" style="width:240px" placeholder="请输入用户名称" clearable size="small" />
+            <el-form-item label="登录名称" prop="username">
+              <el-input v-model="form.username" style="width:240px" placeholder="请输入登录名称" clearable size="small" />
             </el-form-item></el-col>
           <el-col :span="12">
-            <el-form-item label="手机号" prop="phone">
-              <el-input v-model="form.phone" style="width:240px" placeholder="请输入手机号，作为登陆凭证" clearable size="small" />
+            <el-form-item label="真实姓名" prop="realName">
+              <el-input v-model="form.realName" style="width:240px" placeholder="请输入真实姓名" clearable size="small" />
             </el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="所属科室" prop="deptId">
+            <el-form-item label="状态" prop="background">
               <el-select
-                v-model="form.deptId"
-                placeholder="所属科室"
+                v-model="form.state"
+                placeholder="状态"
                 clearable
                 size="small"
                 style="width:240px"
               >
                 <el-option
-                  v-for="d in deptOptions"
-                  :key="d.deptId"
-                  :label="d.deptName"
-                  :value="d.deptId"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="级别" prop="userRank">
-              <el-select
-                v-model="form.userRank"
-                placeholder="用户级别"
-                clearable
-                size="small"
-                style="width:240px"
-              >
-                <el-option
-                  v-for="d in userRankOptions"
+                  v-for="d in stateOptions"
                   :key="d.dictValue"
                   :label="d.dictLabel"
                   :value="d.dictValue"
@@ -204,21 +156,16 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="年龄" prop="age">
-              <el-input-number v-model="form.age" clearable size="small" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="背景" prop="background">
+            <el-form-item label="角色" prop="background">
               <el-select
-                v-model="form.background"
-                placeholder="学历"
+                v-model="form.role"
+                placeholder="角色"
                 clearable
                 size="small"
                 style="width:240px"
               >
                 <el-option
-                  v-for="d in backgroundOptions"
+                  v-for="d in roleOptions"
                   :key="d.dictValue"
                   :label="d.dictLabel"
                   :value="d.dictValue"
@@ -226,69 +173,38 @@
               </el-select>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号" prop="mobile">
+              <el-input v-model="form.mobile" style="width:240px" placeholder="请输入手机号" clearable size="small" />
+            </el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="性别" prop="sex">
-              <el-radio-group v-model="form.sex">
-                <el-radio
-                  v-for="d in sexOptions"
-                  :key="d.dictValue"
-                  :label="d.dictValue"
-                  :value="d.dictValue"
-                >{{ d.dictLabel }}</el-radio>
-              </el-radio-group>
+            <el-form-item label="选择父级账号" prop="background">
+              <el-select
+                v-model="form.parentId"
+                placeholder="父级账号"
+                clearable
+                size="small"
+                style="width:240px"
+              >
+                <el-option
+                  v-for="d in userOptions"
+                  :key="d.id"
+                  :label="d.username"
+                  :value="d.id"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="状态" prop="status">
-              <el-radio-group v-model="form.status">
-                <el-radio
-                  v-for="dict in statusOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictValue"
-                  :value="dict.dictValue"
-                >{{ dict.dictLabel }}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="是否参与排班" prop="schedulingFlag">
-              <el-radio-group v-model="form.schedulingFlag">
-                <el-radio
-                  v-for="d in schedulingFlagOptions"
-                  :key="d.dictValue"
-                  :label="d.dictValue"
-                  :value="d.dictValue"
-                >{{ d.dictLabel }}</el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
+
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
               <el-input v-model="form.email" style="width:240px" placeholder="请输入用户邮箱" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="24">
-            <el-form-item label="擅长" prop="strong">
-              <el-input v-model="form.strong" type="textarea" placeholder="请输入用户擅长" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="荣誉" prop="honor">
-              <el-input v-model="form.honor" type="textarea" placeholder="请输入用户相关荣誉" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="24">
-            <el-form-item label="简介" prop="introduction">
-              <el-input v-model="form.introduction" type="textarea" placeholder="请输入用户简介" />
-            </el-form-item>
-          </el-col>
-        </el-row>
+
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
@@ -309,6 +225,7 @@
         v-loading="loading"
         border
         :data="roleTableList"
+        @select="select"
         @selection-change="handleRoleTableSelectionChange"
       >
         <el-table-column type="selection" width="55" align="center" />
@@ -328,8 +245,7 @@
 </template>
 <script>
 // 引入api
-import { selectAllDept } from '@/api/system/dept'
-import { listUserForPage, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
+import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
 import { selectAllRole, getRoleIdsByUserId, saveRoleUser } from '@/api/system/role'
 export default {
   // 定义页面数据
@@ -351,10 +267,12 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
-      // 查询条件里面的部门数据
-      deptOptions: [],
+      // 角色数据字典
+      roleOptions: [],
+      // 用户信息
+      userOptions: [],
       // 状态数据字典
-      statusOptions: [],
+      stateOptions: [],
       // 级别数据字典
       userRankOptions: [],
       // 背景数据字典
@@ -367,22 +285,21 @@ export default {
       dateRange: [],
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
-        deptId: undefined,
-        userName: undefined,
-        phone: undefined,
-        status: undefined
+        page: 1,
+        size: 10,
+        username: undefined,
+        mobile: undefined,
+        state: undefined
       },
       // 表单数据
       form: {},
       // 表单校验
       rules: {
-        userName: [
-          { required: true, message: '科室名称不能为空', trigger: 'blur' }
+        username: [
+          { required: true, message: '登录名称不为空', trigger: 'blur' }
         ],
-        userNumber: [
-          { required: true, message: '科室编码不能为空', trigger: 'blur' }
+        mobile: [
+          { required: true, validator: this.validatorPhone, trigger: 'blur' }
         ]
       },
       // 是否显示分配权限的弹出层
@@ -392,35 +309,24 @@ export default {
       // 角色数据
       roleTableList: [],
       // 当前选中的用户
-      currentUserId: undefined
+      currentUserId: undefined,
+      // 添加车场选中的用户
+      currentParkUserId: undefined
     }
   },
   // 勾子
   created() {
-    // 使用全局的根据字典类型查询字典数据的方法查询字典数据
+    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  0禁用 1正常
     this.getDataByType('sys_normal_disable').then(res => {
-      this.statusOptions = res.data
+      console.log(res.data)
+      this.stateOptions = res.data
     })
     // 加载用户级别
-    this.getDataByType('sys_user_level').then(res => {
-      this.userRankOptions = res.data
+    this.getDataByType('sys_role_manager').then(res => {
+      this.roleOptions = res.data
     })
-    // 加载用户背景
-    this.getDataByType('sys_user_background').then(res => {
-      this.backgroundOptions = res.data
-    })
-    // 加载用户性别
-    this.getDataByType('sys_user_sex').then(res => {
-      this.sexOptions = res.data
-    })
-    // 加载用户是否参与排班
-    this.getDataByType('sys_yes_no').then(res => {
-      this.schedulingFlagOptions = res.data
-    })
-    // 查询部门数据
-    selectAllDept().then(res => {
-      this.deptOptions = res.data
-    })
+    // 查询所有用户信息
+    this.selectNeedSchedulingUsers()
     // 查询表格数据
     this.getUserList()
   },
@@ -429,12 +335,18 @@ export default {
     // 查询表格数据
     getUserList() {
       this.loading = true // 打开遮罩
-      listUserForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-        this.userTableList = res.data
-        this.total = res.total
+      listUserForPage(this.queryParams, this.dateRange).then(res => {
+        this.userTableList = res.data.list
+        this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },
+    selectNeedSchedulingUsers() {
+      selectNeedSchedulingUsers().then(res => {
+        this.userOptions = res.data
+      })
+    },
+
     // 条件查询
     handleQuery() {
       this.getUserList()
@@ -445,72 +357,72 @@ export default {
       this.dateRange = []
       this.getUserList()
     },
+    // 手机号校验
+    validatorPhone(rule, value, callback) {
+      if (value === '') {
+        callback(new Error('手机号不能为空'))
+      } else if (!/^1\d{10}$/.test(value)) {
+        callback(new Error('手机号格式错误'))
+      } else {
+        callback()
+      }
+    },
     // 数据表格的多选择框选择时触发
     handleSelectionChange(selection) {
-      this.ids = selection.map(item => item.userId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
-    // 分页pageSize变化时触发
+    // 分页size变化时触发
     handleSizeChange(val) {
-      this.queryParams.pageSize = val
+      this.queryParams.size = val
       // 重新查询
       this.getUserList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.pageNum = val
+      this.queryParams.page = val
       // 重新查询
       this.getUserList()
     },
     // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
+    stateFormatter(row) {
+      return this.selectDictLabel(this.stateOptions, row.state.toString())
     },
-    // 翻译性别
-    sexFormatter(row) {
-      return this.selectDictLabel(this.sexOptions, row.sex)
+    roleFormatter(row) {
+      return this.selectDictLabel(this.roleOptions, row.role.toString())
     },
-    // 翻译排班状态
-    schedulingFlagFormatter(row) {
-      return this.selectDictLabel(this.schedulingFlagOptions, row.schedulingFlag)
-    },
-    // 翻译用户级别
-    userRankFormatter(row) {
-      return this.selectDictLabel(this.userRankOptions, row.userRank)
-    },
-    // 翻译用户背景
-    backgroundFormatter(row) {
-      return this.selectDictLabel(this.backgroundOptions, row.background)
-    },
-    // 翻译部门
-    deptFormatter(row) {
-      let deptName = ''
-      this.deptOptions.filter(item => {
-        if (parseInt(item.deptId) === parseInt(row.deptId)) {
-          deptName = item.deptName
-        }
-      })
-      return deptName
-    },
-
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
-      this.reset()
+      this.form.state = '1',
+      this.form.userId= '',
+      this.form.username= '',
+      this.form.realName= '',
+      this.form.mobile= '',
+      this.form.role= '',
+      this.form.email= '',
       this.title = '添加用户信息'
+      console.log(this.form)
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改科室信息'
-      const userId = row.userId || this.ids
+      this.title = '修改用户信息'
+      const userId = row.id || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
       getUserById(userId).then(res => {
-        this.form = res.data
+        this.form.state = res.data.state+'',
+        this.form.userId= res.data.userId,
+        this.form.username= res.data.username,
+        this.form.realName= res.data.realName,
+        this.form.mobile= res.data.mobile,
+        this.form.role= res.data.role+'',
+        this.form.email= res.data.email,
+        console.log(res.data)
         this.loading = false
       })
     },
@@ -573,18 +485,13 @@ export default {
     reset() {
       this.resetForm('form')
       this.form = {
+        state: '1',
         userId: undefined,
-        userName: undefined,
-        phone: undefined,
-        sex: '0',
-        age: 0,
-        status: '0',
-        email: undefined,
-        strong: undefined,
-        honor: undefined,
-        introduction: undefined,
-        remark: undefined,
-        schedulingFlag: '0'
+        username: undefined,
+        realName: undefined,
+        mobile: undefined,
+        role: undefined,
+        email: undefined
       }
     },
     // 重置密码
@@ -604,12 +511,15 @@ export default {
         tx.msgError('重置已取消')
       })
     },
-
+    handleAddPak() {
+      this.currentParkUserId = this.ids[0]
+    },
     // 打开分配角色的弹出层
     handleSelectRole(row) {
+      console.log(this.ids[0])
       this.selectRoleOpen = true
       this.title = '分配角色'
-      this.currentUserId = row.userId || this.ids[0]
+      this.currentUserId = row.id || this.ids[0]
       const tx = this
       selectAllRole().then(res => {
         tx.roleTableList = res.data
@@ -618,7 +528,7 @@ export default {
           getRoleIdsByUserId(tx.currentUserId).then(res2 => {
             res2.data.filter(r1 => {
               tx.roleTableList.filter(r2 => {
-                if (r1 === r2.roleId) {
+                if (r1 === r2.roleId.toString()) {
                   // 选中表格checkbox
                   tx.$refs.roleListTable.toggleRowSelection(r2, true)
                 }
@@ -635,10 +545,24 @@ export default {
     handleRoleTableSelectionChange(selection) {
       this.roleIds = selection.map(item => item.roleId)
     },
+    // 当用户手动勾选数据行的 Checkbox 时触发的事件,确保只能选中一项数据
+    select(selection, row) {
+      this.$refs.roleListTable.clearSelection()
+      if (selection.length === 0) {
+        return
+      }
+      if (row) {
+        this.selectioned = row
+        this.$refs.roleListTable.toggleRowSelection(row, true)
+      }
+    },
     // 保存用户和角色之间的关系
     handleSaveRoleUserSubmit() {
+      console.log(this.roleIds)
       saveRoleUser(this.currentUserId, this.roleIds).then(res => {
         this.msgSuccess('分配成功')
+        this.selectRoleOpen = false
+        this.getUserList()
       }).catch(function() {
         this.msgError('分配失败')
       })

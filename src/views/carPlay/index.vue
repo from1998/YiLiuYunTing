@@ -1,0 +1,139 @@
+<template>
+  <div id="data-view">
+    <dv-full-screen-container>
+
+      <top-header />
+
+      <dv-border-box-1 class="main-content">
+        <digital-flop />
+
+        <div class="block-content">
+          <!-- <ranking-board /> -->
+          <div class="block-left-content">
+            <dv-border-box-13 class="left-top">
+              <scroll-board />
+            </dv-border-box-13>
+            <rose-chart />
+          </div>
+          <div class="block-right-content">
+            <div class="right-top">
+              <div class="right-top-left">
+                <china-map />
+              </div>
+              <div class="right-top-right">
+                右边
+              </div>
+            </div>
+            <div class="right-bottom">
+              right-bottom
+            </div>
+          </div>
+        </div></dv-border-box-1>
+    </dv-full-screen-container>
+  </div>
+</template>
+
+<script>
+// 导入顶部标题栏样式
+import topHeader from './topHeader'
+// 导入数字化展板(方格)
+import digitalFlop from './digitalFlop'
+// 导入饼图
+import roseChart from './roseChart'
+// 导入排名轮播图
+import scrollBoard from './scrollBoard'
+// 导入中国地图
+import chinaMap from './map'
+
+export default {
+  name: 'DataView',
+  components: {
+    topHeader,
+    digitalFlop,
+    roseChart,
+    scrollBoard,
+    chinaMap
+    // waterLevelChart,
+    // cards
+  },
+  data() {
+    return {}
+  },
+  methods: {}
+}
+</script>
+
+<style lang="scss">
+#data-view{
+  width: 100%;
+  height: 100%;
+  background-color: #030409;
+  color: #fff;
+
+  #dv-full-screen-container {
+    background-image: url('../../assets/images/bg.png');
+    background-size: 100% 100%;
+    box-shadow: 0 0 3px blue;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-content {
+    flex: 1;
+    .border-box-content {
+      padding: 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .block-content {
+    flex: 1;
+    display: flex;
+    margin-top: 20px;
+  }
+
+  .block-left-content {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-left: 10px;
+    .left-top {
+      height: 65%;
+      margin-bottom: 20px;
+    }
+  }
+  .block-right-content {
+    flex: 7;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding-left: 20px;
+    transform: rotateY(-180deg);
+    .right-top {
+      display: flex;
+      height: 65%;
+      // background-color: #fff;
+      // font-size: 72px;
+      // text-align: center;
+      // color: red;
+      .right-top-right , .right-top-left {
+        flex: 1;
+      }
+      .right-top-right {
+        background-color: #0f0;
+      }
+    }
+  }
+
+  .block-top-content {
+    height: 55%;
+    display: flex;
+    flex-grow: 0;
+    box-sizing: border-box;
+    padding-bottom: 20px;
+  }
+}
+</style>

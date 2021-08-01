@@ -74,44 +74,16 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
-
-      <!-- <div style="position:relative">
-        <div class="tips">
-          <span />
-          <span />
-        </div>
-        <div class="tips">
-          <span style="margin-right:18px;" />
-          <span />
-        </div>
-
-        <el-button class="thirdparty-button" type="primary" @click="showDialog=true">
-          第三方登陆
-        </el-button>
-      </div> -->
     </el-form>
-
-    <!-- <el-dialog title="Or connect with" :visible.sync="showDialog">
-      Can not be simulated on local, so please combine you own business simulation! ! !
-      <br>
-      <br>
-      <br>
-      <social-sign />
-    </el-dialog> -->
   </div>
 </template>
 
 <script>
-// impsort { validUsername } from '@/utils/validate'
 import { v4 as uuidv4 } from 'uuid'
-// 导入验证码请求接口
-// import { getVerifyCode } from '@/api/user'
 // uuidv4()// ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
-// import SocialSign from './components/SocialSignin'
 
 export default {
   name: 'Login',
-  // components: { SocialSign },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (value.length === 0) {
@@ -150,7 +122,6 @@ export default {
       passwordType: 'password',
       capsTooltip: false,
       loading: false,
-      // showDialog: false,
       redirect: undefined,
       otherQuery: {}
     }
@@ -158,7 +129,6 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        // console.log(route)
         const query = route.query
         if (query) {
           this.redirect = query.redirect
@@ -168,9 +138,6 @@ export default {
       immediate: true
     }
   },
-  created() {
-    // window.addEventListener('storage', this.afterQRScan)
-  },
   mounted() {
     if (this.loginForm.username === '') {
       this.$refs.username.focus()
@@ -179,21 +146,11 @@ export default {
     }
     this.getVerifyCode()
   },
-  destroyed() {
-    // window.removeEventListener('storage', this.afterQRScan)
-  },
   methods: {
-    // 获取二进制图片流并显示，该方法可以获取到图片流但无法正确显示
     getVerifyCode() {
-      // alert('ok')
       this.loginForm.verifyCode = ''
       this.loginForm.uuid = uuidv4().split('-')[0] // ⇨ '9b1deb4d'
       this.image_verify_code = process.env.VUE_APP_BASE_API + '/login/verificationCode?creationTime=' + this.loginForm.uuid
-      // 调用验证码请求方法
-      // getVerifyCode(this.uuid).then(response => {
-      //   console.log('response', response)
-      //   this.image_verify_code = 'data:image/jpeg;base64,' + encodeURI(response)
-      // })
     },
     checkCapslock(e) {
       const { key } = e
@@ -230,7 +187,6 @@ export default {
             })
         } else {
           this.getVerifyCode()
-          // console.log('error submit!!')
           return false
         }
       })
@@ -243,24 +199,6 @@ export default {
         return acc
       }, {})
     }
-    // afterQRScan() {
-    //   if (e.key === 'x-admin-oauth-code') {
-    //     const code = getQueryObject(e.newValue)
-    //     const codeMap = {
-    //       wechat: 'code',
-    //       tencent: 'code'
-    //     }
-    //     const type = codeMap[this.auth_type]
-    //     const codeName = code[type]
-    //     if (codeName) {
-    //       this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-    //         this.$router.push({ path: this.redirect || '/' })
-    //       })
-    //     } else {
-    //       alert('第三方登录失败')
-    //     }
-    //   }
-    // }
   }
 }
 </script>
@@ -308,20 +246,12 @@ $cursor: #fff;
   .el-form {
   .el-form-item {
     &:nth-child(-n+3){
-      // border: none !important;
-      // background: transparent!important;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
     }
   }
-  // .el-form-item {
-  //   border: 1px solid rgba(255, 255, 255, 0.1);
-  //   background: rgba(0, 0, 0, 0.1);
-  //   border-radius: 5px;
-  //   color: #454545;
-  // }
 }
 }
 </style>
@@ -330,21 +260,6 @@ $cursor: #fff;
 $bg:#2d3a4b;
 $dark_gray:#889aa4;
 $light_gray:#eee;
-
-// .login-container {
-//   min-height: 100%;
-//   width: 100%;
-//   background-color: $bg;
-//   overflow: hidden;
-
-//   .login-form {
-//     position: relative;
-//     width: 520px;
-//     max-width: 100%;
-//     padding: 160px 35px 0;
-//     margin: 0 auto;
-//     overflow: hidden;
-//   }
 .login-container {
   min-height: 100%;
   width: 100%;

@@ -52,7 +52,7 @@ export function saveRoleMenu(roleId, menuIds) {
 // 查询所有可用角色
 export function selectAllRole() {
   return request({
-    url: '/system/role/selectAllRole',
+    url: '/system/role/selectAllRoles',
     method: 'get'
   })
 }

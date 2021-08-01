@@ -13,6 +13,9 @@ import './permission' // permission control
 import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 import moment from 'moment'
+import dataV from '@jiaminghi/data-view'
+
+Vue.use(dataV)
 
 import { resetForm, addDateRange, selectDictLabel, handleTree, getAge, getCurrentTimeType } from '@/utils/his-utils'
 import { getDataByType } from '@/api/system/dict/data'

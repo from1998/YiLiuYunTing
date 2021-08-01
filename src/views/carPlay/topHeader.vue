@@ -1,0 +1,46 @@
+<template>
+  <div id="top-header">
+    <dv-decoration-8 class="header-left-decoration" />
+    <dv-decoration-5 class="header-center-decoration" />
+    <dv-decoration-8 class="header-right-decoration" :reverse="true" />
+    <dv-decoration-11 style="width:450px;height:80px;" class="center-title"> 一流云停 大数据管理平台</dv-decoration-11>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'TopHeader'
+}
+</script>
+
+<style lang="scss" scoped>
+#top-header {
+  position: relative;
+  width: 100%;
+  height: 110px;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+
+  .header-center-decoration {
+    width: 40%;
+    height: 60px;
+    margin-top: 80px;
+  }
+
+  .header-left-decoration, .header-right-decoration {
+    width: 25%;
+    height: 90px;
+  }
+
+  .center-title {
+    position: absolute;
+    font-size: 32px;
+    font-weight: 900;
+    font-family:STXingkai,STKaiti,KaiTi,KaiTi_GB2312,SimSun,'Microsoft YaHei';
+    left: 50%;
+    top: 18px;
+    transform: translateX(-50%);
+  }
+}
+</style>

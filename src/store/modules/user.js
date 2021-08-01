@@ -31,7 +31,7 @@ const mutations = {
 const actions = {
   // 用户登陆
   login({ commit }, userInfo) {
-    // 从userInfo里面取出username和password
+    // 从userInfo里面取出username和password以及验证码和验证码id
     const { username, password, verifyCode, uuid } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password, code: verifyCode, verifyCodeId: uuid }).then(response => {
@@ -53,6 +53,12 @@ const actions = {
 
         if (!username) {
           reject('用户未登陆,请登陆.')
+          commit('SET_ROLES', [])
+          commit('SET_PERMISSIONS', [])
+          removeToken()
+          removeMenu()
+          resetRouter()// 重置路由
+          resolve()
         }
         commit('SET_ROLES', roles)// 用户角色
         commit('SET_NAME', username)// 用户名
@@ -76,7 +82,6 @@ const actions = {
         removeMenu()
         resetRouter()// 重置路由
         dispatch('tagsView/delAllViews', null, { root: true })
-
         resolve()
       }).catch(error => {
         reject(error)
