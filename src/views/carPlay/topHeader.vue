@@ -3,7 +3,7 @@
     <dv-decoration-8 class="header-left-decoration" />
     <dv-decoration-5 class="header-center-decoration" />
     <dv-decoration-8 class="header-right-decoration" :reverse="true" />
-    <dv-decoration-11 style="width:450px;height:80px;" class="center-title"> 一流云停 大数据管理平台</dv-decoration-11>
+    <dv-decoration-11 style="width:500px;height:80px;" class="center-title"> 一流云停 大数据管理平台</dv-decoration-11>
   </div>
 </template>
 
@@ -35,7 +35,7 @@ export default {
 
   .center-title {
     position: absolute;
-    font-size: 32px;
+    font-size: 38px;
     font-weight: 900;
     font-family:STXingkai,STKaiti,KaiTi,KaiTi_GB2312,SimSun,'Microsoft YaHei';
     left: 50%;

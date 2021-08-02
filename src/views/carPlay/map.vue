@@ -1,5 +1,10 @@
 <template>
-  <div id="chart" style="width: 100%;height:100%;" />
+  <div style="width: 100%;height:100%;  position: relative;">
+    <dv-decoration-7 class="mapTitle">
+      <span>全国车厂分布图</span>
+    </dv-decoration-7>
+    <div id="chart" style="width: 100%;height:100%;" />
+  </div>
 </template>
 
 <script>
@@ -8,17 +13,17 @@ import jsonp from 'jsonp' // 引入jsonp
 import 'echarts/map/js/china' // 引入中国地图
 
 const option = {
-  title: { // 标题
-    text: 'vue实现疫情地图',
-    x: 'center', // 居中
-    textStyle: { // 标题 样式
-      color: '#9c0505'
-    }
-  },
+  // title: { // 标题
+  //   text: '全国车厂分布图',
+  //   x: 'left', // 居中
+  //   textStyle: { // 标题 样式
+  //     color: '#7ec699'
+  //   }
+  // },
   tooltip: { // 提示信息
     trigger: 'item', // 类型
     // 地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
-    formatter: '地区：{b}<br/>确诊：{c}'
+    formatter: '地区：{b}<br/>车厂数量：{c}'
   },
   series: [ // 数据
     {
@@ -26,23 +31,19 @@ const option = {
       map: 'china',
       // data:[
       //     {name: '北京', value: 200},
-      //     {name: '湖北', value: 20000},
-      //     {name: '湖南', value: 10000},
-      //     {name: '西藏', value: 8000},
-      //     {name: '云南', value: 4000},
       // ],
       label: { // 图形上的文本标签，可用于说明图形的一些数据信息
         show: true,
-        color: 'red',
-        fontSize: 10
+        color: '#FFF',
+        fontSize: 12
       },
-      zoom: 1.0, // 当前视角的缩放比例。
+      zoom: 1.3, // 当前视角的缩放比例。
       itemStyle: { // 地图区域的多边形 图形样式。
         borderColor: 'blue'
       },
       emphasis: { // 高亮状态下的设置
         label: { // 图形上的文本标签，可用于说明图形的一些数据信息
-          color: '#fff',
+          color: '#F00',
           fontSize: 12
         },
         itemStyle: { // 地图区域的多边形 图形样式。
@@ -63,7 +64,7 @@ const option = {
       { value: 0 } // 不指定 min，表示 min 为无限大（-Infinity）。
     ],
     inRange: { // 范围
-      color: ['#fff', '#ffaa85', '#660208']
+      color: ['#33FFCC', '#0099FF', '#009966', '#3366CC', '#333399', '#003300']
     },
     itemWidth: 10,
     itemHeight: 10
@@ -102,7 +103,21 @@ export default {
 
 }
 </script>
-<style scoped>
+<style lang="scss">
+.mapTitle {
+  position: absolute;
+  top: 2%;
+  left: 0%;
+  width:280px;
+  height:30px;
+  color: #7ec699;
+  letter-spacing: 0.3em;
+  font-size: 20px;
+  span {
+    display: block;
+    margin-left: 0.3em;
+  }
+}
 #chart {
   margin: 0 auto;
 }
