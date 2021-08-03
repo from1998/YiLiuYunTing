@@ -34,10 +34,10 @@ const option = {
       // ],
       label: { // 图形上的文本标签，可用于说明图形的一些数据信息
         show: true,
-        color: '#FFF',
-        fontSize: 12
+        color: '#FFF'
+        // fontSize: 12
       },
-      zoom: 1.3, // 当前视角的缩放比例。
+      zoom: 1.25, // 当前视角的缩放比例。
       itemStyle: { // 地图区域的多边形 图形样式。
         borderColor: 'blue'
       },
@@ -93,7 +93,7 @@ export default {
         // data.data.list    map()
         console.log(err)
         var lists = data.data.list.map(item => { return { name: item.name, value: item.value } })
-        console.log(lists)
+        // console.log(lists)
         option.series[0].data = lists
         // 使用刚指定的配置项和数据显示图表。
         this.myChart.setOption(option)

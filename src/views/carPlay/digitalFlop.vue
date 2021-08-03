@@ -35,7 +35,7 @@ export default {
     createData()
 
     setInterval(createData, 30000)
-    console.log(this.$refs)
+    // console.log(this.$refs)
   },
   methods: {
     createData() {

@@ -35,6 +35,7 @@ export default {
 
   .center-title {
     position: absolute;
+    color: aqua;
     font-size: 38px;
     font-weight: 900;
     font-family:STXingkai,STKaiti,KaiTi,KaiTi_GB2312,SimSun,'Microsoft YaHei';

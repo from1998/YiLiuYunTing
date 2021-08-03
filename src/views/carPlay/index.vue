@@ -21,7 +21,7 @@
                 <china-map />
               </div>
               <div class="right-top-right">
-                右边
+                <right-chart />
               </div>
             </div>
             <div class="right-bottom">
@@ -44,6 +44,8 @@ import roseChart from './roseChart'
 import scrollBoard from './scrollBoard'
 // 导入中国地图
 import chinaMap from './map'
+// 导入地图右侧的图标
+import rightChart from './rightChart'
 
 export default {
   name: 'DataView',
@@ -52,7 +54,8 @@ export default {
     digitalFlop,
     roseChart,
     scrollBoard,
-    chinaMap
+    chinaMap,
+    rightChart
     // waterLevelChart,
     // cards
   },
@@ -123,7 +126,9 @@ export default {
         flex: 1;
       }
       .right-top-right {
-        background-color: #0f0;
+        background-color: transparent;
+        display: flex;
+        // flex-direction: column;
       }
     }
   }
