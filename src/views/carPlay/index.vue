@@ -126,9 +126,7 @@ export default {
         flex: 1;
       }
       .right-top-right {
-        background-color: transparent;
         display: flex;
-        // flex-direction: column;
       }
     }
   }

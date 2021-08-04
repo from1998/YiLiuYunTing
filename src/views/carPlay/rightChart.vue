@@ -6,22 +6,24 @@
           <span>总交易额<sub class="sub">(单位:万元)</sub></span>
         </dv-decoration-7>
         <div class="GMVdata">
+          <span class="svg-container">
+            <svg-icon icon-class="money-total" />
+          </span>
           <span v-for="(item,index) in transformGMV" :key="index">
             {{ item }}
           </span>
         </div>
       </div>
     </dv-border-box-9>
-    <!-- <div class="right-chart"> -->
+
     <dv-border-box-4 :reverse="true" class="right-chart">
       <div class="header">
         <dv-decoration-7>
           <span>收费排名</span>
         </dv-decoration-7>
       </div>
-      <div class="chart-container" />
+      <div id="chart-container" />
     </dv-border-box-4>
-    <!-- </div> -->
   </div>
 </template>
 
@@ -70,23 +72,18 @@ const option = {
     axisLine: {
       show: false,
       lineStyle: {
-        color: '#00f'
+        color: '#fff'
       }
     },
     axisTick: {
       show: false
     },
-    data: ['一流云停', '多威尔停车场', '南湖春城', '芜湖医苑', '东方商城'],
-    axisLabel: {
-      formatter: function(value) {
-        return value.length > 10 ? value.slice(0, 10) + '...' : value
-      }
-    }
+    data: ['一流云停', '多威尔停车场', '南湖春城', '芜湖医苑', '东方商城']
   }],
   series: [
     {
       type: 'bar',
-      data: [131744, 18203, 23489, 29034, 104970],
+      data: [231744, 18203, 23489, 29034, 104970],
       // series配置
       // 颜色
       itemStyle: {
@@ -94,7 +91,7 @@ const option = {
           label: {
             show: true,
             position: 'right',
-            color: '#000'
+            color: '#fff'
           },
           // 提供的工具函数生成渐变颜色
           color: function(params) {
@@ -134,9 +131,7 @@ const option = {
               }]
             }
           },
-          barBorderRadius: 70,
-          borderWidth: 0,
-          borderColor: '#333'
+          barBorderRadius: 70
         }
       }
     }
@@ -161,9 +156,10 @@ export default {
   },
   mounted() {
     // 基于准备好的dom，初始化echarts实例
-    this.myChart = echarts.init(document.getElementsByClassName('chart-container'))
+    this.myChart = echarts.init(document.getElementById('chart-container'))
     // 使用刚指定的配置项和数据显示图表。
     this.myChart.setOption(option)
+    console.log('success')
   },
   created() {
     this.getGmv()
@@ -178,7 +174,6 @@ export default {
 
 <style lang="scss">
 .dv-border-box-9 {
-  // height: 40%;
   flex: 2;
   .GMV {
     position: relative;
@@ -204,17 +199,23 @@ export default {
     justify-content: space-evenly;
     transform: translateY(90%);
     span {
-    width: 10%;
-    height: 65px;
-    text-align: center;
-    line-height: 65px;
-    background: rgba(0,35,120,.56);
-    border: 1px solid rgba(255,255,255,.2);
-    border-radius: 5px;
-    color: #fff;
-    font-size: 68px;
-    font-weight: 700;
-}
+      width: 9%;
+      height: 65px;
+      text-align: center;
+      line-height: 65px;
+      background: rgba(0,35,120,.56);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 5px;
+      color: #F2CE20;
+      font-size: 68px;
+      font-weight: 700;
+      &:first-child {
+        background: none;
+        border: none;
+        margin: -2% 9% 0 0;
+        font-size: 100px;
+      }
+    }
   }
   }
 }
@@ -243,7 +244,7 @@ export default {
     }
   }
 
-  .chart-container {
+  #chart-container {
     flex: 1;
     height: 100%;
     // padding-bottom: 20px;
