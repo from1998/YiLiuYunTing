@@ -28,6 +28,7 @@ export default {
   created() {
     this.resData = {
       park: {
+        //   legendData可以不用传回
         legendData: ['进场车辆', '出场车辆'],
         xAxisData: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
         seriesData: [
@@ -42,6 +43,7 @@ export default {
         ]
       },
       order: {
+        //   legendData可以不用传回
         legendData: ['官方', '微信', '支付宝'],
         xAxisData: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
         seriesData: [

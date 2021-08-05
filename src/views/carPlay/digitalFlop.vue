@@ -28,8 +28,12 @@ export default {
   name: 'DigitalFlop',
   data() {
     return {
-      digitalFlopData: []
+      digitalFlopData: [],
+      resData: {}
     }
+  },
+  created() {
+    this.getData()
   },
   mounted() {
     const { createData } = this
@@ -37,17 +41,14 @@ export default {
     createData()
 
     setInterval(createData, 30000)
-    // console.log(this.$refs)
   },
   methods: {
     createData() {
-      const { randomExtend } = this
-
       this.digitalFlopData = [
         {
           title: '车场总量',
           number: {
-            number: [randomExtend(200, 300)],
+            number: [this.resData.totalStation],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -60,7 +61,7 @@ export default {
         {
           title: '设备总量',
           number: {
-            number: [randomExtend(20, 30)],
+            number: [this.resData.equipment],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -73,7 +74,7 @@ export default {
         {
           title: '今日出场',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [this.resData.todayOut],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -86,7 +87,7 @@ export default {
         {
           title: '今日进场',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [this.resData.todayIn],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -99,7 +100,7 @@ export default {
         {
           title: '出场总量',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [this.resData.totalOut],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -112,7 +113,7 @@ export default {
         {
           title: '进场总量',
           number: {
-            number: [randomExtend(5, 10)],
+            number: [this.resData.totalIn],
             content: '{nt}',
             textAlign: 'right',
             style: {
@@ -124,11 +125,14 @@ export default {
         }
       ]
     },
-    randomExtend(minNum, maxNum) {
-      if (arguments.length === 1) {
-        return parseInt(Math.random() * minNum + 1, 10)
-      } else {
-        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+    getData() {
+      this.resData = {
+        totalStation: 500,
+        equipment: 500,
+        todayIn: 500,
+        todayOut: 500,
+        totalIn: 500,
+        totalOut: 500
       }
     }
   }

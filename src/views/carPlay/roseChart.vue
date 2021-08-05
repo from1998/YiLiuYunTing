@@ -8,7 +8,7 @@
     <div class="payment">
       <div class="total">
         <dv-border-box-8>
-          <span class="primaryText">430</span>
+          <span class="primaryText">{{ resData.totalPaid }}</span>
           <div>
             <span class="svg-container">
               <svg-icon icon-class="money-bag" />
@@ -19,7 +19,7 @@
       </div>
       <div class="daily">
         <dv-border-box-8>
-          <span class="primaryText">180</span>
+          <span class="primaryText">{{ resData.todayPaid }}</span>
           <div>
             <span class="svg-container">
               <svg-icon icon-class="money" />
@@ -37,8 +37,12 @@ export default {
   name: 'RoseChart',
   data() {
     return {
-      option: {}
+      option: {},
+      resData: {}
     }
+  },
+  created() {
+    this.getData()
   },
   mounted() {
     const { createData } = this
@@ -49,19 +53,13 @@ export default {
   },
   methods: {
     createData() {
-      const { randomExtend } = this
-
       this.option = {
         series: [
           {
             type: 'pie',
             radius: '50%',
             roseSort: false,
-            data: [
-              { name: '微信', value: randomExtend(40, 70) },
-              { name: '支付宝', value: randomExtend(20, 30) },
-              { name: '官方', value: randomExtend(10, 50) }
-            ],
+            data: this.resData.seriesData,
             insideLabel: {
               show: false
             },
@@ -81,11 +79,15 @@ export default {
         color: ['#06AD56', '#1777FF', '#E7370C']
       }
     },
-    randomExtend(minNum, maxNum) {
-      if (arguments.length === 1) {
-        return parseInt(Math.random() * minNum + 1, 10)
-      } else {
-        return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10)
+    getData() {
+      this.resData = {
+        seriesData: [
+          { name: '微信', value: 42 },
+          { name: '支付宝', value: 30 },
+          { name: '官方', value: 28 }
+        ],
+        totalPaid: 430,
+        todayPaid: 180
       }
     }
   }

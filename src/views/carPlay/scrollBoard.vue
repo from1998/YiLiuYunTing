@@ -3,13 +3,13 @@
     <dv-decoration-7 class="dv-decoration-7"><span>进出监控</span></dv-decoration-7>
     <dv-border-box-3 style="height: 45%;margin-bottom:10px">
       <div class="scroll-board-access">
-        <dv-scroll-board style="color: aqua;" :config="config" />
+        <dv-scroll-board style="color: aqua;" :config="inOutConfig" />
       </div>
     </dv-border-box-3>
     <dv-decoration-7 class="dv-decoration-7"><span>订单监控</span></dv-decoration-7>
     <dv-border-box-3 style="height: 45%;">
       <div class="scroll-board-order">
-        <dv-scroll-board style="color: aqua;" :config="config" />
+        <dv-scroll-board style="color: aqua;" :config="orderConfig" />
       </div>
     </dv-border-box-3>
   </div>
@@ -20,22 +20,24 @@ export default {
   name: 'ScrollBoard',
   data() {
     return {
-      config: {
-        header: ['车厂', '车牌', '时间', '进/出'],
-        data: [
-          ['一流云停', '皖A12345', '2019-07-01 19:25:00', '进场'],
-          ['一流云停', '粤B594SB', '2019-07-02 17:25:00', '出场'],
-          ['光明殿', '黑S222333', '2019-07-03 16:25:00', '进场'],
-          ['六尺巷', '浙JB18CM', '2019-07-04 15:25:00', '出场'],
-          ['长安街', '琼B945945', '2019-07-05 14:25:00', '进场'],
-          ['多威尔', '鲁A5942B', '2019-07-06 13:25:00', '出场'],
-          ['多威尔', '京A110112', '2019-07-07 12:25:00', '进场'],
-          ['光明殿', '冀B666999', '2019-07-08 11:25:00', '出场'],
-          ['六尺巷', '沪A662399', '2019-07-09 10:25:00', '进场'],
-          ['一流云停', '苏B123456', '2019-07-10 09:25:00', '进场']
-        ],
-        // index: true,
-        columnWidth: [110, 130, 170, 60],
+      resData: [],
+      inOut: [],
+      order: [],
+      inOutConfig: {
+        header: ['车厂', '车牌', '时间', '进/出口'],
+        data: [],
+        columnWidth: [110, 110, 150, 100],
+        align: ['center'],
+        rowNum: 3,
+        headerBGC: '#1981f6',
+        headerHeight: 35,
+        oddRowBGC: 'rgba(0, 44, 81, 0.8)',
+        evenRowBGC: 'rgba(10, 29, 50, 0.8)'
+      },
+      orderConfig: {
+        header: ['车厂', '车牌', '时间', '停车费用'],
+        data: [],
+        columnWidth: [110, 110, 150, 100],
         align: ['center'],
         rowNum: 3,
         headerBGC: '#1981f6',
@@ -43,6 +45,51 @@ export default {
         oddRowBGC: 'rgba(0, 44, 81, 0.8)',
         evenRowBGC: 'rgba(10, 29, 50, 0.8)'
       }
+    }
+  },
+  created() {
+    this.getData()
+  },
+  methods: {
+    getData() {
+      this.resData = [{
+        // 是否进场
+        isin: true,
+        stationName: '一流云停',
+        carNumber: '皖A12345',
+        time: '2019-07-01 19:25:00',
+        accessName: '东门入口',
+        // 进场车辆费用为null
+        fee: null
+      },
+      {
+        // 出场
+        isin: false,
+        stationName: '多威尔',
+        carNumber: '皖A33345',
+        time: '2019-07-01 19:25:00',
+        accessName: '西门出口',
+        // 出场费用
+        fee: 20.00
+      },
+      {
+        isin: true,
+        stationName: '东方商城',
+        carNumber: '皖A12345',
+        time: '2019-07-01 19:25:00',
+        accessName: '南门入口',
+        fee: null
+      }
+      ]
+      this.resData.map(item => {
+        if (!item.isin) {
+          this.order.push([item.stationName, item.carNumber, item.time, item.fee])
+        } else {
+          this.inOut.push([item.stationName, item.carNumber, item.time, item.accessName])
+        }
+      })
+      this.inOutConfig.data = this.inOut
+      this.orderConfig.data = this.order
     }
   }
 }

@@ -28,7 +28,6 @@ const option = {
       label: { // 图形上的文本标签，可用于说明图形的一些数据信息
         show: true,
         color: 'aqua'
-        // fontSize: 12
       },
       zoom: 1.25, // 当前视角的缩放比例。
       itemStyle: { // 地图区域的多边形 图形样式。
@@ -84,7 +83,9 @@ export default {
       jsonp('https://interface.sina.cn/news/wap/fymap2020_data.d.json?_=1580892522427', (err, data) => {
         // console.log(data.data.list)
         // data.data.list    map()
-        console.log(err)
+        if (err) {
+          return
+        }
         var lists = data.data.list.map(item => { return { name: item.name, value: item.value } })
         // console.log(lists)
         option.series[0].data = lists
@@ -100,7 +101,7 @@ export default {
 .mapTitle {
   position: absolute;
   top: 2%;
-  left: 0%;
+  left: 1%;
   width:280px;
   height:30px;
   color: #7ec699;
