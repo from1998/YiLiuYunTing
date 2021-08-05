@@ -30,6 +30,10 @@
 <script>
 import echarts from 'echarts' // 引入echarts
 
+var data = []
+for (let i = 0; i < 5; ++i) {
+  data.push(Math.round(Math.random() * 200))
+}
 const colorArray = [{
   top: '#ffa800', // 黄
   bottom: 'rgba(11,42,84,.3)'
@@ -52,46 +56,54 @@ const colorArray = [{
 const option = {
   tooltip: {
     show: true,
-    formatter: '{b}:{c}'
+    formatter: '停车场：{b}<br />收费金额：￥{c} 元'
   },
   grid: {
     left: '3%',
-    right: '4%',
-    bottom: '3%',
+    right: '10%',
+    top: '10%',
+    bottom: '1%',
     containLabel: true
   },
   xAxis: {
     type: 'value',
-    show: false
+    show: false,
+    max: 'dataMax'
   },
   yAxis: [{
     type: 'category',
-    inverse: 'true', // 排序
-    realtimeSort: true,
+    data: ['一流云停', '多威尔停车场', '南湖春城', '芜湖医苑', '东方商城'],
+    inverse: true,
     animationDuration: 300,
+    animationDurationUpdate: 300,
     axisLine: {
       show: false,
       lineStyle: {
-        color: '#fff'
+        color: 'aqua'
       }
     },
     axisTick: {
       show: false
-    },
-    data: ['一流云停', '多威尔停车场', '南湖春城', '芜湖医苑', '东方商城']
+    }
   }],
+  animationDuration: 0,
+  animationDurationUpdate: 3000,
+  animationEasing: 'linear',
+  animationEasingUpdate: 'linear',
   series: [
     {
+      realtimeSort: true,
       type: 'bar',
-      data: [231744, 18203, 23489, 29034, 104970],
-      // series配置
+      data: data,
+      barCategoryGap: '30%',
       // 颜色
       itemStyle: {
         normal: {
           label: {
             show: true,
             position: 'right',
-            color: '#fff'
+            color: 'aqua',
+            valueAnimation: true
           },
           // 提供的工具函数生成渐变颜色
           color: function(params) {
@@ -150,7 +162,6 @@ export default {
     transformGMV: function() {
       // `this` 指向 vm 实例
       const GMV = this.GMV.toString().padStart(8, 0).split('')
-      // console.log(GMV)
       return GMV
     }
   },
@@ -158,8 +169,12 @@ export default {
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart-container'))
     // 使用刚指定的配置项和数据显示图表。
-    this.myChart.setOption(option)
-    console.log('success')
+    setInterval(() => {
+      this.renderChart()
+    }, 0)
+    setInterval(() => {
+      this.renderChart()
+    }, 3000)
   },
   created() {
     this.getGmv()
@@ -167,6 +182,17 @@ export default {
   methods: {
     getGmv() {
       this.GMV = 123456
+    },
+    renderChart() {
+      var data = option.series[0].data
+      for (var i = 0; i < data.length; ++i) {
+        if (Math.random() > 0.9) {
+          data[i] += Math.round(Math.random() * 2000)
+        } else {
+          data[i] += Math.round(Math.random() * 200)
+        }
+      }
+      this.myChart.setOption(option)
     }
   }
 }
@@ -221,8 +247,6 @@ export default {
 }
 .right-chart {
   flex: 3;
-  // width: 100%;
-  // height: 80%;
   position: relative;
   margin-top: 30px;
   display: flex;
@@ -247,8 +271,6 @@ export default {
   #chart-container {
     flex: 1;
     height: 100%;
-    // padding-bottom: 20px;
-    // padding-right: 20px;
     box-sizing: border-box;
   }
 }

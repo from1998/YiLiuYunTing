@@ -3,13 +3,13 @@
     <dv-decoration-7 class="dv-decoration-7"><span>进出监控</span></dv-decoration-7>
     <dv-border-box-3 style="height: 45%;margin-bottom:10px">
       <div class="scroll-board-access">
-        <dv-scroll-board :config="config" />
+        <dv-scroll-board style="color: aqua;" :config="config" />
       </div>
     </dv-border-box-3>
     <dv-decoration-7 class="dv-decoration-7"><span>订单监控</span></dv-decoration-7>
     <dv-border-box-3 style="height: 45%;">
       <div class="scroll-board-order">
-        <dv-scroll-board :config="config" />
+        <dv-scroll-board style="color: aqua;" :config="config" />
       </div>
     </dv-border-box-3>
   </div>

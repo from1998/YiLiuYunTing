@@ -69,10 +69,10 @@ export default {
               formatter: '{name} {percent}%',
               labelLineEndLength: 20,
               style: {
-                fill: '#fff'
+                fill: 'aqua'
               },
               labelLineStyle: {
-                stroke: '#fff'
+                stroke: 'aqua'
               }
             },
             roseType: true

@@ -25,7 +25,7 @@
               </div>
             </div>
             <div class="right-bottom">
-              right-bottom
+              <line-stack />
             </div>
           </div>
         </div></dv-border-box-1>
@@ -46,6 +46,8 @@ import scrollBoard from './scrollBoard'
 import chinaMap from './map'
 // 导入地图右侧的图标
 import rightChart from './rightChart'
+// 导入折现堆叠图
+import lineStack from './lineStack'
 
 export default {
   name: 'DataView',
@@ -55,7 +57,8 @@ export default {
     roseChart,
     scrollBoard,
     chinaMap,
-    rightChart
+    rightChart,
+    lineStack
     // waterLevelChart,
     // cards
   },
@@ -71,7 +74,8 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #030409;
-  color: #fff;
+  color: aqua;
+  user-select: none;
 
   #dv-full-screen-container {
     background-image: url('../../assets/images/bg.png');
@@ -128,6 +132,10 @@ export default {
       .right-top-right {
         display: flex;
       }
+    }
+    .right-bottom {
+      flex: 1;
+      transform: rotateY(180deg)
     }
   }
 

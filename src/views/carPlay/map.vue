@@ -13,17 +13,10 @@ import jsonp from 'jsonp' // 引入jsonp
 import 'echarts/map/js/china' // 引入中国地图
 
 const option = {
-  // title: { // 标题
-  //   text: '全国车厂分布图',
-  //   x: 'left', // 居中
-  //   textStyle: { // 标题 样式
-  //     color: '#7ec699'
-  //   }
-  // },
   tooltip: { // 提示信息
     trigger: 'item', // 类型
     // 地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
-    formatter: '地区：{b}<br/>车厂数量：{c}'
+    formatter: '地区：{b}<br/>停车场数量：{c} 个'
   },
   series: [ // 数据
     {
@@ -34,7 +27,7 @@ const option = {
       // ],
       label: { // 图形上的文本标签，可用于说明图形的一些数据信息
         show: true,
-        color: '#FFF'
+        color: 'aqua'
         // fontSize: 12
       },
       zoom: 1.25, // 当前视角的缩放比例。
@@ -78,11 +71,11 @@ export default {
     }
   },
   mounted() { // 生命周期
-    this.getData()
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart'))
     // 使用刚指定的配置项和数据显示图表。
     // myChart.setOption(option);
+    this.getData()
   },
   methods: {
     // 真实数据
