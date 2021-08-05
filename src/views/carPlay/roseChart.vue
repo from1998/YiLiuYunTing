@@ -13,7 +13,7 @@
             <span class="svg-container">
               <svg-icon icon-class="money-bag" />
             </span>
-            支付总金额
+            <span>支付总金额</span><sub class="sub">(万元)</sub>
           </div>
         </dv-border-box-8>
       </div>
@@ -24,7 +24,7 @@
             <span class="svg-container">
               <svg-icon icon-class="money" />
             </span>
-            当日支付金额
+            <span>当日支付金额</span><sub class="sub">(万元)</sub>
           </div>
         </dv-border-box-8>
       </div>
@@ -106,11 +106,11 @@ export default {
   }
   .payment {
     height: 45%;
-    width: 29%;
+    width: 35%;
     position: absolute;
-    left: 65%;
+    left: 58%;
     top: 30%;
-    font-size: 14px;
+    font-size: 16px;
     text-align: center;
     color: #E89C07;
 
@@ -122,8 +122,12 @@ export default {
       }
       .primaryText {
       font-size: 18px;
-      color: #7ec699;
+      color: aqua;
       font-weight: bold;
+    }
+    .sub {
+      bottom: 0;
+      font-size: 12px!important;
     }
     }
   }
