@@ -6,6 +6,7 @@
 
       <dv-border-box-1 class="main-content">
         <digital-flop />
+        <dv-decoration-3 class="dv-decoration-3" />
 
         <div class="block-content">
           <!-- <ranking-board /> -->
@@ -86,7 +87,15 @@ export default {
   }
 
   .main-content {
+    position: relative;
     flex: 1;
+    .dv-decoration-3 {
+    position: absolute;
+    top:5%;
+    right:8%;
+    width:300px;
+    height:50px;
+  }
     .border-box-content {
       padding: 20px;
       box-sizing: border-box;

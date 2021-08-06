@@ -24,9 +24,9 @@ export default {
       inOut: [],
       order: [],
       inOutConfig: {
-        header: ['车厂', '车牌', '时间', '进/出口'],
+        header: ['车厂', '车牌', '进场时间', '进场口'],
         data: [],
-        columnWidth: [110, 110, 150, 100],
+        columnWidth: [100, 100, 160, 100],
         align: ['center'],
         rowNum: 3,
         headerBGC: '#1981f6',
@@ -35,9 +35,9 @@ export default {
         evenRowBGC: 'rgba(10, 29, 50, 0.8)'
       },
       orderConfig: {
-        header: ['车厂', '车牌', '时间', '停车费用'],
+        header: ['车厂', '车牌', '出场时间', '出场口', '费用'],
         data: [],
-        columnWidth: [110, 110, 150, 100],
+        columnWidth: [90, 90, 160, 90, 60],
         align: ['center'],
         rowNum: 3,
         headerBGC: '#1981f6',
@@ -83,7 +83,7 @@ export default {
       ]
       this.resData.map(item => {
         if (!item.isin) {
-          this.order.push([item.stationName, item.carNumber, item.time, item.fee])
+          this.order.push([item.stationName, item.carNumber, item.time, item.accessName, item.fee])
         } else {
           this.inOut.push([item.stationName, item.carNumber, item.time, item.accessName])
         }
@@ -117,7 +117,7 @@ export default {
   .scroll-board-access, .scroll-board-order{
     // 表格相对于装饰的高度和宽度
     height: 95%;
-    width: 99%;
+    width: 99%!important;
   }
 }
 </style>

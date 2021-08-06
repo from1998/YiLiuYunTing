@@ -18,8 +18,6 @@
       </dv-border-box-8>
     </div>
 
-    <!-- <dv-decoration-10 />
-    <dv-decoration-10 /> -->
   </div>
 </template>
 
@@ -52,7 +50,7 @@ export default {
             content: '{nt}',
             textAlign: 'right',
             style: {
-              fill: '#4d99fc',
+              fill: '#3366FF',
               fontWeight: 'bold'
             }
           },
@@ -65,11 +63,24 @@ export default {
             content: '{nt}',
             textAlign: 'right',
             style: {
-              fill: '#40faee',
+              fill: '#CC00FF',
               fontWeight: 'bold'
             }
           },
           unit: '台'
+        },
+        {
+          title: '今日进场',
+          number: {
+            number: [this.resData.todayIn],
+            content: '{nt}',
+            textAlign: 'right',
+            style: {
+              fill: '#f46827',
+              fontWeight: 'bold'
+            }
+          },
+          unit: '辆'
         },
         {
           title: '今日出场',
@@ -85,13 +96,13 @@ export default {
           unit: '辆'
         },
         {
-          title: '今日进场',
+          title: '进场总量',
           number: {
-            number: [this.resData.todayIn],
+            number: [this.resData.totalIn],
             content: '{nt}',
             textAlign: 'right',
             style: {
-              fill: '#4d99fc',
+              fill: '#00CC66',
               fontWeight: 'bold'
             }
           },
@@ -104,35 +115,37 @@ export default {
             content: '{nt}',
             textAlign: 'right',
             style: {
-              fill: '#40faee',
+              fill: '#00CC66',
               fontWeight: 'bold'
             }
           },
           unit: '辆'
         },
         {
-          title: '进场总量',
+          title: '今日收益',
           number: {
-            number: [this.resData.totalIn],
-            content: '{nt}',
+            number: [this.resData.todayFee],
+            content: '￥',
             textAlign: 'right',
             style: {
-              fill: '#f46827',
+              fill: '#f2ce20',
               fontWeight: 'bold'
             }
           },
-          unit: '辆'
+          unit: '元'
         }
+
       ]
     },
     getData() {
       this.resData = {
-        totalStation: 500,
-        equipment: 500,
-        todayIn: 500,
-        todayOut: 500,
-        totalIn: 500,
-        totalOut: 500
+        totalStation: 510,
+        equipment: 600,
+        todayIn: 480,
+        todayOut: 556,
+        totalIn: 280,
+        totalOut: 360,
+        todayFee: 360
       }
     }
   }
@@ -142,30 +155,17 @@ export default {
 <style lang="scss" scoped>
 #digital-flop {
   position: relative;
+  display: flex;
   height: 10%;
   width: 100%;
   flex-shrink: 0;
-  padding: 0 10px;
+  padding: 0 0 0 10px;
   // display: flex;
   // justify-content: space-between;
   // align-items: center;
-  .dv-decoration-10 {
-    // position: absolute;
-    // left: 2.5%;
-    // bottom: 0px;
-    width: 37%;
-    height: 2px;
-    &:first-child {
-      float: left;
-    }
-    &:last-child {
-      float: right;
-      transform: rotate(180deg);
-    }
-  }
 
   .digital-flop-item {
-    width: calc(100% / 6);
+    flex: 1;
     height: 105%;
     display: flex;
     flex-direction: column;
@@ -177,8 +177,8 @@ export default {
     // &:nth-child(-n+2) {
     // float: left;
     // }
-    &:nth-child(n+1) {
-    float: right;
+    &:last-child {
+    flex: 3;
     }
   }
 
