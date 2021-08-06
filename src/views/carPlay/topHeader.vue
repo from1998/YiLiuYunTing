@@ -17,15 +17,17 @@ export default {
 #top-header {
   position: relative;
   width: 100%;
-  height: 110px;
+  // height: 110px;
+  flex: 11;
   display: flex;
   justify-content: space-between;
   flex-shrink: 0;
+  // overflow: hidden;
 
   .header-center-decoration {
     width: 40%;
     height: 60px;
-    margin-top: 80px;
+    margin-top: 3.5%;
   }
 
   .header-left-decoration, .header-right-decoration {
@@ -40,7 +42,7 @@ export default {
     font-weight: 900;
     font-family:STXingkai,STKaiti,KaiTi,KaiTi_GB2312,SimSun,'Microsoft YaHei';
     left: 50%;
-    top: 18px;
+    top: 10px;
     transform: translateX(-50%);
   }
 }

@@ -248,7 +248,7 @@ export default {
 .right-chart {
   flex: 3;
   position: relative;
-  margin-top: 30px;
+  margin: 20px 0 20px 0;
   display: flex;
   flex-direction: column;
 

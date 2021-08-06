@@ -1,13 +1,13 @@
 <template>
   <div id="scroll-board">
     <dv-decoration-7 class="dv-decoration-7"><span>进出监控</span></dv-decoration-7>
-    <dv-border-box-3 style="height: 45%;margin-bottom:10px">
+    <dv-border-box-3 style="height:45%;overflow: hidden;margin-bottom:10px;">
       <div class="scroll-board-access">
         <dv-scroll-board style="color: aqua;" :config="inOutConfig" />
       </div>
     </dv-border-box-3>
     <dv-decoration-7 class="dv-decoration-7"><span>订单监控</span></dv-decoration-7>
-    <dv-border-box-3 style="height: 45%;">
+    <dv-border-box-3 style="height: 45%;overflow: hidden;">
       <div class="scroll-board-order">
         <dv-scroll-board style="color: aqua;" :config="orderConfig" />
       </div>
@@ -26,7 +26,7 @@ export default {
       inOutConfig: {
         header: ['车厂', '车牌', '进场时间', '进场口'],
         data: [],
-        columnWidth: [100, 100, 160, 100],
+        columnWidth: [130, 130, 180, 130],
         align: ['center'],
         rowNum: 3,
         headerBGC: '#1981f6',
@@ -37,7 +37,7 @@ export default {
       orderConfig: {
         header: ['车厂', '车牌', '出场时间', '出场口', '费用'],
         data: [],
-        columnWidth: [90, 90, 160, 90, 60],
+        columnWidth: [100, 100, 160, 100, 80],
         align: ['center'],
         rowNum: 3,
         headerBGC: '#1981f6',
@@ -117,7 +117,7 @@ export default {
   .scroll-board-access, .scroll-board-order{
     // 表格相对于装饰的高度和宽度
     height: 95%;
-    width: 99%!important;
+    width: 99%;
   }
 }
 </style>

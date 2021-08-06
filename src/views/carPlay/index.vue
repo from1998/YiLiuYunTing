@@ -11,9 +11,10 @@
         <div class="block-content">
           <!-- <ranking-board /> -->
           <div class="block-left-content">
-            <dv-border-box-13 class="left-top">
-              <scroll-board />
-            </dv-border-box-13>
+            <!-- <dv-border-box-13 class="left-top"> -->
+            <right-chart />
+
+            <!-- </dv-border-box-13> -->
             <rose-chart />
           </div>
           <div class="block-right-content">
@@ -22,7 +23,10 @@
                 <china-map />
               </div>
               <div class="right-top-right">
-                <right-chart />
+                <dv-border-box-13 class="left-top">
+                  <scroll-board />
+                </dv-border-box-13>
+
               </div>
             </div>
             <div class="right-bottom">
@@ -73,7 +77,7 @@ export default {
 <style lang="scss">
 #data-view{
   width: 100%;
-  height: 100%;
+  height: 100%!important;
   background-color: #030409;
   color: aqua;
   user-select: none;
@@ -88,11 +92,12 @@ export default {
 
   .main-content {
     position: relative;
-    flex: 1;
+    flex: 97;
+    margin-top: -1%;
     .dv-decoration-3 {
     position: absolute;
     top:5%;
-    right:8%;
+    left:12%;
     width:300px;
     height:50px;
   }

@@ -96,7 +96,7 @@ export default {
 
 <style lang="scss">
 #rose-chart {
-  flex: 1;
+  height: 35%;
   position: relative;
   box-sizing: border-box;
   .dv-decoration-6 {

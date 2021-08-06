@@ -44,6 +44,19 @@ export default {
     createData() {
       this.digitalFlopData = [
         {
+          title: '今日收益',
+          number: {
+            number: [this.resData.todayFee],
+            content: '￥',
+            textAlign: 'right',
+            style: {
+              fill: '#f2ce20',
+              fontWeight: 'bold'
+            }
+          },
+          unit: '元'
+        },
+        {
           title: '车场总量',
           number: {
             number: [this.resData.totalStation],
@@ -120,19 +133,6 @@ export default {
             }
           },
           unit: '辆'
-        },
-        {
-          title: '今日收益',
-          number: {
-            number: [this.resData.todayFee],
-            content: '￥',
-            textAlign: 'right',
-            style: {
-              fill: '#f2ce20',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '元'
         }
 
       ]
@@ -166,7 +166,7 @@ export default {
 
   .digital-flop-item {
     flex: 1;
-    height: 105%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -177,8 +177,8 @@ export default {
     // &:nth-child(-n+2) {
     // float: left;
     // }
-    &:last-child {
-    flex: 3;
+    &:first-child {
+    flex: 2.5;
     }
   }
 
