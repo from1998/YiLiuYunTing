@@ -34,11 +34,13 @@ export default {
         seriesData: [
           {
             name: '进场车辆',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: [120, 132, 101, 134, 90, 230, 210],
+            color: '#FF0000'
           },
           {
             name: '出场车辆',
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: [220, 182, 191, 234, 290, 330, 310],
+            color: '#00FF00'
           }
         ]
       },
@@ -49,15 +51,18 @@ export default {
         seriesData: [
           {
             name: '官方',
-            data: [120, 132, 101, 134, 90, 230, 210]
+            data: [120, 132, 101, 134, 90, 230, 210],
+            color: '#FF0000'
           },
           {
             name: '微信',
-            data: [220, 182, 191, 234, 290, 330, 310]
+            data: [220, 182, 191, 234, 290, 330, 310],
+            color: '#00FF00'
           },
           {
             name: '支付宝',
-            data: [326, 178, 255, 109, 183, 226, 499]
+            data: [326, 178, 255, 109, 183, 226, 499],
+            color: '#FFFFFF'
           }
         ]
       }
@@ -76,7 +81,13 @@ export default {
         return {
           name: item.name,
           type: 'line',
-          stack: '总量',
+          itemStyle: {
+            normal: {
+              lineStyle: {
+                color: item.color
+              }
+            }
+          },
           markPoint: {
             data: [
               { type: 'max', name: '最大值' }
@@ -92,6 +103,7 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
+        color: ['#FF0000', '#00FF00', '#FFFFFF'],
         legend: {
           top: '3%',
           right: '4%',

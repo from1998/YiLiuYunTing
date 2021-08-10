@@ -242,6 +242,7 @@ $cursor: #fff;
 }
 /* reset element-ui css */
 .login-container {
+  user-select: none;
   .el-input {
     display: inline-block;
     height: 47px;
