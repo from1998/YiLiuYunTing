@@ -40,26 +40,19 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/',
+    path: '/carPlay',
     component: () => import('@/views/carPlay/index'),
-    redirect: '/carPlay',
-    children: [
-      {
-        path: 'carPlay',
-        component: () => import('@/views/carPlay/index'),
-        name: 'CarPlay',
-        meta: { title: '可视化', icon: 'view', affix: true }
-      }
-    ]
+    meta: { title: '可视化', icon: 'view', affix: true }
   },
   {
-    path: '/dashboard',
+    path: '/',
     component: Layout,
+    redirect: '/dashboard',
     children: [
       {
-        path: '',
+        path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
+        name: 'dashboard',
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]

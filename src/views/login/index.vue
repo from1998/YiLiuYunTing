@@ -73,12 +73,32 @@
         </el-row>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登录</el-button>
+      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
     </el-form>
+    <vue-particles
+      color:
+      particles-color
+      :particle-opacity="0.7"
+      :particles-number="100"
+      shape-type="circle"
+      :particle-size="4"
+      lines-color="#fff"
+      :lines-width="1"
+      :line-linked="true"
+      :line-opacity="0.4"
+      :lines-distance="150"
+      :move-speed="3"
+      :hover-effect="true"
+      hover-mode="grab"
+      :click-effect="true"
+      click-mode="push"
+      class="lizi"
+    />
   </div>
 </template>
 
 <script>
+import '@/assets/css/style.css'
 import { v4 as uuidv4 } from 'uuid'
 // uuidv4()// ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
 
@@ -208,7 +228,7 @@ export default {
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
 $bg:#283443;
-$light_gray:#fff;
+$light_gray:aqua;
 $cursor: #fff;
 
 @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
@@ -233,7 +253,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: $light_gray;
+      color: aqua;
       height: 47px;
       caret-color: $cursor;
 
@@ -249,7 +269,7 @@ $cursor: #fff;
     border: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    color: #454545;
+    color: aqua;
     }
   }
 }
@@ -258,24 +278,33 @@ $cursor: #fff;
 
 <style lang="scss" scoped>
 $bg:#2d3a4b;
-$dark_gray:#889aa4;
+$dark_gray:#fff;
 $light_gray:#eee;
-.login-container {
-  min-height: 100%;
+#particles-js {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  padding-top: 160px;
-  background-color: $bg;
+  height: 100vh;
+}
+.login-container {
+  position: relative;
+  min-height: 100%;
+  height: 100%;
+  width: 100%;
   overflow: hidden;
 .logo {
-  margin: 20px auto;
+    padding-top: 160px;
+  margin: 0 auto;
   text-align: center;
-  width: 50px;
+  width: 100px;
   img {
     width: 100%;
   }
 }
   .login-form {
     position: relative;
+    z-index: 9999;
     width: 520px;
     max-width: 100%;
     padding: 0 35px;
@@ -284,7 +313,7 @@ $light_gray:#eee;
   }
   .tips {
     font-size: 14px;
-    color: #fff;
+    color: aqua;
     margin-bottom: 10px;
 
     span {
@@ -307,10 +336,12 @@ $light_gray:#eee;
 
     .title {
       font-size: 26px;
-      color: $light_gray;
+      color: #fff;
       margin: 0px auto 40px auto;
       text-align: center;
-      font-weight: bold;
+      letter-spacing: 0.3em;
+      font-family: sans-serif;
+
     }
   }
 

@@ -39,6 +39,7 @@
 </template>
 
 <script>
+
 // 导入顶部标题栏样式
 import topHeader from './topHeader'
 // 导入数字化展板(方格)

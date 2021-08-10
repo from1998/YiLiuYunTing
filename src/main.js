@@ -13,9 +13,12 @@ import './permission' // permission control
 import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 import moment from 'moment'
+// 大屏可视化插件
 import dataV from '@jiaminghi/data-view'
-
 Vue.use(dataV)
+// 粒子效果插件
+import VueParticles from 'vue-particles'
+Vue.use(VueParticles)
 
 import { resetForm, addDateRange, selectDictLabel, handleTree, getAge, getCurrentTimeType } from '@/utils/his-utils'
 import { getDataByType } from '@/api/system/dict/data'
