@@ -395,40 +395,41 @@ export default {
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
-      this.form.state = '1',
-      this.form.userId= '',
-      this.form.username= '',
-      this.form.realName= '',
-      this.form.mobile= '',
-      this.form.role= '',
-      this.form.email= '',
+      this.form.state = '1'
+      this.form.id = ''
+      this.form.username = ''
+      this.form.realName = ''
+      this.form.mobile = ''
+      this.form.role = ''
+      this.form.email = ''
       this.title = '添加用户信息'
       console.log(this.form)
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改用户信息'
-      const userId = row.id || this.ids
+      const id = row.id || this.ids
+      console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
-      getUserById(userId).then(res => {
-        this.form.state = res.data.state+'',
-        this.form.userId= res.data.userId,
-        this.form.username= res.data.username,
-        this.form.realName= res.data.realName,
-        this.form.mobile= res.data.mobile,
-        this.form.role= res.data.role+'',
-        this.form.email= res.data.email,
+      getUserById(id).then(res => {
+        this.form.state = res.data.state + ''
+        this.form.id = res.data.id
+        this.form.username = res.data.username
+        this.form.realName = res.data.realName
+        this.form.mobile = res.data.mobile
+        this.form.role = res.data.role + ''
+        this.form.email = res.data.email
         console.log(res.data)
         this.loading = false
       })
     },
     // 执行删除
     handleDelete(row) {
-      const userIds = row.userId || this.ids
+      const userIds = row.id || this.ids
       this.$confirm('此操作将永久删除该用户数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -454,14 +455,16 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          if (this.form.userId === undefined) {
+          console.log(this.form)
+          if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
+            debugger
             addUser(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.getUserList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false
-              this.msgSuccess('保存失败')
+              this.msgError('保存失败')
             })
           } else { // 做修改
             updateUser(this.form).then(res => {
@@ -486,7 +489,7 @@ export default {
       this.resetForm('form')
       this.form = {
         state: '1',
-        userId: undefined,
+        id: undefined,
         username: undefined,
         realName: undefined,
         mobile: undefined,
