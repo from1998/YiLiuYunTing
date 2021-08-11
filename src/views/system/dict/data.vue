@@ -215,7 +215,7 @@ export default {
       this.loading = true
       listForPage(this.queryParams).then(res => {
         this.loading = false
-        this.dictDataTableList = res.data
+        this.dictDataTableList = res.data.list
         this.total = res.total
       })
     },
@@ -309,6 +309,7 @@ export default {
             addDictData(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
+              debugger
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
