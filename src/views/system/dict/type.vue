@@ -20,7 +20,7 @@
           style="width:240px"
         />
       </el-form-item>
-      <el-form-item label="状态" prop="status">
+      <el-form-item label="字典状态" prop="status">
         <el-select
           v-model="queryParams.status"
           placeholder="字典状态"
@@ -123,7 +123,7 @@
         <el-form-item label="字典类型" prop="dictType">
           <el-input v-model="form.dictType" placeholder="请输入字典类型" clearable size="small" />
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <el-form-item label="字典状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
               v-for="dict in statusOptions"
@@ -133,7 +133,7 @@
             >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item label="字典备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
         </el-form-item>
       </el-form>
@@ -327,10 +327,14 @@ export default {
     // 缓存同步
     handleCacheAsync() {
       this.loading = true
-      dictCacheAsync().then(res => {
+      dictCacheAsync().then(() => {
         this.loading = false
         this.msgSuccess('缓存同步成功')
-      })
+      }).catch(
+        () => {
+          this.getDictTypeList()
+        }
+      )
     }
   }
 }

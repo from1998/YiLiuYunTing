@@ -23,7 +23,7 @@
       <el-form-item label="状态" prop="state">
         <el-select
           v-model="queryParams.state"
-          placeholder="可用状态"
+          placeholder="请选择状态"
           clearable
           size="small"
           style="width:240px"

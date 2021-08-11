@@ -71,15 +71,6 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'dept',
-        component: () => import('@/views/system/dept/index'),
-        name: '/system/dept',
-        meta: {
-          title: '科室管理',
-          icon: 'edit'
-        }
-      },
-      {
         path: 'user',
         component: () => import('@/views/system/user/index'),
         name: '/system/user',
@@ -125,39 +116,12 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'log_login',
-        component: () => import('@/views/system/loginInfo/index'),
-        name: '/system/log_login',
-        meta: {
-          title: '登陆日志管理',
-          icon: 'clipboard'
-        }
-      },
-      {
         path: 'log_opt',
         component: () => import('@/views/system/operLog/index'),
         name: '/system/log_opt',
         meta: {
           title: '操作日志管理',
           icon: 'clipboard'
-        }
-      },
-      {
-        path: 'ins_fee',
-        component: () => import('@/views/system/checkItem/index'),
-        name: '/system/ins_fee',
-        meta: {
-          title: '检查费用设置',
-          icon: 'international'
-        }
-      },
-      {
-        path: 'reg_fee',
-        component: () => import('@/views/system/registeredItem/index'),
-        name: '/system/reg_fee',
-        meta: {
-          title: '挂号费用设置',
-          icon: 'international'
         }
       }
     ]

@@ -109,14 +109,16 @@
         <el-form-item label="字典类型" prop="dictType">
           <el-input v-model="form.dictType" :disabled="true" size="small" />
         </el-form-item>
-        <el-form-item label="数据标签" prop="dictLabel">
-          <el-input v-model="form.dictLabel" placeholder="请输入数据标签" clearable size="small" />
+        <el-form-item label="字典名称" prop="dictLabel">
+          <el-input v-model="form.dictLabel" placeholder="请输入字典名称" clearable size="small" />
         </el-form-item>
-        <el-form-item label="数据键值" prop="dictValue">
-          <el-input v-model="form.dictValue" placeholder="请输入数据键值" clearable size="small" />
+        <el-form-item label="字典值" prop="dictValue">
+          <el-input v-model="form.dictValue" placeholder="请输入字典值" clearable size="small" />
         </el-form-item>
         <el-form-item label="排序显示" prop="dictSort">
-          <el-input-number v-model="form.dictSort" placeholder="请输入数据键值" clearable size="small" :min="0" />
+          <el-tooltip class="item" effect="dark" content="提示:数值越小，显示位置越靠前。" placement="right">
+            <el-input-number v-model="form.dictSort" clearable size="small" :min="1" />
+          </el-tooltip>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -128,7 +130,7 @@
             >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
+        <el-form-item label="字典备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
         </el-form-item>
       </el-form>
@@ -182,10 +184,10 @@ export default {
       // 表单校验
       rules: {
         dictLabel: [
-          { required: true, message: '数据标签不能为空', trigger: 'blur' }
+          { required: true, message: '字典名称不能为空', trigger: 'blur' }
         ],
         dictValue: [
-          { required: true, message: '数据键值不能为空', trigger: 'blur' }
+          { required: true, message: '字典值不能为空', trigger: 'blur' }
         ]
       }
     }
