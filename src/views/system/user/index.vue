@@ -516,6 +516,7 @@ export default {
     },
     handleAddPak() {
       this.currentParkUserId = this.ids[0]
+      console.log(this.currentParkUserId)
     },
     // 打开分配角色的弹出层
     handleSelectRole(row) {

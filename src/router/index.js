@@ -125,15 +125,6 @@ export const asyncRoutes = [
         }
       },
       {
-        path: 'log_login',
-        component: () => import('@/views/system/loginInfo/index'),
-        name: '/system/log_login',
-        meta: {
-          title: '登陆日志管理',
-          icon: 'clipboard'
-        }
-      },
-      {
         path: 'log_opt',
         component: () => import('@/views/system/operLog/index'),
         name: '/system/log_opt',
