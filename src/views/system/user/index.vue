@@ -97,7 +97,7 @@
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-thumb" size="mini" @click="handleSelectRole(scope.row)">角色配置</el-button>
+          <!-- <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-thumb" size="mini" @click="handleSelectRole(scope.row)">角色配置</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -136,7 +136,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="状态" prop="background">
+            <el-form-item label="状态">
               <el-select
                 v-model="form.state"
                 placeholder="状态"
@@ -156,7 +156,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="角色" prop="background">
+            <el-form-item label="角色">
               <el-select
                 v-model="form.role"
                 placeholder="角色"
@@ -165,10 +165,10 @@
                 style="width:240px"
               >
                 <el-option
-                  v-for="d in roleOptions"
-                  :key="d.dictValue"
-                  :label="d.dictLabel"
-                  :value="d.dictValue"
+                  v-for="(item, index) in roleOptions"
+                  :key="index"
+                  :label="item.roleName"
+                  :value="item.roleId"
                 />
               </el-select>
             </el-form-item>
@@ -180,7 +180,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="选择父级账号" prop="background">
+            <el-form-item label="选择父级账号">
               <el-select
                 v-model="form.parentId"
                 placeholder="父级账号"
@@ -189,10 +189,10 @@
                 style="width:240px"
               >
                 <el-option
-                  v-for="d in userOptions"
-                  :key="d.id"
-                  :label="d.username"
-                  :value="d.id"
+                  v-for="item in userOptions"
+                  :key="item.id"
+                  :label="item.username"
+                  :value="item.id"
                 />
               </el-select>
             </el-form-item>
@@ -318,15 +318,19 @@ export default {
   created() {
     // 使用全局的根据字典类型查询字典数据的方法查询字典数据  0禁用 1正常
     this.getDataByType('sys_normal_disable').then(res => {
-      console.log(res.data)
       this.stateOptions = res.data
     })
     // 加载用户级别
-    this.getDataByType('sys_role_manager').then(res => {
+    // this.getDataByType('sys_role_manager').then(res => {
+    //   this.roleOptions = res.data
+    // })
+    selectAllRole().then(res => {
       this.roleOptions = res.data
     })
     // 查询所有用户信息
-    this.selectNeedSchedulingUsers()
+    selectNeedSchedulingUsers().then(res => {
+      this.userOptions = res.data
+    })
     // 查询表格数据
     this.getUserList()
   },
@@ -339,11 +343,6 @@ export default {
         this.userTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
-      })
-    },
-    selectNeedSchedulingUsers() {
-      selectNeedSchedulingUsers().then(res => {
-        this.userOptions = res.data
       })
     },
 
@@ -390,10 +389,11 @@ export default {
       return this.selectDictLabel(this.stateOptions, row.state.toString())
     },
     roleFormatter(row) {
-      return this.selectDictLabel(this.roleOptions, row.role.toString())
+      return this.selectRoleLabel(this.roleOptions, row.role)
     },
     // 打开添加的弹出层
     handleAdd() {
+      this.reset()
       this.open = true
       this.form.state = '1'
       this.form.id = ''
@@ -402,20 +402,22 @@ export default {
       this.form.mobile = ''
       this.form.role = ''
       this.form.email = ''
+
       this.title = '添加用户信息'
-      console.log(this.form)
+      // console.log(this.form)
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改用户信息'
       const id = row.id || this.ids
-      console.log(id)
+      // console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
       getUserById(id).then(res => {
+        console.log(res.data)
         this.form.state = res.data.state + ''
         this.form.id = res.data.id
         this.form.username = res.data.username
@@ -423,7 +425,7 @@ export default {
         this.form.mobile = res.data.mobile
         this.form.role = res.data.role + ''
         this.form.email = res.data.email
-        console.log(res.data)
+        this.form.parentId = res.data.parentId
         this.loading = false
       })
     },
@@ -455,9 +457,8 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          console.log(this.form)
-          if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
-            debugger
+          // console.log(this.form)
+          if (this.form.id === undefined) {
             addUser(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.getUserList()// 列表重新查询
@@ -519,7 +520,7 @@ export default {
     },
     // 打开分配角色的弹出层
     handleSelectRole(row) {
-      console.log(this.ids[0])
+      // console.log(this.ids[0])
       this.selectRoleOpen = true
       this.title = '分配角色'
       this.currentUserId = row.id || this.ids[0]
@@ -561,7 +562,7 @@ export default {
     },
     // 保存用户和角色之间的关系
     handleSaveRoleUserSubmit() {
-      console.log(this.roleIds)
+      // console.log(this.roleIds)
       saveRoleUser(this.currentUserId, this.roleIds).then(res => {
         this.msgSuccess('分配成功')
         this.selectRoleOpen = false

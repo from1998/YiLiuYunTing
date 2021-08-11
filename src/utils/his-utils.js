@@ -19,7 +19,7 @@ export function addDateRange(params, dateRange) {
 }
 // 状态翻译 datas是当前状态数据列表 value要翻译的值
 export function selectDictLabel(datas, value) {
-  var actions = []
+  const actions = []
   Object.keys(datas).map((key) => {
     if (datas[key].dictValue === value) {
       actions.push(datas[key].dictLabel)
@@ -27,6 +27,17 @@ export function selectDictLabel(datas, value) {
     }
   })
   return actions.join('')
+}
+// 角色翻译 datas是角色数据列表 value要翻译的值
+export function selectRoleLabel(datas, value) {
+  const Roles = []
+  Object.keys(datas).map((key) => {
+    if (datas[key].roleId === value) {
+      Roles.push(datas[key].roleName)
+      return false
+    }
+  })
+  return Roles
 }
 /** *
  * 构造树的数据结构

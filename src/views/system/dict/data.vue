@@ -117,7 +117,7 @@
         </el-form-item>
         <el-form-item label="排序显示" prop="dictSort">
           <el-tooltip class="item" effect="dark" content="提示:数值越小，显示位置越靠前。" placement="right">
-            <el-input-number v-model="form.dictSort" clearable size="small" :min="1" />
+            <el-input-number v-model="form.dictSort" clearable size="small" :min="0" />
           </el-tooltip>
         </el-form-item>
         <el-form-item label="状态" prop="status">
