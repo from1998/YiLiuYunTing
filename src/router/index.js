@@ -51,7 +51,7 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/views/dashboard/index'),
+        component: [Layout],
         name: 'dashboard',
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
@@ -104,6 +104,15 @@ export const asyncRoutes = [
         meta: {
           title: '字典管理',
           icon: 'zip'
+        }
+      },
+      {
+        path: 'carManger',
+        component: () => import('@/views/system/carManger/index'),
+        name: '/system/carManger',
+        meta: {
+          title: '车辆管理',
+          icon: 'car'
         }
       },
       {
