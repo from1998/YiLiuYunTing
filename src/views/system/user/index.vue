@@ -187,6 +187,7 @@
                 clearable
                 size="small"
                 style="width:240px"
+                @change="change()"
               >
                 <el-option
                   v-for="item in userOptions"
@@ -336,6 +337,10 @@ export default {
   },
   // 方法
   methods: {
+    // 解决页面v-for中修改item属性值后页面页面值不改变的问题
+    change() {
+      this.$forceUpdate()
+    },
     // 查询表格数据
     getUserList() {
       this.loading = true // 打开遮罩
