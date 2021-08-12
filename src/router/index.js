@@ -430,6 +430,19 @@ export const lastRoute = [
     ]
   },
   {
+    path: '/user',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'carSetting/:id(\\d+)',
+        component: () => import('@/views/system/user/carSetting'),
+        name: '/user',
+        meta: { title: '车场设置' }
+      }
+    ]
+  },
+  {
     path: '/erp/purchase',
     component: Layout,
     hidden: true,

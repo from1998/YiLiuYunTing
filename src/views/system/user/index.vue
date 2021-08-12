@@ -58,9 +58,6 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleResetPwd">重置密码</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-thumb" size="mini" :disabled="single" @click="handleAddPak">车场配置</el-button>
-      </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->
 
@@ -91,13 +88,18 @@
       <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
       <el-table-column label="状态" prop="state" align="center" :formatter="stateFormatter" />
       <el-table-column label="角色" prop="role" align="center" :formatter="roleFormatter" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="200" />
-      <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="200" />
-      <el-table-column label="操作" align="center" width="250">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
+      <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="180" />
+      <el-table-column label="操作" align="center" width="300">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <!-- <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-thumb" size="mini" @click="handleSelectRole(scope.row)">角色配置</el-button> -->
+          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">分润设置</el-button>
+          <!-- 后期路径里面的scope.row.id要换成每个车场的id -->
+          <router-link v-if="scope.row.id===129" :to="'/user/carSetting/' + scope.row.id" class="link-type">
+            <!-- 129是车场角色的id -->
+            <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleCarSetting(scope.row)">车场配置</el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -213,21 +215,18 @@
       </span>
     </el-dialog>
     <!-- 添加修改弹出层结束 -->
-    <!-- 分配角色的弹出层开始 -->
+    <!-- 车厂配置的弹出层开始 -->
     <el-dialog
       :title="title"
-      :visible.sync="selectRoleOpen"
+      :visible.sync="carSettingOpen"
       width="900px"
       center
       append-to-body
     >
       <el-table
-        ref="roleListTable"
         v-loading="loading"
         border
-        :data="roleTableList"
-        @select="select"
-        @selection-change="handleRoleTableSelectionChange"
+        :data="carSettingList"
       >
         <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="角色ID" align="center" prop="roleId" />
@@ -241,13 +240,13 @@
         <el-button @click="cancelRoleUser">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 分配角色的弹出层结束 -->
+    <!-- 车厂配置的弹出层结束 -->
   </div>
 </template>
 <script>
 // 引入api
 import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
-import { selectAllRole, getRoleIdsByUserId, saveRoleUser } from '@/api/system/role'
+import { selectAllRole, saveRoleUser } from '@/api/system/role'
 export default {
   // 定义页面数据
   data() {
@@ -304,11 +303,11 @@ export default {
         ]
       },
       // 是否显示分配权限的弹出层
-      selectRoleOpen: false,
+      carSettingOpen: false,
       // roleIds 分配角色列表选择状态
       roleIds: [],
       // 角色数据
-      roleTableList: [],
+      carSettingList: [],
       // 当前选中的用户
       currentUserId: undefined,
       // 添加车场选中的用户
@@ -393,6 +392,7 @@ export default {
     stateFormatter(row) {
       return this.selectDictLabel(this.stateOptions, row.state.toString())
     },
+    // 翻译角色
     roleFormatter(row) {
       return this.selectRoleLabel(this.roleOptions, row.role)
     },
@@ -407,22 +407,18 @@ export default {
       this.form.mobile = ''
       this.form.role = ''
       this.form.email = ''
-
       this.title = '添加用户信息'
-      // console.log(this.form)
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改用户信息'
       const id = row.id || this.ids
       // console.log(id)
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
       getUserById(id).then(res => {
-        console.log(res.data)
         this.form.state = res.data.state + ''
         this.form.id = res.data.id
         this.form.username = res.data.username
@@ -462,8 +458,7 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          // console.log(this.form)
-          if (this.form.id === undefined) {
+          if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
             addUser(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.getUserList()// 列表重新查询
@@ -523,54 +518,27 @@ export default {
     handleAddPak() {
       this.currentParkUserId = this.ids[0]
     },
-    // 打开分配角色的弹出层
-    handleSelectRole(row) {
+    // 打开车场配置的弹出层
+    handleCarSetting(row) {
+      // console.log();
       // console.log(this.ids[0])
-      this.selectRoleOpen = true
-      this.title = '分配角色'
+      this.carSettingOpen = true
+      this.title = '车场配置'
       this.currentUserId = row.id || this.ids[0]
-      const tx = this
+      // 这个导入的函数需要修改
       selectAllRole().then(res => {
-        tx.roleTableList = res.data
-        this.$nextTick(() => {
-          // 根据当前用户查找之前拥有的角色IDS
-          getRoleIdsByUserId(tx.currentUserId).then(res2 => {
-            res2.data.filter(r1 => {
-              tx.roleTableList.filter(r2 => {
-                if (r1 === r2.roleId.toString()) {
-                  // 选中表格checkbox
-                  tx.$refs.roleListTable.toggleRowSelection(r2, true)
-                }
-              })
-            })
-          })
-        })
+        this.carSettingList = res.data
       })
     },
     cancelRoleUser() {
-      this.selectRoleOpen = false
-    },
-    // 数据表格的多选择框选择时触发
-    handleRoleTableSelectionChange(selection) {
-      this.roleIds = selection.map(item => item.roleId)
-    },
-    // 当用户手动勾选数据行的 Checkbox 时触发的事件,确保只能选中一项数据
-    select(selection, row) {
-      this.$refs.roleListTable.clearSelection()
-      if (selection.length === 0) {
-        return
-      }
-      if (row) {
-        this.selectioned = row
-        this.$refs.roleListTable.toggleRowSelection(row, true)
-      }
+      this.carSettingOpen = false
     },
     // 保存用户和角色之间的关系
     handleSaveRoleUserSubmit() {
       // console.log(this.roleIds)
       saveRoleUser(this.currentUserId, this.roleIds).then(res => {
         this.msgSuccess('分配成功')
-        this.selectRoleOpen = false
+        this.carSettingOpen = false
         this.getUserList()
       }).catch(function() {
         this.msgError('分配失败')
