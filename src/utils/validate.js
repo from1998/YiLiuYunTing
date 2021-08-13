@@ -86,3 +86,37 @@ export function isArray(arg) {
   }
   return Array.isArray(arg)
 }
+
+// 身份证
+export function carPhoneValid(rule, value, callback) {
+  const plateNumber = /^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})$/
+  if (plateNumber.test(value)) {
+    callback()
+  } else {
+    callback(new Error('请输入正确的车牌号'))
+  }
+}
+
+// 手机号
+/* 是否手机号码*/
+export function phoneValid(rule, value, callback) {
+  const reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
+  if (value === '' || value === undefined || value === null) {
+    callback(new Error('手机号码不能为空！'))
+    console.log(value)
+  } else {
+    if (!reg.test(value)) {
+      callback(new Error('请输入正确的手机号码！'))
+    } else {
+      callback()
+    }
+  }
+}
+export default {
+  carNumber: [
+    { required: true, validator: carPhoneValid, trigger: 'blur' }
+  ],
+  phone: [
+    { required: true, validator: phoneValid, trigger: 'blur' }
+  ]
+}

@@ -13,6 +13,7 @@ import './permission' // permission control
 import './utils/error-log' // error log
 import * as filters from './filters' // global filters
 import moment from 'moment'
+Vue.prototype.moment = moment
 // 大屏可视化插件
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)
