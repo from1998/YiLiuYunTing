@@ -3,12 +3,11 @@
 </template>
 <script>
 export default {
-  name: 'Test1'
+  name: 'LaneSet'
 }
 </script>
 <style lang="scss">
 .test {
-    height: 100%;
-    background-color: #f00;
+    background-color: #00f;
 }
 </style>

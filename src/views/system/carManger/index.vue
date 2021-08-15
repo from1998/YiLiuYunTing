@@ -252,28 +252,32 @@ export default {
   // 定义页面数据
   data() {
     return {
+      // daysTotal: undefined,
       renewFeeTime: [],
       // 日期快捷选择
       pickerOptions: {
         shortcuts: [{
           text: '一周',
           onClick(picker) {
-            const end = this.moment()
-            const start = this.moment().subtract(-1, 'week')
+            const end = new Date()
+            const start = new Date()
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
             picker.$emit('pick', [start, end])
           }
         }, {
           text: '一个月',
           onClick(picker) {
-            const end = this.moment()
-            const start = this.moment().subtract(-1, 'month')
+            const end = new Date()
+            const start = new Date()
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
             picker.$emit('pick', [start, end])
           }
         }, {
           text: '三个月',
           onClick(picker) {
-            const end = this.moment()
-            const start = this.moment().subtract(-3, 'month')
+            const end = new Date()
+            const start = new Date()
+            end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
             picker.$emit('pick', [start, end])
           }
         }, {

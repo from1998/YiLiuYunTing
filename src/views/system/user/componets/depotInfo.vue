@@ -3,11 +3,12 @@
 </template>
 <script>
 export default {
-  name: 'Test3'
+  name: 'DepotInfo'
 }
 </script>
 <style lang="scss">
 .test {
-    background-color: #00f;
+    height: 100%;
+    background-color: #f00;
 }
 </style>

@@ -1,16 +1,27 @@
 <template>
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="用户管理" name="first">
-        <div class="test1" />
+      <el-tab-pane label="车场信息" name="first">
+        <depot-info />
       </el-tab-pane>
-      <el-tab-pane label="配置管理" name="second">
-        <test2 />
+      <el-tab-pane label="车场配置" name="second">
+        <depot-set />
       </el-tab-pane>
-      <el-tab-pane label="角色管理" name="third">
-        <test3 />
+      <el-tab-pane label="收费规则" name="third">
+        <fee-rule />
       </el-tab-pane>
-      <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+      <el-tab-pane label="岗亭设置" name="fourth">
+        <watchhouse-set />
+      </el-tab-pane>
+      <el-tab-pane label="车道设置" name="second">
+        <lane-set />
+      </el-tab-pane>
+      <el-tab-pane label="保安管理" name="third">
+        <sec-manger />
+      </el-tab-pane>
+      <el-tab-pane label="车位管理" name="fourth">
+        <port-manger />
+      </el-tab-pane>
     </el-tabs>
     <span>hello</span>
   </div>
@@ -18,13 +29,22 @@
 <script>
 // todo 停车端个人中心与车厂配置待完成
 // import test1 from './componets/test1'
-import test2 from './componets/test2'
-import test3 from './componets/test3'
+import depotInfo from './componets/depotInfo.vue'
+import depotSet from './componets/depotSet'
+import feeRule from './componets/feeRule'
+import laneSet from './componets/laneSet'
+import portManger from './componets/portManger'
+import secManger from './componets/secManger'
+import watchhouseSet from './componets/watchhouseSet'
 export default {
   components: {
-    // test1,
-    test2,
-    test3
+    depotInfo,
+    depotSet,
+    feeRule,
+    laneSet,
+    portManger,
+    secManger,
+    watchhouseSet
   }
 }
 </script>

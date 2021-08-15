@@ -136,57 +136,6 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/depot',
-    component: Layout,
-    redirect: 'noRedirect',
-    name: '/depot',
-    meta: { title: '车厂设置', icon: 'el-icon-s-tools' },
-    children: [
-      {
-        path: 'carInfo',
-        component: () => import('@/views/depot/carInfo/index'),
-        name: '/depot/carInfo',
-        meta: { title: '车厂信息', icon: 'list' }
-      },
-      {
-        path: 'carConfig',
-        component: () => import('@/views/depot/carConfig/index'),
-        name: '/depot/carConfig',
-        meta: { title: '车厂配置', icon: 'list' }
-      },
-      {
-        path: 'charge',
-        component: () => import('@/views/depot/charge/index'),
-        name: '/depot/charge',
-        meta: { title: '收费规则', icon: 'list' }
-      },
-      {
-        path: 'watchhouse',
-        component: () => import('@/views/depot/watchhouse/index'),
-        name: '/depot/watchhouse',
-        meta: { title: '岗亭设置', icon: 'list' }
-      },
-      {
-        path: 'lane',
-        component: () => import('@/views/depot/lane/index'),
-        name: '/depot/lane',
-        meta: { title: '车道设置', icon: 'list' }
-      },
-      {
-        path: 'security',
-        component: () => import('@/views/depot/security/index'),
-        name: '/depot/security',
-        meta: { title: '保安管理', icon: 'list' }
-      },
-      {
-        path: 'carport',
-        component: () => import('@/views/depot/carport/index'),
-        name: '/depot/carport',
-        meta: { title: '车位管理', icon: 'list' }
-      }
-    ]
-  },
-  {
     path: '/account',
     component: Layout,
     redirect: 'noRedirect',

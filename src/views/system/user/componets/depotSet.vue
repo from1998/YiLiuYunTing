@@ -57,7 +57,7 @@
 </template>
 <script>
 export default {
-  name: 'Test2',
+  name: 'DepotSet',
   data() {
     return {
       form: {
