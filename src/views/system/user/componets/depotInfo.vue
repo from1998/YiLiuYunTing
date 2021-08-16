@@ -6,7 +6,7 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form ref="form" :model="form" label-width="100px" style="width:700px">
+      <el-form ref="form" :model="form" label-width="150px" style="width:750px">
         <!-- 名称 简称 -->
         <el-row>
           <el-col :span="12">
@@ -82,8 +82,21 @@
             </el-form-item>
           </el-col>
         </el-row>
-
+        <!-- 连接方式与展示车位 -->
         <el-row>
+          <el-col :span="12">
+            <el-form-item label="连接方式">
+              <el-radio-group v-model="form.connectMethod">
+                <el-radio
+                  v-for="item in connectOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >
+                  {{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="是否展示车位">
               <el-radio-group v-model="form.status">
@@ -97,6 +110,9 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+        </el-row>
+        <!-- 是否收费 -->
+        <el-row>
           <el-col :span="12">
             <el-form-item label="是否收费">
               <el-radio-group v-model="form.feeStatus">
@@ -108,6 +124,103 @@
                   {{ item.label }}
                 </el-radio>
               </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 手续费及停车费分成 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="手续费(百分比)">
+              <el-tooltip class="item" effect="dark" content="请输入手续费(百分比)" placement="right">
+                <el-input-number v-model="form.procedureFee" :precision="2" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="停车费分成(百分比)">
+              <el-tooltip class="item" effect="dark" content="请输入停车费分成(百分比)" placement="right">
+                <el-input-number v-model="form.parkingFee" :precision="2" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 是否有充电桩 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否有充电桩">
+              <el-radio-group v-model="form.chargingPile">
+                <el-radio
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >
+                  {{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 所属角色与状态 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="所属角色">
+              <el-select v-model="form.pertainRole" placeholder="请选择所属角色">
+                <el-option
+                  v-for="item in pertainRoleOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否可用">
+              <el-radio-group v-model="form.usable">
+                <el-radio
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >
+                  {{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 上传监管平台与上传平台 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否上传监管平台">
+              <el-radio-group v-model="form.uploadMonitorPlatform">
+                <el-radio
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >
+                  {{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 平台及识别码 -->
+        <el-row v-if="form.uploadMonitorPlatform === '1'">
+          <el-col :span="12">
+            <el-form-item label="平台">
+              <el-select v-model="form.monitorPlatform" placeholder="请选择平台">
+                <el-option
+                  v-for="item in monitorPlatformOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="平台识别码">
+              <el-input v-model="form.PlatformIdentification" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -125,10 +238,12 @@
           <el-input v-model="form.remark" />
         </el-form-item>
         <el-row :gutter="20">
-          <div class="footer">
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
-            <el-button>取消</el-button>
-          </div>
+          <el-form-item>
+            <div class="footer">
+              <el-button type="primary" @click="onSubmit">提交</el-button>
+              <el-button type="danger" @click="onReset">重置</el-button>
+            </div>
+          </el-form-item>
         </el-row>
 
       </el-form>
@@ -155,7 +270,16 @@ export default {
         allPort: '',
         freePort: '',
         status: '',
+        connectMethod: '',
         feeStatus: '',
+        procedureFee: '',
+        parkingFee: '',
+        chargingPile: '',
+        pertainRole: '',
+        usable: '',
+        uploadMonitorPlatform: '',
+        monitorPlatform: '',
+        PlatformIdentification: '',
         businessHours: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
         remark: ''
       },
@@ -379,12 +503,54 @@ export default {
           value: '0',
           label: '否'
         }
+      ],
+      connectOptions: [
+        {
+          value: '1',
+          label: '间接'
+        },
+        {
+          value: '0',
+          label: '直连'
+        }
+      ],
+      pertainRoleOptions: [
+        {
+          value: '1',
+          label: '测试'
+        },
+        {
+          value: '0',
+          label: '超管'
+        },
+        {
+          value: '2',
+          label: '运营'
+        }
+      ],
+      monitorPlatformOptions: [
+        {
+          value: '0',
+          label: '合肥市城管停车平台'
+        },
+        {
+          value: '1',
+          label: '省立交警大队'
+        },
+        {
+          value: '2',
+          label: '安徽停车综合监控办公室'
+        }
       ]
     }
   },
   methods: {
     onSubmit() {
       // console.log('submit!')
+    },
+    onReset() {
+      console.log('ok')
+      this.resetForm('form')
     },
     handleChange(value) {
       // console.log(value)

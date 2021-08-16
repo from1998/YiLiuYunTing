@@ -189,6 +189,50 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <!-- 进出场超时时间 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="进场超时时间(分钟)">
+              <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
+                <el-input-number v-model="form.accessInTime" :precision="0" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出场超时时间(分钟)">
+              <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
+                <el-input-number v-model="form.accessOutTime" :precision="0" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 进出场超时处理 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="进场超时处理">
+              <el-select v-model="form.accessInDeal" placeholder="请选择类型">
+                <el-option
+                  v-for="item in options.repetition"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出场超时处理">
+              <el-select v-model="form.accessOutDeal" placeholder="请选择类型">
+                <el-option
+                  v-for="item in options.repetition"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <!-- 空闲车位计数与自动清理天数 -->
         <el-row>
           <el-col :span="12">
@@ -375,7 +419,11 @@ export default {
         peakRelease: '',
         peakDuration: [],
         feeForType: '',
-        specialVehicle: []
+        specialVehicle: [],
+        accessInTime: '',
+        accessOutTime: '',
+        accessInDeal: '',
+        accessOutDeal: ''
       },
       options: {
         // 车辆进出场
@@ -453,6 +501,7 @@ export default {
             label: '所有车辆'
           }
         ],
+        // 特殊车辆类型
         specialVehicle: [
           {
             value: '0',
@@ -502,7 +551,12 @@ export default {
             value: '13',
             label: '其它'
           }
-        ]
+        ],
+        // 进出场超时时间
+        accessTimeout: {
+          accessIn: '30',
+          accessOut: '30'
+        }
       }
     }
   },
