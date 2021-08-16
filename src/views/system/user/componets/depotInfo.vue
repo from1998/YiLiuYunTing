@@ -6,25 +6,40 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form ref="form" :model="form" label-width="100px" style="width:500px">
-        <el-form-item label="名称">
-          <el-input v-model="form.name" />
-        </el-form-item>
-        <el-form-item label="简称">
-          <el-input v-model="form.sName" />
-        </el-form-item>
-        <el-form-item label="地区">
-          <el-cascader
-            v-model="form.region"
-            :options="addressOptions"
-            :props="{ expandTrigger: 'hover' }"
-            label-width="80px"
-            @change="handleChange"
-          />
-        </el-form-item>
-        <el-form-item label="详细地址">
-          <el-input v-model="form.detailAddress" />
-        </el-form-item>
+      <el-form ref="form" :model="form" label-width="100px" style="width:700px">
+        <!-- 名称 简称 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="名称">
+              <el-input v-model="form.name" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="简称">
+              <el-input v-model="form.sName" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 地区 详细地址 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="地区">
+              <el-cascader
+                v-model="form.region"
+                :options="addressOptions"
+                :props="{ expandTrigger: 'hover' }"
+                label-width="260px"
+                @change="handleChange"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="详细地址">
+              <el-input v-model="form.detailAddress" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 车场类型 -->
         <el-form-item label="类型">
           <el-select v-model="form.category" placeholder="请选择车场类型">
             <el-option
@@ -41,40 +56,73 @@
         <el-form-item label="支付逗留时长">
           <el-input v-model="form.remain" />
         </el-form-item>
-        <el-form-item label="经度">
-          <el-input v-model="form.longitude" />
-        </el-form-item>
-        <el-form-item label="纬度">
-          <el-input v-model="form.latitude" />
-        </el-form-item>
-        <el-form-item label="总车位数">
-          <el-input v-model="form.allPort" />
-        </el-form-item>
-        <el-form-item label="空闲车位数">
-          <el-input v-model="form.freePort" />
-        </el-form-item>
-        <el-form-item label="是否展示车位">
-          <el-select v-model="form.status" placeholder="请选择是否展示车位">
-            <el-option
-              v-for="item in statusOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="是否收费">
-          <el-select v-model="form.feeStatus" placeholder="请选择是否收费">
-            <el-option
-              v-for="item in statusOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
+        <!-- 经纬度 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="经度">
+              <el-input v-model="form.longitude" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="纬度">
+              <el-input v-model="form.latitude" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 总车位数与空闲车位数 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="总车位数">
+              <el-input v-model="form.allPort" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="空闲车位数">
+              <el-input v-model="form.freePort" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="是否展示车位">
+              <el-radio-group v-model="form.status">
+                <el-radio
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >
+                  {{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否收费">
+              <el-radio-group v-model="form.feeStatus">
+                <el-radio
+                  v-for="item in statusOptions"
+                  :key="item.value"
+                  :label="item.value"
+                >
+                  {{ item.label }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="营业时间">
-          <el-input v-model="form.businessHours " />
+          <el-time-picker
+            v-model="form.businessHours"
+            is-range
+            range-separator="至"
+            start-placeholder="开始时间"
+            end-placeholder="结束时间"
+            placeholder="选择时间范围"
+          />
+        </el-form-item>
+        <el-form-item label="备注">
+          <el-input v-model="form.remark" />
         </el-form-item>
         <el-row :gutter="20">
           <div class="footer">
@@ -108,7 +156,8 @@ export default {
         freePort: '',
         status: '',
         feeStatus: '',
-        businessHours: ''
+        businessHours: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+        remark: ''
       },
       categoryOptions: [{
         value: '选项1',
@@ -335,7 +384,10 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log('submit!')
+      // console.log('submit!')
+    },
+    handleChange(value) {
+      // console.log(value)
     }
   }
 }
