@@ -23,7 +23,6 @@
         <port-manger />
       </el-tab-pane>
     </el-tabs>
-    <span>hello</span>
   </div>
 </template>
 <script>
@@ -53,9 +52,8 @@ export default {
   height: 100%;
     .el-tabs {
     height: 100%!important;
-    .test1 {
-      height: 100%;
-      min-height: 100%;
+    .el-tabs__nav-scroll {
+     transform: translateX(20px);
     }
   }
 }

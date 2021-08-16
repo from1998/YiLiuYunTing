@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
-      配置管理
+      车场配置
     </el-header>
     <el-container class="container">
       <el-form ref="form" :model="form" label-width="80px">

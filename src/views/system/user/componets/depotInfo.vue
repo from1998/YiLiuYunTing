@@ -1,14 +1,352 @@
 <template>
-  <div class="test" />
+  <el-container>
+    <!-- 标题 -->
+    <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
+      车场信息
+    </el-header>
+    <!-- 主体 -->
+    <el-container class="container">
+      <el-form ref="form" :model="form" label-width="100px" style="width:500px">
+        <el-form-item label="名称">
+          <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="简称">
+          <el-input v-model="form.sName" />
+        </el-form-item>
+        <el-form-item label="地区">
+          <el-cascader
+            v-model="form.region"
+            :options="addressOptions"
+            :props="{ expandTrigger: 'hover' }"
+            label-width="80px"
+            @change="handleChange"
+          />
+        </el-form-item>
+        <el-form-item label="详细地址">
+          <el-input v-model="form.detailAddress" />
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-select v-model="form.category" placeholder="请选择车场类型">
+            <el-option
+              v-for="item in categoryOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="手机/电话">
+          <el-input v-model="form.phone" />
+        </el-form-item>
+        <el-form-item label="支付逗留时长">
+          <el-input v-model="form.remain" />
+        </el-form-item>
+        <el-form-item label="经度">
+          <el-input v-model="form.longitude" />
+        </el-form-item>
+        <el-form-item label="纬度">
+          <el-input v-model="form.latitude" />
+        </el-form-item>
+        <el-form-item label="总车位数">
+          <el-input v-model="form.allPort" />
+        </el-form-item>
+        <el-form-item label="空闲车位数">
+          <el-input v-model="form.freePort" />
+        </el-form-item>
+        <el-form-item label="是否展示车位">
+          <el-select v-model="form.status" placeholder="请选择是否展示车位">
+            <el-option
+              v-for="item in statusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否收费">
+          <el-select v-model="form.feeStatus" placeholder="请选择是否收费">
+            <el-option
+              v-for="item in statusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="营业时间">
+          <el-input v-model="form.businessHours " />
+        </el-form-item>
+        <el-row :gutter="20">
+          <div class="footer">
+            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button>取消</el-button>
+          </div>
+        </el-row>
+
+      </el-form>
+    </el-container>
+
+  </el-container>
+
 </template>
 <script>
 export default {
-  name: 'DepotInfo'
+  name: 'DepotInfo',
+  data() {
+    return {
+      form: {
+        name: '',
+        sName: '',
+        region: [],
+        detailAddress: '',
+        category: '',
+        phone: '',
+        remain: '',
+        longitude: '',
+        latitude: '',
+        allPort: '',
+        freePort: '',
+        status: '',
+        feeStatus: '',
+        businessHours: ''
+      },
+      categoryOptions: [{
+        value: '选项1',
+        label: '黄金糕'
+      }, {
+        value: '选项2',
+        label: '双皮奶'
+      }, {
+        value: '选项3',
+        label: '蚵仔煎'
+      }, {
+        value: '选项4',
+        label: '龙须面'
+      }, {
+        value: '选项5',
+        label: '北京烤鸭'
+      }],
+      addressOptions: [{
+        value: 'zhinan',
+        label: '指南',
+        children: [{
+          value: 'shejiyuanze',
+          label: '设计原则',
+          children: [{
+            value: 'yizhi',
+            label: '一致'
+          }, {
+            value: 'fankui',
+            label: '反馈'
+          }, {
+            value: 'xiaolv',
+            label: '效率'
+          }, {
+            value: 'kekong',
+            label: '可控'
+          }]
+        }, {
+          value: 'daohang',
+          label: '导航',
+          children: [{
+            value: 'cexiangdaohang',
+            label: '侧向导航'
+          }, {
+            value: 'dingbudaohang',
+            label: '顶部导航'
+          }]
+        }]
+      }, {
+        value: 'zujian',
+        label: '组件',
+        children: [{
+          value: 'basic',
+          label: 'Basic',
+          children: [{
+            value: 'layout',
+            label: 'Layout 布局'
+          }, {
+            value: 'color',
+            label: 'Color 色彩'
+          }, {
+            value: 'typography',
+            label: 'Typography 字体'
+          }, {
+            value: 'icon',
+            label: 'Icon 图标'
+          }, {
+            value: 'button',
+            label: 'Button 按钮'
+          }]
+        }, {
+          value: 'form',
+          label: 'Form',
+          children: [{
+            value: 'radio',
+            label: 'Radio 单选框'
+          }, {
+            value: 'checkbox',
+            label: 'Checkbox 多选框'
+          }, {
+            value: 'input',
+            label: 'Input 输入框'
+          }, {
+            value: 'input-number',
+            label: 'InputNumber 计数器'
+          }, {
+            value: 'select',
+            label: 'Select 选择器'
+          }, {
+            value: 'cascader',
+            label: 'Cascader 级联选择器'
+          }, {
+            value: 'switch',
+            label: 'Switch 开关'
+          }, {
+            value: 'slider',
+            label: 'Slider 滑块'
+          }, {
+            value: 'time-picker',
+            label: 'TimePicker 时间选择器'
+          }, {
+            value: 'date-picker',
+            label: 'DatePicker 日期选择器'
+          }, {
+            value: 'datetime-picker',
+            label: 'DateTimePicker 日期时间选择器'
+          }, {
+            value: 'upload',
+            label: 'Upload 上传'
+          }, {
+            value: 'rate',
+            label: 'Rate 评分'
+          }, {
+            value: 'form',
+            label: 'Form 表单'
+          }]
+        }, {
+          value: 'data',
+          label: 'Data',
+          children: [{
+            value: 'table',
+            label: 'Table 表格'
+          }, {
+            value: 'tag',
+            label: 'Tag 标签'
+          }, {
+            value: 'progress',
+            label: 'Progress 进度条'
+          }, {
+            value: 'tree',
+            label: 'Tree 树形控件'
+          }, {
+            value: 'pagination',
+            label: 'Pagination 分页'
+          }, {
+            value: 'badge',
+            label: 'Badge 标记'
+          }]
+        }, {
+          value: 'notice',
+          label: 'Notice',
+          children: [{
+            value: 'alert',
+            label: 'Alert 警告'
+          }, {
+            value: 'loading',
+            label: 'Loading 加载'
+          }, {
+            value: 'message',
+            label: 'Message 消息提示'
+          }, {
+            value: 'message-box',
+            label: 'MessageBox 弹框'
+          }, {
+            value: 'notification',
+            label: 'Notification 通知'
+          }]
+        }, {
+          value: 'navigation',
+          label: 'Navigation',
+          children: [{
+            value: 'menu',
+            label: 'NavMenu 导航菜单'
+          }, {
+            value: 'tabs',
+            label: 'Tabs 标签页'
+          }, {
+            value: 'breadcrumb',
+            label: 'Breadcrumb 面包屑'
+          }, {
+            value: 'dropdown',
+            label: 'Dropdown 下拉菜单'
+          }, {
+            value: 'steps',
+            label: 'Steps 步骤条'
+          }]
+        }, {
+          value: 'others',
+          label: 'Others',
+          children: [{
+            value: 'dialog',
+            label: 'Dialog 对话框'
+          }, {
+            value: 'tooltip',
+            label: 'Tooltip 文字提示'
+          }, {
+            value: 'popover',
+            label: 'Popover 弹出框'
+          }, {
+            value: 'card',
+            label: 'Card 卡片'
+          }, {
+            value: 'carousel',
+            label: 'Carousel 走马灯'
+          }, {
+            value: 'collapse',
+            label: 'Collapse 折叠面板'
+          }]
+        }]
+      }, {
+        value: 'ziyuan',
+        label: '资源',
+        children: [{
+          value: 'axure',
+          label: 'Axure Components'
+        }, {
+          value: 'sketch',
+          label: 'Sketch Templates'
+        }, {
+          value: 'jiaohu',
+          label: '组件交互文档'
+        }]
+      }],
+      statusOptions: [
+        {
+          value: '1',
+          label: '是'
+        },
+        {
+          value: '0',
+          label: '否'
+        }
+      ]
+    }
+  },
+  methods: {
+    onSubmit() {
+      console.log('submit!')
+    }
+  }
 }
 </script>
 <style lang="scss">
-.test {
-    height: 100%;
-    background-color: #f00;
+.container {
+    display: -webkit-box;
+     -webkit-box-pack:center;
+}
+.footer {
+    margin-left: 50%;
+    transform: translateX(-50%);
 }
 </style>
