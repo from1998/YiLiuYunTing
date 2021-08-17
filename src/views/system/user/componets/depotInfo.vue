@@ -241,7 +241,7 @@
           <el-form-item>
             <div class="footer">
               <el-button type="primary" @click="onSubmit">提交</el-button>
-              <el-button type="danger" @click="onReset">重置</el-button>
+              <el-button type="danger" @click="onReset('form')">重置</el-button>
             </div>
           </el-form-item>
         </el-row>
@@ -548,9 +548,15 @@ export default {
     onSubmit() {
       // console.log('submit!')
     },
-    onReset() {
-      console.log('ok')
-      this.resetForm('form')
+    onReset(formName) {
+      this.$nextTick(() => {
+        console.log(0)
+        if (this.$refs[formName] !== undefined) {
+          console.log(1)
+          this.$refs[formName].resetFields()
+          2
+        }
+      })
     },
     handleChange(value) {
       // console.log(value)

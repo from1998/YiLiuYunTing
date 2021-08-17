@@ -377,12 +377,14 @@
             />
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item>
-          <div class="footer">
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
-            <el-button>取消</el-button>
-          </div>
-        </el-form-item>
+        <el-row :gutter="20">
+          <el-form-item>
+            <div class="footer">
+              <el-button type="primary" @click="onSubmit">提交</el-button>
+              <el-button type="danger" @click="onReset">重置</el-button>
+            </div>
+          </el-form-item>
+        </el-row>
       </el-form>
     </el-container>
   </el-container>
@@ -551,18 +553,23 @@ export default {
             value: '13',
             label: '其它'
           }
-        ],
-        // 进出场超时时间
-        accessTimeout: {
-          accessIn: '30',
-          accessOut: '30'
-        }
+        ]
       }
     }
   },
   methods: {
     onSubmit() {
-      console.log('submit!')
+      // console.log('submit!')
+    },
+    onReset(formName) {
+      this.$nextTick(() => {
+        console.log(0)
+        if (this.$refs[formName] !== undefined) {
+          console.log(1)
+          this.$refs[formName].resetFields()
+          2
+        }
+      })
     }
   }
 }

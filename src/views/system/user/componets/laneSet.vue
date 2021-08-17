@@ -1,13 +1,17 @@
 <template>
-  <div class="test" />
+  <div>hello</div>
 </template>
 <script>
 export default {
-  name: 'LaneSet'
+  name: 'LaneSet',
+  data() {
+    return {
+    }
+  },
+  methods: {
+  }
 }
 </script>
 <style lang="scss">
-.test {
-    background-color: #00f;
-}
+
 </style>
