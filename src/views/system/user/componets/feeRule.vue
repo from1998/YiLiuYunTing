@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
+    <el-header class="container" height="36px" style="padding:15px 10px 45px;font-weight:700">
       收费规则
     </el-header>
     <el-container class="container">
@@ -116,7 +116,7 @@
                   </el-table-column>
                   <el-table-column
                     label="收费金额(元)"
-                    width="221"
+                    width="222"
                   >
                     <template slot-scope="scope">
                       <el-input-number v-model="scope.row.divisionFee" :precision="2" :step="1" />
@@ -147,10 +147,11 @@
                   :data="form.overlayCountFee"
                   border
                   stripe
-                  style="width: 100%"
+                  style="width: 78%"
                 >
                   <el-table-column
                     label="时长(分钟)"
+                    width="222"
                   >
                     <template slot-scope="scope">
                       <el-input-number v-model="scope.row.timeDur" :precision="0" :step="1" />
@@ -158,6 +159,7 @@
                   </el-table-column>
                   <el-table-column
                     label="收费金额(元)"
+                    width="222"
                   >
                     <template slot-scope="scope">
                       <el-input-number v-model="scope.row.overlayFee" :precision="2" :step="1" />
@@ -298,7 +300,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
     display: -webkit-box;
      -webkit-box-pack:center;
@@ -313,7 +315,6 @@ export default {
     th {
       padding: 0!important;
       text-align: center;
-
     }
   }
 }

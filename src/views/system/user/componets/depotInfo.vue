@@ -564,7 +564,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .container {
     display: -webkit-box;
      -webkit-box-pack:center;

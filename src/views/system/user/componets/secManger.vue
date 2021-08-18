@@ -1,6 +1,6 @@
 <template>
   <div>
-    车位管理
+    保安管理
   </div>
 </template>
 <script>

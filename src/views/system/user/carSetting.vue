@@ -73,14 +73,7 @@ export default {
 }
 </script>
 <style lang="scss">
-.content {
-  user-select: none;
-  height: 100%;
-    .el-tabs {
-    height: 100%!important;
-    .el-tabs__nav-scroll {
-     transform: translateX(20px);
-    }
-  }
+.el-tabs__nav {
+  transform: translateX(40px) !important;
 }
 </style>

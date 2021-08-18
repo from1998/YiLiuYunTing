@@ -1,5 +1,5 @@
 <template>
-  <div>hello</div>
+  <div>车道设置</div>
 </template>
 <script>
 export default {
