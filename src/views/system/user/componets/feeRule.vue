@@ -91,53 +91,97 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="计费时间段">
-              <el-table
-                :data="form.countFeeList"
-                border
-                stripe
-                style="width: 100%"
-              >
-                <el-table-column
-                  label="时间范围"
-                  width="372"
+              <!-- 常规计费 -->
+              <el-row v-if="form.sectionChargeType ==='0' ">
+                <el-table
+                  :data="form.commonCountFee"
+                  border
+                  stripe
+                  style="width: 100%"
                 >
-                  <template slot-scope="scope">
-                    <el-time-picker
-                      v-model="scope.row.timeDur"
-                      is-range
-                      range-separator="至"
-                      start-placeholder="开始时间"
-                      end-placeholder="结束时间"
-                      placeholder="选择时间范围"
-                    />
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="收费金额(元)"
-                  width="221"
+                  <el-table-column
+                    label="时间范围"
+                    width="372"
+                  >
+                    <template slot-scope="scope">
+                      <el-time-picker
+                        v-model="scope.row.timeDur"
+                        is-range
+                        range-separator="至"
+                        start-placeholder="开始时间"
+                        end-placeholder="结束时间"
+                        placeholder="选择时间范围"
+                      />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="收费金额(元)"
+                    width="221"
+                  >
+                    <template slot-scope="scope">
+                      <el-input-number v-model="scope.row.divisionFee" :precision="2" :step="1" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="操作"
+                  >
+                    <template slot-scope="scope" style="text-align:center">
+                      <el-button
+                        size="mini"
+                        type="danger"
+                        @click.native.prevent="deleteRow(scope.$index, form.commonCountFee)"
+                      >
+                        删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <el-tooltip class="item" effect="dark" placement="right" style="margin-top:16px">
+                  <div slot="content"><span>注意正确的时间格式 例:07:00:00，时间段从低到高。</span><br>最多可添加{{ limitNumber }}个时间段,时段计费优先其他计费。</div>
+                  <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addFeeRule(form.commonCountFee)">添加计费规则</el-button>
+                </el-tooltip>
+              </el-row>
+              <!-- 叠加计费 -->
+              <el-row v-if="form.sectionChargeType ==='1' ">
+                <el-table
+                  :data="form.overlayCountFee"
+                  border
+                  stripe
+                  style="width: 100%"
                 >
-                  <template slot-scope="scope">
-                    <el-input-number v-model="scope.row.fee" :precision="2" :step="1" />
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  label="操作"
-                >
-                  <template slot-scope="scope" style="text-align:center">
-                    <el-button
-                      size="mini"
-                      type="danger"
-                      @click.native.prevent="deleteRow(scope.$index, form.countFeeList)"
-                    >
-                      删除
-                    </el-button>
-                  </template>
-                </el-table-column>
-              </el-table>
-              <el-tooltip class="item" effect="dark" placement="right" style="margin-top:16px">
-                <div slot="content"><span>注意正确的时间格式 例:07:00:00，时间段从低到高。</span><br>最多可添加{{ limitNumber }}个时间段,时段计费优先其他计费。</div>
-                <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addFeeRule">添加计费规则</el-button>
-              </el-tooltip>
+                  <el-table-column
+                    label="时长(分钟)"
+                  >
+                    <template slot-scope="scope">
+                      <el-input-number v-model="scope.row.timeDur" :precision="0" :step="1" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="收费金额(元)"
+                  >
+                    <template slot-scope="scope">
+                      <el-input-number v-model="scope.row.overlayFee" :precision="2" :step="1" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column
+                    label="操作"
+                  >
+                    <template slot-scope="scope" style="text-align:center">
+                      <el-button
+                        size="mini"
+                        type="danger"
+                        @click.native.prevent="deleteRow(scope.$index, form.overlayCountFee)"
+                      >
+                        删除
+                      </el-button>
+                    </template>
+                  </el-table-column>
+                </el-table>
+                <el-tooltip class="item" effect="dark" placement="right" style="margin-top:16px">
+                  <div slot="content"><span>注意分钟从低到高。 最大值{{ limitNumber*60 }}（即{{ limitNumber }}小时）。</span><br>最多可添加{{ limitNumber }}组。</div>
+                  <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addFeeRule(form.overlayCountFee)">添加计费规则</el-button>
+                </el-tooltip>
+              </el-row>
             </el-form-item>
           </el-col>
         </el-row>
@@ -160,7 +204,7 @@ export default {
   name: 'FeeRule',
   data() {
     return {
-      limitNumber: '24',
+      limitNumber: '5',
       form: {
         carNumberCategory: '',
         onceFreeTime: '',
@@ -170,14 +214,26 @@ export default {
         continueTimeLong: '',
         continueFee: '',
         sectionChargeType: '',
-        countFeeList: [
+        // 常规计费
+        commonCountFee: [
           {
             timeDur: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
-            fee: ''
+            divisionFee: ''
           },
           {
             timeDur: [new Date(), new Date()],
-            fee: ''
+            divisionFee: ''
+          }
+        ],
+        // 叠加计费
+        overlayCountFee: [
+          {
+            timeDur: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+            overlayFee: ''
+          },
+          {
+            timeDur: [new Date(), new Date()],
+            overlayFee: ''
           }
         ]
       },
@@ -219,12 +275,19 @@ export default {
       console.log(index, rows)
       rows.splice(index, 1)
     },
-    addFeeRule() {
-      if (this.form.countFeeList.length + 1 <= Number(this.limitNumber)) {
-        this.form.countFeeList.push({
-          timeDur: [new Date(), new Date()],
-          fee: ''
-        })
+    addFeeRule(array) {
+      if (array.length + 1 <= Number(this.limitNumber)) {
+        if (array === this.form.commonCountFee) {
+          array.push({
+            timeDur: [new Date(), new Date()],
+            divisionFee: ''
+          })
+        } else {
+          array.push({
+            timeDur: [new Date(), new Date()],
+            overlayFee: ''
+          })
+        }
       } else {
         this.$message({
           message: '最多只能添加' + this.limitNumber + '项计费规则。',
