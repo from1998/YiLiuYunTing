@@ -96,7 +96,7 @@
           <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">分润设置</el-button>
           <!-- 后期路径里面的scope.row.id要换成每个车场的id -->
-          <router-link v-if="scope.row.id===129" :to="'/user/carSetting/' + scope.row.id" class="link-type">
+          <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
             <!-- 129是车场角色的id -->
             <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleCarSetting(scope.row)">车场配置</el-button>
           </router-link>
@@ -413,7 +413,7 @@ export default {
     handleUpdate(row) {
       this.title = '修改用户信息'
       const id = row.id || this.ids
-      // console.log(id)
+      console.log(row.id)
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
