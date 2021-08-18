@@ -103,15 +103,97 @@
       center
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules">
-        <el-form-item label="车场名称" prop="parkinglotName">
-          <el-input v-model="form.parkinglotName" placeholder="请输入车场名称" clearable size="small" />
+      <el-form ref="form" :model="form" label-width="100px">
+        <!-- 车道名称 -->
+        <el-form-item label="车道名称" prop="parkinglotName">
+          <el-input v-model="form.laneName" placeholder="请输入车道名称" clearable size="small" />
         </el-form-item>
-        <el-form-item label="岗亭名称" prop="watchhouseName">
-          <el-input v-model="form.watchhouseName" placeholder="请输入岗亭名称" clearable size="small" />
+        <!-- 车道类型 -->
+        <el-form-item label="车道类型" prop="watchhouseName">
+          <el-select v-model="form.laneCategory" placeholder="请选择车道类型" size="small">
+            <el-option
+              v-for="item in options.laneCategory"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入岗亭备注" clearable size="small" />
+        <!-- 所属岗亭 -->
+        <el-form-item label="所属岗亭" prop="watchhouseName">
+          <el-select v-model="form.watchhouseName" placeholder="请选择所属岗亭" size="small">
+            <el-option
+              v-for="item in options.watchhouseName"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <!-- 相机品牌 -->
+        <el-form-item label="相机品牌">
+          <el-select v-model="form.cameraBrand" placeholder="请选择相机品牌" size="small">
+            <el-option
+              v-for="item in options.cameraBrand"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <!-- 相机识别码 -->
+        <el-form-item label="相机识别码">
+          <el-input v-model="form.cameraUDID" placeholder="请输入相机识别码" clearable size="small" />
+        </el-form-item>
+        <!-- 相机IP -->
+        <el-form-item label="相机IP">
+          <el-input v-model="form.cameraIP" placeholder="请输入相机IP" clearable size="small" />
+        </el-form-item>
+        <!-- 控制卡类型 -->
+        <el-form-item label="控制卡类型">
+          <el-select v-model="form.controlCardType" placeholder="请选择控制卡类型" size="small">
+            <el-option
+              v-for="item in options.controlCardType"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <!-- 是否有屏 -->
+        <el-form-item label="是否有屏">
+          <el-radio-group v-model="form.hasScreen">
+            <el-radio
+              v-for="item in options.hasScreenStatus"
+              :key="item.value"
+              :label="item.value"
+            >
+              {{ item.label }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <!-- 屏幕行数 -->
+        <el-form-item label="屏幕行数">
+          <el-select v-model="form.screenLines" placeholder="请选择屏幕行数" size="small">
+            <el-option
+              v-for="item in options.screenLines"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <!-- 是否显示余位 -->
+        <el-form-item label="是否显示余位">
+          <el-radio-group v-model="form.hasScreen">
+            <el-radio
+              v-for="item in options.hasScreenStatus"
+              :key="item.value"
+              :label="item.value"
+            >
+              {{ item.label }}
+            </el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -158,15 +240,7 @@ export default {
       },
       // 表单数据
       form: {},
-      // 表单校验
-      rules: {
-        parkinglotName: [
-          { required: true, message: '车场名称不能为空', trigger: 'blur' }
-        ],
-        watchhouseName: [
-          { required: true, message: '岗亭名称不能为空', trigger: 'blur' }
-        ]
-      },
+      // 遍历数据
       options: []
     }
   },
@@ -193,6 +267,16 @@ export default {
           }, {
             value: 0,
             label: '出口'
+          }
+        ],
+        // 二元状态选择
+        hasScreenStatus: [
+          {
+            value: '1',
+            label: '是'
+          }, {
+            value: '0',
+            label: '否'
           }
         ]
       }
