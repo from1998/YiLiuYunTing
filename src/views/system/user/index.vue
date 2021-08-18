@@ -316,7 +316,7 @@ export default {
   },
   // 勾子
   created() {
-    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  0禁用 1正常
+    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  1禁用 0正常
     this.getDataByType('sys_normal_disable').then(res => {
       this.stateOptions = res.data
     })
@@ -424,7 +424,7 @@ export default {
         this.form.username = res.data.username
         this.form.realName = res.data.realName
         this.form.mobile = res.data.mobile
-        this.form.role = res.data.role + ''
+        this.form.role = this.selectRoleLabel(this.roleOptions, res.data.role)
         this.form.email = res.data.email
         this.form.parentId = res.data.parentId
         this.loading = false
