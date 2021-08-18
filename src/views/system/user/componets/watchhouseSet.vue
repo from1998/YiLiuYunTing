@@ -5,15 +5,6 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="车场名称" prop="parkinglotName">
-        <el-input
-          v-model="queryParams.parkinglotName"
-          placeholder="请输入车场名称"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
       <el-form-item label="岗亭名称" prop="watchhouseName">
         <el-input
           v-model="queryParams.watchhouseName"
@@ -44,7 +35,6 @@
     <el-table v-loading="loading" border :data="watchhouseList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="岗亭ID" align="center" prop="watchhouseId" />
-      <el-table-column label="车场名称" align="center" prop="parkinglotName" />
       <el-table-column label="岗亭名称" align="center" prop="watchhouseName" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="280">
@@ -75,9 +65,6 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules">
-        <el-form-item label="车场名称" prop="parkinglotName">
-          <el-input v-model="form.parkinglotName" placeholder="请输入车场名称" clearable size="small" />
-        </el-form-item>
         <el-form-item label="岗亭名称" prop="watchhouseName">
           <el-input v-model="form.watchhouseName" placeholder="请输入岗亭名称" clearable size="small" />
         </el-form-item>
@@ -112,7 +99,7 @@ export default {
       multiple: true,
       // 分页数据总条数
       total: 0,
-      // 字典表格数据
+      // 表格数据
       watchhouseList: [],
       // 弹出层标题
       title: '',
@@ -122,16 +109,12 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        parkinglotName: undefined,
         watchhouseName: undefined
       },
       // 表单数据
       form: {},
       // 表单校验
       rules: {
-        parkinglotName: [
-          { required: true, message: '车场名称不能为空', trigger: 'blur' }
-        ],
         watchhouseName: [
           { required: true, message: '岗亭名称不能为空', trigger: 'blur' }
         ]
@@ -156,37 +139,31 @@ export default {
       this.watchhouseList = [
         {
           watchhouseId: '0',
-          parkinglotName: '一流云停',
           watchhouseName: '一号岗亭',
           remark: '这是第一个备注'
         },
         {
           watchhouseId: '1',
-          parkinglotName: '一流云停',
           watchhouseName: '二号岗亭',
           remark: '这是第二个备注'
         },
         {
           watchhouseId: '2',
-          parkinglotName: '一流云停',
           watchhouseName: '三号岗亭',
           remark: '这是第三个备注'
         },
         {
           watchhouseId: '3',
-          parkinglotName: '一流云停',
           watchhouseName: '四号岗亭',
           remark: '这是第四个备注'
         },
         {
           watchhouseId: '4',
-          parkinglotName: '一流云停',
           watchhouseName: '五号岗亭',
           remark: '这是第五个备注'
         },
         {
           watchhouseId: '5',
-          parkinglotName: '一流云停',
           watchhouseName: '六号岗亭',
           remark: '这是第六个备注'
         }
