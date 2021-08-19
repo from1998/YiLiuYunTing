@@ -87,9 +87,9 @@
     <!-- 分页组件开始 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.pageNum"
+      :current-page="queryParams.page"
       :page-sizes="[5, 10, 20, 30]"
-      :page-size="queryParams.pageSize"
+      :page-size="queryParams.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -173,8 +173,8 @@ export default {
       defaultDictType: undefined,
       // 查询参数
       queryParams: {
-        pageNum: 1,
-        pageSize: 10,
+        page: 1,
+        size: 10,
         dictLabel: undefined,
         dictType: undefined,
         status: undefined
@@ -239,14 +239,14 @@ export default {
     },
     // 分页pageSize变化时触发
     handleSizeChange(val) {
-      this.queryParams.pageSize = val
-      console.log(this.queryParams.pageSize)
+      this.queryParams.size = val
+      console.log(this.queryParams.size)
       // 重新查询
       this.getDictDataList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.pageNum = val
+      this.queryParams.page = val
       // 重新查询
       this.getDictDataList()
     },
