@@ -52,9 +52,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间">
+      <el-form-item label="操作时间">
         <el-date-picker
           v-model="dateRange"
+          placeholder="请选择操作时间"
           size="small"
           style="width:240px"
           value-format="yyyy-MM-dd"
