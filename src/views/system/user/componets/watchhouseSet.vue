@@ -34,7 +34,6 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="watchhouseList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗亭ID" align="center" prop="watchhouseId" />
       <el-table-column label="岗亭名称" align="center" prop="watchhouseName" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="280">
@@ -178,7 +177,6 @@ export default {
     // 重置查询
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
       this.getWatchhouseList()
     },
     // 数据表格的多选择框选择时触发

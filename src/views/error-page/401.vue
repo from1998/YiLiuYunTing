@@ -13,7 +13,7 @@
         <ul class="list-unstyled">
           <li>或者你可以:</li>
           <li class="link-type">
-            <router-link to="/carPlay">
+            <router-link to="/dashboard">
               回首页
             </router-link>
           </li>

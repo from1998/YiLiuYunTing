@@ -64,11 +64,15 @@ export default {
       }
     }
   },
-
+  created() {
+    this.activeName = window.sessionStorage.getItem('activeName')
+  },
   methods: {
-    handleClick(tab, event) {
-      // console.log(tab, event)
+    handleClick(tab) {
+      // console.log(tab.paneName)
+      window.sessionStorage.setItem('activeName', tab.paneName)
     }
+
   }
 }
 </script>

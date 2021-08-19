@@ -218,7 +218,7 @@ export default {
       listForPage(this.queryParams).then(res => {
         this.loading = false
         this.dictDataTableList = res.data.list
-        this.total = res.total
+        this.total = res.data.total
       })
     },
     // 条件查询
@@ -240,6 +240,7 @@ export default {
     // 分页pageSize变化时触发
     handleSizeChange(val) {
       this.queryParams.pageSize = val
+      console.log(this.queryParams.pageSize)
       // 重新查询
       this.getDictDataList()
     },

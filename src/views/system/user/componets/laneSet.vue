@@ -56,14 +56,11 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="laneList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="40" align="center" />
-      <el-table-column label="ID" width="50" align="center" prop="laneId" />
       <el-table-column label="车道名称" align="center" prop="laneName" />
       <el-table-column label="车道类型" align="center" prop="laneCategory" />
       <el-table-column label="所属岗亭" align="center" prop="watchhouseName" />
       <el-table-column label="相机状态" align="center">
         <template slot-scope="scope">
-          <!-- <el-result icon="scope.row.cameraState==='在线'?success:error" /> -->
-          <el-result icon="success" title="成功提示" sub-title="请根据提示进行操作" />
           <span>{{ scope.row.cameraState }}</span>
         </template>
       </el-table-column>
@@ -72,14 +69,37 @@
       <el-table-column label="相机IP" align="center" prop="cameraIP" />
       <el-table-column label="控制卡类型" align="center" prop="controlCardType" />
       <el-table-column label="是否有屏" align="center" prop="hasScreen" />
+      <el-table-column label="闸口状态" align="center">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.gateState"
+            :active-text="scope.row.gateState?'开闸':'关闸'"
+            @change="gateStateChanged(scope.row)"
+          />
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">开闸</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">关闸</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">无牌进场二维码</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">出场支付二维码</el-button>
+          <el-button
+            v-if="scope.row.laneCategory==='入口'"
+            type="text"
+            size="mini"
+            @click="handleIn(scope.row)"
+          >
+            <svg-icon icon-class="qrcode" />
+            无牌进场二维码
+          </el-button>
+          <el-button
+            v-if="scope.row.laneCategory==='出口'"
+            type="text"
+            size="mini"
+            @click="handleOut(scope.row)"
+          >
+            <svg-icon icon-class="pay" />
+            出场支付二维码
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -101,15 +121,14 @@
       :visible.sync="open"
       width="500px"
       center
-      append-to-body
     >
       <el-form ref="form" :model="form" label-width="100px">
         <!-- 车道名称 -->
-        <el-form-item label="车道名称" prop="parkinglotName">
+        <el-form-item label="车道名称" prop="laneName">
           <el-input v-model="form.laneName" placeholder="请输入车道名称" clearable size="small" />
         </el-form-item>
         <!-- 车道类型 -->
-        <el-form-item label="车道类型" prop="watchhouseName">
+        <el-form-item label="车道类型" prop="laneCategory">
           <el-select v-model="form.laneCategory" placeholder="请选择车道类型" size="small">
             <el-option
               v-for="item in options.laneCategory"
@@ -164,7 +183,7 @@
         <el-form-item label="是否有屏">
           <el-radio-group v-model="form.hasScreen">
             <el-radio
-              v-for="item in options.hasScreenStatus"
+              v-for="item in options.status"
               :key="item.value"
               :label="item.value"
             >
@@ -185,9 +204,9 @@
         </el-form-item>
         <!-- 是否显示余位 -->
         <el-form-item label="是否显示余位">
-          <el-radio-group v-model="form.hasScreen">
+          <el-radio-group v-model="form.showResidue">
             <el-radio
-              v-for="item in options.hasScreenStatus"
+              v-for="item in options.status"
               :key="item.value"
               :label="item.value"
             >
@@ -199,6 +218,18 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- 二维码弹出层 -->
+    <el-dialog
+      title="无牌车进场请扫码"
+      :visible.sync="qrcodeDialogVisible"
+      width="30%"
+      center
+    >
+      <span slot="footer" class="dialog-footer">
+        <el-button :loading="loading" type="primary" icon="el-icon-download" @click="handleDownload">下载</el-button>
+        <el-button type="primary" @click="qrcodeDialogVisible = false">关闭</el-button>
       </span>
     </el-dialog>
   </div>
@@ -213,6 +244,7 @@ export default {
   // 定义页面数据
   data() {
     return {
+      qrcodeDialogVisible: false,
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -239,7 +271,19 @@ export default {
 
       },
       // 表单数据
-      form: {},
+      form: {
+        laneName: '',
+        laneCategory: '',
+        watchhouseName: '',
+        cameraBrand: '',
+        cameraUDID: '',
+        cameraIP: '',
+        controlCardType: '',
+        hasScreen: '',
+        screenLines: '',
+        showResidue: '',
+        gateState: undefined
+      },
       // 遍历数据
       options: []
     }
@@ -270,7 +314,7 @@ export default {
           }
         ],
         // 二元状态选择
-        hasScreenStatus: [
+        status: [
           {
             value: '1',
             label: '是'
@@ -284,7 +328,7 @@ export default {
         {
           laneId: '0',
           laneName: 'A车道',
-          laneCategory: '出口',
+          laneCategory: '入口',
           watchhouseName: '一号岗亭',
           cameraState: '在线',
           cameraBrand: '索尼',
@@ -294,7 +338,7 @@ export default {
           hasScreen: '是'
         },
         {
-          laneId: '0',
+          laneId: '1',
           laneName: 'B车道',
           laneCategory: '出口',
           watchhouseName: '二号岗亭',
@@ -306,9 +350,9 @@ export default {
           hasScreen: '否'
         },
         {
-          laneId: '0',
+          laneId: '2',
           laneName: 'C车道',
-          laneCategory: '出口',
+          laneCategory: '入口',
           watchhouseName: '三号岗亭',
           cameraState: '不在线',
           cameraBrand: '爱立信',
@@ -318,7 +362,7 @@ export default {
           hasScreen: '是'
         },
         {
-          laneId: '0',
+          laneId: '3',
           laneName: 'D车道',
           laneCategory: '出口',
           watchhouseName: '四号岗亭',
@@ -345,7 +389,7 @@ export default {
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
-      this.ids = selection.map(item => item.watchhouseId)
+      this.ids = selection.map(item => item.laneId)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -370,22 +414,22 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改车道'
-      const watchhouseId = row.watchhouseId || this.ids
+      const laneId = row.laneId || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据id查询岗亭信息
       // this.loading = true
-      // getRoleById(watchhouseId).then(res => {
+      // getRoleById(laneId).then(res => {
       //   this.form = res.data
       //   this.loading = false
       // })
-      console.log(watchhouseId)
+      console.log(laneId)
       this.msgSuccess('修改弹出成功')
     },
     // 执行删除
     handleDelete(row) {
-      const watchhouseId = row.watchhouseId || this.ids
+      const laneId = row.laneId || this.ids
       this.$confirm('此操作将永久删除该车道数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -397,11 +441,42 @@ export default {
         //   this.msgSuccess('删除成功')
         //   this.getlaneList()// 全查询
         // })
-        console.log(watchhouseId)
+        console.log(laneId)
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false
       })
+    },
+    // 监听 switch 闸口状态的改变
+    async gateStateChanged(row) {
+      console.log(row)
+      // const { data: res } = await this.$http.put(
+      //   `users/${row.id}/state/${row.gateState}`
+      // )
+      // if (res.meta.status !== 200) {
+      //   row.gateState = !row.gateState
+      //   return this.$message.error('更新用户状态失败！')
+      // }
+      this.msgSuccess('闸口状态修改成功！')
+    },
+    handleIn() {
+      this.qrcodeDialogVisible = true
+    },
+    // 二维码下载
+    handleDownload() {
+      this.loading = true
+      // import('@/vendor/Export2Excel').then(excel => {
+      //   const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
+      //   const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
+      //   const data = this.formatJson(filterVal)
+      //   excel.export_json_to_excel({
+      //     header: tHeader,
+      //     data,
+      //     filename: 'table-list'
+      //   })
+      //   this.loading = false
+      // })
+      this.loading = false
     },
     // 保存
     handleSubmit() {
