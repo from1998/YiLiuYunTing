@@ -5,7 +5,7 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="车位层号">
+      <el-form-item label="车位层号" prop="portLevel">
         <el-input
           v-model="queryParams.portLevel"
           placeholder="请输入车位层号"
@@ -13,7 +13,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="车位区域号" label-width="96px">
+      <el-form-item label="车位区域号" label-width="96px" prop="portArea">
         <el-input
           v-model="queryParams.portArea"
           placeholder="请输入车位区域号"
@@ -21,7 +21,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="车位编号" label-width="96px">
+      <el-form-item label="车位编号" label-width="96px" prop="portSerialNumber">
         <el-input
           v-model="queryParams.portSerialNumber"
           placeholder="请输入车位编号"

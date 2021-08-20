@@ -65,7 +65,7 @@ export default {
     }
   },
   created() {
-    this.activeName = window.sessionStorage.getItem('activeName')
+    this.activeName = window.sessionStorage.getItem('activeName') || 'depotInfo'
   },
   methods: {
     handleClick(tab) {

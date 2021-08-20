@@ -5,7 +5,7 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="保安姓名">
+      <el-form-item label="保安姓名" prop="securityName">
         <el-input
           v-model="queryParams.securityName"
           placeholder="请输入保安姓名"
@@ -13,7 +13,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="保安手机号码" label-width="96px">
+      <el-form-item label="保安手机号码" label-width="96px" prop="securityPhone">
         <el-input
           v-model="queryParams.securityPhone"
           placeholder="请输入保安手机号码"

@@ -52,19 +52,21 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="操作时间">
-        <el-date-picker
-          v-model="dateRange"
-          placeholder="请选择操作时间"
-          size="small"
-          style="width:240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholde="开始日期"
-          end-placeholde="结束日期"
-        />
-      </el-form-item>
+      <el-tooltip class="item" effect="dark" content="默认显示当天的操作记录" placement="bottom">
+        <el-form-item label="操作时间">
+          <el-date-picker
+            v-model="dateRange"
+            placeholder="请选择操作时间"
+            size="small"
+            style="width:240px"
+            value-format="yyyy-MM-dd"
+            type="daterange"
+            range-separator="-"
+            start-placeholde="开始日期"
+            end-placeholde="结束日期"
+          />
+        </el-form-item>
+      </el-tooltip>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button type="normal" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -227,6 +229,7 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      this.dateRange = this.timeDefault()
       this.getOperLogList()
     },
     // 数据表格的多选择框选择时触发

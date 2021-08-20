@@ -5,7 +5,7 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="车道名称">
+      <el-form-item label="车道名称" prop="laneName">
         <el-input
           v-model="queryParams.laneName"
           placeholder="请输入车道名称"
@@ -13,7 +13,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="所属岗亭">
+      <el-form-item label="所属岗亭" prop="watchhouseName">
         <el-input
           v-model="queryParams.watchhouseName"
           placeholder="请输入所属岗亭名称"
@@ -21,7 +21,7 @@
           size="small"
         />
       </el-form-item>
-      <el-form-item label="车道类型">
+      <el-form-item label="车道类型" prop="laneCategory">
         <el-select
           v-model="queryParams.laneCategory"
           placeholder="请选择车道类型"
