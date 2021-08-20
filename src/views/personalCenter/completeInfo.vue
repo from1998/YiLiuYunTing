@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <!-- 标题 -->
-    <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
+    <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
       完善资料
     </el-header>
     <!-- 主体 -->
@@ -30,17 +30,18 @@
         <el-form-item label="企业名称" prop="firmName">
           <el-input v-model="form.firmName" placeholder="请输入企业名称" />
         </el-form-item>
-        <el-row :gutter="20">
-          <el-col :span="12">
+        <el-row>
+          <el-col :span="16">
             <el-form-item label="验证码" prop="verificationCode">
-              <el-input v-model="form.verificationCode" placeholder="验证码" />
+              <el-input v-model="form.verificationCode" placeholder="请输入验证码" />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-button type="primary" size="default" @click="getVerificationCode">
-              获取验证码
-              <el-button />
-            </el-button></el-col>
+          <el-col :span="8" class="verifyCode">
+            <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
+              <span v-if="codeShow">获取验证码</span>
+              <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
+            </el-button>
+          </el-col>
         </el-row>
 
         <el-row :gutter="20">
@@ -63,47 +64,30 @@ export default {
   name: 'DepotInfo',
   data() {
     return {
+      // 获取验证码按钮显示
+      codeShow: true,
+      //   计数器
+      count: '',
+      //   定时器
+      timer: null,
       form: {
-        name: '',
-        sName: '',
-        region: [],
-        detailAddress: '',
         category: '',
+        name: '',
+        idNumber: '',
         phone: '',
-        remain: '',
-        longitude: '',
-        latitude: '',
-        allPort: '',
-        freePort: '',
-        status: '1',
-        connectMethod: '1',
-        feeStatus: '1',
-        procedureFee: '',
-        parkingFee: '',
-        chargingPile: '1',
-        pertainRole: '',
-        usable: '1',
-        uploadMonitorPlatform: '1',
-        monitorPlatform: '',
-        PlatformIdentification: '',
-        businessHours: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
-        remark: ''
+        firmName: '',
+        verificationCode: ''
+
       },
       categoryOptions: [{
-        value: '选项1',
-        label: '黄金糕'
+        value: '1',
+        label: '公司'
       }, {
-        value: '选项2',
-        label: '双皮奶'
+        value: '2',
+        label: '个人'
       }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
+        value: '3',
+        label: '个体工商户'
       }]
     }
   },
@@ -118,7 +102,20 @@ export default {
       // console.log(value)
     },
     getVerificationCode() {
-      this.$message('成功')
+      const TIME_COUNT = 60
+      if (!this.timer) {
+        this.count = TIME_COUNT
+        this.codeShow = false
+        this.timer = setInterval(() => {
+          if (this.count > 0 && this.count <= TIME_COUNT) {
+            this.count--
+          } else {
+            this.codeShow = true
+            clearInterval(this.timer)
+            this.timer = null
+          }
+        }, 1000)
+      }
     }
   }
 }
@@ -131,5 +128,13 @@ export default {
 .footer {
     margin-left: 50%;
     transform: translateX(-50%);
+}
+.verifyCode {
+    el-button {
+        border-radius: 0!important;
+    }
+}
+.count {
+    cursor:not-allowed;
 }
 </style>
