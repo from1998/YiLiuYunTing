@@ -3,14 +3,14 @@
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
       身份认证
-      <el-button v-show="authentication" type="primary" icon="el-icon-success" size="mini">已认证</el-button>
+      <el-button v-show="authentication" type="success" icon="el-icon-success" size="mini">已认证</el-button>
       <el-button v-show="!authentication" type="info" icon="el-icon-info" size="mini">未认证</el-button>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
 
       <el-form ref="depotForm" :model="form" label-width="150px" style="width:750px">
-        <!-- 名称 简称 -->
+        <!-- 注册类型 -->
         <el-form-item label="注册类型" prop="category">
           <el-select v-model="form.category" placeholder="请选择注册类型">
             <el-option
@@ -68,7 +68,7 @@ export default {
   data() {
     return {
       // 用户认证状态,
-      authentication: false,
+      authentication: true,
       // 获取验证码按钮显示
       codeShow: true,
       //   计数器
