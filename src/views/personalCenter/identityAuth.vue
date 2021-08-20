@@ -3,9 +3,12 @@
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
       身份认证
+      <el-button v-show="authentication" type="primary" icon="el-icon-success" size="mini">已认证</el-button>
+      <el-button v-show="!authentication" type="info" icon="el-icon-info" size="mini">未认证</el-button>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
+
       <el-form ref="depotForm" :model="form" label-width="150px" style="width:750px">
         <!-- 名称 简称 -->
         <el-form-item label="注册类型" prop="category">
@@ -64,6 +67,8 @@ export default {
   name: 'IdentityAuth',
   data() {
     return {
+      // 用户认证状态,
+      authentication: false,
       // 获取验证码按钮显示
       codeShow: true,
       //   计数器
@@ -134,7 +139,9 @@ export default {
         border-radius: 0!important;
     }
 }
-.count {
-    cursor:not-allowed;
+.el-button--mini {
+  padding: 0 5px!important;
+  height: 17px;
 }
+
 </style>
