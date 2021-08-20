@@ -154,7 +154,7 @@
                     width="222"
                   >
                     <template slot-scope="scope">
-                      <el-input-number v-model="scope.row.timeDur" :precision="0" :step="1" />
+                      <el-input-number v-model="scope.row.minutes" :precision="0" :step="1" />
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -206,7 +206,7 @@ export default {
   name: 'FeeRule',
   data() {
     return {
-      limitNumber: '5',
+      limitNumber: '24',
       form: {
         carNumberCategory: '',
         onceFreeTime: '',
@@ -230,11 +230,11 @@ export default {
         // 叠加计费
         overlayCountFee: [
           {
-            timeDur: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
+            minutes: '',
             overlayFee: ''
           },
           {
-            timeDur: [new Date(), new Date()],
+            minutes: '',
             overlayFee: ''
           }
         ]
@@ -286,7 +286,7 @@ export default {
           })
         } else {
           array.push({
-            timeDur: [new Date(), new Date()],
+            minutes: '',
             overlayFee: ''
           })
         }
