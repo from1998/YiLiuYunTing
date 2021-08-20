@@ -207,13 +207,11 @@
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" />
         </el-form-item>
-        <el-row :gutter="20">
-          <el-form-item>
-            <div class="footer">
-              <el-button type="primary" @click="onSubmit">提交</el-button>
-              <el-button type="danger" @click="resetForm('depotForm')">重置</el-button>
-            </div>
-          </el-form-item>
+        <el-row :gutter="30">
+          <div class="footer">
+            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button type="danger" @click="resetForm('depotForm')">重置</el-button>
+          </div>
         </el-row>
 
       </el-form>

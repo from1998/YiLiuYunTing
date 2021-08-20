@@ -69,16 +69,16 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'completeInfo',
-        component: () => import('@/views/personalCenter/completeInfo'),
-        name: '/personalCenter/completeInfo',
+        path: 'userRegister',
+        component: () => import('@/views/personalCenter/userRegister'),
+        name: '/personalCenter/userRegister',
         meta: {
-          title: '完善资料',
+          title: '用户注册',
           icon: 'el-icon-document'
         }
       },
       {
-        path: 'role',
+        path: 'identityAuth',
         component: () => import('@/views/personalCenter/identityAuth'),
         name: '/personalCenter/identityAuth',
         meta: {
