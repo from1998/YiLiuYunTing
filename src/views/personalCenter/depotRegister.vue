@@ -2,14 +2,14 @@
   <el-container>
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
-      用户注册
+      车场注册
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form ref="registerForm" :model="form" label-width="150px" style="width:750px">
+      <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px">
         <!-- 注册类型 -->
         <el-form-item label="注册类型" prop="category">
-          <el-select v-model="form.category" placeholder="请选择注册类型">
+          <el-select v-model="form.category" placeholder="请选择注册类型" clearable>
             <el-option
               v-for="item in categoryOptions"
               :key="item.value"
@@ -19,7 +19,13 @@
           </el-select>
         </el-form-item>
         <!-- 个人/法人姓名 -->
-        <el-form-item label="个人/法人姓名" prop="name">
+        <el-form-item prop="name">
+          <span slot="label">
+            <span v-show="form.category===''">个人/法人姓名</span>
+            <span v-show="form.category==='1'">法人姓名</span>
+            <span v-show="form.category==='2'">个人姓名</span>
+            <span v-show="form.category==='3'">个体工商户姓名</span>
+          </span>
           <el-input v-model="form.name" placeholder="请输入个人/法人姓名" />
         </el-form-item>
         <!-- 身份证号码 -->
@@ -31,7 +37,7 @@
           <el-input v-model="form.phone" placeholder="请输入手机号码" />
         </el-form-item>
         <!-- 企业名称 -->
-        <el-form-item label="企业名称" prop="firmName">
+        <el-form-item v-if="form.category==='1'" label="企业名称" prop="firmName">
           <el-input v-model="form.firmName" placeholder="请输入企业名称" />
         </el-form-item>
         <!-- 用户协议 -->
@@ -90,7 +96,7 @@
 </template>
 <script>
 export default {
-  name: 'UserRegister',
+  name: 'DepotRegister',
   data() {
     return {
       ConfirmAgreementOpen: false,

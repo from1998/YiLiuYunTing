@@ -69,11 +69,11 @@ export const constantRoutes = [
     },
     children: [
       {
-        path: 'userRegister',
-        component: () => import('@/views/personalCenter/userRegister'),
-        name: '/personalCenter/userRegister',
+        path: 'depotRegister',
+        component: () => import('@/views/personalCenter/depotRegister'),
+        name: '/personalCenter/depotRegister',
         meta: {
-          title: '用户注册',
+          title: '车场注册',
           icon: 'el-icon-document'
         }
       },

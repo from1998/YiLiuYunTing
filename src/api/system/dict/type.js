@@ -46,10 +46,3 @@ export function getDictTypeById(dictId) {
     method: 'get'
   })
 }
-// 缓存同步接口
-export function dictCacheAsync() {
-  return request({
-    url: '/system/dict/type/dictCacheAsync',
-    method: 'get'
-  })
-}

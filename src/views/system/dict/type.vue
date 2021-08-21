@@ -57,17 +57,14 @@
 
     <!-- 表格工具按钮开始 -->
     <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+      <el-col :span="2">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <el-col :span="2">
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
       </el-col>
-      <el-col :span="1.5">
+      <el-col :span="2">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="warning" icon="el-icon-refresh" size="mini" @click="handleCacheAsync">缓存同步</el-button>
       </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->
@@ -121,7 +118,7 @@
           <el-input v-model="form.dictName" placeholder="请输入字典名称" clearable size="small" />
         </el-form-item>
         <el-form-item label="字典类型" prop="dictType">
-          <el-input v-model="form.dictType" placeholder="请输入字典类型" clearable size="small" />
+          <el-input v-model="form.dictType" placeholder="请输入字典类型" clearable size="small" @keyup.enter.native="handleSubmit" />
         </el-form-item>
         <el-form-item label="字典状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -148,7 +145,7 @@
 </template>
 <script>
 // 引入api
-import { listForPage, addDictType, updateDictType, getDictTypeById, deleteDictTypeByIds, dictCacheAsync } from '@/api/system/dict/type'
+import { listForPage, addDictType, updateDictType, getDictTypeById, deleteDictTypeByIds } from '@/api/system/dict/type'
 export default {
   // 定义页面数据
   data() {
@@ -323,18 +320,6 @@ export default {
         remark: undefined
       }
       this.resetForm('form')
-    },
-    // 缓存同步
-    handleCacheAsync() {
-      this.loading = true
-      dictCacheAsync().then(() => {
-        this.loading = false
-        this.msgSuccess('缓存同步成功')
-      }).catch(
-        () => {
-          this.getDictTypeList()
-        }
-      )
     }
   }
 }
