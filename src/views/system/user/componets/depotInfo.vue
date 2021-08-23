@@ -521,7 +521,7 @@ export default {
     //   this.resetForm(formName)
     // },
     handleChange(value) {
-      // console.log(value)
+      console.log(value)
     }
   }
 }

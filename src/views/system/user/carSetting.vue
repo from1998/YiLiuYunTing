@@ -68,6 +68,13 @@ export default {
   },
   created() {
     this.activeName = window.sessionStorage.getItem('activeName') || 'depotInfo'
+    // 取路由路径上的参数
+    const id = this.$route.params && this.$route.params.id // 路由传参
+    console.log(id)
+    // 根据字典类型ID查询字典的dictType
+    getDepotById(id).then(res => {
+      console.log(res)
+    })
   },
   methods: {
     handleClick(tab) {
