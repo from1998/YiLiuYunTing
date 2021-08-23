@@ -41,7 +41,7 @@
           <el-input v-model="form.firmName" placeholder="请输入企业名称" />
         </el-form-item>
         <!-- 用户协议 -->
-        <el-form-item prop="userProtocol">
+        <el-form-item prop="userProtocolState">
           <span slot="label">确认<el-link type="primary" :underline="false" @click="ConfirmAgreementOpen = true">用户协议</el-link></span>
           <el-switch
             v-model="form.userProtocol"
@@ -162,7 +162,7 @@ export default {
      -webkit-box-pack:center;
 }
 .footer {
-    margin-top: 5%;
+  margin-bottom: 5%;
     margin-left: 50%;
     transform: translateX(-50%);
     display: flex;

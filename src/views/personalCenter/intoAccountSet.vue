@@ -2,7 +2,7 @@
   <el-container>
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
-      完善资料
+      到账设置
     </el-header>
     <!-- 主体 -->
     <el-container class="container">

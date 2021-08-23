@@ -9,7 +9,7 @@
     <!-- 主体 -->
     <el-container class="container">
 
-      <el-form ref="depotForm" :model="form" label-width="150px" style="width:750px">
+      <el-form ref="depotForm" :model="form" label-width="150px" style="width:1000px">
         <el-row :gutter="50">
           <el-col :span="12">
             <!-- 注册类型 -->
@@ -43,19 +43,19 @@
         </el-row>
         <el-row :gutter="50">
           <el-col :span="12">
-            <el-form-item label="身份证是否长期" prop="whetherLongtime">
+            <el-form-item label="身份证是否长期" prop="IDCardLongtime">
               <el-tooltip class="item" effect="dark" content="请选择身份证有效期状态" placement="right">
                 <el-switch
-                  v-model="form.whetherLongtime"
-                  :active-text="form.whetherLongtime?'长期':'非长期'"
+                  v-model="form.IDCardLongtime"
+                  :active-text="form.IDCardLongtime?'长期':'非长期'"
                 />
               </el-tooltip>
             </el-form-item>
           </el-col>
-          <el-col v-if="!form.whetherLongtime" :span="12">
-            <el-form-item label="有效期限截至日期" prop="expiryTime">
+          <el-col v-if="!form.IDCardLongtime" :span="12">
+            <el-form-item label="有效期限截至日期" prop="IDCardExpiryTime">
               <el-date-picker
-                v-model="form.expiryTime"
+                v-model="form.IDCardExpiryTime"
                 type="date"
                 placeholder="选择日期"
               />
@@ -63,25 +63,127 @@
           </el-col>
         </el-row>
         <!-- 上传证件照片 -->
-        <el-row :gutter="50">
+        <el-row :gutter="20">
           <el-col :span="8">
-            <el-form-item label="手持证件照片" prop="handHeld" />
-          </el-col>
-        </el-row>
-        <el-form-item label="企业名称" prop="firmName">
-          <el-input v-model="form.firmName" placeholder="请输入企业名称" />
-        </el-form-item>
-        <el-row>
-          <el-col :span="16">
-            <el-form-item label="验证码" prop="verificationCode">
-              <el-input v-model="form.verificationCode" placeholder="请输入验证码" />
+            <el-form-item label="身份证正面照" prop="IDCardFront">
+              <upload-img />
             </el-form-item>
           </el-col>
-          <el-col :span="8" class="verifyCode">
-            <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
-              <span v-if="codeShow">获取验证码</span>
-              <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
-            </el-button>
+          <el-col :span="8">
+            <el-form-item label="身份证反面照" prop="IDCardReverse">
+              <upload-img />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="手持身份证照片" prop="IDCardHandheld">
+              <upload-img />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 商户全称与简称 -->
+        <el-row v-show="options.category.value!=='2'" :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="商户全称" prop="merchantName">
+              <el-input v-model="form.merchantName" placeholder="请输入商户全称" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="商户简称" prop="merchantSname">
+              <el-input v-model="form.merchantSname" placeholder="请输入商户简称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 商户电话与营业地址 -->
+        <el-row :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="商户电话" prop="merchantPhone">
+              <el-input v-model="form.merchantPhone" placeholder="请输入商户电话" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="营业地址" prop="businessAddress">
+              <el-input v-model="form.businessAddress" placeholder="请输入营业地址" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 营业执照类型与统一社会信用代码 -->
+        <el-row v-show="options.category.value!=='2'" :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="营业执照类型" prop="licenseCategory">
+              <el-select v-model="form.licenseCategory" placeholder="请选择营业执照类型" clearable>
+                <el-option
+                  v-for="item in licenseCategoryOptions"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="统一社会信用代码" prop="socialCreditCode">
+              <el-input v-model="form.socialCreditCode" placeholder="请输入统一社会信用代码" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 营业执照是否长期 -->
+        <el-row v-show="options.category.value!=='2'" :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="营业执照是否长期" prop="licenseLongtime">
+              <el-tooltip class="item" effect="dark" content="请选择营业执照有效期状态" placement="right">
+                <el-switch
+                  v-model="form.licenseLongtime"
+                  :active-text="form.licenseLongtime?'长期':'非长期'"
+                />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col v-if="!form.licenseLongtime" :span="12">
+            <el-form-item label="有效期限截至日期" prop="licenseExpiryTime">
+              <el-date-picker
+                v-model="form.licenseExpiryTime"
+                type="date"
+                placeholder="选择日期"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 注册资本与经营范围 -->
+        <el-row v-show="options.category.value!=='2'" :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="注册资本(万元)" prop="registeredCapital">
+              <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
+                <el-input-number v-model="form.registeredCapital" :precision="0" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="经营范围" prop="businessScope">
+              <el-input v-model="form.businessScope" placeholder="请输入经营范围" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 上传企业证件照片 -->
+        <el-row :gutter="50">
+          <el-col :span="6">
+            <el-form-item label="营业执照" prop="license">
+              <upload-img />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="税务登记证副本" prop="taxCertificate ">
+              <upload-img />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="组织结构代码证副本" prop="organizationCodeCertificate">
+              <upload-img />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="银行开户许可证" prop="bankAccountPermit">
+              <upload-img />
+            </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="20">
@@ -100,14 +202,15 @@
 
 </template>
 <script>
+import UploadImg from '@/components/UploadImg/index.vue'
+
 export default {
   name: 'IdentityAuth',
+  components: {
+    UploadImg
+  },
   data() {
     return {
-      limitCount: 1,
-      uploadImgVisible: false,
-      // 为隐藏上传图片按钮设置的类的激活状态
-      hideUpload: false,
       // 用户认证状态,
       authentication: false,
       // 获取验证码按钮显示
@@ -121,11 +224,35 @@ export default {
         name: '',
         idNumber: '',
         phone: '',
-        whetherLongtime: false,
         firmName: '',
-        handHeld: []
+        handHeld: [],
+        IDCardLongtime: false,
+        IDCardExpiryTime: [],
+        merchantName: '',
+        merchantSname: '',
+        merchantPhone: '',
+        businessAddress: '',
+        licenseCategory: '',
+        socialCreditCode: '',
+        licenseLongtime: false,
+        licenseExpiryTime: [],
+        registeredCapital: undefined,
+        businessScope: '',
+        license: [],
+        taxCertificate: [],
+        organizationCodeCertificate: [],
+        bankAccountPermit: []
 
       },
+      licenseCategoryOptions: [
+        {
+          label: '普通营业执照',
+          value: '1'
+        }, {
+          label: '三证合一营业执照',
+          value: '2'
+        }
+      ],
       options: {
         category: {
           label: '公司',
@@ -144,17 +271,6 @@ export default {
     // onReset(formName) {
     //   this.resetForm(formName)
     // },
-    handleChange(file, fileList) {
-      this.form.handHeld = fileList
-      console.log(this.form.handHeld)
-      this.hideUpload = fileList.length >= this.limitCount
-    },
-    // 删除上传的图片
-    handleRemove(file, fileList) {
-      this.form.handHeld = fileList
-      console.log(fileList)
-      this.hideUpload = fileList.length >= this.limitCount
-    },
     getVerificationCode() {
       const TIME_COUNT = 60
       if (!this.timer) {
@@ -183,7 +299,7 @@ export default {
     margin-left: 50%;
     transform: translateX(-50%);
 }
-.verifyCode {
+.verificationCode {
     el-button {
         border-radius: 0!important;
     }

@@ -29,8 +29,7 @@
   </div>
 </template>
 <script>
-// todo 停车端个人中心与车厂配置待完成
-// import test1 from './componets/test1'
+// 导入组件
 import depotInfo from './componets/depotInfo.vue'
 import depotSet from './componets/depotSet'
 import feeRule from './componets/feeRule'
@@ -39,6 +38,9 @@ import portManger from './componets/portManger'
 import secManger from './componets/secManger'
 import watchhouseSet from './componets/watchhouseSet'
 import BackToTop from '@/components/BackToTop'
+
+// 导入API方法
+import { getDepotById } from '@/api/system/carSetting'
 export default {
   components: {
     depotInfo,

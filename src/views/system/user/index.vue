@@ -424,7 +424,7 @@ export default {
         this.form.username = res.data.username
         this.form.realName = res.data.realName
         this.form.mobile = res.data.mobile
-        this.form.role = this.selectRoleLabel(this.roleOptions, res.data.role)
+        this.form.role = res.data.role
         this.form.email = res.data.email
         this.form.parentId = res.data.parentId
         this.loading = false
