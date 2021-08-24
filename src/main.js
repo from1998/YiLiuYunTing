@@ -20,8 +20,8 @@ Vue.use(dataV)
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
-import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType } from '@/utils/his-utils'
 import { getDataByType } from '@/api/system/dict/data'
+import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType, getDataByMoreType } from '@/utils/his-utils'
 // 全局方法挂载
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
@@ -32,6 +32,7 @@ Vue.prototype.handleTree = handleTree // 挂载全局的构造树的JSON的方�
 Vue.prototype.getAge = getAge// 挂载全局的根据出生年月日计算年龄的方法
 Vue.prototype.getCurrentTimeType = getCurrentTimeType// 挂载全局计算时段的方法
 Vue.prototype.moment = moment
+Vue.prototype.getDataByMoreType = getDataByMoreType // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 // 挂载全局消息框
 Vue.prototype.msgSuccess = function(msg) {
   this.$message({ showClose: true, message: msg, type: 'success' })

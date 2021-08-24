@@ -1,4 +1,19 @@
 // 项目通用方法的封装
+import { getDataByType } from '@/api/system/dict/data'
+
+// 查询多个字典数据
+export function getDataByMoreType() {
+  const vals = []
+  for (let index = 0; index < arguments.length; index++) {
+    vals.push(getDataByType(arguments[index]).then(res => {
+      return {
+        name: arguments[index],
+        value: res.data
+      }
+    }))
+  }
+  return vals
+}
 
 // 可以重置任何页面的表单
 export function resetForm(refName) {

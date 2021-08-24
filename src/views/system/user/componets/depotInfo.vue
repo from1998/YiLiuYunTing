@@ -10,62 +10,62 @@
         <!-- 名称 简称 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="名称" prop="name">
+            <el-form-item label="名称" prop="form.name">
               <el-input v-model="form.name" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="简称" prop="sName">
-              <el-input v-model="form.sName" />
+            <el-form-item label="简称" prop="form.shortname">
+              <el-input v-model="form.shortname" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 地区 详细地址 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="地区" prop="region">
+            <el-form-item label="地区" prop="convert.region">
               <el-cascader
-                v-model="form.region"
+                v-model="convert.region"
                 :options="addressOptions"
                 :props="{ expandTrigger: 'hover' }"
                 label-width="260px"
-                @change="handleChange"
-                @expand-change="expandChange"
+                filterable
+                @change="handleChange(addressOptions,$event)"
               />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="详细地址" prop="detailAddress">
-              <el-input v-model="form.detailAddress" />
+            <el-form-item label="详细地址" prop="form.address">
+              <el-input v-model="form.address" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 车场类型 -->
-        <el-form-item label="类型" prop="category">
-          <el-select v-model="form.category" placeholder="请选择车场类型">
+        <el-form-item label="类型" prop="form.lottype">
+          <el-select v-model="form.lottype" placeholder="请选择车场类型">
             <el-option
               v-for="item in categoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="item.dictValue"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="手机/电话" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机/电话号码" />
+        <el-form-item label="手机/电话" prop="form.mobile">
+          <el-input v-model="form.mobile" placeholder="请输入手机/电话号码" />
         </el-form-item>
-        <el-form-item label="支付逗留时长" prop="remain" placeholder="请输入支付逗留时长">
-          <el-input v-model="form.remain" />
+        <el-form-item label="支付逗留时长" prop="form.payduration" placeholder="请输入支付逗留时长">
+          <el-input v-model="form.payduration" />
         </el-form-item>
         <!-- 经纬度 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="经度" prop="longitude">
+            <el-form-item label="经度" prop="form.longitude">
               <el-input v-model="form.longitude" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="纬度" prop="latitude">
+            <el-form-item label="纬度" prop="form.latitude">
               <el-input v-model="form.latitude" />
             </el-form-item>
           </el-col>
@@ -73,31 +73,43 @@
         <!-- 总车位数与空闲车位数 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="总车位数" prop="allPort">
-              <el-input v-model="form.allPort" />
+            <el-form-item label="总车位数" prop="form.total">
+              <el-input v-model="form.total" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="空闲车位数" prop="freePort">
-              <el-input v-model="form.freePort" />
+            <el-form-item label="空闲车位数" prop="form.emptynum">
+              <el-input v-model="form.emptynum" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 连接方式与展示车位 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="连接方式" prop="connectMethod">
-              <el-radio-group v-model="form.connectMethod">
-                <el-radio label="1" selected>直连</el-radio>
-                <el-radio label="0">间连</el-radio>
+            <el-form-item label="连接方式" prop="form.linktype">
+              <el-radio-group v-model="form.linktype">
+                <el-radio
+                  v-for="item in linkTypeOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  @change="stateChange()"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否展示车位" prop="status">
-              <el-radio-group v-model="form.status">
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+            <el-form-item label="是否展示车位" prop="form.isshowsite">
+              <el-radio-group v-model="form.isshowsite">
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  @change="stateChange()"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -105,10 +117,16 @@
         <!-- 是否收费 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否收费" prop="feeStatus">
-              <el-radio-group v-model="form.feeStatus">
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+            <el-form-item label="是否收费" prop="form.charge">
+              <el-radio-group v-model="form.charge">
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  @change="stateChange()"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -116,16 +134,16 @@
         <!-- 手续费及停车费分成 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手续费(百分比)" prop="procedureFee">
+            <el-form-item label="手续费(百分比)" prop="form.commissioncharge">
               <el-tooltip class="item" effect="dark" content="请输入手续费(百分比)" placement="right">
-                <el-input-number v-model="form.procedureFee" :precision="2" :step="1" />
+                <el-input-number v-model="form.commissioncharge" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="停车费分成(百分比)" prop="parkingFee">
+            <el-form-item label="停车费分成(百分比)" prop="form.parkfeecharge">
               <el-tooltip class="item" effect="dark" content="请输入停车费分成(百分比)" placement="right">
-                <el-input-number v-model="form.parkingFee" :precision="2" :step="1" />
+                <el-input-number v-model="form.parkfeecharge" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -133,19 +151,31 @@
         <!-- 是否有充电桩 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否有充电桩" prop="chargingPile">
+            <el-form-item label="是否有充电桩" prop="form.chargingPile">
               <el-radio-group v-model="form.chargingPile">
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  @change="stateChange()"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <!-- 状态 -->
           <el-col :span="12">
-            <el-form-item label="是否可用" prop="usable">
-              <el-radio-group v-model="form.usable">
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+            <el-form-item label="是否可用" prop="form.state">
+              <el-radio-group v-model="form.state">
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  @change="stateChange()"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
@@ -153,44 +183,50 @@
         <!-- 上传监管平台与上传平台 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否上传监管平台" prop="uploadMonitorPlatform">
-              <el-radio-group v-model="form.uploadMonitorPlatform">
-                <el-radio label="1">是</el-radio>
-                <el-radio label="0">否</el-radio>
+            <el-form-item label="是否上传监管平台" prop="form.isuploaddata">
+              <el-radio-group v-model="form.isuploaddata">
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  @change="stateChange()"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 平台及识别码 -->
-        <el-row v-if="form.uploadMonitorPlatform === '1'">
+        <el-row v-if="form.isuploaddata === '1'">
           <el-col :span="12">
-            <el-form-item label="平台" prop="monitorPlatform">
-              <el-select v-model="form.monitorPlatform" placeholder="请选择平台">
+            <el-form-item label="平台" prop="form.uploadplatform">
+              <el-select v-model="form.uploadplatform" placeholder="请选择平台">
                 <el-option
                   v-for="item in monitorPlatformOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="item.dictValue"
                 />
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="平台识别码" prop="PlatformIdentification">
-              <el-input v-model="form.PlatformIdentification" />
+            <el-form-item label="平台识别码" prop="form.uploadplatformsn">
+              <el-input v-model="form.uploadplatformsn" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="营业时间" prop="businessHours">
+        <el-form-item label="营业时间" prop="convert.businessHours">
           <el-time-picker
-            v-model="businessHours"
+            v-model="convert.businessHours"
             is-range
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             placeholder="选择时间范围"
-            value-format="hh-mm-ss"
-            @change="timeChange(businessHours)"
+            value-format="HH-mm-ss"
+            @change="timeChange(convert.businessHours)"
           />
         </el-form-item>
         <el-row :gutter="30">
@@ -208,126 +244,143 @@
 
 </template>
 <script>
+
+import { getDepotById, addDepotInfo } from '@/api/system/carSetting'
+
 import area from '@/assets/json/citys.json'
 
 export default {
   name: 'DepotInfo',
   data() {
     return {
-      businessHours: [new Date(2016, 9, 10, 9, 0), new Date(2016, 9, 10, 17, 0)],
-      form: {
-        name: '',
-        sName: '',
+      // 返回数据
+      resdata: [],
+      // 字典数据
+      dictDatas: [],
+      // 是否状态
+      stateOptions: [],
+      // 车场类型
+      categoryOptions: [],
+      // 平台类型
+      monitorPlatformOptions: [],
+      // 连接方式
+      linkTypeOptions: [],
+      convert: {
+        // 待转换的车场地区数组
         region: [],
-        detailAddress: '',
-        category: '',
-        phone: '',
-        remain: '',
+        // 待转换的营业时间,默认朝8晚7
+        businessHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
+      },
+      form: {
+        // 车场名称
+        name: '',
+        // 车场简称
+        shortname: '',
+        // 地区 省市区
+        provincename: '',
+        cityname: '',
+        areaname: '',
+        // 详细地址
+        address: '',
+        // 车场类型
+        lottype: '',
+        // 车场电话
+        mobile: '',
+        // 支付后逗留时长
+        payduration: '',
+        // 经纬度
         longitude: '',
         latitude: '',
-        allPort: '',
-        freePort: '',
-        status: '1',
-        connectMethod: '1',
-        feeStatus: '1',
-        procedureFee: '',
-        parkingFee: '',
+        // 总车位数
+        total: '',
+        // 空闲车位数
+        emptynum: '',
+        // 是否展示车位
+        isshowsite: '1',
+        // 连接方式
+        linktype: 1,
+        // 是否收费
+        charge: '1',
+        // 手续费
+        commissioncharge: null,
+        // 停车费
+        parkfeecharge: null,
+        // 是否有充电桩
         chargingPile: '1',
-        pertainRole: '',
-        usable: '1',
-        uploadMonitorPlatform: '1',
-        monitorPlatform: '',
-        PlatformIdentification: '',
-        remark: '',
-        start: '',
-        end: ''
+        // 是否可用
+        state: '1',
+        // 是否上传监管平台
+        isuploaddata: '1',
+        // 上传的监管平台
+        uploadplatform: '',
+        // 监管平台标识码
+        uploadplatformsn: '',
+        // 营业时间
+        starthours: '',
+        endhours: ''
       },
-      categoryOptions: [{
-        value: '选项1',
-        label: '黄金糕'
-      }, {
-        value: '选项2',
-        label: '双皮奶'
-      }, {
-        value: '选项3',
-        label: '蚵仔煎'
-      }, {
-        value: '选项4',
-        label: '龙须面'
-      }, {
-        value: '选项5',
-        label: '北京烤鸭'
-      }],
-      addressOptions: area,
-      statusOptions: [
-        {
-          value: '1',
-          label: '是'
-        },
-        {
-          value: '0',
-          label: '否'
-        }
-      ],
-      connectOptions: [
-        {
-          value: '1',
-          label: '间接'
-        },
-        {
-          value: '0',
-          label: '直连'
-        }
-      ],
-      pertainRoleOptions: [
-        {
-          value: '1',
-          label: '测试'
-        },
-        {
-          value: '0',
-          label: '超管'
-        },
-        {
-          value: '2',
-          label: '运营'
-        }
-      ],
-      monitorPlatformOptions: [
-        {
-          value: '0',
-          label: '合肥市城管停车平台'
-        },
-        {
-          value: '1',
-          label: '省立交警大队'
-        },
-        {
-          value: '2',
-          label: '安徽停车综合监控办公室'
-        }
-      ]
+      addressOptions: area
     }
   },
+  created() {
+    // 取路由路径上的参数
+    const id = this.$route.params && this.$route.params.id // 路由传参
+    // 根据字典类型ID查询字典的dictType
+    getDepotById(id).then(res => {
+      this.resdata = res.data
+    })
+    // 获取字典数据
+    this.getDataByType('yesOrNo').then(res => {
+      this.stateOptions = res.data
+    })
+    // 车场类型
+    this.getDataByType('ParkLotTypeDic').then(res => {
+      this.categoryOptions = res.data
+    })
+    // 平台类型
+    this.getDataByType('UploadPlatformDic').then(res => {
+      this.monitorPlatformOptions = res.data
+    })
+    // 连接方式
+    this.getDataByType('ParkLinkTypeDic').then(res => {
+      this.linkTypeOptions = res.data
+    })
+  },
   methods: {
+    stateChange() {
+      console.log(this.form.chargingPile)
+    },
     onSubmit() {
-      // console.log('submit!')
+      console.log('submit!')
+      console.log(this.resdata)
+      if (this.resdata === null) {
+        addDepotInfo(this.form).then(res => {
+          this.msgSuccess('添加成功')
+        }).catch(() => {
+          this.msgError('添加失败')
+        })
+      }
     },
     // onReset(formName) {
     //   this.resetForm(formName)
     // },
-    handleChange(value) {
-      console.log(value)
-    },
-    expandChange(value) {
-      // console.log(value)
+    handleChange(opt, val) {
+      const vals = val.map(function(value) {
+        for (var itm of opt) {
+          if (itm.value === value) {
+            opt = itm.children
+            return itm.label
+          }
+        }
+        return null
+      })
+      this.form.provincename = vals[0]
+      this.form.cityname = vals[1]
+      this.form.areaname = vals[2]
     },
     timeChange(val) {
-      console.log(val)
-      this.form.start = val[0]
-      this.form.end = val[1]
-      console.log(this.form.start)
-      console.log(this.form.end)
+      this.form.starthours = val[0]
+      this.form.endhours = val[1]
     }
   }
 }

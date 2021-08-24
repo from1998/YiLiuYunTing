@@ -2,7 +2,7 @@
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="车场信息" name="depotInfo">
-        <depot-info />
+        <depot-info :resdata="resdata" />
       </el-tab-pane>
       <el-tab-pane label="车场配置" name="depotSet">
         <depot-set />
@@ -40,7 +40,6 @@ import watchhouseSet from './componets/watchhouseSet'
 import BackToTop from '@/components/BackToTop'
 
 // 导入API方法
-import { getDepotById } from '@/api/system/carSetting'
 export default {
   components: {
     depotInfo,
@@ -54,6 +53,7 @@ export default {
   },
   data() {
     return {
+      resdata: '',
       activeName: 'depotInfo',
       myBackToTopStyle: {
         right: '50px',
@@ -68,13 +68,6 @@ export default {
   },
   created() {
     this.activeName = window.sessionStorage.getItem('activeName') || 'depotInfo'
-    // 取路由路径上的参数
-    const id = this.$route.params && this.$route.params.id // 路由传参
-    console.log(id)
-    // 根据字典类型ID查询字典的dictType
-    getDepotById(id).then(res => {
-      console.log(res)
-    })
   },
   methods: {
     handleClick(tab) {

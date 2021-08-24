@@ -316,7 +316,7 @@ export default {
   },
   // 勾子
   created() {
-    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  1禁用 0正常
+    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  2禁用 1正常
     this.getDataByType('sys_normal_disable').then(res => {
       this.stateOptions = res.data
     })
