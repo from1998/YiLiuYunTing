@@ -413,7 +413,7 @@ export default {
     handleUpdate(row) {
       this.title = '修改用户信息'
       const id = row.id || this.ids
-      console.log(row.id)
+      // console.log(row.id)
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息

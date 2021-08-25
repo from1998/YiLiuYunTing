@@ -98,8 +98,7 @@
                 <el-radio
                   v-for="item in linkTypeOptions"
                   :key="item.dictValue"
-                  :label="item.dictValue"
-                  @change="stateChange()"
+                  :label="Number(item.dictValue)"
                 >
                   {{ item.dictLabel }}
                 </el-radio>
@@ -112,8 +111,7 @@
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
-                  :label="item.dictValue"
-                  @change="stateChange()"
+                  :label="Number(item.dictValue)"
                 >
                   {{ item.dictLabel }}
                 </el-radio>
@@ -129,8 +127,7 @@
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
-                  :label="item.dictValue"
-                  @change="stateChange()"
+                  :label="Number(item.dictValue)"
                 >
                   {{ item.dictLabel }}
                 </el-radio>
@@ -159,12 +156,11 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="是否有充电桩">
-              <el-radio-group v-model="form.chargingPile">
+              <el-radio-group v-model="form.chargingpile">
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
-                  :label="item.dictValue"
-                  @change="stateChange()"
+                  :label="Number(item.dictValue)"
                 >
                   {{ item.dictLabel }}
                 </el-radio>
@@ -178,9 +174,8 @@
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
-                  :label="item.dictValue"
+                  :label="Number(item.dictValue)"
                   :value="item.dictValue"
-                  @change="stateChange()"
                 >
                   {{ item.dictLabel }}
                 </el-radio>
@@ -196,8 +191,7 @@
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
-                  :label="item.dictValue"
-                  @change="stateChange()"
+                  :label="Number(item.dictValue)"
                 >
                   {{ item.dictLabel }}
                 </el-radio>
@@ -240,7 +234,7 @@
         <el-row :gutter="30">
           <el-form-item>
             <div class="footer">
-              <el-button type="primary" @click="onSubmit">{{ SubmitTitle }}</el-button>
+              <el-button type="primary" :disabled="SubmitTitle==='已提交'?true:false" @click="onSubmit">{{ SubmitTitle }}</el-button>
               <el-button type="danger" @click="resetForm('depotForm')">重置</el-button>
             </div>
           </el-form-item>
@@ -253,7 +247,7 @@
 </template>
 <script>
 
-import { getDepotById, addDepotInfo } from '@/api/system/carSetting'
+import { getDepotById, addDepotInfo, updateDepotInfo } from '@/api/system/carSetting'
 
 import area from '@/assets/json/citys.json'
 
@@ -317,7 +311,7 @@ export default {
         // 停车费
         parkfeecharge: null,
         // 是否有充电桩
-        chargingPile: '',
+        chargingpile: '',
         // 是否可用
         state: '',
         // 是否上传监管平台
@@ -337,6 +331,19 @@ export default {
         ]
       },
       addressOptions: area
+    }
+  },
+  watch: {
+    form: {
+      handler(val) {
+        // debugger
+        console.log(val)
+        // console.log(this.resdata)
+        if (val !== this.resdata) {
+          this.SubmitTitle = '提交'
+        }
+      },
+      deep: true
     }
   },
   created() {
@@ -368,20 +375,11 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
+          this.SubmitTitle = '已提交'
         }
         this.handleRegion(this.addressOptions)
         this.handletime()
-        this.handleSubmitTitle()
       })
-    },
-    // 处理动态标题
-    handleSubmitTitle() {
-      if (this.resdata !== null) {
-        this.SubmitTitle = '更新'
-      }
-    },
-    stateChange() {
-      console.log(this.form.chargingPile)
     },
     onSubmit() {
       if (this.resdata === null) {
@@ -392,7 +390,12 @@ export default {
           this.msgError('添加失败')
         })
       } else {
-        console.log('修改')
+        updateDepotInfo(this.form).then(res => {
+          this.msgSuccess('修改成功')
+          this.init()
+        }).catch(() => {
+          this.msgError('修改失败')
+        })
       }
     },
     // onReset(formName) {
