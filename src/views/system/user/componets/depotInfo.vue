@@ -6,7 +6,7 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form ref="depotForm" :model="form" label-width="150px" style="width:750px" :rules="rules">
+      <el-form ref="depotForm" v-loading="loading" :model="form" label-width="150px" style="width:750px" :rules="rules">
         <!-- 名称 简称 -->
         <el-row>
           <el-col :span="12">
@@ -42,12 +42,12 @@
         </el-row>
         <!-- 车场类型 -->
         <el-form-item label="类型">
-          <el-select v-model="form.lottype" placeholder="请选择车场类型">
+          <el-select v-cloak v-model="form.lottype" placeholder="请选择车场类型">
             <el-option
               v-for="item in categoryOptions"
               :key="item.dictValue"
               :label="item.dictLabel"
-              :value="item.dictValue"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
@@ -200,7 +200,7 @@
           </el-col>
         </el-row>
         <!-- 平台及识别码 -->
-        <el-row v-if="form.isuploaddata === '1'">
+        <el-row v-if="form.isuploaddata === 1">
           <el-col :span="12">
             <el-form-item label="平台">
               <el-select v-model="form.uploadplatform" placeholder="请选择平台">
@@ -208,7 +208,7 @@
                   v-for="item in monitorPlatformOptions"
                   :key="item.dictValue"
                   :label="item.dictLabel"
-                  :value="item.dictValue"
+                  :value="Number(item.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -234,8 +234,9 @@
         <el-row :gutter="30">
           <el-form-item>
             <div class="footer">
-              <el-button type="primary" :disabled="SubmitTitle==='已提交'?true:false" @click="onSubmit">{{ SubmitTitle }}</el-button>
-              <el-button type="danger" @click="resetForm('depotForm')">重置</el-button>
+              <el-button type="primary" @click="onSubmit">提交</el-button>
+              <!-- <el-button type="primary" :disabled="SubmitTitle==='已提交'?true:false" @click="onSubmit">{{ SubmitTitle }}</el-button> -->
+              <el-button type="danger" @click="onReset">重置</el-button>
             </div>
           </el-form-item>
         </el-row>
@@ -255,7 +256,9 @@ export default {
   name: 'DepotInfo',
   data() {
     return {
-      SubmitTitle: '提交',
+      // 是否启用遮罩层
+      loading: false,
+      // SubmitTitle: '提交',
       // 返回数据
       resdata: [],
       // 字典数据
@@ -274,6 +277,7 @@ export default {
         // 待转换的营业时间,默认朝8晚7
         businessHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
       },
+      formBak: {},
       form: {
         // 用户id
         managerid: '',
@@ -301,21 +305,21 @@ export default {
         // 空闲车位数
         emptynum: '',
         // 是否展示车位
-        isshowsite: '',
+        isshowsite: 1,
         // 连接方式
-        linktype: 1,
+        linktype: 2,
         // 是否收费
-        charge: '',
+        charge: 1,
         // 手续费
         commissioncharge: null,
         // 停车费
         parkfeecharge: null,
         // 是否有充电桩
-        chargingpile: '',
+        chargingpile: 1,
         // 是否可用
-        state: '',
+        state: 1,
         // 是否上传监管平台
-        isuploaddata: '',
+        isuploaddata: 1,
         // 上传的监管平台
         uploadplatform: '',
         // 监管平台标识码
@@ -333,19 +337,19 @@ export default {
       addressOptions: area
     }
   },
-  watch: {
-    form: {
-      handler(val) {
-        // debugger
-        console.log(val)
-        // console.log(this.resdata)
-        if (val !== this.resdata) {
-          this.SubmitTitle = '提交'
-        }
-      },
-      deep: true
-    }
-  },
+  // watch: {
+  //   form: {
+  //     handler(val) {
+  //       // debugger
+  //       console.log(val)
+  //       // console.log(this.resdata)
+  //       if (val !== this.resdata) {
+  //         this.SubmitTitle = '提交'
+  //       }
+  //     },
+  //     deep: true
+  //   }
+  // },
   created() {
     // 取路由路径上的参数
     this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
@@ -370,37 +374,60 @@ export default {
     })
   },
   methods: {
-    init() {
-      getDepotById(this.form.managerid).then(res => {
+    async init() {
+      this.formBak = this.form
+      this.loading = true // 打开遮罩
+      await getDepotById(this.form.managerid).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
-          this.SubmitTitle = '已提交'
+          // this.SubmitTitle = '已提交'
+          this.handleRegion(this.addressOptions)
+          this.handletime()
         }
-        this.handleRegion(this.addressOptions)
-        this.handletime()
+        this.loading = false // 关闭遮罩
       })
     },
     onSubmit() {
       if (this.resdata === null) {
+        this.timeChange()
+        this.loading = true // 打开遮罩
         addDepotInfo(this.form).then(res => {
           this.msgSuccess('添加成功')
           this.init()
+          console.log(this.form)
+          this.loading = false // 关闭遮罩
         }).catch(() => {
           this.msgError('添加失败')
+          this.loading = false // 关闭遮罩
         })
       } else {
+        this.loading = true // 打开遮罩
+
         updateDepotInfo(this.form).then(res => {
           this.msgSuccess('修改成功')
           this.init()
+          this.loading = false // 关闭遮罩
         }).catch(() => {
           this.msgError('修改失败')
+          this.loading = false // 关闭遮罩
         })
       }
     },
-    // onReset(formName) {
-    //   this.resetForm(formName)
-    // },
+    onReset() {
+      this.$confirm('确定重置?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.form = this.formBak
+        this.convert.region = []
+        this.convert.businessHours = [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
+        this.msgSuccess('重置成功')
+      }).catch(() => {
+        this.msgError('重置已取消')
+      })
+    },
     handleRegion(opt) {
       this.convert.region = [this.form.provincename, this.form.cityname, this.form.areaname]
       this.convert.region = this.convert.region.map(function(value) {
@@ -446,4 +473,8 @@ export default {
     margin-left: 50%;
     transform: translateX(-50%);
 }
+  [v-cloak]{
+    /* 元素隐藏    */
+    display: none;
+  }
 </style>

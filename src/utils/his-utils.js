@@ -54,6 +54,19 @@ export function selectRoleLabel(datas, value) {
   })
   return Roles
 }
+
+// 翻译车场类型
+export function convertCarCategory(arr, val) {
+  let convertVal = ''
+  arr.forEach(item => {
+    if (Number(item.dictValue) === val) {
+      convertVal = item.dictLabel
+      return
+    }
+  })
+  return convertVal
+}
+
 /** *
  * 构造树的数据结构
  * @param data 要构造的数据源

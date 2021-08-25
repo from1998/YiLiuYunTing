@@ -21,12 +21,13 @@ import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
 import { getDataByType } from '@/api/system/dict/data'
-import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType, getDataByMoreType } from '@/utils/his-utils'
+import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType, getDataByMoreType, convertCarCategory } from '@/utils/his-utils'
 // 全局方法挂载
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel
 Vue.prototype.selectRoleLabel = selectRoleLabel
+Vue.prototype.convertCarCategory = convertCarCategory
 Vue.prototype.getDataByType = getDataByType // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 Vue.prototype.handleTree = handleTree // 挂载全局的构造树的JSON的方法
 Vue.prototype.getAge = getAge// 挂载全局的根据出生年月日计算年龄的方法

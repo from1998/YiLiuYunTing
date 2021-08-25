@@ -25,3 +25,22 @@ export function updateDepotInfo(data) {
     params: data
   })
 }
+
+// 添加车场配置
+export function addDepotSet(data) {
+  return request({
+    url: '/ylyt/park/addParkOperation',
+    method: 'post',
+    params: data
+  })
+}
+
+// 修改车场配置
+export function updateDepotSet(data) {
+  return request({
+    url: '/ylyt/park/updateParkOperation',
+    method: 'put',
+    params: data
+  })
+}
+
