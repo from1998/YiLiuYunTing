@@ -189,23 +189,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 进出场超时时间 -->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="进场超时时间(分钟)">
-              <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
-                <el-input-number v-model="form.intimeout" :precision="0" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="出场超时时间(分钟)">
-              <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
-                <el-input-number v-model="form.outtimeout" :precision="0" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <!-- 进出场超时处理 -->
         <el-row>
           <el-col :span="12">
@@ -230,6 +213,23 @@
                   :value="Number(item.dictValue)"
                 />
               </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 进出场超时时间 -->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="进场超时时间(分钟)">
+              <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
+                <el-input-number v-model="form.intimeout" :precision="0" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="出场超时时间(分钟)">
+              <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
+                <el-input-number v-model="form.outtimeout" :precision="0" :step="1" />
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
@@ -283,6 +283,76 @@
               </el-radio-group>
             </el-form-item></el-col>
         </el-row>
+        <!-- 无牌车是否收费及是否开启高峰放行-->
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="无牌车是否收费">
+              <el-radio-group v-model="form.nonumbercarcharge">
+                <el-radio
+                  v-for="item in options.status"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="按车牌类型收费">
+              <el-radio-group v-model="form.isfeebytype">
+                <el-radio
+                  v-for="item in options.status"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="是否开启高峰放行">
+              <el-radio-group v-model="form.isfreeperiod">
+                <el-radio
+                  v-for="item in options.status"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col> -->
+        </el-row>
+        <!-- 高峰时间段 -->
+        <!-- <el-row>
+          <el-col :span="12">
+            <el-form-item v-if="form.isfreeperiod === 1" label="高峰时间段">
+              <el-date-picker
+                v-model="convert.businessHours"
+                value-format="yyyy-MM-dd HH-mm-ss"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                @change="timeChange(convert.businessHours)"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row> -->
+        <!-- 按车牌类型收费 -->
+        <!-- <el-form-item label="按车牌类型收费">
+          <el-radio-group v-model="form.isfeebytype">
+            <el-radio
+              v-for="item in options.status"
+              :key="item.dictValue"
+              :label="Number(item.dictValue)"
+            >
+              {{ item.dictLabel }}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item> -->
         <!-- 是否开启多位多车及其规则 -->
         <el-row>
           <el-col :span="12">
@@ -311,70 +381,13 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 无牌车是否收费及是否开启高峰放行-->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="无牌车是否收费">
-              <el-radio-group v-model="form.nonumbercarcharge">
-                <el-radio
-                  v-for="item in options.status"
-                  :key="item.dictValue"
-                  :label="Number(item.dictValue)"
-                >
-                  {{ item.dictLabel }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="是否开启高峰放行">
-              <el-radio-group v-model="form.isfreeperiod">
-                <el-radio
-                  v-for="item in options.status"
-                  :key="item.dictValue"
-                  :label="Number(item.dictValue)"
-                >
-                  {{ item.dictLabel }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- 高峰时间段 -->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item v-if="form.isfreeperiod === 1" label="高峰时间段">
-              <el-date-picker
-                v-model="convert.businessHours"
-                value-format="yyyy-MM-dd HH-mm-ss"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                @change="timeChange(convert.businessHours)"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- 按车牌类型收费 -->
-        <el-form-item label="按车牌类型收费">
-          <el-radio-group v-model="form.isfeebytype">
-            <el-radio
-              v-for="item in options.status"
-              :key="item.dictValue"
-              :label="Number(item.dictValue)"
-            >
-              {{ item.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
         <!-- 特殊车辆允许 -->
         <el-form-item label="特殊车辆允许">
-          <el-checkbox-group v-model="form.specialpass" @change="specialpassChange">
+          <el-checkbox-group v-model="form.specialpass">
             <el-checkbox
               v-for="item in options.specialpass"
               :key="item.dictValue"
-              :label="item.dictValue"
+              :label="Number(item.dictValue)"
             >
               {{ item.dictLabel }}
             </el-checkbox>
@@ -394,16 +407,21 @@
 
 </template>
 <script>
-// import { updateDepotSet, addDepotSet } from '@/api/system/carSetting'
+import { updateDepotSet, addDepotSet, getParkOperationByMid } from '@/api/system/carSetting'
 
 export default {
   name: 'DepotSet',
   data() {
     return {
+      // 是否启用遮罩层
+      loading: false,
       formBak: {},
       form: {
-        freeperiodend: '',
-        freeperiodstart: '',
+        // 是否开启高峰时间
+        // isfreeperiod: '',
+        // 高峰时间段
+        // freeperiodend: '',
+        // freeperiodstart: '',
         fixedcarin: '',
         fixedcarout: '',
         fixedcarduplicatein: '',
@@ -417,7 +435,7 @@ export default {
         overduecarin: '',
         overduecarout: '',
         norecordtempcarout: '',
-        norecordtempcaroutamount: '9.99',
+        norecordtempcaroutamount: '',
         freecarsitecount: '',
         autocleancar: '',
         yellowcarin: '',
@@ -425,9 +443,8 @@ export default {
         fixedcarmoresitemorecar: '',
         moresitemorecarrule: '',
         nonumbercarcharge: '',
-        isfreeperiod: '',
         isfeebytype: '',
-        specialpass: ['2', '3', '4', '6', '12'],
+        specialpass: [2, 3, 4, 6, 12],
         intimeout: '',
         outtimeout: '',
         intimeoutaction: '',
@@ -449,14 +466,17 @@ export default {
       },
       convert: {
         // 待转换的特殊车辆数组
-        specialpassArr: [],
+        specialpassArr: []
         // 待转换的高峰时间,默认当前时间
-        businessHours: [new Date(), new Date()]
+        // businessHours: [new Date(), new Date()]
       }
     }
   },
   created() {
+    // 取路由路径上的参数
+    this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     this.formBak = this.form
+    this.init()
     // 获取进出场字典数据
     this.getDataByType('AutoOrManagerDic').then(res => {
       this.options.access = res.data
@@ -480,14 +500,47 @@ export default {
     // 特殊车辆允许字典
     this.getDataByType('CarNumberTypeDic').then(res => {
       this.options.specialpass = res.data
-      console.log(res.data)
     })
   },
   methods: {
+    async init() {
+      this.loading = true // 打开遮罩
+      await getParkOperationByMid(this.form.managerid).then(res => {
+        this.resdata = res.data
+        if (res.data !== null) {
+          this.form = res.data
+          // this.SubmitTitle = '已提交'
+          this.handleCheckedStr(this.resdata.specialpass)
+        }
+        this.loading = false // 关闭遮罩
+      })
+    },
     onSubmit() {
       this.form.specialpass = this.form.specialpass.toString()
-      this.timeChange(this.convert.businessHours)
-      console.log(this.form)
+      // this.timeChange(this.convert.businessHours)
+      if (this.resdata === null) {
+        // this.timeChange()
+        this.loading = true // 打开遮罩
+        addDepotSet(this.form).then(() => {
+          this.msgSuccess('添加成功')
+          this.init()
+          this.loading = false // 关闭遮罩
+        }).catch(() => {
+          this.msgError('添加失败')
+          this.loading = false // 关闭遮罩
+        })
+      } else {
+        this.loading = true // 打开遮罩
+
+        updateDepotSet(this.form).then(() => {
+          this.msgSuccess('修改成功')
+          this.init()
+          this.loading = false // 关闭遮罩
+        }).catch(() => {
+          this.msgError('修改失败')
+          this.loading = false // 关闭遮罩
+        })
+      }
     },
     onReset() {
       this.$confirm('确定重置?', '提示', {
@@ -496,20 +549,26 @@ export default {
         type: 'warning'
       }).then(() => {
         this.form = this.formBak
+        console.log(this.formBak)
         this.convert.businessHours = [new Date(), new Date()]
         this.msgSuccess('重置成功')
       }).catch(() => {
         this.msgError('重置已取消')
       })
     },
-    specialpassChange(val) {
-      console.log(val)
-    },
-    // 处理时间
-    timeChange(val) {
-      this.form.freeperiodstart = val[0]
-      this.form.freeperiodend = val[1]
+    handleCheckedStr(str) {
+      var arr = str.split(',')
+      var arrNumber = []
+      arr.forEach(val => {
+        arrNumber.push(Number(val))
+      })
+      this.form.specialpass = arrNumber
     }
+    // 处理时间
+  //   timeChange(val) {
+  //     this.form.freeperiodstart = val[0]
+  //     this.form.freeperiodend = val[1]
+  //   }
   }
 }
 </script>

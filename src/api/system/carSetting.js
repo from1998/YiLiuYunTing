@@ -26,6 +26,14 @@ export function updateDepotInfo(data) {
   })
 }
 
+// 查询车场配置
+export function getParkOperationByMid(id) {
+  return request({
+    url: '/ylyt/park/getParkOperationByMid/' + id,
+    method: 'get'
+  })
+}
+
 // 添加车场配置
 export function addDepotSet(data) {
   return request({

@@ -138,16 +138,16 @@
         <!-- 手续费及停车费分成 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手续费(百分比)">
-              <el-tooltip class="item" effect="dark" content="请输入手续费(百分比)" placement="right">
-                <el-input-number v-model="form.commissioncharge" :precision="2" :step="1" />
+            <el-form-item label="手续费(千分比)">
+              <el-tooltip class="item" effect="dark" content="请输入手续费(千分比)" placement="right">
+                <el-input-number v-model="form.commissioncharge" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="停车费分成(百分比)">
-              <el-tooltip class="item" effect="dark" content="请输入停车费分成(百分比)" placement="right">
-                <el-input-number v-model="form.parkfeecharge" :precision="2" :step="1" />
+            <el-form-item label="停车费分成(千分比)">
+              <el-tooltip class="item" effect="dark" content="请输入停车费分成(千分比)" placement="right">
+                <el-input-number v-model="form.parkfeecharge" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -354,7 +354,7 @@ export default {
     // 取路由路径上的参数
     this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 根据字典类型ID查询字典的dictType
-
+    this.formBak = this.form
     this.init()
     // 获取字典数据
     this.getDataByType('yesOrNo').then(res => {
@@ -375,12 +375,13 @@ export default {
   },
   methods: {
     async init() {
-      this.formBak = this.form
       this.loading = true // 打开遮罩
       await getDepotById(this.form.managerid).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
+          this.form.parkfeecharge = this.form.parkfeecharge * 1000
+          this.form.commissioncharge = this.form.commissioncharge * 1000
           // this.SubmitTitle = '已提交'
           this.handleRegion(this.addressOptions)
           this.handletime()
@@ -391,6 +392,9 @@ export default {
     onSubmit() {
       if (this.resdata === null) {
         this.timeChange()
+        this.form.parkfeecharge = this.form.parkfeecharge / 1000
+        this.form.commissioncharge = this.form.commissioncharge / 1000
+        console.log(this.form.commissioncharge)
         this.loading = true // 打开遮罩
         addDepotInfo(this.form).then(res => {
           this.msgSuccess('添加成功')
@@ -403,8 +407,9 @@ export default {
         })
       } else {
         this.loading = true // 打开遮罩
-
-        updateDepotInfo(this.form).then(res => {
+        this.form.parkfeecharge = this.form.parkfeecharge / 1000
+        this.form.commissioncharge = this.form.commissioncharge / 1000
+        updateDepotInfo(this.form).then(() => {
           this.msgSuccess('修改成功')
           this.init()
           this.loading = false // 关闭遮罩

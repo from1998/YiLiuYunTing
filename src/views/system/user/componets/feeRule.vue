@@ -42,14 +42,14 @@
             <el-col :span="12">
               <el-form-item label="单次停车免费时长(分钟)">
                 <el-tooltip class="item" effect="dark" content="请输入单次停车免费时长(分钟)" placement="right">
-                  <el-input-number v-model="form.yduration" :precision="0" :step="1" />
+                  <el-input-number v-model="form.freeperiod" :precision="0" :step="1" />
                 </el-tooltip>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="单日封顶价格(元)">
                 <el-tooltip class="item" effect="dark" content="请输入单日封顶价格(元)" placement="right">
-                  <el-input-number v-model="form.ymoney" :precision="2" :step="1" />
+                  <el-input-number v-model="form.daypriceup" :precision="2" :step="1" />
                 </el-tooltip>
               </el-form-item>
             </el-col>
@@ -59,14 +59,14 @@
             <el-col :span="12">
               <el-form-item label="首停时长(分钟)">
                 <el-tooltip class="item" effect="dark" content="请输入首停时长(分钟)" placement="right">
-                  <el-input-number v-model="form.firstStoppTimelong" :precision="0" :step="1" />
+                  <el-input-number v-model="form.yduration" :precision="0" :step="1" />
                 </el-tooltip>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="首停时长费用(元)">
                 <el-tooltip class="item" effect="dark" content="请输入首停时长费用(元)" placement="right">
-                  <el-input-number v-model="form.firstStoppFee" :precision="2" :step="1" />
+                  <el-input-number v-model="form.ymoney" :precision="2" :step="1" />
                 </el-tooltip>
               </el-form-item>
             </el-col>
@@ -211,15 +211,15 @@ export default {
       limitNumber: '24',
       form: {
         numbertype: 0,
+        daypriceup: '',
+        freeperiod: '',
         yduration: '',
         ymoney: '',
-        firstStoppTimelong: '',
-        firstStoppFee: '',
         overunit: '',
         overmoney: '',
         // 默认常规计费
         splittimejson: 3,
-        // 常规计费
+        // 分段计费
         commonCountFee: [
           {
             timeDur: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
