@@ -5,25 +5,25 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="车道名称" prop="laneName">
+      <el-form-item label="车道名称" prop="name">
         <el-input
-          v-model="queryParams.laneName"
+          v-model="queryParams.name"
           placeholder="请输入车道名称"
           clearable
           size="small"
         />
       </el-form-item>
-      <el-form-item label="所属岗亭" prop="watchhouseName">
+      <el-form-item label="所属岗亭" prop="workstationId">
         <el-input
-          v-model="queryParams.watchhouseName"
+          v-model="queryParams.workstationId"
           placeholder="请输入所属岗亭名称"
           clearable
           size="small"
         />
       </el-form-item>
-      <el-form-item label="车道类型" prop="laneCategory">
+      <el-form-item label="车道类型" prop="type">
         <el-select
-          v-model="queryParams.laneCategory"
+          v-model="queryParams.type"
           placeholder="请选择车道类型"
           clearable
           size="small"
@@ -56,9 +56,9 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="laneList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="40" align="center" />
-      <el-table-column label="车道名称" align="center" prop="laneName" />
-      <el-table-column label="车道类型" align="center" prop="laneCategory" />
-      <el-table-column label="所属岗亭" align="center" prop="watchhouseName" />
+      <el-table-column label="车道名称" align="center" prop="name" />
+      <el-table-column label="车道类型" align="center" prop="type" />
+      <el-table-column label="所属岗亭" align="center" prop="workstationId" />
       <el-table-column label="相机状态" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.cameraState }}</span>
@@ -83,7 +83,7 @@
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           <el-button
-            v-if="scope.row.laneCategory==='入口'"
+            v-if="scope.row.type==='入口'"
             type="text"
             size="mini"
             @click="handleIn(scope.row)"
@@ -92,7 +92,7 @@
             无牌进场二维码
           </el-button>
           <el-button
-            v-if="scope.row.laneCategory==='出口'"
+            v-if="scope.row.type==='出口'"
             type="text"
             size="mini"
             @click="handleOut(scope.row)"
@@ -124,12 +124,12 @@
     >
       <el-form ref="form" :model="form" label-width="100px">
         <!-- 车道名称 -->
-        <el-form-item label="车道名称" prop="laneName">
-          <el-input v-model="form.laneName" placeholder="请输入车道名称" clearable size="small" />
+        <el-form-item label="车道名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入车道名称" clearable size="small" />
         </el-form-item>
         <!-- 车道类型 -->
-        <el-form-item label="车道类型" prop="laneCategory">
-          <el-select v-model="form.laneCategory" placeholder="请选择车道类型" size="small">
+        <el-form-item label="车道类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择车道类型" size="small">
             <el-option
               v-for="item in options.laneCategory"
               :key="item.value"
@@ -139,8 +139,8 @@
           </el-select>
         </el-form-item>
         <!-- 所属岗亭 -->
-        <el-form-item label="所属岗亭" prop="watchhouseName">
-          <el-select v-model="form.watchhouseName" placeholder="请选择所属岗亭" size="small">
+        <el-form-item label="所属岗亭" prop="workstationId">
+          <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small">
             <el-option
               v-for="item in options.watchhouseName"
               :key="item.value"
@@ -265,16 +265,16 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        laneName: undefined,
-        watchhouseName: undefined,
-        laneCategory: undefined
+        name: undefined,
+        workstationId: undefined,
+        type: undefined
 
       },
       // 表单数据
       form: {
-        laneName: '',
-        laneCategory: '',
-        watchhouseName: '',
+        name: '',
+        type: '',
+        workstationId: '',
         cameraBrand: '',
         cameraUDID: '',
         cameraIP: '',
@@ -290,6 +290,14 @@ export default {
   },
   // 勾子
   created() {
+    // 查询所有用户信息
+    // 车道类型 LaneTypeDic
+    // 相机品牌 CameraBrandTypeDic
+    // 控制卡类型 ControllerBrandTypeDic
+    // 屏幕行数 LaneLineCountDic
+    selectNeedSchedulingUsers().then(res => {
+      this.userOptions = res.data
+    })
     // 查询表格数据
     this.getlaneList()
   },
@@ -324,56 +332,8 @@ export default {
           }
         ]
       }
-      this.laneList = [
-        {
-          laneId: '0',
-          laneName: 'A车道',
-          laneCategory: '入口',
-          watchhouseName: '一号岗亭',
-          cameraState: '在线',
-          cameraBrand: '索尼',
-          cameraUDID: '18030007835d',
-          cameraIP: '	192.168.1.230',
-          controlCardType: '一流云停-RTK-1.7-TTS',
-          hasScreen: '是'
-        },
-        {
-          laneId: '1',
-          laneName: 'B车道',
-          laneCategory: '出口',
-          watchhouseName: '二号岗亭',
-          cameraState: '不在线',
-          cameraBrand: '康佳',
-          cameraUDID: '09F5103100152146',
-          cameraIP: '	192.168.1.30',
-          controlCardType: '一流云停-RTK-1.7-TTS',
-          hasScreen: '否'
-        },
-        {
-          laneId: '2',
-          laneName: 'C车道',
-          laneCategory: '入口',
-          watchhouseName: '三号岗亭',
-          cameraState: '不在线',
-          cameraBrand: '爱立信',
-          cameraUDID: '96603100152146',
-          cameraIP: '	192.168.1.226',
-          controlCardType: '一流云停-RTK-1.7-TTS',
-          hasScreen: '是'
-        },
-        {
-          laneId: '3',
-          laneName: 'D车道',
-          laneCategory: '出口',
-          watchhouseName: '四号岗亭',
-          cameraState: '在线',
-          cameraBrand: 'TCL',
-          cameraUDID: '045103100152146',
-          cameraIP: '	192.168.1.158',
-          controlCardType: '一流云停-RTK-1.7-TTS',
-          hasScreen: '否'
-        }
-      ]
+      // 车道列表数据
+      this.laneList = []
       this.total = this.laneList.length
       // console.log('查询成功')
     },
@@ -518,7 +478,7 @@ export default {
       this.resetForm('form')
       this.form = {
         watchhouseId: undefined,
-        watchhouseName: undefined,
+        workstationId: undefined,
         parkinglotName: undefined,
         remark: undefined
       }
