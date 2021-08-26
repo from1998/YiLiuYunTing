@@ -28,14 +28,14 @@
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDeleteMany">删除</el-button>
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="watchhouseList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="岗亭ID" align="center" prop="id" />
-      <el-table-column label="车场名称" align="center" prop="parkId" />
+      <el-table-column label="车场名称" align="center" prop="parkName" />
       <el-table-column label="岗亭名称" align="center" prop="name" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
@@ -78,13 +78,15 @@
 </template>
 <script>
 // 引入api
-import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById } from '@/api/system/carSetting'
+import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, deleteWorkStationByList } from '@/api/system/carSetting'
 
 export default {
   name: 'WatchhouseSet',
   // 定义页面数据
   data() {
     return {
+      // 用户id备份
+      manageridBak: '',
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -122,7 +124,7 @@ export default {
   // 勾子
   created() {
     // 取路由路径上的参数
-    this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
+    this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getWatchhouseList()
   },
@@ -148,7 +150,7 @@ export default {
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
-      this.ids = selection.map(item => item.watchhouseId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -167,7 +169,7 @@ export default {
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
-      this.form.name = ''
+      this.reset()
       this.title = '添加岗亭'
     },
     // 打开修改的弹出层
@@ -193,6 +195,24 @@ export default {
       }).then(() => {
         this.loading = true
         deleteWorkStationById(id).then(res => {
+          this.loading = false
+          this.msgSuccess('删除成功')
+          this.getWatchhouseList()// 查询列表
+        })
+      }).catch(() => {
+        this.msgError('删除已取消')
+        this.loading = false
+      })
+    },
+    // 删除多个
+    handleDeleteMany(row) {
+      this.$confirm('此操作将永久删除这些岗亭数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        deleteWorkStationByList(this.ids).then(res => {
           this.loading = false
           this.msgSuccess('删除成功')
           this.getWatchhouseList()// 查询列表
@@ -239,10 +259,8 @@ export default {
     reset() {
       this.resetForm('form')
       this.form = {
-        watchhouseId: undefined,
-        watchhouseName: undefined,
-        parkinglotName: undefined,
-        remark: undefined
+        name: undefined,
+        managerid: this.manageridBak
       }
     }
   }

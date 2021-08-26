@@ -69,6 +69,8 @@ export function updateParkfee(data) {
     params: data
   })
 }
+// -------------------------------------岗亭
+
 // 查询岗亭设置列表
 export function getWorkStationByMid(id) {
   return request({
@@ -110,3 +112,53 @@ export function deleteWorkStationById(id) {
   })
 }
 
+// 批量删除岗亭设置
+export function deleteWorkStationByList(ids) {
+  return request({
+    url: '/ylyt/workStation/deleteWorkStationByList',
+    method: 'delete',
+    params: ids
+  })
+}
+// -------------------------------------车道
+
+// 查询车道列表
+export function getLaneByMid(id) {
+  return request({
+    url: '/ylyt/lane/getLaneByMid/' + id,
+    method: 'get'
+  })
+}
+// 根据ID查询车道信息
+export function getLaneById(id) {
+  return request({
+    url: '/ylyt/lane/getLaneById/' + id,
+    method: 'get'
+  })
+}
+
+// 添加车道设置
+export function addLane(data) {
+  return request({
+    url: '/ylyt/lane/addLane',
+    method: 'post',
+    params: data
+  })
+}
+
+// 修改车道设置
+export function updateLane(data) {
+  return request({
+    url: '/ylyt/lane/updateLane',
+    method: 'put',
+    params: data
+  })
+}
+
+// 删除单个车道
+export function deleteLaneById(id) {
+  return request({
+    url: '/ylyt/lane/deleteLaneById/' + id,
+    method: 'delete'
+  })
+}
