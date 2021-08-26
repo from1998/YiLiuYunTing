@@ -210,7 +210,7 @@ export default {
     return {
       limitNumber: '24',
       form: {
-        numbertype: '',
+        numbertype: 0,
         yduration: '',
         ymoney: '',
         firstStoppTimelong: '',
