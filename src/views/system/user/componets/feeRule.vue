@@ -20,57 +20,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 单次停车免费时长(分钟) 及单日封顶价格(元) -->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="单次停车免费时长(分钟)">
-              <el-tooltip class="item" effect="dark" content="请输入单次停车免费时长(分钟)" placement="right">
-                <el-input-number v-model="form.yduration" :precision="0" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="单日封顶价格(元)">
-              <el-tooltip class="item" effect="dark" content="请输入单日封顶价格(元)" placement="right">
-                <el-input-number v-model="form.ymoney" :precision="2" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- 首停时长及费用 -->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="首停时长(分钟)">
-              <el-tooltip class="item" effect="dark" content="请输入首停时长(分钟)" placement="right">
-                <el-input-number v-model="form.firstStoppTimelong" :precision="0" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="首停时长费用(元)">
-              <el-tooltip class="item" effect="dark" content="请输入首停时长费用(元)" placement="right">
-                <el-input-number v-model="form.firstStoppFee" :precision="2" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- 续费时长及单价 -->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="续费时长(分钟)">
-              <el-tooltip class="item" effect="dark" content="请输入续费时长(分钟)" placement="right">
-                <el-input-number v-model="form.overunit" :precision="0" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="续费单价(元/分钟)">
-              <el-tooltip class="item" effect="dark" content="请输入续费单价(元/分钟)" placement="right">
-                <el-input-number v-model="form.overmoney" :precision="2" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <!-- 分段收费类型 -->
         <el-row>
           <el-col :span="24">
@@ -87,12 +36,65 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <div v-show="form.splittimejson ===3 ">
+          <!-- 单次停车免费时长(分钟) 及单日封顶价格(元) -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="单次停车免费时长(分钟)">
+                <el-tooltip class="item" effect="dark" content="请输入单次停车免费时长(分钟)" placement="right">
+                  <el-input-number v-model="form.yduration" :precision="0" :step="1" />
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="单日封顶价格(元)">
+                <el-tooltip class="item" effect="dark" content="请输入单日封顶价格(元)" placement="right">
+                  <el-input-number v-model="form.ymoney" :precision="2" :step="1" />
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 首停时长及费用 -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="首停时长(分钟)">
+                <el-tooltip class="item" effect="dark" content="请输入首停时长(分钟)" placement="right">
+                  <el-input-number v-model="form.firstStoppTimelong" :precision="0" :step="1" />
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="首停时长费用(元)">
+                <el-tooltip class="item" effect="dark" content="请输入首停时长费用(元)" placement="right">
+                  <el-input-number v-model="form.firstStoppFee" :precision="2" :step="1" />
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <!-- 续费时长及单价 -->
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="续费时长(分钟)">
+                <el-tooltip class="item" effect="dark" content="请输入续费时长(分钟)" placement="right">
+                  <el-input-number v-model="form.overunit" :precision="0" :step="1" />
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="续费单价(元/分钟)">
+                <el-tooltip class="item" effect="dark" content="请输入续费单价(元/分钟)" placement="right">
+                  <el-input-number v-model="form.overmoney" :precision="2" :step="1" />
+                </el-tooltip>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </div>
         <!-- 计费时间段 -->
-        <el-row>
+        <el-row v-show="form.splittimejson !==3 ">
           <el-col :span="24">
             <el-form-item label="计费时间段">
               <!-- 分段计费 -->
-              <el-row v-if="form.splittimejson ===1 ">
+              <el-row v-show="form.splittimejson ===1 ">
                 <el-table
                   :data="form.commonCountFee"
                   border
@@ -142,7 +144,7 @@
                 </el-tooltip>
               </el-row>
               <!-- 叠加计费 -->
-              <el-row v-if="form.splittimejson ===2 ">
+              <el-row v-show="form.splittimejson ===2 ">
                 <el-table
                   :data="form.overlayCountFee"
                   border
@@ -215,7 +217,8 @@ export default {
         firstStoppFee: '',
         overunit: '',
         overmoney: '',
-        splittimejson: '0',
+        // 默认常规计费
+        splittimejson: 3,
         // 常规计费
         commonCountFee: [
           {
