@@ -485,6 +485,7 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.form.specialpass = this.form.specialpass.toString()
       this.timeChange(this.convert.businessHours)
       console.log(this.form)
     },

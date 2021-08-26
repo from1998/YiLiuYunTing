@@ -44,3 +44,21 @@ export function updateDepotSet(data) {
   })
 }
 
+// 添加收费规则
+export function addParkfee(data) {
+  return request({
+    url: '/ylyt/parkFee/addParkfee',
+    method: 'post',
+    params: data
+  })
+}
+
+// 修改收费规则
+export function updateParkfee(data) {
+  return request({
+    url: '/ylyt/parkFee/updateParkfee',
+    method: 'put',
+    params: data
+  })
+}
+

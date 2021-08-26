@@ -12,9 +12,9 @@
               <el-select v-model="form.carNumberCategory" placeholder="请选择车牌类型" style="width:566px">
                 <el-option
                   v-for="item in options.carNumberCategory"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -78,10 +78,10 @@
               <el-radio-group v-model="form.sectionChargeType">
                 <el-radio
                   v-for="item in options.sectionChargeType"
-                  :key="item.value"
-                  :label="item.value"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
                 >
-                  {{ item.label }}
+                  {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
@@ -92,7 +92,7 @@
           <el-col :span="24">
             <el-form-item label="计费时间段">
               <!-- 常规计费 -->
-              <el-row v-if="form.sectionChargeType ==='0' ">
+              <el-row v-if="form.sectionChargeType ===1 ">
                 <el-table
                   :data="form.commonCountFee"
                   border
@@ -142,7 +142,7 @@
                 </el-tooltip>
               </el-row>
               <!-- 叠加计费 -->
-              <el-row v-if="form.sectionChargeType ==='1' ">
+              <el-row v-if="form.sectionChargeType ===2 ">
                 <el-table
                   :data="form.overlayCountFee"
                   border
@@ -241,30 +241,22 @@ export default {
       },
       options: {
         // 车牌类型
-        carNumberCategory: [
-          {
-            value: '0',
-            label: '大车'
-          }, {
-            value: '1',
-            label: '小车'
-          }, {
-            value: '2',
-            label: '自行车'
-          }
-        ],
+        carNumberCategory: [],
         // 分段收费类型
-        sectionChargeType: [
-          {
-            value: '0',
-            label: '常规'
-          }, {
-            value: '1',
-            label: '叠加'
-          }
-        ]
+        sectionChargeType: []
       }
     }
+  },
+  created() {
+    this.formBak = this.form
+    // 获取收费规则车辆类型字典数据
+    this.getDataByType('FeeNumberTypeDic').then(res => {
+      this.options.carNumberCategory = res.data
+    })
+    // 获取分段收费类型字典数据
+    this.getDataByType('FeeSplitTypeDic').then(res => {
+      this.options.sectionChargeType = res.data
+    })
   },
   methods: {
     onSubmit() {
