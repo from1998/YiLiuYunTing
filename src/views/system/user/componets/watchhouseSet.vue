@@ -5,7 +5,7 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="岗亭名称" prop="watchhouseName">
+      <el-form-item label="岗亭名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入岗亭名称"
@@ -78,7 +78,7 @@
 </template>
 <script>
 // 引入api
-import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, deleteWorkStationByList, getWorkStationLikeName } from '@/api/system/carSetting'
+import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, getWorkStationLikeName } from '@/api/system/carSetting'
 
 export default {
   name: 'WatchhouseSet',
@@ -107,7 +107,8 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        name: ''
+        name: '',
+        managerid: ''
       },
       // 表单数据
       form: {
@@ -124,7 +125,7 @@ export default {
   // 勾子
   created() {
     // 取路由路径上的参数
-    this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
+    this.queryParams.managerid = this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getWatchhouseList()
   },
@@ -132,7 +133,7 @@ export default {
   methods: {
     getWatchhouseList() {
       this.loading = true // 打开遮罩
-      getWorkStationByMid(this.form.managerid).then(res => {
+      getWorkStationByMid(this.queryParams).then(res => {
         console.log(res.data)
         this.watchhouseList = res.data.list
         this.total = res.data.total
@@ -141,7 +142,7 @@ export default {
     },
     // 查询
     handleQuery() {
-      this.getWatchhouseList()
+      getWorkStationLikeName()
     },
     // 重置查询
     resetQuery() {
@@ -187,17 +188,20 @@ export default {
     },
     // 执行删除
     handleDelete(row) {
-      const id = row.id || this.ids
-      this.$confirm('此操作将永久删除该岗亭数据, 是否继续?', '提示', {
+      const userIds = row.id || this.ids
+      this.$confirm('此操作将永久删除该用户数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.loading = true
-        deleteWorkStationById(id).then(res => {
+        deleteWorkStationById(userIds).then(() => {
           this.loading = false
           this.msgSuccess('删除成功')
-          this.getWatchhouseList()// 查询列表
+          this.getWatchhouseList()// 全查询
+        }).catch(() => {
+          this.msgError('删除失败')
+          this.loading = false
         })
       }).catch(() => {
         this.msgError('删除已取消')
