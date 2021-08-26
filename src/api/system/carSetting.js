@@ -112,12 +112,11 @@ export function deleteWorkStationById(id) {
   })
 }
 
-// 批量删除岗亭设置
-export function deleteWorkStationByList(ids) {
+// 根据岗亭名称查询岗亭设置
+export function getWorkStationLikeName(name) {
   return request({
-    url: '/ylyt/workStation/deleteWorkStationByList',
-    method: 'delete',
-    params: ids
+    url: '/ylyt/workStation/getWorkStationLikeName/' + name,
+    method: 'get'
   })
 }
 // -------------------------------------车道

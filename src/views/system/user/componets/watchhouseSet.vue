@@ -28,7 +28,7 @@
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
       </el-col>
       <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDeleteMany">删除</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
@@ -78,7 +78,7 @@
 </template>
 <script>
 // 引入api
-import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, deleteWorkStationByList } from '@/api/system/carSetting'
+import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, deleteWorkStationByList, getWorkStationLikeName } from '@/api/system/carSetting'
 
 export default {
   name: 'WatchhouseSet',
@@ -107,7 +107,7 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        watchhouseName: undefined
+        name: ''
       },
       // 表单数据
       form: {
@@ -195,24 +195,6 @@ export default {
       }).then(() => {
         this.loading = true
         deleteWorkStationById(id).then(res => {
-          this.loading = false
-          this.msgSuccess('删除成功')
-          this.getWatchhouseList()// 查询列表
-        })
-      }).catch(() => {
-        this.msgError('删除已取消')
-        this.loading = false
-      })
-    },
-    // 删除多个
-    handleDeleteMany(row) {
-      this.$confirm('此操作将永久删除这些岗亭数据, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.loading = true
-        deleteWorkStationByList(this.ids).then(res => {
           this.loading = false
           this.msgSuccess('删除成功')
           this.getWatchhouseList()// 查询列表
