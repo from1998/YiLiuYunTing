@@ -7,7 +7,7 @@
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
       <el-form-item label="岗亭名称" prop="watchhouseName">
         <el-input
-          v-model="queryParams.watchhouseName"
+          v-model="queryParams.name"
           placeholder="请输入岗亭名称"
           clearable
           size="small"
@@ -34,8 +34,9 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="watchhouseList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗亭名称" align="center" prop="watchhouseName" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="岗亭ID" align="center" prop="id" />
+      <el-table-column label="车场名称" align="center" prop="parkId" />
+      <el-table-column label="岗亭名称" align="center" prop="name" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -64,11 +65,8 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules">
-        <el-form-item label="岗亭名称" prop="watchhouseName">
-          <el-input v-model="form.watchhouseName" placeholder="请输入岗亭名称" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入岗亭备注" clearable size="small" />
+        <el-form-item label="岗亭名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入岗亭名称" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -80,8 +78,7 @@
 </template>
 <script>
 // 引入api
-// import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
-// import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
+import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById } from '@/api/system/carSetting'
 
 export default {
   name: 'WatchhouseSet',
@@ -111,7 +108,9 @@ export default {
         watchhouseName: undefined
       },
       // 表单数据
-      form: {},
+      form: {
+        managerid: ''
+      },
       // 表单校验
       rules: {
         watchhouseName: [
@@ -122,53 +121,21 @@ export default {
   },
   // 勾子
   created() {
+    // 取路由路径上的参数
+    this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getWatchhouseList()
   },
   // 方法
   methods: {
-    // 查询表格数据
     getWatchhouseList() {
-      // this.loading = true // 打开遮罩
-      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-      //   this.watchhouseList = res.data.list
-      //   this.total = res.data.total
-      //   this.loading = false// 关闭遮罩
-      // })
-      this.watchhouseList = [
-        {
-          watchhouseId: '0',
-          watchhouseName: '一号岗亭',
-          remark: '这是第一个备注'
-        },
-        {
-          watchhouseId: '1',
-          watchhouseName: '二号岗亭',
-          remark: '这是第二个备注'
-        },
-        {
-          watchhouseId: '2',
-          watchhouseName: '三号岗亭',
-          remark: '这是第三个备注'
-        },
-        {
-          watchhouseId: '3',
-          watchhouseName: '四号岗亭',
-          remark: '这是第四个备注'
-        },
-        {
-          watchhouseId: '4',
-          watchhouseName: '五号岗亭',
-          remark: '这是第五个备注'
-        },
-        {
-          watchhouseId: '5',
-          watchhouseName: '六号岗亭',
-          remark: '这是第六个备注'
-        }
-      ]
-      this.total = 6
-      console.log('查询成功')
+      this.loading = true // 打开遮罩
+      getWorkStationByMid(this.form.managerid).then(res => {
+        console.log(res.data)
+        this.watchhouseList = res.data.list
+        this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      })
     },
     // 查询
     handleQuery() {
@@ -200,40 +167,36 @@ export default {
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
-      this.reset()
+      this.form.name = ''
       this.title = '添加岗亭'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改岗亭'
-      const watchhouseId = row.watchhouseId || this.ids
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
+      const id = row.id || this.ids
       this.open = true
       this.reset()
       // 根据id查询岗亭信息
-      // this.loading = true
-      // getRoleById(watchhouseId).then(res => {
-      //   this.form = res.data
-      //   this.loading = false
-      // })
-      console.log(watchhouseId)
-      this.msgSuccess('修改弹出成功')
+      this.loading = true
+      getWorkStationById(id).then(res => {
+        this.form = res.data
+        this.loading = false
+      })
     },
     // 执行删除
     handleDelete(row) {
-      const watchhouseId = row.watchhouseId || this.ids
+      const id = row.id || this.ids
       this.$confirm('此操作将永久删除该岗亭数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // this.loading = true
-        // deleteRoleByIds(roleIds).then(res => {
-        //   this.loading = false
-        //   this.msgSuccess('删除成功')
-        //   this.getWatchhouseList()// 全查询
-        // })
-        console.log(watchhouseId)
+        this.loading = true
+        deleteWorkStationById(id).then(res => {
+          this.loading = false
+          this.msgSuccess('删除成功')
+          this.getWatchhouseList()// 查询列表
+        })
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false
@@ -245,26 +208,24 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          if (this.form.watchhouseId === undefined) {
-            // addRole(this.form).then(res => {
-            //   this.msgSuccess('保存成功')
-            //   this.loading = false
-            //   this.getWatchhouseList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
-            console.log('添加')
-          } else { // 做修改、
-            console.log('修改')
-            // updateRole(this.form).then(res => {
-            //   this.msgSuccess('修改成功')
-            //   this.loading = false
-            //   this.getWatchhouseList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
+          if (this.form.id === undefined) {
+            addWorkStation(this.form).then(res => {
+              this.msgSuccess('保存成功')
+              this.loading = false
+              this.getWatchhouseList()// 列表重新查询
+              this.open = false// 关闭弹出层
+            }).catch(() => {
+              this.loading = false
+            })
+          } else { // 做修改
+            updateWorkStation(this.form).then(() => {
+              this.msgSuccess('修改成功')
+              this.loading = false
+              this.getWatchhouseList()// 列表重新查询
+              this.open = false// 关闭弹出层
+            }).catch(() => {
+              this.loading = false
+            })
           }
         }
       })

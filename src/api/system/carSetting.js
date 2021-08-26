@@ -69,4 +69,44 @@ export function updateParkfee(data) {
     params: data
   })
 }
+// 查询岗亭设置列表
+export function getWorkStationByMid(id) {
+  return request({
+    url: '/ylyt/workStation/getWorkStationByMid/' + id,
+    method: 'get'
+  })
+}
+// 根据ID查询岗亭信息
+export function getWorkStationById(id) {
+  return request({
+    url: '/ylyt/workStation/getWorkStationById/' + id,
+    method: 'get'
+  })
+}
+
+// 添加岗亭设置
+export function addWorkStation(data) {
+  return request({
+    url: '/ylyt/workStation/addWorkStation',
+    method: 'post',
+    params: data
+  })
+}
+
+// 修改岗亭设置
+export function updateWorkStation(data) {
+  return request({
+    url: '/ylyt/workStation/updateWorkStation',
+    method: 'put',
+    params: data
+  })
+}
+
+// 删除岗亭设置
+export function deleteWorkStationById(id) {
+  return request({
+    url: '/ylyt/workStation/deleteWorkStationById/' + id,
+    method: 'delete'
+  })
+}
 

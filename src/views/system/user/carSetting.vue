@@ -2,7 +2,7 @@
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="车场信息" name="depotInfo">
-        <depot-info :resdata="resdata" />
+        <depot-info :park="resdata" />
       </el-tab-pane>
       <el-tab-pane label="车场配置" name="depotSet">
         <depot-set />
@@ -39,6 +39,8 @@ import secManger from './componets/secManger'
 import watchhouseSet from './componets/watchhouseSet'
 import BackToTop from '@/components/BackToTop'
 
+import { getDepotById } from '@/api/system/carSetting'
+
 // 导入API方法
 export default {
   components: {
@@ -53,7 +55,7 @@ export default {
   },
   data() {
     return {
-      resdata: '',
+      parkid: '',
       activeName: 'depotInfo',
       myBackToTopStyle: {
         right: '50px',
@@ -68,6 +70,13 @@ export default {
   },
   created() {
     this.activeName = window.sessionStorage.getItem('activeName') || 'depotInfo'
+    const managerid = this.$route.params && this.$route.params.id // 路由传参
+    getDepotById(managerid).then(res => {
+      if (res.data !== null) {
+        this.parkid = res.data.id
+        // console.log(this.parkid)
+      }
+    })
   },
   methods: {
     handleClick(tab) {
