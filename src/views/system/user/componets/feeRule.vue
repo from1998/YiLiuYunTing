@@ -9,7 +9,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="车牌类型">
-              <el-select v-model="form.carNumberCategory" placeholder="请选择车牌类型" style="width:566px">
+              <el-select v-model="form.numbertype" placeholder="请选择车牌类型" style="width:566px" disabled>
                 <el-option
                   v-for="item in options.carNumberCategory"
                   :key="item.dictValue"
@@ -25,14 +25,14 @@
           <el-col :span="12">
             <el-form-item label="单次停车免费时长(分钟)">
               <el-tooltip class="item" effect="dark" content="请输入单次停车免费时长(分钟)" placement="right">
-                <el-input-number v-model="form.onceFreeTime" :precision="0" :step="1" />
+                <el-input-number v-model="form.yduration" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="单日封顶价格(元)">
               <el-tooltip class="item" effect="dark" content="请输入单日封顶价格(元)" placement="right">
-                <el-input-number v-model="form.priceCaps" :precision="2" :step="1" />
+                <el-input-number v-model="form.ymoney" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -59,14 +59,14 @@
           <el-col :span="12">
             <el-form-item label="续费时长(分钟)">
               <el-tooltip class="item" effect="dark" content="请输入续费时长(分钟)" placement="right">
-                <el-input-number v-model="form.continueTimeLong" :precision="0" :step="1" />
+                <el-input-number v-model="form.overunit" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="续费单价(元/分钟)">
               <el-tooltip class="item" effect="dark" content="请输入续费单价(元/分钟)" placement="right">
-                <el-input-number v-model="form.continueFee" :precision="2" :step="1" />
+                <el-input-number v-model="form.overmoney" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -74,8 +74,8 @@
         <!-- 分段收费类型 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label="分段收费类型">
-              <el-radio-group v-model="form.sectionChargeType">
+            <el-form-item label="收费类型">
+              <el-radio-group v-model="form.splittimejson">
                 <el-radio
                   v-for="item in options.sectionChargeType"
                   :key="item.dictValue"
@@ -91,8 +91,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="计费时间段">
-              <!-- 常规计费 -->
-              <el-row v-if="form.sectionChargeType ===1 ">
+              <!-- 分段计费 -->
+              <el-row v-if="form.splittimejson ===1 ">
                 <el-table
                   :data="form.commonCountFee"
                   border
@@ -142,7 +142,7 @@
                 </el-tooltip>
               </el-row>
               <!-- 叠加计费 -->
-              <el-row v-if="form.sectionChargeType ===2 ">
+              <el-row v-if="form.splittimejson ===2 ">
                 <el-table
                   :data="form.overlayCountFee"
                   border
@@ -208,14 +208,14 @@ export default {
     return {
       limitNumber: '24',
       form: {
-        carNumberCategory: '',
-        onceFreeTime: '',
-        priceCaps: '',
+        numbertype: '',
+        yduration: '',
+        ymoney: '',
         firstStoppTimelong: '',
         firstStoppFee: '',
-        continueTimeLong: '',
-        continueFee: '',
-        sectionChargeType: '',
+        overunit: '',
+        overmoney: '',
+        splittimejson: '0',
         // 常规计费
         commonCountFee: [
           {
@@ -242,7 +242,7 @@ export default {
       options: {
         // 车牌类型
         carNumberCategory: [],
-        // 分段收费类型
+        // 收费类型
         sectionChargeType: []
       }
     }
