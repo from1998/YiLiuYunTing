@@ -134,7 +134,6 @@ export default {
     getWatchhouseList() {
       this.loading = true // 打开遮罩
       getWorkStationByMid(this.queryParams).then(res => {
-        console.log(res.data)
         this.watchhouseList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
@@ -158,7 +157,6 @@ export default {
     // 分页size变化时触发
     handleSizeChange(val) {
       this.queryParams.size = val
-      console.log(this.queryParams)
       // 重新查询
       this.getWatchhouseList()
     },

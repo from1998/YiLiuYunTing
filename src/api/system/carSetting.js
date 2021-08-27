@@ -13,7 +13,7 @@ export function addDepotInfo(data) {
   return request({
     url: '/ylyt/park/addPark',
     method: 'post',
-    data
+    params: data
   })
 }
 
@@ -22,7 +22,7 @@ export function updateDepotInfo(data) {
   return request({
     url: '/ylyt/park/updatePark',
     method: 'put',
-    data
+    params: data
   })
 }
 // --------------------------------------车场配置
@@ -39,7 +39,7 @@ export function addDepotSet(data) {
   return request({
     url: '/ylyt/park/addParkOperation',
     method: 'post',
-    data
+    params: data
   })
 }
 
@@ -48,7 +48,7 @@ export function updateDepotSet(data) {
   return request({
     url: '/ylyt/park/updateParkOperation',
     method: 'put',
-    data
+    params: data
   })
 }
 // --------------------------------------收费规则
@@ -57,7 +57,7 @@ export function addParkfee(data) {
   return request({
     url: '/ylyt/parkFee/addParkfee',
     method: 'post',
-    data
+    params: data
   })
 }
 
@@ -66,7 +66,7 @@ export function updateParkfee(data) {
   return request({
     url: '/ylyt/parkFee/updateParkfee',
     method: 'put',
-    data
+    params: data
   })
 }
 // -------------------------------------岗亭

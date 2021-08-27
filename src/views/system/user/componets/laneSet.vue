@@ -244,6 +244,8 @@ export default {
   // 定义页面数据
   data() {
     return {
+      // 初始表单备份
+      formBak: {},
       // 用户id备份
       manageridBak: '',
       // 二维码是否弹出
@@ -284,7 +286,8 @@ export default {
         controllerCard: '',
         haveScreen: '',
         lineCount: '',
-        remainder: ''
+        remainder: '',
+        managerid: undefined
         // gateState: undefined
       },
       // 遍历数据
@@ -306,6 +309,9 @@ export default {
   },
   // 勾子
   created() {
+    // 备份初始表单
+    this.formBak = this.form
+
     // 获取车道类型字典数据
     this.getDataByType('LaneTypeDic').then(res => {
       this.options.laneCategory = res.data
@@ -313,22 +319,18 @@ export default {
     // 获取相机品牌字典
     this.getDataByType('CameraBrandTypeDic').then(res => {
       this.options.cameraBrandType = res.data
-      console.log(res.data)
     })
     // 获取控制卡类型字典
     this.getDataByType('ControllerBrandTypeDic').then(res => {
       this.options.controllerCard = res.data
-      console.log(res.data)
     })
     // 获取屏幕行数字典
     this.getDataByType('LaneLineCountDic').then(res => {
       this.options.screenLines = res.data
-      console.log(res.data)
     })
     // 获取是否字典
     this.getDataByType('yesOrNo').then(res => {
       this.options.status = res.data
-      console.log(res.data)
     })
     // 取路由路径上的参数
     this.queryParams.managerid = this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
@@ -339,9 +341,9 @@ export default {
   methods: {
     // 查询表格数据
     getlaneList() {
+      console.log('ok')
       this.loading = true // 打开遮罩
       getLaneByMid(this.queryParams).then(res => {
-        console.log(res.data)
         this.laneList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
@@ -355,8 +357,7 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.queryParams.managerid = this.manageridBak
-      console.log(this.queryParams)
-      // this.getlaneList()
+      this.getlaneList()
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
@@ -390,13 +391,11 @@ export default {
       this.open = true
       this.reset()
       // 根据id查询岗亭信息
-      // this.loading = true
-      // getRoleById(laneId).then(res => {
-      //   this.form = res.data
-      //   this.loading = false
-      // })
-      console.log(laneId)
-      this.msgSuccess('修改弹出成功')
+      this.loading = true
+      getLaneById(laneId).then(res => {
+        this.form = res.data
+        this.loading = false
+      })
     },
     // 执行删除
     handleDelete(row) {
@@ -406,13 +405,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // this.loading = true
-        // deleteRoleByIds(roleIds).then(res => {
-        //   this.loading = false
-        //   this.msgSuccess('删除成功')
-        //   this.getlaneList()// 全查询
-        // })
-        console.log(laneId)
+        this.loading = true
+        deleteLaneById(laneId).then(res => {
+          this.loading = false
+          this.msgSuccess('删除成功')
+          this.getlaneList()// 全查询
+        })
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false
@@ -420,7 +418,6 @@ export default {
     },
     // 监听 switch 闸口状态的改变
     async gateStateChanged(row) {
-      console.log(row)
       // const { data: res } = await this.$http.put(
       //   `users/${row.id}/state/${row.gateState}`
       // )
@@ -455,7 +452,7 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          if (this.form.watchhouseId === undefined) {
+          if (this.form.id === undefined) {
             addLane(this.form).then(() => {
               this.msgSuccess('保存成功')
               this.loading = false
@@ -464,9 +461,7 @@ export default {
             }).catch(() => {
               this.loading = false
             })
-            console.log('添加')
-          } else { // 做修改、
-            console.log('修改')
+          } else { // 做修改
             updateLane(this.form).then(res => {
               this.msgSuccess('修改成功')
               this.loading = false
@@ -487,12 +482,8 @@ export default {
     // 重置表单
     reset() {
       this.resetForm('form')
-      this.form = {
-        watchhouseId: undefined,
-        workstationId: undefined,
-        parkinglotName: undefined,
-        remark: undefined
-      }
+      this.form = this.formBak
+      this.form.managerid = this.manageridBak
     }
   }
 }

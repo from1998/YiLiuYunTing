@@ -255,7 +255,7 @@ export default {
         }
       ]
       this.total = 6
-      console.log('查询成功')
+      // console.log('查询成功')
     },
     // 查询
     handleQuery() {

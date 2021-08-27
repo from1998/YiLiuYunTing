@@ -380,8 +380,6 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
-          this.form.parkfeecharge = this.form.parkfeecharge * 1000
-          this.form.commissioncharge = this.form.commissioncharge * 1000
           // this.SubmitTitle = '已提交'
           this.handleRegion(this.addressOptions)
           this.handletime()
@@ -390,11 +388,8 @@ export default {
       })
     },
     onSubmit() {
+      this.timeChange(this.convert.businessHours)
       if (this.resdata === null) {
-        this.timeChange()
-        this.form.parkfeecharge = this.form.parkfeecharge / 1000
-        this.form.commissioncharge = this.form.commissioncharge / 1000
-        console.log(this.form.commissioncharge)
         this.loading = true // 打开遮罩
         addDepotInfo(this.form).then(res => {
           this.msgSuccess('添加成功')
@@ -407,8 +402,6 @@ export default {
         })
       } else {
         this.loading = true // 打开遮罩
-        this.form.parkfeecharge = this.form.parkfeecharge / 1000
-        this.form.commissioncharge = this.form.commissioncharge / 1000
         updateDepotInfo(this.form).then(() => {
           this.msgSuccess('修改成功')
           this.init()
@@ -420,6 +413,7 @@ export default {
       }
     },
     onReset() {
+      console.log(this.formBak)
       this.$confirm('确定重置?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
