@@ -29,7 +29,7 @@ export function updateDepotInfo(data) {
 // 查询车场配置
 export function getParkOperationByMid(id) {
   return request({
-    url: '/ylyt/park/getParkOperationByMid/' + id,
+    url: '/ylyt/parkOperation/getParkOperationByMid/' + id,
     method: 'get'
   })
 }
@@ -161,6 +161,49 @@ export function updateLane(data) {
 export function deleteLaneById(id) {
   return request({
     url: '/ylyt/lane/deleteLaneByList/' + id,
+    method: 'delete'
+  })
+}
+// -------------------------------------保安管理
+
+// 查询保安列表
+export function getBaoAnList(query) {
+  return request({
+    url: '/ylyt/baoAn/getBaoAnList',
+    method: 'get',
+    params: query
+  })
+}
+// 根据ID查询保安
+export function getBaoAnById(id) {
+  return request({
+    url: '/ylyt/baoAn/getBaoAnById/' + id,
+    method: 'get'
+  })
+}
+
+// 添加保安
+export function addBaoAn(data) {
+  return request({
+    url: '/ylyt/baoAn/addBaoAn',
+    method: 'post',
+    data
+  })
+}
+
+// 修改保安
+export function updateBaoAn(data) {
+  return request({
+    url: '/ylyt/baoAn/updateBaoAn',
+    method: 'put',
+    params: data
+  })
+}
+
+// 删除保安
+export function deleteBaoAn(id) {
+  return request({
+    url: '/ylyt/baoAn/deleteBaoAnByList/' + id,
     method: 'delete'
   })
 }

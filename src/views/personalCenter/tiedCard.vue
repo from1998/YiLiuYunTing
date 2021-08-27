@@ -7,9 +7,12 @@
     <!-- 主体 -->
     <el-container class="container">
       <el-form ref="depotForm" :model="form" label-width="150px" style="width:750px">
-        <!-- 名称 简称 -->
-        <el-form-item label="注册类型" prop="category">
-          <el-select v-model="form.category" placeholder="请选择注册类型">
+        <el-form-item label="绑卡商户号" prop="name">
+          <el-input v-model="form.name" placeholder="请输入绑卡商户号" />
+        </el-form-item>
+        <!-- 银行卡类型 -->
+        <el-form-item label="银行卡类型" prop="category">
+          <el-select v-model="form.category" placeholder="请选择银行卡类型">
             <el-option
               v-for="item in categoryOptions"
               :key="item.value"
@@ -18,37 +21,31 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="个人/法人姓名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入个人/法人姓名" />
+        <!-- 开户银行 -->
+        <el-form-item label="开户银行" prop="category">
+          <el-select v-model="form.category" placeholder="请选择开户银行">
+            <el-option
+              v-for="item in categoryOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
-        <el-form-item label="身份证号码" prop="idNumber">
-          <el-input v-model="form.idNumber" placeholder="请输入身份证号码" />
+        <el-form-item label="银行卡号码" prop="idNumber">
+          <el-input v-model="form.idNumber" placeholder="请输入银行卡号码" />
         </el-form-item>
-        <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号码" />
-        </el-form-item>
-        <el-form-item label="企业名称" prop="firmName">
-          <el-input v-model="form.firmName" placeholder="请输入企业名称" />
-        </el-form-item>
-        <el-row>
-          <el-col :span="16">
-            <el-form-item label="验证码" prop="verificationCode">
-              <el-input v-model="form.verificationCode" placeholder="请输入验证码" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="8" class="verifyCode">
-            <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
-              <span v-if="codeShow">获取验证码</span>
-              <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
-            </el-button>
-          </el-col>
-        </el-row>
+
+        <el-tooltip class="item" effect="dark" content="我们会往您的账户打款0.5元以下的金额，请务必在确认到账后输入收款金额后 点击绑卡!" placement="bottom-start">
+          <el-form-item label="收款金额" prop="phone">
+            <el-input v-model="form.phone" placeholder="请输入收款金额" />
+          </el-form-item>
+        </el-tooltip>
 
         <el-row :gutter="20">
           <el-form-item>
             <div class="footer">
-              <el-button type="primary" @click="onSubmit">提交</el-button>
-              <el-button type="danger" @click="resetForm('depotForm')">重置</el-button>
+              <el-button type="primary" @click="onSubmit">绑卡</el-button>
             </div>
           </el-form-item>
         </el-row>

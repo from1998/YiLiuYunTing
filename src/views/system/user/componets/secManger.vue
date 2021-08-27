@@ -5,17 +5,17 @@
     </el-header>
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="保安姓名" prop="securityName">
+      <el-form-item label="保安姓名" prop="realName">
         <el-input
-          v-model="queryParams.securityName"
+          v-model="queryParams.realName"
           placeholder="请输入保安姓名"
           clearable
           size="small"
         />
       </el-form-item>
-      <el-form-item label="保安手机号码" label-width="96px" prop="securityPhone">
+      <el-form-item label="保安手机号码" label-width="96px" prop="mobile">
         <el-input
-          v-model="queryParams.securityPhone"
+          v-model="queryParams.mobile"
           placeholder="请输入保安手机号码"
           clearable
           size="small"
@@ -41,27 +41,27 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="securityList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="姓名" align="center" prop="securityName" />
-      <el-table-column label="手机号码" align="center" prop="securityPhone" />
-      <el-table-column label="身份证号码" align="center" prop="securityIdCard" width="180" />
-      <el-table-column label="所属岗亭" align="center" prop="watchhouseName" />
-      <el-table-column label="负责车道" align="center" prop="administerLane" />
+      <el-table-column label="姓名" align="center" prop="realName" />
+      <el-table-column label="手机号码" align="center" prop="mobile" />
       <el-table-column label="上下班时间" align="center" prop="workTimeDur" width="392">
         <template slot-scope="scope">
           <el-time-picker
-            v-model="scope.row.workTimeDur"
+            v-model="scope.row.Hours"
             is-range
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
+            value-format="HH-mm-ss"
             disabled
           />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="186">
+      <el-table-column label="操作" align="center" width="500">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="danger" icon="el-icon-setting" size="small" @click="handleWatchhouse(scope.row)">岗亭设置</el-button>
+          <el-button type="danger" icon="el-icon-setting" size="small" @click="handleLane(scope.row)">车道设置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -87,27 +87,41 @@
     >
       <el-form ref="form" :model="form" label-width="100px">
         <el-form-item label="姓名">
-          <el-input v-model="form.securityName" placeholder="请输入保安姓名" clearable size="small" />
+          <el-input v-model="form.realName" placeholder="请输入保安姓名" clearable size="small" />
         </el-form-item>
         <el-form-item label="手机号码">
-          <el-input v-model="form.securityPhone" placeholder="请输入保安手机号码" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="身份证号码">
-          <el-input v-model="form.securityIdCard" placeholder="请输入保安身份证号码" clearable size="small" />
+          <el-input v-model="form.mobile" placeholder="请输入保安手机号码" clearable size="small" />
         </el-form-item>
         <el-form-item label="上下班时间">
           <el-time-picker
-            v-model="form.workTimeDur"
+            v-model="convertHours"
             is-range
             range-separator="至"
             start-placeholder="开始时间"
             end-placeholder="结束时间"
             placeholder="选择上下班时间"
+            value-format="HH-mm-ss"
+            @change="timeChange(convertHours)"
           />
         </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- 所属岗亭 -->
+    <el-dialog
+      title="所属岗亭"
+      :visible.sync="openWatchhouse"
+      width="500px"
+      center
+      append-to-body
+    >
+      <el-form ref="watchhouse" :model="watchhouse" label-width="100px">
         <el-form-item label="所属岗亭">
           <el-select
-            v-model="form.watchhouseName"
+            v-model="watchhouse.name"
             placeholder="请选择所属岗亭"
             clearable
             size="small"
@@ -120,9 +134,24 @@
             />
           </el-select>
         </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- 负责车道 -->
+    <el-dialog
+      title="负责车道"
+      :visible.sync="openAdministerLane"
+      width="500px"
+      center
+      append-to-body
+    >
+      <el-form ref="administerLane" :model="administerLane" label-width="100px">
         <el-form-item label="负责车道">
           <el-select
-            v-model="form.administerLane"
+            v-model="administerLane.administerLane"
             placeholder="请选择负责车道"
             clearable
             size="small"
@@ -145,14 +174,15 @@
 </template>
 <script>
 // 引入api
-// import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
-// import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
+import { getBaoAnList, getBaoAnById, addBaoAn, updateBaoAn, deleteBaoAn } from '@/api/system/carSetting'
 
 export default {
   name: 'SecManger', // 和对应路由表中配置的name值一致',
   // 定义页面数据
   data() {
     return {
+      // 用户id备份
+      manageridBak: '',
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -167,95 +197,65 @@ export default {
       securityList: [],
       // 弹出层标题
       title: '',
-      // 是否显示弹出层
+      // 是否显示添加修改弹出层
       open: false,
+      // 是否显示所属岗亭
+      openWatchhouse: false,
+      // 是否显示负责车道
+      openAdministerLane: false,
       // 查询参数
       queryParams: {
         page: 1,
         size: 10,
-        securityName: undefined,
-        securityPhone: undefined
+        realName: undefined,
+        mobile: undefined,
+        parentId: undefined
       },
       // 表单数据
       form: {
-        securityName: '',
-        securityPhone: '',
-        securityIdCard: '',
-        workTimeDur: [new Date(), new Date()],
-        watchhouseName: '',
-        administerLane: ''
+        realName: '',
+        mobile: '',
+        startWorkTime: '',
+        endWorkTime: '',
+        parentId: undefined
+        // workTimeDur: [new Date(), new Date()],
+        // watchhouseName: '',
+        // administerLane: ''
       },
+      // 所属岗亭
+      watchhouse: {},
+      // 负责车道
+      administerLane: {},
+      // 待转换的上下班时间,默认朝8晚7
+      convertHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)],
       // 遍历数据
       options: []
     }
   },
   // 勾子
   created() {
+    // 取路由路径上的参数
+    this.queryParams.parentId = this.manageridBak = this.form.parentId = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getSecurityList()
   },
   // 方法
   methods: {
-    // 查询表格数据
+    // 查询列表数据
     getSecurityList() {
-      // this.loading = true // 打开遮罩
-      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-      //   this.securityList = res.data.list
-      //   this.total = res.data.total
-      //   this.loading = false// 关闭遮罩
-      // })
-      this.options = [
-
-      ]
-      this.securityList = [
-        {
-          securityId: '0',
-          securityName: '张三',
-          securityPhone: '15301051819',
-          securityIdCard: '341223199406281701',
-          watchhouseName: '一号岗亭',
-          administerLane: 'A车道',
-          workTimeDur: [new Date(2020, 9, 10, 8, 40), new Date(2020, 9, 10, 9, 40)]
-        },
-        {
-          securityId: '1',
-          securityName: '李四',
-          securityPhone: '13301051819',
-          securityIdCard: '342623199406281701',
-          watchhouseName: '一号岗亭',
-          administerLane: 'B车道',
-          workTimeDur: [new Date(2020, 6, 9, 8, 40), new Date(2020, 9, 10, 9, 40)]
-        },
-        {
-          securityId: '2',
-          securityName: '王五',
-          securityPhone: '19801051819',
-          securityIdCard: '341223199406281701',
-          watchhouseName: '二号岗亭',
-          administerLane: 'A车道',
-          workTimeDur: [new Date(2020, 6, 10, 8, 40), new Date(2020, 9, 10, 9, 40)]
-        },
-        {
-          securityId: '3',
-          securityName: '赵六',
-          securityPhone: '13601051819',
-          securityIdCard: '341223199406281701',
-          watchhouseName: '二号岗亭',
-          administerLane: 'B车道',
-          workTimeDur: [new Date(2020, 9, 10, 8, 40), new Date(2020, 9, 10, 9, 40)]
-        },
-        {
-          securityId: '4',
-          securityName: '宋七',
-          securityPhone: '15301050019',
-          securityIdCard: '341223199406281701',
-          watchhouseName: '三号岗亭',
-          administerLane: 'A车道',
-          workTimeDur: [new Date(2020, 9, 10, 8, 40), new Date(2020, 9, 10, 9, 40)]
-        }
-      ]
-      this.total = 6
-      // console.log('查询成功')
+      getBaoAnList(this.queryParams).then(res => {
+        this.securityList = res.data.list.map(val => {
+          return {
+            id: val.id,
+            realName: val.realName,
+            mobile: val.mobile,
+            Hours: [val.startWorkTime, val.endWorkTime]
+          }
+        })
+        console.log(this.securityList)
+        this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      })
     },
     // 查询
     handleQuery() {
@@ -264,12 +264,12 @@ export default {
     // 重置查询
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
+      this.queryParams.parentId = this.manageridBak
       this.getSecurityList()
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
-      this.ids = selection.map(item => item.securityId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -289,39 +289,36 @@ export default {
     handleAdd() {
       this.open = true
       this.reset()
+      console.log(this.form)
       this.title = '添加保安'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改保安'
-      const securityId = row.securityId || this.ids
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
+      const id = row.id || this.ids
       this.open = true
       this.reset()
-      // 根据id查询岗亭信息
-      // this.loading = true
-      // getRoleById(securityId).then(res => {
-      //   this.form = res.data
-      //   this.loading = false
-      // })
-      console.log(securityId)
-      this.msgSuccess('修改弹出成功')
+      // 根据id查询保安信息
+      this.loading = true
+      getBaoAnById(id).then(res => {
+        this.form = res.data
+        this.loading = false
+      })
     },
     // 执行删除
     handleDelete(row) {
-      const securityId = row.securityId || this.ids
+      const id = row.id || this.ids
       this.$confirm('此操作将永久删除该保安数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        // this.loading = true
-        // deleteRoleByIds(roleIds).then(res => {
-        //   this.loading = false
-        //   this.msgSuccess('删除成功')
-        //   this.getSecurityList()// 全查询
-        // })
-        console.log(securityId)
+        this.loading = true
+        deleteBaoAn(id).then(res => {
+          this.loading = false
+          this.msgSuccess('删除成功')
+          this.getSecurityList()// 全查询
+        })
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false
@@ -333,26 +330,25 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          if (this.form.securityId === undefined) {
-            // addRole(this.form).then(res => {
-            //   this.msgSuccess('保存成功')
-            //   this.loading = false
-            //   this.getSecurityList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
-            console.log('添加')
+          console.log(this.form)
+          if (this.form.id === undefined) {
+            addBaoAn(this.form).then(res => {
+              this.msgSuccess('保存成功')
+              this.loading = false
+              this.getSecurityList()// 列表重新查询
+              this.open = false// 关闭弹出层
+            }).catch(() => {
+              this.loading = false
+            })
           } else { // 做修改、
-            console.log('修改')
-            // updateRole(this.form).then(res => {
-            //   this.msgSuccess('修改成功')
-            //   this.loading = false
-            //   this.getSecurityList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
+            updateBaoAn(this.form).then(res => {
+              this.msgSuccess('修改成功')
+              this.loading = false
+              this.getSecurityList()// 列表重新查询
+              this.open = false// 关闭弹出层
+            }).catch(() => {
+              this.loading = false
+            })
           }
         }
       })
@@ -366,11 +362,19 @@ export default {
     reset() {
       this.resetForm('form')
       this.form = {
-        securityName: '',
-        securityPhone: '',
-        securityIdCard: '',
-        workTimeDur: []
+        realName: '',
+        mobile: '',
+        parentId: this.manageridBak,
+        startWorkTime: '08-00-00',
+        endWorkTime: '19-00-00'
       }
+    },
+    handletime() {
+      this.convertHours = [this.form.startWorkTime, this.form.endWorkTime]
+    },
+    timeChange(val) {
+      this.form.startWorkTime = val[0]
+      this.form.endWorkTime = val[1]
     }
   }
 }

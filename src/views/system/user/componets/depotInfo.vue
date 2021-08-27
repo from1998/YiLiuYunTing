@@ -325,8 +325,8 @@ export default {
         // 监管平台标识码
         uploadplatformsn: '',
         // 营业时间
-        starthours: '',
-        endhours: ''
+        starthours: '08-00-00',
+        endhours: '19-00-00'
       },
       // 表单校验
       rules: {
@@ -388,7 +388,6 @@ export default {
       })
     },
     onSubmit() {
-      this.timeChange(this.convert.businessHours)
       if (this.resdata === null) {
         this.loading = true // 打开遮罩
         addDepotInfo(this.form).then(res => {

@@ -34,6 +34,7 @@ Vue.prototype.getAge = getAge// 挂载全局的根据出生年月日计算年龄
 Vue.prototype.getCurrentTimeType = getCurrentTimeType// 挂载全局计算时段的方法
 Vue.prototype.moment = moment
 Vue.prototype.getDataByMoreType = getDataByMoreType // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
+Vue.prototype.bus = new Vue() // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 // 挂载全局消息框
 Vue.prototype.msgSuccess = function(msg) {
   this.$message({ showClose: true, message: msg, type: 'success' })

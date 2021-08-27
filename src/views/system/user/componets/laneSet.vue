@@ -361,7 +361,7 @@ export default {
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
-      this.ids = selection.map(item => item.laneId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -386,34 +386,36 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改车道'
-      const laneId = row.laneId || this.ids
+      const id = row.id || this.ids
+      console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据id查询岗亭信息
       this.loading = true
-      getLaneById(laneId).then(res => {
+      debugger
+      getLaneById(id).then(res => {
         this.form = res.data
+        console.log(res.data)
         this.loading = false
       })
     },
     // 执行删除
     handleDelete(row) {
-      const laneId = row.laneId || this.ids
+      const id = row.id || this.ids
+      console.log(id)
       this.$confirm('此操作将永久删除该车道数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.loading = true
-        deleteLaneById(laneId).then(res => {
-          this.loading = false
+        deleteLaneById(id).then(res => {
           this.msgSuccess('删除成功')
           this.getlaneList()// 全查询
+          console.log(res)
         })
       }).catch(() => {
         this.msgError('删除已取消')
-        this.loading = false
       })
     },
     // 监听 switch 闸口状态的改变

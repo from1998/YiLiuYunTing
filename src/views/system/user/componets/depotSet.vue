@@ -518,7 +518,7 @@ export default {
     onSubmit() {
       this.form.specialpass = this.form.specialpass.toString()
       // this.timeChange(this.convert.businessHours)
-      if (this.resdata === null) {
+      if (this.resdata.id === null) {
         // this.timeChange()
         this.loading = true // 打开遮罩
         addDepotSet(this.form).then(() => {

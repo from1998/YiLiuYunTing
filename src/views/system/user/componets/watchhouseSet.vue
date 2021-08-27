@@ -131,11 +131,21 @@ export default {
   },
   // 方法
   methods: {
+    // 传递岗亭数据给车道设置
+    handle() {
+      // 2、传递数据方，通过一个事件触发bus.$emit(方法名，传递的数据)   触发兄弟组件的事件
+      this.watchhouseList.map(val => {
+        return
+      })
+      // this.bus.$emit('watchHouse', )
+    },
     getWatchhouseList() {
       this.loading = true // 打开遮罩
       getWorkStationByMid(this.queryParams).then(res => {
         this.watchhouseList = res.data.list
         this.total = res.data.total
+        // 调用岗亭数据传递函数
+        this.handle()
         this.loading = false// 关闭遮罩
       })
     },
