@@ -30,9 +30,9 @@
         >
           <el-option
             v-for="item in options.laneCategory"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
+            :key="item.dictValue"
+            :label="item.dictLabel"
+            :value="Number(item.dictValue)"
           />
         </el-select>
       </el-form-item>
@@ -59,17 +59,18 @@
       <el-table-column label="车道名称" align="center" prop="name" />
       <el-table-column label="车道类型" align="center" prop="type" />
       <el-table-column label="所属岗亭" align="center" prop="workstationId" />
-      <el-table-column label="相机状态" align="center">
+      <!-- <el-table-column label="相机状态" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.cameraState }}</span>
         </template>
-      </el-table-column>
-      <el-table-column label="相机品牌" align="center" prop="cameraBrand" />
-      <el-table-column label="相机识别码" align="center" prop="cameraUDID" />
-      <el-table-column label="相机IP" align="center" prop="cameraIP" />
-      <el-table-column label="控制卡类型" align="center" prop="controlCardType" />
-      <el-table-column label="是否有屏" align="center" prop="hasScreen" />
-      <el-table-column label="闸口状态" align="center">
+      </el-table-column> -->
+      <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
+      <el-table-column label="相机识别码" align="center" prop="cameraSn" />
+      <el-table-column label="相机IP" align="center" prop="cameraIp" />
+      <el-table-column label="控制卡类型" align="center" prop="controllerCard" />
+      <el-table-column label="是否有屏" align="center" prop="haveScreen" />
+      <el-table-column label="是否显示余位" align="center" prop="remainder" />
+      <!-- <el-table-column label="闸口状态" align="center">
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.gateState"
@@ -77,7 +78,7 @@
             @change="gateStateChanged(scope.row)"
           />
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -124,22 +125,22 @@
     >
       <el-form ref="form" :model="form" label-width="100px">
         <!-- 车道名称 -->
-        <el-form-item label="车道名称" prop="name">
+        <el-form-item label="车道名称">
           <el-input v-model="form.name" placeholder="请输入车道名称" clearable size="small" />
         </el-form-item>
         <!-- 车道类型 -->
-        <el-form-item label="车道类型" prop="type">
+        <el-form-item label="车道类型">
           <el-select v-model="form.type" placeholder="请选择车道类型" size="small">
             <el-option
               v-for="item in options.laneCategory"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
         <!-- 所属岗亭 -->
-        <el-form-item label="所属岗亭" prop="workstationId">
+        <el-form-item label="所属岗亭">
           <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small">
             <el-option
               v-for="item in options.watchhouseName"
@@ -151,66 +152,66 @@
         </el-form-item>
         <!-- 相机品牌 -->
         <el-form-item label="相机品牌">
-          <el-select v-model="form.cameraBrand" placeholder="请选择相机品牌" size="small">
+          <el-select v-model="form.cameraBrandType" placeholder="请选择相机品牌" size="small">
             <el-option
-              v-for="item in options.cameraBrand"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in options.cameraBrandType"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
         <!-- 相机识别码 -->
         <el-form-item label="相机识别码">
-          <el-input v-model="form.cameraUDID" placeholder="请输入相机识别码" clearable size="small" />
+          <el-input v-model="form.cameraSn" placeholder="请输入相机识别码" clearable size="small" />
         </el-form-item>
         <!-- 相机IP -->
         <el-form-item label="相机IP">
-          <el-input v-model="form.cameraIP" placeholder="请输入相机IP" clearable size="small" />
+          <el-input v-model="form.cameraIp" placeholder="请输入相机IP" clearable size="small" />
         </el-form-item>
         <!-- 控制卡类型 -->
         <el-form-item label="控制卡类型">
-          <el-select v-model="form.controlCardType" placeholder="请选择控制卡类型" size="small">
+          <el-select v-model="form.controllerCard" placeholder="请选择控制卡类型" size="small">
             <el-option
-              v-for="item in options.controlCardType"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in options.controllerCard"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
         <!-- 是否有屏 -->
         <el-form-item label="是否有屏">
-          <el-radio-group v-model="form.hasScreen">
+          <el-radio-group v-model="form.haveScreen">
             <el-radio
               v-for="item in options.status"
-              :key="item.value"
-              :label="item.value"
+              :key="item.dictValue"
+              :label="Number(item.dictValue)"
             >
-              {{ item.label }}
+              {{ item.dictLabel }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
         <!-- 屏幕行数 -->
         <el-form-item label="屏幕行数">
-          <el-select v-model="form.screenLines" placeholder="请选择屏幕行数" size="small">
+          <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small">
             <el-option
               v-for="item in options.screenLines"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
         <!-- 是否显示余位 -->
         <el-form-item label="是否显示余位">
-          <el-radio-group v-model="form.showResidue">
+          <el-radio-group v-model="form.remainder">
             <el-radio
               v-for="item in options.status"
-              :key="item.value"
-              :label="item.value"
+              :key="item.dictValue"
+              :label="Number(item.dictValue)"
             >
-              {{ item.label }}
+              {{ item.dictLabel }}
             </el-radio>
           </el-radio-group>
         </el-form-item>
@@ -236,14 +237,16 @@
 </template>
 <script>
 // 引入api
-// import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
-// import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
+import { getLaneByMid, getLaneById, addLane, updateLane, deleteLaneById } from '@/api/system/carSetting'
 
 export default {
   name: 'LaneSet',
   // 定义页面数据
   data() {
     return {
+      // 用户id备份
+      manageridBak: '',
+      // 二维码是否弹出
       qrcodeDialogVisible: false,
       // 是否启用遮罩层
       loading: false,
@@ -256,7 +259,7 @@ export default {
       // 分页数据总条数
       total: 0,
       // 表格数据
-      LaneList: [],
+      laneList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -265,39 +268,70 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        name: undefined,
-        workstationId: undefined,
-        type: undefined
-
+        name: '',
+        workstationId: '',
+        type: '',
+        managerid: ''
       },
       // 表单数据
       form: {
         name: '',
         type: '',
         workstationId: '',
-        cameraBrand: '',
-        cameraUDID: '',
-        cameraIP: '',
-        controlCardType: '',
-        hasScreen: '',
-        screenLines: '',
-        showResidue: '',
-        gateState: undefined
+        cameraBrandType: '',
+        cameraSn: '',
+        cameraIp: '',
+        controllerCard: '',
+        haveScreen: '',
+        lineCount: '',
+        remainder: ''
+        // gateState: undefined
       },
       // 遍历数据
-      options: []
+      options: {
+        // 车道类型
+        laneCategory: [],
+        // 是否状态
+        status: [],
+        // 屏幕行数
+        screenLines: [],
+        // 控制卡类型
+        controllerCard: [],
+        // 相机品牌
+        cameraBrandType: [],
+        // 所属岗亭
+        watchhouseName: []
+      }
     }
   },
   // 勾子
   created() {
-    // 查询所有用户信息
-    // 车道类型 LaneTypeDic
-    // 相机品牌 CameraBrandTypeDic
-    // 控制卡类型 ControllerBrandTypeDic
-    // 屏幕行数 LaneLineCountDic
-    selectNeedSchedulingUsers().then(res => {
-      this.userOptions = res.data
+    // 获取车道类型字典数据
+    this.getDataByType('LaneTypeDic').then(res => {
+      this.options.laneCategory = res.data
     })
+    // 获取相机品牌字典
+    this.getDataByType('CameraBrandTypeDic').then(res => {
+      this.options.cameraBrandType = res.data
+      console.log(res.data)
+    })
+    // 获取控制卡类型字典
+    this.getDataByType('ControllerBrandTypeDic').then(res => {
+      this.options.controllerCard = res.data
+      console.log(res.data)
+    })
+    // 获取屏幕行数字典
+    this.getDataByType('LaneLineCountDic').then(res => {
+      this.options.screenLines = res.data
+      console.log(res.data)
+    })
+    // 获取是否字典
+    this.getDataByType('yesOrNo').then(res => {
+      this.options.status = res.data
+      console.log(res.data)
+    })
+    // 取路由路径上的参数
+    this.queryParams.managerid = this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getlaneList()
   },
@@ -305,37 +339,13 @@ export default {
   methods: {
     // 查询表格数据
     getlaneList() {
-      // this.loading = true // 打开遮罩
-      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-      //   this.LaneList = res.data.list
-      //   this.total = res.data.total
-      //   this.loading = false// 关闭遮罩
-      // })
-      this.options = {
-        laneCategory: [
-          {
-            value: 1,
-            label: '入口'
-          }, {
-            value: 0,
-            label: '出口'
-          }
-        ],
-        // 二元状态选择
-        status: [
-          {
-            value: '1',
-            label: '是'
-          }, {
-            value: '0',
-            label: '否'
-          }
-        ]
-      }
-      // 车道列表数据
-      this.laneList = []
-      this.total = this.laneList.length
-      // console.log('查询成功')
+      this.loading = true // 打开遮罩
+      getLaneByMid(this.queryParams).then(res => {
+        console.log(res.data)
+        this.laneList = res.data.list
+        this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      })
     },
     // 查询
     handleQuery() {
@@ -344,8 +354,9 @@ export default {
     // 重置查询
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
-      this.getlaneList()
+      this.queryParams.managerid = this.manageridBak
+      console.log(this.queryParams)
+      // this.getlaneList()
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
@@ -445,25 +456,25 @@ export default {
           // 做添加
           this.loading = true
           if (this.form.watchhouseId === undefined) {
-            // addRole(this.form).then(res => {
-            //   this.msgSuccess('保存成功')
-            //   this.loading = false
-            //   this.getlaneList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
+            addLane(this.form).then(() => {
+              this.msgSuccess('保存成功')
+              this.loading = false
+              this.getlaneList()// 列表重新查询
+              this.open = false// 关闭弹出层
+            }).catch(() => {
+              this.loading = false
+            })
             console.log('添加')
           } else { // 做修改、
             console.log('修改')
-            // updateRole(this.form).then(res => {
-            //   this.msgSuccess('修改成功')
-            //   this.loading = false
-            //   this.getlaneList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
+            updateLane(this.form).then(res => {
+              this.msgSuccess('修改成功')
+              this.loading = false
+              this.getlaneList()// 列表重新查询
+              this.open = false// 关闭弹出层
+            }).catch(() => {
+              this.loading = false
+            })
           }
         }
       })

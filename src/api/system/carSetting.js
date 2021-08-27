@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-
+// --------------------------------------车场信息
 // 查询车场信息
 export function getDepotById(id) {
   return request({
@@ -13,7 +13,7 @@ export function addDepotInfo(data) {
   return request({
     url: '/ylyt/park/addPark',
     method: 'post',
-    params: data
+    data
   })
 }
 
@@ -22,10 +22,10 @@ export function updateDepotInfo(data) {
   return request({
     url: '/ylyt/park/updatePark',
     method: 'put',
-    params: data
+    data
   })
 }
-
+// --------------------------------------车场配置
 // 查询车场配置
 export function getParkOperationByMid(id) {
   return request({
@@ -39,7 +39,7 @@ export function addDepotSet(data) {
   return request({
     url: '/ylyt/park/addParkOperation',
     method: 'post',
-    params: data
+    data
   })
 }
 
@@ -48,16 +48,16 @@ export function updateDepotSet(data) {
   return request({
     url: '/ylyt/park/updateParkOperation',
     method: 'put',
-    params: data
+    data
   })
 }
-
+// --------------------------------------收费规则
 // 添加收费规则
 export function addParkfee(data) {
   return request({
     url: '/ylyt/parkFee/addParkfee',
     method: 'post',
-    params: data
+    data
   })
 }
 
@@ -66,7 +66,7 @@ export function updateParkfee(data) {
   return request({
     url: '/ylyt/parkFee/updateParkfee',
     method: 'put',
-    params: data
+    data
   })
 }
 // -------------------------------------岗亭
@@ -124,10 +124,11 @@ export function getWorkStationLikeName(name) {
 // -------------------------------------车道
 
 // 查询车道列表
-export function getLaneByMid(id) {
+export function getLaneByMid(query) {
   return request({
-    url: '/ylyt/lane/getLaneByMid/' + id,
-    method: 'get'
+    url: '/ylyt/lane/getLaneByMid/',
+    method: 'get',
+    params: query
   })
 }
 // 根据ID查询车道信息
@@ -156,10 +157,10 @@ export function updateLane(data) {
   })
 }
 
-// 删除单个车道
+// 删除车道
 export function deleteLaneById(id) {
   return request({
-    url: '/ylyt/lane/deleteLaneById/' + id,
+    url: '/ylyt/lane/deleteLaneByList/' + id,
     method: 'delete'
   })
 }

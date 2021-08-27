@@ -158,6 +158,7 @@ export default {
     // 分页size变化时触发
     handleSizeChange(val) {
       this.queryParams.size = val
+      console.log(this.queryParams)
       // 重新查询
       this.getWatchhouseList()
     },

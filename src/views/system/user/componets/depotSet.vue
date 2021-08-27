@@ -549,7 +549,6 @@ export default {
         type: 'warning'
       }).then(() => {
         this.form = this.formBak
-        console.log(this.formBak)
         this.convert.businessHours = [new Date(), new Date()]
         this.msgSuccess('重置成功')
       }).catch(() => {

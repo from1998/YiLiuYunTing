@@ -2,7 +2,7 @@
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="车场信息" name="depotInfo">
-        <depot-info :park="resdata" />
+        <depot-info :park="parkid" />
       </el-tab-pane>
       <el-tab-pane label="车场配置" name="depotSet">
         <depot-set />
