@@ -207,3 +207,47 @@ export function deleteBaoAn(id) {
     method: 'delete'
   })
 }
+
+// -------------------------------------车位管理
+
+// 查询车位列表
+export function getSiteByMid(query) {
+  return request({
+    url: '/ylyt/carSite/getSiteByMid',
+    method: 'get',
+    params: query
+  })
+}
+// 根据ID查询车位
+export function getSiteById(id) {
+  return request({
+    url: '/ylyt/carSite/getSiteById/' + id,
+    method: 'get'
+  })
+}
+
+// 添加车位
+export function addCarSite(data) {
+  return request({
+    url: '/ylyt/carSite/addCarSite',
+    method: 'post',
+    data
+  })
+}
+
+// 修改车位
+export function updateSite(data) {
+  return request({
+    url: '/ylyt/carSite/updateSite',
+    method: 'put',
+    params: data
+  })
+}
+
+// 删除车位
+export function deleteSiteByList(id) {
+  return request({
+    url: '/ylyt/carSite/deleteSiteByList/' + id,
+    method: 'delete'
+  })
+}

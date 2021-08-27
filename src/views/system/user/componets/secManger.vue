@@ -252,7 +252,6 @@ export default {
             Hours: [val.startWorkTime, val.endWorkTime]
           }
         })
-        console.log(this.securityList)
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
@@ -289,7 +288,6 @@ export default {
     handleAdd() {
       this.open = true
       this.reset()
-      console.log(this.form)
       this.title = '添加保安'
     },
     // 打开修改的弹出层
@@ -330,7 +328,6 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          console.log(this.form)
           if (this.form.id === undefined) {
             addBaoAn(this.form).then(res => {
               this.msgSuccess('保存成功')
