@@ -95,6 +95,8 @@
 
 </template>
 <script>
+import { getDepotRegister, addDepotRegister } from '@/api/personalCenter/depotRegister'
+
 export default {
   name: 'DepotRegister',
   data() {

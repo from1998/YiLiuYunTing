@@ -46,7 +46,8 @@ router.beforeEach(async(to, from, next) => {
       } else {
         try {
           // 获取用户信息
-          await store.dispatch('user/getInfo')
+          const info = await store.dispatch('user/getInfo')
+          console.log(info)
           // 构造动态路由【菜单和权限】
           // const accessRoutes = await store.dispatch('permission/generateRoutes', ['admin'])
           const accessRoutes = await store.dispatch('menu/getMenus')

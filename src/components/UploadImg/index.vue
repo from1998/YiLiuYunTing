@@ -61,14 +61,12 @@ export default {
     },
     handleChange(file, fileList) {
       this.handHeld = fileList
-      // console.log(this.handHeld)
       this.hideUpload = fileList.length >= this.limitCount
     },
     // 删除上传的图片
     handleRemove(file, fileList) {
       this.handHeld = fileList
-      // console.log(fileList)
-      this.hideUpload = fileList.length >= this.limitCount
+      this.hideUpload = false
     }
   }
 }

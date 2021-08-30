@@ -56,55 +56,6 @@ export const constantRoutes = [
         meta: { title: '首页', icon: 'dashboard', affix: true }
       }
     ]
-  },
-  {
-    path: '/personalCenter',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true,
-    name: '/personalCenter',
-    meta: {
-      title: '个人中心',
-      icon: 'user'
-    },
-    children: [
-      {
-        path: 'depotRegister',
-        component: () => import('@/views/personalCenter/depotRegister'),
-        name: '/personalCenter/depotRegister',
-        meta: {
-          title: '车场注册',
-          icon: 'el-icon-document'
-        }
-      },
-      {
-        path: 'identityAuth',
-        component: () => import('@/views/personalCenter/identityAuth'),
-        name: '/personalCenter/identityAuth',
-        meta: {
-          title: '身份认证',
-          icon: 'el-icon-circle-check'
-        }
-      },
-      {
-        path: 'tiedCard',
-        component: () => import('@/views/personalCenter/tiedCard'),
-        name: '/personalCenter/tiedCard',
-        meta: {
-          title: '绑卡',
-          icon: 'el-icon-bank-card'
-        }
-      },
-      {
-        path: 'intoAccountSet',
-        component: () => import('@/views/personalCenter/intoAccountSet'),
-        name: '/personalCenter/intoAccountSet',
-        meta: {
-          title: '到账设置',
-          icon: 'el-icon-coin'
-        }
-      }
-    ]
   }
 ]
 export const asyncRoutes = [
@@ -180,6 +131,55 @@ export const asyncRoutes = [
         meta: {
           title: '操作日志管理',
           icon: 'clipboard'
+        }
+      }
+    ]
+  },
+  {
+    path: '/personalCenter',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/personalCenter',
+    meta: {
+      title: '个人中心',
+      icon: 'user'
+    },
+    children: [
+      {
+        path: 'depotRegister',
+        component: () => import('@/views/personalCenter/depotRegister'),
+        name: '/personalCenter/depotRegister',
+        meta: {
+          title: '车场注册',
+          icon: 'el-icon-document'
+        }
+      },
+      {
+        path: 'identityAuth',
+        component: () => import('@/views/personalCenter/identityAuth'),
+        name: '/personalCenter/identityAuth',
+        meta: {
+          title: '身份认证',
+          icon: 'el-icon-circle-check'
+        }
+      },
+      {
+        path: 'tiedCard',
+        component: () => import('@/views/personalCenter/tiedCard'),
+        name: '/personalCenter/tiedCard',
+        meta: {
+          title: '绑卡',
+          icon: 'el-icon-bank-card'
+        }
+      },
+      {
+        path: 'intoAccountSet',
+        component: () => import('@/views/personalCenter/intoAccountSet'),
+        name: '/personalCenter/intoAccountSet',
+        meta: {
+          title: '到账设置',
+          icon: 'el-icon-coin'
         }
       }
     ]
