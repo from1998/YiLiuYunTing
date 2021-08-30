@@ -23,13 +23,11 @@
             <i class="el-icon-zoom-in" />
           </span>
           <span
-            v-if="!disabled"
             @click="handleDownload(file)"
           >
             <i class="el-icon-download" />
           </span>
           <span
-            v-if="!disabled"
             @click="handleRemove(file)"
           >
             <i class="el-icon-delete" />
@@ -47,6 +45,7 @@ export default {
   name: 'UploadImg',
   data() {
     return {
+      dialogImageUrl: '',
       handHeld: [],
       limitCount: 1,
       uploadImgVisible: false,
@@ -67,6 +66,14 @@ export default {
     handleRemove(file, fileList) {
       this.handHeld = fileList
       this.hideUpload = false
+    },
+    // 图片下载
+    handleDownload(file) {
+      var a = document.createElement('a')
+      var event = new MouseEvent('click')
+      a.download = file.name
+      a.href = file.url
+      a.dispatchEvent(event)
     }
   }
 }

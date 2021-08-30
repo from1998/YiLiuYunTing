@@ -14,12 +14,14 @@
         />
       </el-form-item>
       <el-form-item label="所属岗亭" prop="workstationId">
-        <el-input
-          v-model="queryParams.workstationId"
-          placeholder="请输入所属岗亭名称"
-          clearable
-          size="small"
-        />
+        <el-select v-model="queryParams.workstationId" placeholder="请选择所属岗亭" size="small">
+          <el-option
+            v-for="item in options.watchhouseName"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="车道类型" prop="type">
         <el-select
@@ -58,7 +60,7 @@
       <el-table-column type="selection" width="40" align="center" />
       <el-table-column label="车道名称" align="center" prop="name" />
       <el-table-column label="车道类型" align="center" prop="type" />
-      <el-table-column label="所属岗亭" align="center" prop="workstationId" />
+      <el-table-column label="所属岗亭" align="center" prop="workStation" />
       <!-- <el-table-column label="相机状态" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.cameraState }}</span>
@@ -144,9 +146,9 @@
           <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small">
             <el-option
               v-for="item in options.watchhouseName"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
             />
           </el-select>
         </el-form-item>
@@ -193,7 +195,7 @@
           </el-radio-group>
         </el-form-item>
         <!-- 屏幕行数 -->
-        <el-form-item label="屏幕行数">
+        <el-form-item v-show="form.haveScreen === 1" label="屏幕行数">
           <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small">
             <el-option
               v-for="item in options.screenLines"
@@ -336,6 +338,11 @@ export default {
     this.queryParams.managerid = this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getlaneList()
+  },
+  mounted() {
+    this.bus.$on('watchHouse', val => {
+      this.options.watchhouseName = val
+    })
   },
   // 方法
   methods: {

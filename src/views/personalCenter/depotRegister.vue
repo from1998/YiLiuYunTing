@@ -8,37 +8,37 @@
     <el-container class="container">
       <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px">
         <!-- 注册类型 -->
-        <el-form-item label="注册类型" prop="category">
-          <el-select v-model="form.category" placeholder="请选择注册类型" clearable>
+        <el-form-item label="注册类型" prop="type">
+          <el-select v-model="form.type" placeholder="请选择注册类型" clearable>
             <el-option
               v-for="item in categoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
         <!-- 个人/法人姓名 -->
-        <el-form-item prop="name">
+        <el-form-item prop="legalpersonname">
           <span slot="label">
-            <span v-show="form.category===''">个人/法人姓名</span>
-            <span v-show="form.category==='1'">法人姓名</span>
-            <span v-show="form.category==='2'">个人姓名</span>
-            <span v-show="form.category==='3'">个体工商户姓名</span>
+            <span v-show="form.type===''">个人/法人姓名</span>
+            <span v-show="form.type===1">法人姓名</span>
+            <span v-show="form.type===2">个人姓名</span>
+            <span v-show="form.type===3">个体工商户姓名</span>
           </span>
-          <el-input v-model="form.name" placeholder="请输入个人/法人姓名" />
+          <el-input v-model="form.legalpersonname" placeholder="请输入个人/法人姓名" />
         </el-form-item>
         <!-- 身份证号码 -->
-        <el-form-item label="身份证号码" prop="idNumber">
-          <el-input v-model="form.idNumber" placeholder="请输入身份证号码" />
+        <el-form-item label="身份证号码" prop="idnumber">
+          <el-input v-model="form.idnumber" placeholder="请输入身份证号码" />
         </el-form-item>
         <!-- 手机号码 -->
-        <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号码" />
+        <el-form-item label="手机号码" prop="legalpersonphone">
+          <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" />
         </el-form-item>
         <!-- 企业名称 -->
-        <el-form-item v-if="form.category==='1'" label="企业名称" prop="firmName">
-          <el-input v-model="form.firmName" placeholder="请输入企业名称" />
+        <el-form-item v-if="form.type===1" label="企业名称" prop="merchantname">
+          <el-input v-model="form.merchantname" placeholder="请输入企业名称" />
         </el-form-item>
         <!-- 用户协议 -->
         <el-form-item prop="userProtocolState">
@@ -51,8 +51,8 @@
         <!-- 验证码 -->
         <el-row>
           <el-col :span="16">
-            <el-form-item label="验证码" prop="verificationCode">
-              <el-input v-model="form.verificationCode" placeholder="请输入验证码" />
+            <el-form-item label="验证码" prop="registersmscode">
+              <el-input v-model="form.registersmscode" placeholder="请输入验证码" />
             </el-form-item>
           </el-col>
           <el-col :span="8" class="verifyCode">
@@ -65,7 +65,7 @@
 
         <el-row>
           <div class="footer">
-            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button type="primary" :disabled="!form.userProtocol" @click="onSubmit">提交</el-button>
             <el-button type="danger" @click="resetForm('registerForm')">重置</el-button>
             <el-button type="primary">
               <router-link to="/personalCenter/identityAuth">
@@ -95,10 +95,10 @@
 
 </template>
 <script>
-import { getDepotRegister, addDepotRegister } from '@/api/personalCenter/depotRegister'
+import { getDepotRegister, addDepotRegister, registerSmsCode } from '@/api/personalCenter/depotRegister'
 
 export default {
-  name: 'DepotRegister',
+  legalpersonname: 'DepotRegister',
   data() {
     return {
       ConfirmAgreementOpen: false,
@@ -109,25 +109,22 @@ export default {
       //   定时器
       timer: null,
       form: {
-        category: '',
-        name: '',
-        idNumber: '',
-        phone: '',
-        firmName: '',
+        type: '',
+        legalpersonname: '',
+        idnumber: '',
+        legalpersonphone: '',
+        merchantname: '',
         userProtocol: true,
-        verificationCode: ''
+        registersmscode: ''
       },
-      categoryOptions: [{
-        value: '1',
-        label: '公司'
-      }, {
-        value: '2',
-        label: '个人'
-      }, {
-        value: '3',
-        label: '个体工商户'
-      }]
+      categoryOptions: []
     }
+  },
+  created() {
+    // 获取注册类型字典数据
+    this.getDataByType('SqRegisterDic').then(res => {
+      this.categoryOptions = res.data
+    })
   },
   methods: {
     onSubmit() {
@@ -140,7 +137,10 @@ export default {
       // console.log(value)
     },
     getVerificationCode() {
-      const TIME_COUNT = 60
+      registerSmsCode(this.form).then(res => {
+        console.log(res)
+      })
+      const TIME_COUNT = 0
       if (!this.timer) {
         this.count = TIME_COUNT
         this.codeShow = false

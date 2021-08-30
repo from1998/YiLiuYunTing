@@ -25,3 +25,12 @@ export function updateDepotInfo(data) {
     params: data
   })
 }
+
+// h获取验证码
+export function registerSmsCode(data) {
+  return request({
+    url: '/ylyt/personal/registerSmsCode',
+    method: 'post',
+    data
+  })
+}

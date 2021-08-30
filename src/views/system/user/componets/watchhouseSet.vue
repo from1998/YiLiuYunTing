@@ -134,10 +134,13 @@ export default {
     // 传递岗亭数据给车道设置
     handle() {
       // 2、传递数据方，通过一个事件触发bus.$emit(方法名，传递的数据)   触发兄弟组件的事件
-      this.watchhouseList.map(val => {
-        return
+      const watchHouse = this.watchhouseList.map(val => {
+        return {
+          id: val.id,
+          name: val.name
+        }
       })
-      // this.bus.$emit('watchHouse', )
+      this.bus.$emit('watchHouse', watchHouse)
     },
     getWatchhouseList() {
       this.loading = true // 打开遮罩

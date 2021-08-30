@@ -356,7 +356,7 @@ export default {
     // 根据字典类型ID查询字典的dictType
     this.formBak = this.form
     this.init()
-    // 获取字典数据
+    // 获取是否字典数据
     this.getDataByType('yesOrNo').then(res => {
       this.stateOptions = res.data
     })
