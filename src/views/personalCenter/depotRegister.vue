@@ -101,6 +101,9 @@ export default {
   legalpersonname: 'DepotRegister',
   data() {
     return {
+      // 是否启用遮罩层
+      loading: false,
+      // 用户协议弹窗
       ConfirmAgreementOpen: false,
       // 获取验证码按钮显示
       codeShow: true,
@@ -125,10 +128,31 @@ export default {
     this.getDataByType('SqRegisterDic').then(res => {
       this.categoryOptions = res.data
     })
+    // 获取注册信息
+    this.init()
   },
   methods: {
+    async init() {
+      this.loading = true // 打开遮罩
+      await getDepotRegister(this.form.managerid).then(res => {
+        this.resdata = res.data
+        if (res.data !== null) {
+          this.form = res.data
+        }
+        this.loading = false // 关闭遮罩
+      })
+    },
     onSubmit() {
-      // console.log('submit!')
+      this.loading = true // 打开遮罩
+      addDepotRegister(this.form).then(res => {
+        this.msgSuccess('注册成功')
+        this.init()
+        console.log(this.form)
+        this.loading = false // 关闭遮罩
+      }).catch(() => {
+        this.msgError('注册失败')
+        this.loading = false // 关闭遮罩
+      })
     },
     // onReset(formName) {
     //   this.resetForm(formName)
@@ -138,9 +162,11 @@ export default {
     },
     getVerificationCode() {
       registerSmsCode(this.form).then(res => {
-        console.log(res)
+        this.msgSuccess(res.msg)
+      }).catch(() => {
+        this.msgError('获取验证码失败')
       })
-      const TIME_COUNT = 0
+      const TIME_COUNT = 6
       if (!this.timer) {
         this.count = TIME_COUNT
         this.codeShow = false
