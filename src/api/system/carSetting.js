@@ -69,6 +69,14 @@ export function updateParkfee(data) {
     params: data
   })
 }
+
+// 查询收费规则
+export function getParkfeeByMid(id) {
+  return request({
+    url: '/ylyt/parkFee/getParkfeeByMid/' + id,
+    method: 'get'
+  })
+}
 // -------------------------------------岗亭
 
 // 查询岗亭设置列表
@@ -231,7 +239,7 @@ export function addCarSite(data) {
   return request({
     url: '/ylyt/carSite/addCarSite',
     method: 'post',
-    data
+    params: data
   })
 }
 

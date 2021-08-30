@@ -52,7 +52,6 @@
       <el-table-column label="车位层号" align="center" prop="tierNumber" />
       <el-table-column label="车位区域号" align="center" prop="areaNumber" />
       <el-table-column label="车位编号" align="center" prop="number" width="180" />
-      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="186">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
@@ -156,7 +155,6 @@ export default {
       this.loading = true // 打开遮罩
       getSiteByMid(this.queryParams).then(res => {
         this.portList = res.data.list
-        console.log(this.portList)
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

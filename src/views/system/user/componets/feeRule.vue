@@ -111,6 +111,8 @@
                         start-placeholder="开始时间"
                         end-placeholder="结束时间"
                         placeholder="选择时间范围"
+                        value-format="HH-mm-ss"
+                        @change="timeChange(scope.row.timeDur)"
                       />
                     </template>
                   </el-table-column>
@@ -119,7 +121,7 @@
                     width="222"
                   >
                     <template slot-scope="scope">
-                      <el-input-number v-model="scope.row.divisionFee" :precision="2" :step="1" />
+                      <el-input-number v-model="scope.row.amount" :precision="2" :step="1" />
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -154,7 +156,7 @@
                     width="222"
                   >
                     <template slot-scope="scope">
-                      <el-input-number v-model="scope.row.minutes" :precision="0" :step="1" />
+                      <el-input-number v-model="scope.row.duration" :precision="0" :step="1" />
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -202,11 +204,14 @@
 </template>
 <script>
 
+import { getParkfeeByMid, addParkfee, updateParkfee } from '@/api/system/carSetting'
+
 export default {
   name: 'FeeRule',
   data() {
     return {
       limitNumber: '24',
+      formBak: {},
       form: {
         numbertype: 0,
         daypriceup: '',
@@ -220,22 +225,14 @@ export default {
         // 分段计费
         commonCountFee: [
           {
-            timeDur: [new Date(2016, 9, 10, 8, 40), new Date(2016, 9, 10, 9, 40)],
-            divisionFee: ''
-          },
-          {
-            timeDur: [new Date(), new Date()],
-            divisionFee: ''
+            timeDur: [],
+            amount: ''
           }
         ],
         // 叠加计费
         overlayCountFee: [
           {
-            minutes: '',
-            overlayFee: ''
-          },
-          {
-            minutes: '',
+            duration: '',
             overlayFee: ''
           }
         ]
@@ -250,6 +247,7 @@ export default {
   },
   created() {
     this.formBak = this.form
+    this.init()
     // 获取收费规则车辆类型字典数据
     this.getDataByType('FeeNumberTypeDic').then(res => {
       this.options.carNumberCategory = res.data
@@ -260,26 +258,73 @@ export default {
     })
   },
   methods: {
+    async init() {
+      this.loading = true // 打开遮罩
+      await getParkfeeByMid(this.form.managerid).then(res => {
+        this.resdata = res.data
+        if (res.data !== null) {
+          this.form = res.data
+          this.handletime()
+        }
+        this.loading = false // 关闭遮罩
+      })
+    },
     onSubmit() {
-      // console.log('submit!')
+      console.log(this.resdata)
+      if (this.resdata === null) {
+        this.loading = true // 打开遮罩
+        addParkfee(this.form).then(res => {
+          if (res.data.code === 200) {
+            this.msgSuccess('添加成功')
+            this.init()
+            this.loading = false // 关闭遮罩
+          } else {
+            this.loading = false // 关闭遮罩
+          }
+        }).catch(() => {
+          this.msgError('添加失败')
+          this.loading = false // 关闭遮罩
+        })
+      } else {
+        this.loading = true // 打开遮罩
+        updateParkfee(this.form).then(() => {
+          this.msgSuccess('修改成功')
+          this.init()
+          this.loading = false // 关闭遮罩
+        }).catch(() => {
+          this.msgError('修改失败')
+          this.loading = false // 关闭遮罩
+        })
+      }
     },
     onReset() {
-      // this.$refs['form'].resetFields()
+      this.$confirm('确定重置?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.form = this.formBak
+        this.convert.businessHours = [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
+        this.msgSuccess('重置成功')
+      }).catch(() => {
+        this.msgError('重置已取消')
+      })
     },
     deleteRow(index, rows) {
       console.log(index, rows)
       rows.splice(index, 1)
     },
+    // 添加计费规则
     addFeeRule(array) {
       if (array.length + 1 <= Number(this.limitNumber)) {
         if (array === this.form.commonCountFee) {
           array.push({
-            timeDur: [new Date(), new Date()],
-            divisionFee: ''
+            timeDur: [],
+            amount: ''
           })
         } else {
           array.push({
-            minutes: '',
+            duration: '',
             overlayFee: ''
           })
         }
@@ -289,6 +334,15 @@ export default {
           type: 'warning'
         })
       }
+    },
+    // 处理请求到的时间
+    handletime() {
+      this.timeDur = [this.form.start, this.form.end]
+    },
+    // 处理待发送的时间
+    timeChange(val) {
+      this.form.start = val[0]
+      this.form.end = val[1]
     }
   }
 }

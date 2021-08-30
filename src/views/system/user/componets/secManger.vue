@@ -366,9 +366,6 @@ export default {
         endWorkTime: '19-00-00'
       }
     },
-    handletime() {
-      this.convertHours = [this.form.startWorkTime, this.form.endWorkTime]
-    },
     timeChange(val) {
       this.form.startWorkTime = val[0]
       this.form.endWorkTime = val[1]

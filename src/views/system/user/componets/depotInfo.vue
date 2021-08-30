@@ -412,7 +412,6 @@ export default {
       }
     },
     onReset() {
-      console.log(this.formBak)
       this.$confirm('确定重置?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
