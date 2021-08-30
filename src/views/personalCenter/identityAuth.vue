@@ -186,6 +186,22 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item label="结果上传">
+          <el-upload
+            :action="uploadPath"
+            :headers="headers"
+            :on-remove="handleRemove"
+            :file-list="fileList"
+            accept="image/*"
+            name="mf"
+            :on-success="handleUploadSuccess"
+            :on-error="handleUploadError"
+            list-type="picture"
+          >
+            <el-button size="small" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          </el-upload>
+        </el-form-item>
         <el-row :gutter="20">
           <el-form-item>
             <div class="footer">
@@ -203,6 +219,7 @@
 </template>
 <script>
 import UploadImg from '@/components/UploadImg/index.vue'
+import { getToken } from '@/utils/auth'
 
 export default {
   name: 'IdentityAuth',
@@ -261,8 +278,22 @@ export default {
         name: '金仁宏',
         phone: '16655077897         ',
         idNumber: '342901197210235615'
-      }
+      },
+      // 声明上传路径
+      uploadPath: undefined,
+      // 控件里面的文件列表
+      fileList: [],
+      // 头
+      headers: undefined,
+      // 文件列表的json对象
+      fileListJsonObj: []
     }
+  },
+  created() {
+    // 文件上传的路径
+    this.uploadPath = process.env.VUE_APP_BASE_API + '/system/upload/doUploadImage'
+    // 设置请求头加入token 避免求认证的问题
+    this.headers = { 'token': getToken() }
   },
   methods: {
     onSubmit() {
@@ -286,6 +317,25 @@ export default {
           }
         }, 1000)
       }
+    },
+    // 文件上传的相关方法
+    // 移除回调
+    handleRemove(file, fileList) {
+      this.fileListJsonObj.filter(i1 => {
+        if (file.response.data.url === i1.url) {
+          this.fileListJsonObj.splice(this.fileListJsonObj.indexOf(i1), 1)
+        }
+      })
+    },
+    // 上传成功之后的回调
+    handleUploadSuccess(response, file, fileList) {
+      console.log('success', response, file, fileList)
+      this.fileListJsonObj.push(response.data)
+      // console.log(this.fileListJsonObj)
+    },
+    // 上传失败之后的回调
+    handleUploadError() {
+      this.msgError('上传失败')
     }
   }
 }

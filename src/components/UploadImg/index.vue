@@ -55,6 +55,10 @@ export default {
     }
   },
   methods: {
+    handlePictureCardPreview(file) {
+      this.uploadImgVisible = true
+      this.dialogImageUrl = file.url
+    },
     handleChange(file, fileList) {
       this.handHeld = fileList
       // console.log(this.handHeld)

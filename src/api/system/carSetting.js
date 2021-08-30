@@ -57,7 +57,7 @@ export function addParkfee(data) {
   return request({
     url: '/ylyt/parkFee/addParkfee',
     method: 'post',
-    params: data
+    data
   })
 }
 
@@ -66,7 +66,7 @@ export function updateParkfee(data) {
   return request({
     url: '/ylyt/parkFee/updateParkfee',
     method: 'put',
-    params: data
+    data
   })
 }
 

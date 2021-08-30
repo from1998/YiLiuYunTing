@@ -75,7 +75,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="收费类型">
-              <el-radio-group v-model="form.splittimejson">
+              <el-radio-group v-model="form.splittype">
                 <el-radio
                   v-for="item in options.sectionChargeType"
                   :key="item.dictValue"
@@ -88,11 +88,11 @@
           </el-col>
         </el-row>
         <!-- 计费时间段 -->
-        <el-row v-show="form.splittimejson !==3 ">
+        <el-row v-if="form.splittype !==3 ">
           <el-col :span="24">
             <el-form-item label="计费时间段">
               <!-- 分段计费 -->
-              <el-row v-show="form.splittimejson ===1 ">
+              <el-row v-if="form.splittype ===1 ">
                 <el-table
                   :data="form.commonCountFee"
                   border
@@ -112,7 +112,7 @@
                         end-placeholder="结束时间"
                         placeholder="选择时间范围"
                         value-format="HH-mm-ss"
-                        @change="timeChange(scope.row.timeDur)"
+                        @change="timeChange(scope.row,scope.row.timeDur)"
                       />
                     </template>
                   </el-table-column>
@@ -144,9 +144,9 @@
                 </el-tooltip>
               </el-row>
               <!-- 叠加计费 -->
-              <el-row v-show="form.splittimejson ===2 ">
+              <el-row v-if="form.splittype ===2 ">
                 <el-table
-                  :data="form.overlayCountFee"
+                  :data="form.splittimejsonDto"
                   border
                   stripe
                   style="width: 78%"
@@ -164,7 +164,7 @@
                     width="222"
                   >
                     <template slot-scope="scope">
-                      <el-input-number v-model="scope.row.overlayFee" :precision="2" :step="1" />
+                      <el-input-number v-model="scope.row.amount" :precision="2" :step="1" />
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -174,7 +174,7 @@
                       <el-button
                         size="mini"
                         type="danger"
-                        @click.native.prevent="deleteRow(scope.$index, form.overlayCountFee)"
+                        @click.native.prevent="deleteRow(scope.$index, form.splittimejsonDto)"
                       >
                         删除
                       </el-button>
@@ -183,7 +183,7 @@
                 </el-table>
                 <el-tooltip class="item" effect="dark" placement="right" style="margin-top:16px">
                   <div slot="content"><span>注意分钟从低到高。 最大值{{ limitNumber*60 }}（即{{ limitNumber }}小时）。</span><br>最多可添加{{ limitNumber }}组。</div>
-                  <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addFeeRule(form.overlayCountFee)">添加计费规则</el-button>
+                  <el-button type="primary" icon="el-icon-circle-plus-outline" size="mini" @click="addFeeRule(form.splittimejsonDto)">添加计费规则</el-button>
                 </el-tooltip>
               </el-row>
             </el-form-item>
@@ -213,6 +213,8 @@ export default {
       limitNumber: '24',
       formBak: {},
       form: {
+        // 用户id
+        managerid: '',
         numbertype: 0,
         daypriceup: '',
         freeperiod: '',
@@ -221,19 +223,13 @@ export default {
         overunit: '',
         overmoney: '',
         // 默认常规计费
-        splittimejson: 3,
+        splittype: 3,
+        splittimejsonDto: [],
         // 分段计费
         commonCountFee: [
           {
             timeDur: [],
             amount: ''
-          }
-        ],
-        // 叠加计费
-        overlayCountFee: [
-          {
-            duration: '',
-            overlayFee: ''
           }
         ]
       },
@@ -246,6 +242,7 @@ export default {
     }
   },
   created() {
+    this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     this.formBak = this.form
     this.init()
     // 获取收费规则车辆类型字典数据
@@ -264,13 +261,25 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
-          this.handletime()
+          if (res.data.splittype === 3) {
+            this.form.splittimejsonDto = []
+            this.form.commonCountFee = []
+          } else if (res.data.splittype === 1) {
+            this.handletime()
+          } else {
+            this.form.commonCountFee = []
+          }
         }
         this.loading = false // 关闭遮罩
       })
     },
     onSubmit() {
-      console.log(this.resdata)
+      if (this.form.splittype === 1) {
+        this.form.splittimejsonDto = this.form.commonCountFee
+        delete this.form.commonCountFee
+        delete this.form.splittimejsonDto.timeDur
+      }
+      console.log(this.form)
       if (this.resdata === null) {
         this.loading = true // 打开遮罩
         addParkfee(this.form).then(res => {
@@ -311,7 +320,6 @@ export default {
       })
     },
     deleteRow(index, rows) {
-      console.log(index, rows)
       rows.splice(index, 1)
     },
     // 添加计费规则
@@ -325,7 +333,7 @@ export default {
         } else {
           array.push({
             duration: '',
-            overlayFee: ''
+            amount: ''
           })
         }
       } else {
@@ -335,14 +343,20 @@ export default {
         })
       }
     },
-    // 处理请求到的时间
+    // 处理请求到的分段计费
     handletime() {
-      this.timeDur = [this.form.start, this.form.end]
+      this.form.commonCountFee = this.form.splittimejsonDto.map(val => {
+        return {
+          amount: val.amount,
+          timeDur: [val.start, val.end]
+        }
+      })
+      this.form.splittimejsonDto = []
     },
     // 处理待发送的时间
-    timeChange(val) {
-      this.form.start = val[0]
-      this.form.end = val[1]
+    timeChange(row, val) {
+      row.start = val[0]
+      row.end = val[1]
     }
   }
 }

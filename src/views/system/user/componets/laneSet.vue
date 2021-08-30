@@ -341,7 +341,6 @@ export default {
   methods: {
     // 查询表格数据
     getlaneList() {
-      console.log('ok')
       this.loading = true // 打开遮罩
       getLaneByMid(this.queryParams).then(res => {
         this.laneList = res.data.list
