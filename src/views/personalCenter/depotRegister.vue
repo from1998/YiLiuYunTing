@@ -200,6 +200,7 @@ export default {
     }
 }
 .verifyCode {
+  padding: 0;
     el-button {
         border-radius: 0!important;
     }
