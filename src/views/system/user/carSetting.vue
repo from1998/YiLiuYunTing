@@ -1,13 +1,13 @@
 <template>
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane v-if="activeName===name" label="车场信息" name="depotInfo">
+      <el-tab-pane label="车场信息" name="depotInfo">
         <depot-info :park="parkid" />
       </el-tab-pane>
-      <el-tab-pane v-if="activeName===name" label="车场配置" name="depotSet">
+      <el-tab-pane label="车场配置" name="depotSet">
         <depot-set />
       </el-tab-pane>
-      <el-tab-pane v-if="activeName===name" label="收费规则" name="feeRule">
+      <el-tab-pane label="收费规则" name="feeRule">
         <fee-rule />
       </el-tab-pane>
       <el-tab-pane label="岗亭设置" name="watchhouseSet">
