@@ -41,6 +41,8 @@
   </div>
 </template>
 <script>
+import { getToken } from '@/utils/auth'
+
 export default {
   name: 'UploadImg',
   data() {
@@ -50,8 +52,22 @@ export default {
       limitCount: 1,
       uploadImgVisible: false,
       // 为隐藏上传图片按钮设置的类的激活状态
-      hideUpload: false
+      hideUpload: false,
+      // 声明上传路径
+      uploadPath: undefined,
+      // 文件列表
+      fileList: [],
+      // 头
+      headers: undefined,
+      // 文件列表的json对象
+      fileListJsonObj: []
     }
+  },
+  created() {
+    // 文件上传的路径
+    this.uploadPath = process.env.VUE_APP_BASE_API + '/system/upload/doUploadImage'
+    // 设置请求头加入token 避免求认证的问题
+    this.headers = { 'token': getToken() }
   },
   methods: {
     handlePictureCardPreview(file) {

@@ -50,10 +50,10 @@
         </el-row>
         <el-row :gutter="50">
           <el-col :span="12">
-            <el-form-item label="法人证件类型" prop="longtimeornoper">
-              <el-select v-model="form.typeofid" placeholder="请选择法人证件类型" clearable disabled>
+            <el-form-item label="法人证件类型" prop="typeofid">
+              <el-select v-model="form.typeofid" placeholder="请选择法人证件类型" clearable>
                 <el-option
-                  v-for="item in options.categoryOptions"
+                  v-for="item in options.certificateTypes"
                   :key="item.dictValue"
                   :label="item.dictLabel"
                   :value="Number(item.dictValue)"
@@ -76,13 +76,13 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col v-if="!form.longtimeornoper" :span="12">
-            <el-form-item label="有效期限截至日期" prop="IDCardExpiryTime">
+          <el-col :span="12">
+            <el-form-item label="身份证有效日期" prop="IDCardExpiryTime">
               <el-date-picker
                 v-model="form.IDCardExpiryTime"
-                type="datetime"
-                placeholder="选择日期"
                 value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="-"
               />
             </el-form-item>
           </el-col>
@@ -100,18 +100,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="手持身份证照片" prop="IDCardHandheld">
-              <upload-img />
-            </el-form-item>
+            <el-tooltip class="item" effect="dark" content="个人年龄若大于60岁，则必填" placement="right">
+              <el-form-item label="手持身份证照片" prop="IDCardHandheld">
+                <upload-img />
+              </el-form-item>
+            </el-tooltip>
           </el-col>
-          <el-col :span="6">
+          <el-col v-show="options.registerInfo.type!==2" :span="6">
             <el-form-item label="开户意愿书" prop="held">
               <upload-img />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 商户全称与简称 -->
-        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="商户全称" prop="merchantname">
               <el-input v-model="form.merchantname" placeholder="请输入商户全称" />
@@ -124,7 +126,7 @@
           </el-col>
         </el-row>
         <!-- 商户号与统一社会信用码 -->
-        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="商户号">
               <el-input v-model="options.registerInfo.sonmerno" placeholder="请输入商户全称" disabled />
@@ -150,7 +152,7 @@
           </el-col>
         </el-row>
         <!-- 营业执照类型与所属行业 -->
-        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="营业执照类型" prop="businesslicencetype">
               <el-select v-model="form.businesslicencetype" placeholder="请选择营业执照类型" clearable>
@@ -177,7 +179,7 @@
           </el-col>
         </el-row>
         <!-- 营业执照是否长期 -->
-        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="营业执照是否长期" prop="licenseLongtime">
               <el-radio-group v-model="form.licenseLongtime">
@@ -191,19 +193,21 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col v-if="!form.licenseLongtime" :span="12">
-            <el-form-item label="有效期限截至日期" prop="licenseExpiryTime">
+          <el-col :span="12">
+            <el-form-item label="营业执照有效日期" prop="IDCardExpiryTime">
               <el-date-picker
                 v-model="form.licenseExpiryTime"
-                type="datetime"
-                placeholder="选择日期"
                 value-format="yyyy-MM-dd"
+                type="daterange"
+                range-separator="至"
+                start-placeholde="开始日期"
+                end-placeholde="结束日期"
               />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 注册资本与经营范围 -->
-        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="注册资本(万元)" prop="registeredcapital">
               <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
@@ -218,7 +222,7 @@
           </el-col>
         </el-row>
         <!-- 上传企业证件照片 -->
-        <el-row :gutter="50">
+        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="6">
             <el-form-item label="营业执照" prop="license">
               <upload-img />
@@ -258,7 +262,6 @@
 <script>
 import { getDepotRegister } from '@/api/personalCenter/depotRegister'
 import UploadImg from '@/components/UploadImg/index.vue'
-import { getToken } from '@/utils/auth'
 
 export default {
   name: 'IdentityAuth',
@@ -291,6 +294,7 @@ export default {
         merchantname: '',
         MCHID: '',
         industry: '',
+        typeofid: '',
         merchantnamesimple: '',
         merchantphone: '',
         address: '',
@@ -321,16 +325,9 @@ export default {
         industryOptions: [],
         categoryOptions: [],
         businessLicense: [],
+        certificateTypes: [],
         registerInfo: []
-      },
-      // 声明上传路径
-      uploadPath: undefined,
-      // 控件里面的文件列表
-      fileList: [],
-      // 头
-      headers: undefined,
-      // 文件列表的json对象
-      fileListJsonObj: []
+      }
     }
   },
   created() {
@@ -350,13 +347,12 @@ export default {
     this.getDataByType('businessLicenseType').then(res => {
       this.options.categoryOptions = res.data
     })
+    // 获取法人证件类型字典数据
+    this.getDataByType('certificateType').then(res => {
+      this.options.certificateTypes = res.data
+    })
     // 获取注册信息
     this.init()
-
-    // 文件上传的路径
-    this.uploadPath = process.env.VUE_APP_BASE_API + '/system/upload/doUploadImage'
-    // 设置请求头加入token 避免求认证的问题
-    this.headers = { 'token': getToken() }
   },
   methods: {
     async init() {
