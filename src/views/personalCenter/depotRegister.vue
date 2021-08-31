@@ -40,21 +40,14 @@
         <el-form-item v-if="form.type===1" label="企业名称" prop="merchantname">
           <el-input v-model="form.merchantname" placeholder="请输入企业名称" />
         </el-form-item>
-        <!-- 用户协议 -->
-        <el-form-item prop="userProtocolState">
-          <span slot="label">确认<el-link type="primary" :underline="false" @click="ConfirmAgreementOpen = true">用户协议</el-link></span>
-          <el-switch
-            v-model="form.userProtocol"
-            :active-text="form.userProtocol?'同意':'暂不接受'"
-          />
-        </el-form-item>
         <!-- 验证码 -->
-        <el-row>
+        <el-row v-show="form.registerstatus !== 2">
           <el-col :span="16">
             <el-form-item label="验证码" prop="registersmscode">
               <el-input v-model="form.registersmscode" placeholder="请输入验证码" />
             </el-form-item>
           </el-col>
+
           <el-col :span="8" class="verifyCode">
             <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
               <span v-if="codeShow">获取验证码</span>
@@ -65,9 +58,12 @@
 
         <el-row>
           <div class="footer">
-            <el-button type="primary" :disabled="!form.userProtocol" @click="onSubmit">提交</el-button>
-            <el-button type="danger" @click="resetForm('registerForm')">重置</el-button>
-            <el-button type="primary">
+            <el-button v-if="form.registerstatus !== 2" type="primary" @click="onSubmit">提交</el-button>
+            <el-button v-if="form.registerstatus === 2" disabled type="primary">已提交</el-button>
+            <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
+            <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
+            <el-button v-if="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
+            <el-button v-if="form.isconfirmprotocol === 1" type="primary">
               <router-link to="/personalCenter/identityAuth">
                 去认证
               </router-link>
@@ -76,35 +72,30 @@
         </el-row>
 
       </el-form>
-      <!-- 确认协议对话框 -->
-      <el-dialog
-        title="用户协议"
-        :visible.sync="ConfirmAgreementOpen"
-        width="900px"
-        center
-      >
-        <p>
-          这里是用户协议
-        </p>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="ConfirmAgreementOpen = false">关 闭</el-button>
-        </span>
-      </el-dialog>
+      <!-- 隐藏表单 -->
+      <form id="confirmForm" action="" method="post" target="_blank">
+        <input id="confirmVersion" name="version" style="display: none">
+        <input id="confirmNotifyUrl" name="notifyUrl" style="display: none">
+        <input id="confirmTimestamp" name="timestamp" style="display: none">
+        <input id="confirmApiContent" name="apiContent" style="display: none">
+        <input id="confirmSignType" name="signType" style="display: none">
+        <input id="confirmSign" name="sign" style="display: none">
+        <input id="confirmMerNo" name="merNo" style="display: none">
+      </form>
     </el-container>
   </el-container>
 
 </template>
 <script>
-import { getDepotRegister, addDepotRegister, registerSmsCode } from '@/api/personalCenter/depotRegister'
+import { getDepotRegister, addDepotRegister, registerSmsCode, getConfirmPage, getConfirmStatus } from '@/api/personalCenter/depotRegister'
 
 export default {
   legalpersonname: 'DepotRegister',
   data() {
     return {
+      id: '',
       // 是否启用遮罩层
       loading: false,
-      // 用户协议弹窗
-      ConfirmAgreementOpen: false,
       // 获取验证码按钮显示
       codeShow: true,
       //   计数器
@@ -117,7 +108,6 @@ export default {
         idnumber: '',
         legalpersonphone: '',
         merchantname: '',
-        userProtocol: true,
         registersmscode: ''
       },
       categoryOptions: []
@@ -134,7 +124,8 @@ export default {
   methods: {
     async init() {
       this.loading = true // 打开遮罩
-      await getDepotRegister(this.form.managerid).then(res => {
+      this.id = await this.getID()
+      await getDepotRegister(this.id).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
@@ -142,23 +133,38 @@ export default {
         this.loading = false // 关闭遮罩
       })
     },
+    confirmAgreement() {
+      getConfirmPage(this.id).then(res => {
+        if (res.code === 200) {
+          this.confirmForm = res.params
+          document.getElementById('confirmForm').action = res.actionUrl
+          document.getElementById('confirmVersion').value = res.params.version
+          document.getElementById('confirmMerNo').value = res.params.merNo
+          document.getElementById('confirmSign').value = res.params.sign
+          document.getElementById('confirmSignType').value = res.params.signType
+          document.getElementById('confirmApiContent').value = res.params.apiContent
+          document.getElementById('confirmTimestamp').value = res.params.timestamp
+          document.getElementById('confirmNotifyUrl').value = res.params.notifyUrl
+          document.getElementById('confirmForm').submit()
+        }
+      })
+    },
+    // 同步协议状态
+    syncAgreement() {
+      getConfirmStatus(this.id).then(res => {
+        this.init()
+      })
+    },
     onSubmit() {
       this.loading = true // 打开遮罩
-      addDepotRegister(this.form).then(res => {
+      addDepotRegister(this.form).then(() => {
         this.msgSuccess('注册成功')
         this.init()
-        console.log(this.form)
         this.loading = false // 关闭遮罩
       }).catch(() => {
         this.msgError('注册失败')
         this.loading = false // 关闭遮罩
       })
-    },
-    // onReset(formName) {
-    //   this.resetForm(formName)
-    // },
-    handleChange(value) {
-      // console.log(value)
     },
     getVerificationCode() {
       registerSmsCode(this.form).then(res => {

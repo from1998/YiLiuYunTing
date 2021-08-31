@@ -14,45 +14,69 @@
           <el-col :span="12">
             <!-- 注册类型 -->
             <el-form-item label="注册类型">
-              <el-input v-model="options.category.label" disabled />
+              <el-select v-model="options.registerInfo.type" placeholder="请选择注册类型" clearable disabled>
+                <el-option
+                  v-for="item in options.categoryOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="个人/法人姓名">
-              <el-input v-model="options.name" disabled />
+              <el-input v-model="options.registerInfo.legalpersonname" disabled />
               <span slot="label">
-                <span v-show="options.category.value===''">个人/法人姓名</span>
-                <span v-show="options.category.value==='1'">法人姓名</span>
-                <span v-show="options.category.value==='2'">个人姓名</span>
-                <span v-show="options.category.value==='3'">个体工商户姓名</span>
+                <span v-show="options.registerInfo.type===''">个人/法人姓名</span>
+                <span v-show="options.registerInfo.type===1">法人姓名</span>
+                <span v-show="options.registerInfo.type===2">个人姓名</span>
+                <span v-show="options.registerInfo.type===3">个体工商户姓名</span>
               </span>
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="50">
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="phone">
-              <el-input v-model="options.phone" disabled />
+            <el-form-item label="手机号码">
+              <el-input v-model="options.registerInfo.legalpersonphone" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="身份证号码" prop="idNumber">
-              <el-input v-model="options.idNumber" disabled />
+            <el-form-item label="身份证号码">
+              <el-input v-model="options.registerInfo.idnumber" disabled />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="50">
           <el-col :span="12">
-            <el-form-item label="身份证是否长期" prop="IDCardLongtime">
-              <el-tooltip class="item" effect="dark" content="请选择身份证有效期状态" placement="right">
-                <el-switch
-                  v-model="form.IDCardLongtime"
-                  :active-text="form.IDCardLongtime?'长期':'非长期'"
+            <el-form-item label="法人证件类型" prop="longtimeornoper">
+              <el-select v-model="form.typeofid" placeholder="请选择法人证件类型" clearable disabled>
+                <el-option
+                  v-for="item in options.categoryOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
                 />
-              </el-tooltip>
+              </el-select>
             </el-form-item>
           </el-col>
-          <el-col v-if="!form.IDCardLongtime" :span="12">
+        </el-row>
+        <el-row :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="身份证是否长期" prop="longtimeornoper">
+              <el-radio-group v-model="form.longtimeornoper">
+                <el-radio
+                  v-for="item in options.stateOptions"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col v-if="!form.longtimeornoper" :span="12">
             <el-form-item label="有效期限截至日期" prop="IDCardExpiryTime">
               <el-date-picker
                 v-model="form.IDCardExpiryTime"
@@ -64,54 +88,72 @@
           </el-col>
         </el-row>
         <!-- 上传证件照片 -->
-        <el-row :gutter="20">
-          <el-col :span="8">
+        <el-row :gutter="50">
+          <el-col :span="6">
             <el-form-item label="身份证正面照" prop="IDCardFront">
               <upload-img />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="身份证反面照" prop="IDCardReverse">
               <upload-img />
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="手持身份证照片" prop="IDCardHandheld">
+              <upload-img />
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
+            <el-form-item label="开户意愿书" prop="held">
               <upload-img />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 商户全称与简称 -->
-        <el-row v-show="options.category.value!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
           <el-col :span="12">
-            <el-form-item label="商户全称" prop="merchantName">
-              <el-input v-model="form.merchantName" placeholder="请输入商户全称" />
+            <el-form-item label="商户全称" prop="merchantname">
+              <el-input v-model="form.merchantname" placeholder="请输入商户全称" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="商户简称" prop="merchantSname">
-              <el-input v-model="form.merchantSname" placeholder="请输入商户简称" />
+            <el-form-item label="商户简称" prop="merchantnamesimple">
+              <el-input v-model="form.merchantnamesimple" placeholder="请输入商户简称" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <!-- 商户号与统一社会信用码 -->
+        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
+          <el-col :span="12">
+            <el-form-item label="商户号">
+              <el-input v-model="options.registerInfo.sonmerno" placeholder="请输入商户全称" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="统一社会信用代码" prop="businesslicenceno">
+              <el-input v-model="form.businesslicenceno" placeholder="请输入统一社会信用代码" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 商户电话与营业地址 -->
         <el-row :gutter="50">
           <el-col :span="12">
-            <el-form-item label="商户电话" prop="merchantPhone">
-              <el-input v-model="form.merchantPhone" placeholder="请输入商户电话" />
+            <el-form-item label="商户电话" prop="merchantphone">
+              <el-input v-model="form.merchantphone" placeholder="请输入商户电话" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="营业地址" prop="businessAddress">
-              <el-input v-model="form.businessAddress" placeholder="请输入营业地址" />
+            <el-form-item label="营业地址" prop="address">
+              <el-input v-model="form.address" placeholder="请输入营业地址" />
             </el-form-item>
           </el-col>
         </el-row>
-        <!-- 营业执照类型与统一社会信用代码 -->
-        <el-row v-show="options.category.value!=='2'" :gutter="50">
+        <!-- 营业执照类型与所属行业 -->
+        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
           <el-col :span="12">
-            <el-form-item label="营业执照类型" prop="licenseCategory">
-              <el-select v-model="form.licenseCategory" placeholder="请选择营业执照类型" clearable>
+            <el-form-item label="营业执照类型" prop="businesslicencetype">
+              <el-select v-model="form.businesslicencetype" placeholder="请选择营业执照类型" clearable>
                 <el-option
                   v-for="item in licenseCategoryOptions"
                   :key="item.value"
@@ -122,28 +164,38 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="统一社会信用代码" prop="socialCreditCode">
-              <el-input v-model="form.socialCreditCode" placeholder="请输入统一社会信用代码" />
+            <el-form-item label="所属行业" prop="industry">
+              <el-select v-model="form.industry" placeholder="请选择所属行业" clearable>
+                <el-option
+                  v-for="item in options.industryOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 营业执照是否长期 -->
-        <el-row v-show="options.category.value!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
           <el-col :span="12">
             <el-form-item label="营业执照是否长期" prop="licenseLongtime">
-              <el-tooltip class="item" effect="dark" content="请选择营业执照有效期状态" placement="right">
-                <el-switch
-                  v-model="form.licenseLongtime"
-                  :active-text="form.licenseLongtime?'长期':'非长期'"
-                />
-              </el-tooltip>
+              <el-radio-group v-model="form.licenseLongtime">
+                <el-radio
+                  v-for="item in options.stateOptions"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col v-if="!form.licenseLongtime" :span="12">
             <el-form-item label="有效期限截至日期" prop="licenseExpiryTime">
               <el-date-picker
                 v-model="form.licenseExpiryTime"
-                type="date"
+                type="datetime"
                 placeholder="选择日期"
                 value-format="yyyy-MM-dd"
               />
@@ -151,17 +203,17 @@
           </el-col>
         </el-row>
         <!-- 注册资本与经营范围 -->
-        <el-row v-show="options.category.value!=='2'" :gutter="50">
+        <el-row v-show="options.registerInfo.type!=='2'" :gutter="50">
           <el-col :span="12">
-            <el-form-item label="注册资本(万元)" prop="registeredCapital">
+            <el-form-item label="注册资本(万元)" prop="registeredcapital">
               <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
-                <el-input-number v-model="form.registeredCapital" :precision="0" :step="1" />
+                <el-input-number v-model="form.registeredcapital" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="经营范围" prop="businessScope">
-              <el-input v-model="form.businessScope" placeholder="请输入经营范围" />
+            <el-form-item label="经营范围" prop="businessscope">
+              <el-input v-model="form.businessscope" placeholder="请输入经营范围" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -204,6 +256,7 @@
 
 </template>
 <script>
+import { getDepotRegister } from '@/api/personalCenter/depotRegister'
 import UploadImg from '@/components/UploadImg/index.vue'
 import { getToken } from '@/utils/auth'
 
@@ -214,6 +267,10 @@ export default {
   },
   data() {
     return {
+      // 用户id
+      id: '',
+      // 是否启用遮罩层
+      loading: false,
       // 用户认证状态,
       authentication: false,
       // 获取验证码按钮显示
@@ -229,18 +286,20 @@ export default {
         phone: '',
         firmName: '',
         handHeld: [],
-        IDCardLongtime: false,
+        longtimeornoper: false,
         IDCardExpiryTime: [],
-        merchantName: '',
-        merchantSname: '',
-        merchantPhone: '',
-        businessAddress: '',
-        licenseCategory: '',
-        socialCreditCode: '',
+        merchantname: '',
+        MCHID: '',
+        industry: '',
+        merchantnamesimple: '',
+        merchantphone: '',
+        address: '',
+        businesslicencetype: '',
+        businesslicenceno: '',
         licenseLongtime: false,
         licenseExpiryTime: [],
-        registeredCapital: undefined,
-        businessScope: '',
+        registeredcapital: undefined,
+        businessscope: '',
         license: [],
         taxCertificate: [],
         organizationCodeCertificate: [],
@@ -257,13 +316,12 @@ export default {
         }
       ],
       options: {
-        category: {
-          label: '公司',
-          value: '1'
-        },
-        name: '金仁宏',
-        phone: '16655077897         ',
-        idNumber: '342901197210235615'
+        // 是否状态
+        stateOptions: [],
+        industryOptions: [],
+        categoryOptions: [],
+        businessLicense: [],
+        registerInfo: []
       },
       // 声明上传路径
       uploadPath: undefined,
@@ -276,12 +334,41 @@ export default {
     }
   },
   created() {
+    // 获取是否字典数据
+    this.getDataByType('yesOrNo').then(res => {
+      this.options.stateOptions = res.data
+    })
+    // 获取所属行业字典数据
+    this.getDataByType('industryInvolved').then(res => {
+      this.options.industryOptions = res.data
+    })
+    // 获取注册类型字典数据
+    this.getDataByType('SqRegisterDic').then(res => {
+      this.options.categoryOptions = res.data
+    })
+    // 获取营业执照类型类型字典数据
+    this.getDataByType('businessLicenseType').then(res => {
+      this.options.categoryOptions = res.data
+    })
+    // 获取注册信息
+    this.init()
+
     // 文件上传的路径
     this.uploadPath = process.env.VUE_APP_BASE_API + '/system/upload/doUploadImage'
     // 设置请求头加入token 避免求认证的问题
     this.headers = { 'token': getToken() }
   },
   methods: {
+    async init() {
+      this.loading = true // 打开遮罩
+      this.id = await this.getID()
+      await getDepotRegister(this.id).then(res => {
+        if (res.code === 200) {
+          this.options.registerInfo = res.data
+        }
+        this.loading = false // 关闭遮罩
+      })
+    },
     onSubmit() {
       // console.log('submit!')
     },

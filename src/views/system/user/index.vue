@@ -419,7 +419,6 @@ export default {
       // 根据dictId查询一个字典信息
       this.loading = true
       getUserById(id).then(res => {
-        console.log(res.data.state)
         this.form.state = res.data.state + ''
         this.form.id = res.data.id
         this.form.username = res.data.username

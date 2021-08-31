@@ -26,7 +26,7 @@ export function updateDepotInfo(data) {
   })
 }
 
-// h获取验证码
+// 获取验证码
 export function registerSmsCode(data) {
   return request({
     url: '/ylyt/personal/registerSmsCode',
@@ -34,3 +34,20 @@ export function registerSmsCode(data) {
     data
   })
 }
+
+// 获取双乾协议路径和请求参数
+export function getConfirmPage(id) {
+  return request({
+    url: '/ylyt/personal/confirmPage/' + id,
+    method: 'get'
+  })
+}
+
+// 同步协议状态
+export function getConfirmStatus(id) {
+  return request({
+    url: '/ylyt/personal/getConfirmStatus/' + id,
+    method: 'get'
+  })
+}
+

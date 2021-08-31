@@ -103,7 +103,6 @@ export function phoneValid(rule, value, callback) {
   const reg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
   if (value === '' || value === undefined || value === null) {
     callback(new Error('手机号码不能为空！'))
-    console.log(value)
   } else {
     if (!reg.test(value)) {
       callback(new Error('请输入正确的手机号码！'))

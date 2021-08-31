@@ -393,7 +393,6 @@ export default {
         addDepotInfo(this.form).then(res => {
           this.msgSuccess('添加成功')
           this.init()
-          console.log(this.form)
           this.loading = false // 关闭遮罩
         }).catch(() => {
           this.msgError('添加失败')

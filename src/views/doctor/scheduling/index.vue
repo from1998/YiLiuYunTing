@@ -284,7 +284,6 @@ export default {
       this.loading = true
       // 调用API
       queryScheduling(this.queryParams).then(res => {
-        console.log(res)
         this.labelNames = res.data.labelNames
         this.tableData = res.data.tableData
         this.schedulingData = res.data.schedulingData

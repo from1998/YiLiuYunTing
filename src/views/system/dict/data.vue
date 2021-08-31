@@ -240,7 +240,6 @@ export default {
     // 分页pageSize变化时触发
     handleSizeChange(val) {
       this.queryParams.size = val
-      console.log(this.queryParams.size)
       // 重新查询
       this.getDictDataList()
     },

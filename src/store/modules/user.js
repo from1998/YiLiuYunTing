@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, removeMenu } from '@/utils/auth'
+import { getToken, setToken, removeToken, removeMenu, removeID, setID } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
@@ -13,6 +13,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_ID: (state, id) => {
+    state.id = id
   },
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions
@@ -35,9 +38,10 @@ const actions = {
     const { username, password, verifyCode, uuid } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password, code: verifyCode, verifyCodeId: uuid }).then(response => {
-        const { token } = response
+        const { token, user } = response
         commit('SET_TOKEN', token)
         setToken(token)
+        setID(user.id)
         resolve()
       }).catch(error => {
         reject(error)
@@ -80,6 +84,7 @@ const actions = {
         commit('SET_PERMISSIONS', [])
         removeToken()
         removeMenu()
+        removeID()
         resetRouter()// 重置路由
         dispatch('tagsView/delAllViews', null, { root: true })
         resolve()

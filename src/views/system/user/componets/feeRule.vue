@@ -279,7 +279,6 @@ export default {
         delete this.form.commonCountFee
         delete this.form.splittimejsonDto.timeDur
       }
-      console.log(this.form)
       if (this.resdata === null) {
         this.loading = true // 打开遮罩
         addParkfee(this.form).then(res => {

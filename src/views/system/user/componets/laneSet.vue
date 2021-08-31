@@ -393,7 +393,6 @@ export default {
     handleUpdate(row) {
       this.title = '修改车道'
       const id = row.id || this.ids
-      console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
@@ -402,14 +401,12 @@ export default {
       debugger
       getLaneById(id).then(res => {
         this.form = res.data
-        console.log(res.data)
         this.loading = false
       })
     },
     // 执行删除
     handleDelete(row) {
       const id = row.id || this.ids
-      console.log(id)
       this.$confirm('此操作将永久删除该车道数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -418,7 +415,6 @@ export default {
         deleteLaneById(id).then(res => {
           this.msgSuccess('删除成功')
           this.getlaneList()// 全查询
-          console.log(res)
         })
       }).catch(() => {
         this.msgError('删除已取消')

@@ -238,7 +238,6 @@ export default {
     // 查询表格数据
     getRoleList() {
       this.loading = true // 打开遮罩
-      console.log(this.addDateRange(this.queryParams, this.dateRange))
       listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.roleTableList = res.data.list
         this.total = res.data.total

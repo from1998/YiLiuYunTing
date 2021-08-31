@@ -544,7 +544,6 @@ export default {
       this.currentRoleId = row.carId || this.ids[0]
       this.title = '续费历史'
       this.RenewHistoryOpen = true
-      console.log(row)
     },
     // 续费确定操作
     handleRenewSubmit() {
