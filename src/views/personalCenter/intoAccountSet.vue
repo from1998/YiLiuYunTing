@@ -19,12 +19,19 @@
               <el-input v-model="form.seqno" placeholder="请输入验证码" />
             </el-form-item>
           </el-col>
-          <el-col :span="5" class="verifyCode">
+          <el-col v-show="cardBindState===1" :span="5" class="verifyCode">
             <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
               <span v-if="codeShow">获取验证码</span>
               <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
             </el-button>
           </el-col>
+          <el-tooltip class="item" effect="dark" content="绑定银行卡后才可以进行到账设置！" placement="right">
+            <el-col v-show="cardBindState===null" :span="5" class="verifyCode">
+              <el-button type="primary" size="medium" disabled>
+                获取验证码
+              </el-button>
+            </el-col>
+          </el-tooltip>
         </el-row>
 
         <el-row :gutter="20">
@@ -49,6 +56,8 @@ export default {
   name: 'IntoAccountSet',
   data() {
     return {
+      // 绑卡状态
+      cardBindState: '',
       // 获取验证码按钮显示
       codeShow: true,
       //   计数器
@@ -74,6 +83,8 @@ export default {
       await getDepotRegister(this.form.id).then(res => {
         if (res.code === 200) {
           this.form.legalpersonphone = res.data.legalpersonphone
+          this.cardBindState = res.data.isbind
+          console.log(this.cardBindState)
         }
         this.loading = false // 关闭遮罩
       })
