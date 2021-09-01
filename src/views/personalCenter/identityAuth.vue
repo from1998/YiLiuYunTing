@@ -77,12 +77,12 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="身份证有效日期" prop="IDCardExpiryTime">
+            <el-form-item label="身份证有效日期">
               <el-date-picker
-                v-model="form.IDCardExpiryTime"
+                v-model="IDCardExpiryTime"
                 value-format="yyyy-MM-dd"
                 type="daterange"
-                range-separator="-"
+                @change="timeChange(IDCardExpiryTime)"
               />
             </el-form-item>
           </el-col>
@@ -90,30 +90,38 @@
         <!-- 上传证件照片 -->
         <el-row :gutter="50">
           <el-col :span="6">
-            <el-form-item label="身份证正面照" prop="IDCardFront">
-              <upload-img />
+            <el-form-item label="身份证正面照">
+              <upload-img @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
+              <el-input v-show="false" v-model="form.idimagea" />
+              <el-input v-show="false" v-model="form.idimageasrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="身份证反面照" prop="IDCardReverse">
-              <upload-img />
+              <upload-img @imgagePush="imageAccept('idimageb','idimagebsrc',$event)" />
+              <el-input v-show="false" v-model="form.idimageb" />
+              <el-input v-show="false" v-model="form.idimagebsrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-tooltip class="item" effect="dark" content="个人年龄若大于60岁，则必填" placement="right">
               <el-form-item label="手持身份证照片" prop="IDCardHandheld">
-                <upload-img />
+                <upload-img @imgagePush="imageAccept('idimagec','idimagecsrc',$event)" />
+                <el-input v-show="false" v-model="form.idimagec" />
+                <el-input v-show="false" v-model="form.idimagecsrc" />
               </el-form-item>
             </el-tooltip>
           </el-col>
-          <el-col v-show="options.registerInfo.type!==2" :span="6">
+          <el-col v-if="options.registerInfo.type!==2" :span="6">
             <el-form-item label="开户意愿书" prop="held">
-              <upload-img />
+              <upload-img @imgagePush="imageAccept('accountLicense','accountLicensesrc',$event)" />
+              <el-input v-show="false" v-model="form.accountLicense" />
+              <el-input v-show="false" v-model="form.accountLicensesrc" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 商户全称与简称 -->
-        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="商户全称" prop="merchantname">
               <el-input v-model="form.merchantname" placeholder="请输入商户全称" />
@@ -126,7 +134,7 @@
           </el-col>
         </el-row>
         <!-- 商户号与统一社会信用码 -->
-        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="商户号">
               <el-input v-model="options.registerInfo.sonmerno" placeholder="请输入商户全称" disabled />
@@ -152,7 +160,7 @@
           </el-col>
         </el-row>
         <!-- 营业执照类型与所属行业 -->
-        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="营业执照类型" prop="businesslicencetype">
               <el-select v-model="form.businesslicencetype" placeholder="请选择营业执照类型" clearable>
@@ -179,7 +187,7 @@
           </el-col>
         </el-row>
         <!-- 营业执照是否长期 -->
-        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="营业执照是否长期" prop="licenseLongtime">
               <el-radio-group v-model="form.licenseLongtime">
@@ -194,20 +202,18 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="营业执照有效日期" prop="IDCardExpiryTime">
+            <el-form-item label="营业执照有效日期">
               <el-date-picker
-                v-model="form.licenseExpiryTime"
+                v-model="form.businesslicencevalidity"
                 value-format="yyyy-MM-dd"
                 type="daterange"
-                range-separator="至"
-                start-placeholde="开始日期"
-                end-placeholde="结束日期"
+                range-separator="-"
               />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 注册资本与经营范围 -->
-        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="12">
             <el-form-item label="注册资本(万元)" prop="registeredcapital">
               <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
@@ -222,25 +228,33 @@
           </el-col>
         </el-row>
         <!-- 上传企业证件照片 -->
-        <el-row v-show="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
           <el-col :span="6">
-            <el-form-item label="营业执照" prop="license">
-              <upload-img />
+            <el-form-item label="营业执照">
+              <upload-img @imgagePush="imageAccept('businesslicencecopy','businesslicencecopysrc',$event)" />
+              <el-input v-show="false" v-model="form.businesslicencecopy" />
+              <el-input v-show="false" v-model="form.businesslicencecopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="税务登记证副本" prop="taxCertificate ">
-              <upload-img />
+            <el-form-item label="税务登记证副本">
+              <upload-img @imgagePush="imageAccept('taxregistrationcopy','taxregistrationcopysrc',$event)" />
+              <el-input v-show="false" v-model="form.taxregistrationcopy" />
+              <el-input v-show="false" v-model="form.taxregistrationcopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="组织结构代码证副本" prop="organizationCodeCertificate">
-              <upload-img />
+            <el-form-item label="组织结构代码证副本">
+              <upload-img @imgagePush="imageAccept('organizationcodecopy','organizationcodecopysrc',$event)" />
+              <el-input v-show="false" v-model="form.organizationcodecopy" />
+              <el-input v-show="false" v-model="form.organizationcodecopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="银行开户许可证" prop="bankAccountPermit">
-              <upload-img />
+            <el-form-item label="银行开户许可证">
+              <upload-img @imgagePush="imageAccept('licenceforopeningaccounts','licenceforopeningaccountssrc',$event)" />
+              <el-input v-show="false" v-model="form.licenceforopeningaccounts" />
+              <el-input v-show="false" v-model="form.licenceforopeningaccountssrc" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -248,7 +262,7 @@
           <el-form-item>
             <div class="footer">
               <el-button type="primary" @click="onSubmit">提交</el-button>
-              <el-button type="danger" @click="resetForm('depotForm')">重置</el-button>
+              <!-- <el-button type="danger" @click="resetForm('depotForm')">重置</el-button> -->
             </div>
           </el-form-item>
         </el-row>
@@ -261,6 +275,8 @@
 </template>
 <script>
 import { getDepotRegister } from '@/api/personalCenter/depotRegister'
+import { identityAuth } from '@/api/personalCenter/identityAuth'
+
 import UploadImg from '@/components/UploadImg/index.vue'
 
 export default {
@@ -282,32 +298,62 @@ export default {
       count: '',
       //   定时器
       timer: null,
+      // 身份证有效日期
+      IDCardExpiryTime: [],
       form: {
-        category: '',
-        name: '',
-        idNumber: '',
-        phone: '',
-        firmName: '',
-        handHeld: [],
-        longtimeornoper: false,
-        IDCardExpiryTime: [],
+        // 身份证正面
+        idimagea: '',
+        idimageasrc: '',
+        // 身份证反面
+        idimageb: '',
+        idimagebsrc: '',
+        // 手持身份证
+        idimagec: '',
+        idimagecsrc: '',
+        // 开户意愿书
+        accountLicense: '',
+        accountLicensesrc: '',
+        // 营业执照
+        businesslicencecopy: '',
+        businesslicencecopysrc: '',
+        // 营业执照有效日期
+        businesslicencevalidity: '',
+        // 税务登记证副本
+        taxregistrationcopy: '',
+        taxregistrationcopysrc: '',
+        // 组织结构代码证副本
+        organizationcodecopy: '',
+        organizationcodecopysrc: '',
+        // 银行开户许可证
+        licenceforopeningaccounts: '',
+        licenceforopeningaccountssrc: '',
+        // 身份证是否长期
+        longtimeornoper: 1,
+        // 身份证有效期开始与结束日期
+        idvalidity: '',
+        idvaliditybegin: '',
+        // 营业执照是否长期
+        licenseLongtime: 1,
+        // 商户全称
         merchantname: '',
-        MCHID: '',
-        industry: '',
-        typeofid: '',
+        // 商户简称
         merchantnamesimple: '',
+        // 所属行业
+        industry: '',
+        // 法人证件类型
+        typeofid: '',
+        // 商户电话
         merchantphone: '',
+        // 营业地址
         address: '',
+        // 营业执照类型
         businesslicencetype: '',
+        // 统一社会信用代码
         businesslicenceno: '',
-        licenseLongtime: false,
-        licenseExpiryTime: [],
+        // 注册资本(万元)
         registeredcapital: undefined,
-        businessscope: '',
-        license: [],
-        taxCertificate: [],
-        organizationCodeCertificate: [],
-        bankAccountPermit: []
+        // 经营范围
+        businessscope: ''
 
       },
       licenseCategoryOptions: [
@@ -355,18 +401,40 @@ export default {
     this.init()
   },
   methods: {
+    // 表单字段赋值函数
+    imageAccept: function(src, sqImageId, val) {
+      this.form[src] = val.src
+      this.form[sqImageId] = val.sqImageId
+    },
+    handletime() {
+      this.IDCardExpiryTime = [this.form.idvaliditybegin, this.form.idvalidity]
+    },
+    timeChange(val) {
+      this.form.idvaliditybegin = val[0]
+      this.form.idvalidity = val[1]
+    },
     async init() {
       this.loading = true // 打开遮罩
       this.id = await this.getID()
       await getDepotRegister(this.id).then(res => {
         if (res.code === 200) {
           this.options.registerInfo = res.data
+          this.form = Object.assign(this.form, res.data)
         }
         this.loading = false // 关闭遮罩
       })
     },
     onSubmit() {
-      // console.log('submit!')
+      // console.log(this.form)
+      this.loading = true // 打开遮罩
+      identityAuth(this.form).then(res => {
+        this.msgSuccess(res.msg)
+        this.init()
+        this.loading = false // 关闭遮罩
+      }).catch((res) => {
+        this.msgError(res.msg)
+        this.loading = false // 关闭遮罩
+      })
     },
     // onReset(formName) {
     //   this.resetForm(formName)

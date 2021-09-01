@@ -1,40 +1,45 @@
 <template>
   <div>
-    <el-upload
-      :class="{hide:hideUpload}"
-      :file-list="handHeld"
-      action="#"
-      :auto-upload="false"
-      :on-change="handleChange"
-      :limit="limitCount"
-      list-type="picture-card"
-    >
-      <i slot="default" class="el-icon-plus" />
-      <div slot="file" slot-scope="{file}">
-        <img
-          class="el-upload-list__item-thumbnail"
-          :src="file.url"
-          alt=""
-        >
-        <span class="el-upload-list__item-actions">
-          <span
-            @click="handlePictureCardPreview(file)"
+    <el-tooltip class="item" effect="dark" content="文件大小不得超过2MB。" placement="bottom">
+      <el-upload
+        :class="{hide:hideUpload}"
+        :file-list="handHeld"
+        :action="uploadPath"
+        :data="{merNo:merNo}"
+        accept="image/*"
+        :on-success="handleSuccess"
+        :on-progress="handleProgress"
+        :limit="limitCount"
+        :headers="headers"
+        list-type="picture-card"
+      >
+        <i slot="default" class="el-icon-plus" />
+        <div slot="file" slot-scope="{file}">
+          <img
+            class="el-upload-list__item-thumbnail"
+            :src="file.url"
+            alt=""
           >
-            <i class="el-icon-zoom-in" />
+          <span class="el-upload-list__item-actions">
+            <span
+              @click="handlePictureCardPreview(file)"
+            >
+              <i class="el-icon-zoom-in" />
+            </span>
+            <span
+              @click="handleDownload(file)"
+            >
+              <i class="el-icon-download" />
+            </span>
+            <span
+              @click="handleRemove(file)"
+            >
+              <i class="el-icon-delete" />
+            </span>
           </span>
-          <span
-            @click="handleDownload(file)"
-          >
-            <i class="el-icon-download" />
-          </span>
-          <span
-            @click="handleRemove(file)"
-          >
-            <i class="el-icon-delete" />
-          </span>
-        </span>
-      </div>
-    </el-upload>
+        </div>
+      </el-upload>
+    </el-tooltip>
     <el-dialog :visible.sync="uploadImgVisible">
       <img width="100%" :src="dialogImageUrl" alt="">
     </el-dialog>
@@ -42,12 +47,15 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth'
+import { getConfirmPage } from '@/api/personalCenter/depotRegister'
 
 export default {
   name: 'UploadImg',
   data() {
     return {
+      merNo: '',
       dialogImageUrl: '',
+      // 文件列表
       handHeld: [],
       limitCount: 1,
       uploadImgVisible: false,
@@ -55,8 +63,6 @@ export default {
       hideUpload: false,
       // 声明上传路径
       uploadPath: undefined,
-      // 文件列表
-      fileList: [],
       // 头
       headers: undefined,
       // 文件列表的json对象
@@ -65,18 +71,43 @@ export default {
   },
   created() {
     // 文件上传的路径
-    this.uploadPath = process.env.VUE_APP_BASE_API + '/system/upload/doUploadImage'
-    // 设置请求头加入token 避免求认证的问题
+    this.uploadPath = process.env.VUE_APP_BASE_API + '/ylyt/personal/uploadFile'
+    // 设置请求头加入token 避免请求认证的问题
     this.headers = { 'token': getToken() }
+    getConfirmPage(this.getID()).then(res => {
+      if (res.code === 200) {
+        this.merNo = res.params.merNo
+      }
+    })
   },
   methods: {
+    // 放大预览图片
     handlePictureCardPreview(file) {
       this.uploadImgVisible = true
       this.dialogImageUrl = file.url
     },
-    handleChange(file, fileList) {
-      this.handHeld = fileList
-      this.hideUpload = fileList.length >= this.limitCount
+    // 上传图片成功
+    handleSuccess(res, file, fileList) {
+      if (res.code === 200) {
+        this.handHeld = fileList
+        this.hideUpload = fileList.length >= this.limitCount
+        this.msgSuccess(res.msg)
+        this.$emit('imgagePush', res.data)
+      } else {
+        this.handHeld = fileList
+        this.hideUpload = fileList.length >= this.limitCount
+        this.msgError(res.msg)
+      }
+    },
+    // 上传图片失败
+    // handleError(res, file, fileList) {
+    //   this.handHeld = fileList
+    //   this.hideUpload = false
+    //   this.msgError(res.msg)
+    // },
+    // 上传图片时
+    handleProgress() {
+      this.hideUpload = true
     },
     // 删除上传的图片
     handleRemove(file, fileList) {

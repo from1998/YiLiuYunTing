@@ -137,8 +137,6 @@ export default {
         this.totalParkingData.date = this.totalProfitsData.date = res.data.times
         this.totalParkingData.actualData = res.data.carRecordMap
         this.totalProfitsData.actualData = res.data.orderMap
-
-        console.log(this.totalParkingData.actualData)
         // this.lineChartData.totalParking =
       }).catch(err => {
         console.log(err)

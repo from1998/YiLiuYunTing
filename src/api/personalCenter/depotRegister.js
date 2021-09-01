@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 // --------------------------------------车场信息
-// 查询车场注册信息
+// 查询个人信息
 export function getDepotRegister(id) {
   return request({
     url: '/ylyt/personal/list/' + id,
