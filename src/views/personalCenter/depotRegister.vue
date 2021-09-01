@@ -42,13 +42,13 @@
         </el-form-item>
         <!-- 验证码 -->
         <el-row v-show="form.registerstatus !== 2">
-          <el-col :span="16">
+          <el-col :span="19">
             <el-form-item label="验证码" prop="registersmscode">
               <el-input v-model="form.registersmscode" placeholder="请输入验证码" />
             </el-form-item>
           </el-col>
 
-          <el-col :span="8" class="verifyCode">
+          <el-col :span="5" class="verifyCode">
             <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
               <span v-if="codeShow">获取验证码</span>
               <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>

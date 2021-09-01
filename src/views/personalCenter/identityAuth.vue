@@ -9,8 +9,8 @@
     <!-- 主体 -->
     <el-container class="container">
 
-      <el-form ref="depotForm" :model="form" label-width="150px" style="width:1000px">
-        <el-row :gutter="50">
+      <el-form :model="form" label-width="150px" style="width:1200px">
+        <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
             <el-form-item label="注册类型">
@@ -36,7 +36,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="50">
+        <el-row>
           <el-col :span="12">
             <el-form-item label="手机号码">
               <el-input v-model="options.registerInfo.legalpersonphone" disabled />
@@ -48,7 +48,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="50">
+        <el-row>
           <el-col :span="12">
             <el-form-item label="法人证件类型" prop="typeofid">
               <el-select v-model="form.typeofid" placeholder="请选择法人证件类型" clearable>
@@ -62,7 +62,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="50">
+        <el-row>
           <el-col :span="12">
             <el-form-item label="身份证是否长期" prop="longtimeornoper">
               <el-radio-group v-model="form.longtimeornoper">
@@ -88,23 +88,23 @@
           </el-col>
         </el-row>
         <!-- 上传证件照片 -->
-        <el-row :gutter="50">
-          <el-col :span="6">
+        <el-row>
+          <el-col :span="options.registerInfo.type!==2?6:8">
             <el-form-item label="身份证正面照">
               <upload-img @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
               <el-input v-show="false" v-model="form.idimagea" />
               <el-input v-show="false" v-model="form.idimageasrc" />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="options.registerInfo.type!==2?6:8">
             <el-form-item label="身份证反面照" prop="IDCardReverse">
               <upload-img @imgagePush="imageAccept('idimageb','idimagebsrc',$event)" />
               <el-input v-show="false" v-model="form.idimageb" />
               <el-input v-show="false" v-model="form.idimagebsrc" />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
-            <el-tooltip class="item" effect="dark" content="个人年龄若大于60岁，则必填" placement="right">
+          <el-col :span="options.registerInfo.type!==2?6:8">
+            <el-tooltip class="item" effect="dark" content="个人年龄若大于60岁，则必填" placement="top">
               <el-form-item label="手持身份证照片" prop="IDCardHandheld">
                 <upload-img @imgagePush="imageAccept('idimagec','idimagecsrc',$event)" />
                 <el-input v-show="false" v-model="form.idimagec" />
@@ -147,7 +147,7 @@
           </el-col>
         </el-row>
         <!-- 商户电话与营业地址 -->
-        <el-row :gutter="50">
+        <el-row>
           <el-col :span="12">
             <el-form-item label="商户电话" prop="merchantphone">
               <el-input v-model="form.merchantphone" placeholder="请输入商户电话" />
@@ -258,7 +258,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row>
           <el-form-item>
             <div class="footer">
               <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -387,7 +387,7 @@ export default {
     this.getDataByType('certificateType').then(res => {
       this.options.certificateTypes = res.data
     })
-    // 获取注册信息
+    // 获取个人信息
     this.init()
   },
   methods: {
@@ -415,7 +415,6 @@ export default {
       })
     },
     onSubmit() {
-      // console.log(this.form)
       this.loading = true // 打开遮罩
       identityAuth(this.form).then(res => {
         this.msgSuccess(res.msg)
