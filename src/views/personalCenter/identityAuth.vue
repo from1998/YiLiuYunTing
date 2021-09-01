@@ -165,10 +165,10 @@
             <el-form-item label="营业执照类型" prop="businesslicencetype">
               <el-select v-model="form.businesslicencetype" placeholder="请选择营业执照类型" clearable>
                 <el-option
-                  v-for="item in licenseCategoryOptions"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"
+                  v-for="item in options.businessLicense"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
                 />
               </el-select>
             </el-form-item>
@@ -354,17 +354,7 @@ export default {
         registeredcapital: undefined,
         // 经营范围
         businessscope: ''
-
       },
-      licenseCategoryOptions: [
-        {
-          label: '普通营业执照',
-          value: '1'
-        }, {
-          label: '三证合一营业执照',
-          value: '2'
-        }
-      ],
       options: {
         // 是否状态
         stateOptions: [],
@@ -391,7 +381,7 @@ export default {
     })
     // 获取营业执照类型类型字典数据
     this.getDataByType('businessLicenseType').then(res => {
-      this.options.categoryOptions = res.data
+      this.options.businessLicense = res.data
     })
     // 获取法人证件类型字典数据
     this.getDataByType('certificateType').then(res => {
