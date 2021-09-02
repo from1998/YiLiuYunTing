@@ -3,8 +3,10 @@
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
       身份认证
-      <el-button v-show="authentication" type="success" icon="el-icon-success" size="mini">已认证</el-button>
-      <el-button v-show="!authentication" type="info" icon="el-icon-info" size="mini">未认证</el-button>
+      <el-button v-show="options.registerInfo.registerstatus===1" type="success" icon="el-icon-success" size="mini">已认证</el-button>
+      <el-button v-show="options.registerInfo.registerstatus===2" type="info" icon="el-icon-info" size="mini">未认证</el-button>
+      <el-button v-show="options.registerInfo.registerstatus===3" type="info" icon="el-icon-warning" size="mini">审核中</el-button>
+      <el-button v-show="options.registerInfo.registerstatus===0" type="info" icon="el-icon-error" size="mini">认证失败</el-button>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
@@ -82,6 +84,10 @@
                 v-model="IDCardExpiryTime"
                 value-format="yyyy-MM-dd"
                 type="daterange"
+                unlink-panels
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
                 @change="timeChange(IDCardExpiryTime)"
               />
             </el-form-item>
@@ -121,7 +127,7 @@
           </el-col>
         </el-row>
         <!-- 商户全称与简称 -->
-        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
             <el-form-item label="商户全称" prop="merchantname">
               <el-input v-model="form.merchantname" placeholder="请输入商户全称" />
@@ -134,7 +140,7 @@
           </el-col>
         </el-row>
         <!-- 商户号与统一社会信用码 -->
-        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
             <el-form-item label="商户号">
               <el-input v-model="options.registerInfo.sonmerno" placeholder="请输入商户全称" disabled />
@@ -160,7 +166,7 @@
           </el-col>
         </el-row>
         <!-- 营业执照类型与所属行业 -->
-        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
             <el-form-item label="营业执照类型" prop="businesslicencetype">
               <el-select v-model="form.businesslicencetype" placeholder="请选择营业执照类型" clearable>
@@ -187,7 +193,7 @@
           </el-col>
         </el-row>
         <!-- 营业执照是否长期 -->
-        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
             <el-form-item label="营业执照是否长期" prop="licenseLongtime">
               <el-radio-group v-model="form.licenseLongtime">
@@ -206,14 +212,14 @@
               <el-date-picker
                 v-model="form.businesslicencevalidity"
                 value-format="yyyy-MM-dd"
-                type="daterange"
-                range-separator="-"
+                type="date"
+                placeholder="选择日期"
               />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 注册资本与经营范围 -->
-        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
             <el-form-item label="注册资本(万元)" prop="registeredcapital">
               <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
@@ -228,7 +234,7 @@
           </el-col>
         </el-row>
         <!-- 上传企业证件照片 -->
-        <el-row v-if="options.registerInfo.type!==2" :gutter="50">
+        <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="6">
             <el-form-item label="营业执照">
               <upload-img @imgagePush="imageAccept('businesslicencecopy','businesslicencecopysrc',$event)" />
@@ -258,11 +264,10 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row class="footer">
           <el-form-item>
-            <div class="footer">
+            <div>
               <el-button type="primary" @click="onSubmit">提交</el-button>
-              <!-- <el-button type="danger" @click="resetForm('depotForm')">重置</el-button> -->
             </div>
           </el-form-item>
         </el-row>
@@ -290,8 +295,6 @@ export default {
       id: '',
       // 是否启用遮罩层
       loading: false,
-      // 用户认证状态,
-      authentication: false,
       // 获取验证码按钮显示
       codeShow: true,
       //   计数器
@@ -410,6 +413,7 @@ export default {
         if (res.code === 200) {
           this.options.registerInfo = res.data
           this.form = Object.assign(this.form, res.data)
+          window.sessionStorage.setItem('sonmerno', res.data.sonmerno)
         }
         this.loading = false // 关闭遮罩
       })
@@ -420,14 +424,8 @@ export default {
         this.msgSuccess(res.msg)
         this.init()
         this.loading = false // 关闭遮罩
-      }).catch((res) => {
-        this.msgError(res.msg)
-        this.loading = false // 关闭遮罩
       })
     },
-    // onReset(formName) {
-    //   this.resetForm(formName)
-    // },
     getVerificationCode() {
       const TIME_COUNT = 60
       if (!this.timer) {
@@ -443,25 +441,6 @@ export default {
           }
         }, 1000)
       }
-    },
-    // 文件上传的相关方法
-    // 移除回调
-    handleRemove(file, fileList) {
-      this.fileListJsonObj.filter(i1 => {
-        if (file.response.data.url === i1.url) {
-          this.fileListJsonObj.splice(this.fileListJsonObj.indexOf(i1), 1)
-        }
-      })
-    },
-    // 上传成功之后的回调
-    handleUploadSuccess(response, file, fileList) {
-      console.log('success', response, file, fileList)
-      this.fileListJsonObj.push(response.data)
-      // console.log(this.fileListJsonObj)
-    },
-    // 上传失败之后的回调
-    handleUploadError() {
-      this.msgError('上传失败')
     }
   }
 }

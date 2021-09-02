@@ -5,7 +5,7 @@
         :class="{hide:hideUpload}"
         :file-list="handHeld"
         :action="uploadPath"
-        :data="{merNo:merNo}"
+        :data="{sonmerno:sonmerno}"
         accept="image/*"
         :on-success="handleSuccess"
         :on-error="handleError"
@@ -48,13 +48,12 @@
 </template>
 <script>
 import { getToken } from '@/utils/auth'
-import { getConfirmPage } from '@/api/personalCenter/depotRegister'
 
 export default {
   name: 'UploadImg',
   data() {
     return {
-      merNo: '',
+      sonmerno: '',
       dialogImageUrl: '',
       // 文件列表
       handHeld: [],
@@ -75,11 +74,7 @@ export default {
     this.uploadPath = process.env.VUE_APP_BASE_API + '/ylyt/personal/uploadFile'
     // 设置请求头加入token 避免请求认证的问题
     this.headers = { 'token': getToken() }
-    getConfirmPage(this.getID()).then(res => {
-      if (res.code === 200) {
-        this.merNo = res.params.merNo
-      }
-    })
+    this.sonmerno = window.sessionStorage.getItem('sonmerno')
   },
   methods: {
     // 放大预览图片

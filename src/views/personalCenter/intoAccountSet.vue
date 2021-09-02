@@ -13,7 +13,7 @@
           </el-form-item>
         </el-row>
 
-        <el-row>
+        <el-row v-show="isautowithdraw===null">
           <el-col :span="19">
             <el-form-item label="验证码" prop="seqno">
               <el-input v-model="form.seqno" placeholder="请输入验证码" />
@@ -37,7 +37,8 @@
         <el-row :gutter="20">
           <el-form-item>
             <div class="footer">
-              <el-button type="primary" @click="onSubmit">提交</el-button>
+              <el-button v-show="isautowithdraw===null" type="primary" :disabled="cardBindState===1?false:true" @click="onSubmit">提交</el-button>
+              <el-button v-show="isautowithdraw===1" type="primary" disabled>已设置</el-button>
             </div>
           </el-form-item>
         </el-row>
@@ -56,6 +57,8 @@ export default {
   name: 'IntoAccountSet',
   data() {
     return {
+      // 到账设置状态
+      isautowithdraw: '',
       // 绑卡状态
       cardBindState: '',
       // 获取验证码按钮显示
@@ -84,7 +87,7 @@ export default {
         if (res.code === 200) {
           this.form.legalpersonphone = res.data.legalpersonphone
           this.cardBindState = res.data.isbind
-          console.log(this.cardBindState)
+          this.isautowithdraw = res.data.isautowithdraw
         }
         this.loading = false // 关闭遮罩
       })

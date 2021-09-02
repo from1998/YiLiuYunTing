@@ -39,21 +39,23 @@
           <el-col :span="20">
             <el-tooltip class="item" effect="dark" content="我们会往您的账户打款0.5元以下的金额，请务必在确认到账后输入收款金额后 点击绑卡!" placement="bottom-start">
               <el-form-item label="收款金额" prop="account">
-                <el-input v-model="form.account" placeholder="请输入收款金额" />
+                <el-input v-model="form.account" placeholder="请输入收款金额" :disabled="cardBindState===1?true:false" />
               </el-form-item>
             </el-tooltip>
           </el-col>
           <el-col :span="4" class="verifyCode">
-            <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getAccount">
+            <el-button v-show="cardBindState===null" type="primary" size="medium" :disabled="codeShow?false:true" @click="getAccount">
               <span v-if="codeShow">发起打款</span>
               <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
             </el-button>
+            <el-button v-show="cardBindState===1" type="primary" disabled>发起打款</el-button>
           </el-col>
         </el-row>
-        <el-row :gutter="20">
+        <el-row>
           <el-form-item>
             <div class="footer">
-              <el-button type="primary" @click="onSubmit">绑卡</el-button>
+              <el-button v-show="cardBindState===null" type="primary" @click="onSubmit">绑卡</el-button>
+              <el-button v-show="cardBindState===1" type="primary" disabled>已绑卡</el-button>
             </div>
           </el-form-item>
         </el-row>
@@ -73,6 +75,10 @@ export default {
     return {
       // 用户id
       id: '',
+      // 认证状态
+      registerstatus: '',
+      // 绑卡状态
+      cardBindState: '',
       // 获取验证码按钮显示
       codeShow: true,
       //   计数器
@@ -109,6 +115,8 @@ export default {
       await getDepotRegister(this.id).then(res => {
         if (res.code === 200) {
           this.form.sonmerno = res.data.sonmerno
+          this.cardBindState = res.data.isbind
+          this.registerstatus = res.data.registerstatus
         }
         this.loading = false // 关闭遮罩
       })
