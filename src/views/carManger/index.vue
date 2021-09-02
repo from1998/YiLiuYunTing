@@ -245,7 +245,6 @@
 <script>
 // 引入api
 import { listRoleForPage, addRole, updateRole, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
-// import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
 import validate from '@/utils/validate'
 
 export default {

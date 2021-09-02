@@ -9,7 +9,7 @@
       <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px" label-position="left">
         <!-- 注册类型 -->
         <el-form-item label="注册类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择注册类型" clearable style="width:350px">
+          <el-select v-model="form.type" placeholder="请选择注册类型" clearable style="width:350px" :disabled="flag">
             <el-option
               v-for="item in categoryOptions"
               :key="item.dictValue"
@@ -26,25 +26,25 @@
             <span v-show="form.type===2">个人姓名</span>
             <span v-show="form.type===3">个体工商户姓名</span>
           </span>
-          <el-input v-model="form.legalpersonname" placeholder="请输入个人/法人姓名" />
+          <el-input v-model="form.legalpersonname" placeholder="请输入个人/法人姓名" :disabled="flag" />
         </el-form-item>
         <!-- 身份证号码 -->
         <el-form-item label="身份证号码" prop="idnumber">
-          <el-input v-model="form.idnumber" placeholder="请输入身份证号码" />
+          <el-input v-model="form.idnumber" placeholder="请输入身份证号码" :disabled="flag" />
         </el-form-item>
         <!-- 手机号码 -->
         <el-form-item label="手机号码" prop="legalpersonphone">
-          <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" />
+          <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" :disabled="flag" />
         </el-form-item>
         <!-- 企业名称 -->
         <el-form-item v-if="form.type===1" label="企业名称" prop="merchantname">
-          <el-input v-model="form.merchantname" placeholder="请输入企业名称" />
+          <el-input v-model="form.merchantname" placeholder="请输入企业名称" :disabled="flag" />
         </el-form-item>
         <!-- 验证码 -->
         <el-row v-show="form.registerstatus !== 2">
           <el-col :span="19">
             <el-form-item label="验证码" prop="registersmscode">
-              <el-input v-model="form.registersmscode" placeholder="请输入验证码" />
+              <el-input v-model="form.registersmscode" placeholder="请输入验证码" :disabled="flag" />
             </el-form-item>
           </el-col>
 
@@ -91,6 +91,7 @@ export default {
   legalpersonname: 'DepotRegister',
   data() {
     return {
+      flag: '',
       id: '',
       // 是否启用遮罩层
       loading: false,
@@ -127,6 +128,7 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
+          this.flag = true
         }
         this.loading = false // 关闭遮罩
       })
@@ -170,7 +172,7 @@ export default {
       }).catch(() => {
         this.msgError('获取验证码失败')
       })
-      const TIME_COUNT = 6
+      const TIME_COUNT = 60
       if (!this.timer) {
         this.count = TIME_COUNT
         this.codeShow = false

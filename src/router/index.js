@@ -42,7 +42,7 @@ export const constantRoutes = [
   {
     path: '/carPlay',
     component: () => import('@/views/carPlay/index'),
-    meta: { title: '可视化', icon: 'view', affix: true }
+    meta: { title: '可视化', icon: 'view' }
   },
   {
     path: '/',
@@ -51,14 +51,28 @@ export const constantRoutes = [
     children: [
       {
         path: 'dashboard',
+        name: '',
         component: () => import('@/views/dashboard/index'),
-        name: 'dashboard',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: { title: '首页', icon: 'dashboard' }
       }
     ]
   }
 ]
 export const asyncRoutes = [
+  {
+    path: '/carManger',
+    component: Layout,
+    redirect: '/carManger/index',
+    name: '/carManger',
+    children: [
+      {
+        path: 'index',
+        name: '/carManger/index',
+        component: () => import('@/views/carManger/index'),
+        meta: { title: '车辆管理', icon: 'car', noCache: true }
+      }
+    ]
+  },
   {
     path: '/system',
     component: Layout,
@@ -104,15 +118,6 @@ export const asyncRoutes = [
         meta: {
           title: '字典管理',
           icon: 'zip'
-        }
-      },
-      {
-        path: 'carManger',
-        component: () => import('@/views/system/carManger/index'),
-        name: '/system/carManger',
-        meta: {
-          title: '车辆管理',
-          icon: 'car'
         }
       },
       {
@@ -445,7 +450,7 @@ export const lastRoute = [
         path: 'carSetting/:id(\\d+)',
         component: () => import('@/views/system/user/carSetting'),
         name: '/user',
-        meta: { title: '车场设置' }
+        meta: { title: '车场设置', noCache: true }
       }
     ]
   },

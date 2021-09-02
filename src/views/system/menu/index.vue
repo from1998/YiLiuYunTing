@@ -2,36 +2,42 @@
   <div class="app-container">
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="菜单名称" prop="menuName">
-        <el-input
-          v-model="queryParams.menuName"
-          placeholder="请输入菜单名称"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="请选择状态"
-          clearable
-          size="small"
-          style="width:200px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="normal" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-        <el-button type="danger" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
-      </el-form-item>
+      <el-row>
+        <el-col :span="6" :offset="0">
+          <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
+        </el-col>
+        <el-col :span="12" :offset="6">
+          <el-form-item label="菜单名称" prop="menuName">
+            <el-input
+              v-model="queryParams.menuName"
+              placeholder="请输入菜单名称"
+              clearable
+              size="small"
+              style="width:240px"
+            />
+          </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+              style="width:200px"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <!-- 查询条件结束 -->
     <!-- 数据表格开始 -->
@@ -52,8 +58,8 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="组件路径" align="center" prop="path" />
-      <el-table-column label="权限标识" align="center" prop="percode" />
+      <el-table-column label="组件路径" align="center" prop="path" width="280" />
+      <!-- <el-table-column label="权限标识" align="center" prop="percode" /> -->
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
       <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="备注" align="center" prop="remark" />

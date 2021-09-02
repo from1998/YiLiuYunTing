@@ -1,9 +1,7 @@
 <template>
   <div id="data-view">
     <dv-full-screen-container>
-
       <top-header />
-
       <dv-border-box-1 class="main-content">
         <digital-flop />
         <dv-decoration-3 class="dv-decoration-3" />

@@ -17,7 +17,6 @@ export default {
 #top-header {
   position: relative;
   width: 100%;
-  // height: 110px;
   flex: 11;
   display: flex;
   justify-content: space-between;
