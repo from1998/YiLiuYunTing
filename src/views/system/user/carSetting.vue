@@ -41,7 +41,6 @@ import BackToTop from '@/components/BackToTop'
 
 import { getDepotById } from '@/api/system/carSetting'
 
-// 导入API方法
 export default {
   components: {
     depotInfo,

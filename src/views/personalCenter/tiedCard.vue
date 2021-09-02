@@ -6,7 +6,23 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form :model="form" label-width="150px" style="width:550px" label-position="left">
+      <div v-show="registerstatus!==1" class="error">
+        <el-row :gutter="20">
+          <el-button
+            type="warning"
+            circle
+            class="warningBtn"
+            style="max-height: 66px"
+          >
+            <i class="el-icon-warning-outline" style="font-size: 40px;" />
+          </el-button>
+          <p>
+            身份认证未通过，无法进行绑卡设置。
+          </p>
+          <el-button type="primary" class="goBack" @click="goIdentityAuth">转到身份认证</el-button>
+        </el-row>
+      </div>
+      <el-form v-show="registerstatus===1" :model="form" label-width="150px" style="width:550px" label-position="left">
         <el-form-item label="绑卡商户号" prop="name">
           <el-input v-model="form.sonmerno" placeholder="请输入绑卡商户号" disabled />
         </el-form-item>
@@ -109,6 +125,9 @@ export default {
     this.init()
   },
   methods: {
+    goIdentityAuth() {
+      this.$router.push('/personalCenter/identityAuth')
+    },
     async init() {
       this.loading = true // 打开遮罩
       this.id = await this.getID()
@@ -174,5 +193,23 @@ export default {
 }
 .count {
     cursor:not-allowed;
+}
+.error {
+display: flex;
+margin-top: 50px;
+height: 100px;
+font-size: 20px;
+    .warningBtn {
+      margin: 0 auto 50px;
+      width: 66px;
+      display: block;
+      min-height: 66px;
+      min-width: 66px;
+      cursor: default;
+    }
+    .goBack {
+      margin: 30px auto 0;
+      display: block;
+    }
 }
 </style>

@@ -264,30 +264,31 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row class="footer">
+        <el-row class="container">
           <el-form-item>
-            <div>
-              <el-button type="primary" @click="onSubmit">提交</el-button>
-            </div>
+            <el-button type="primary" class="btn" @click="onSubmit">提交</el-button>
           </el-form-item>
         </el-row>
-
       </el-form>
     </el-container>
-
+    <el-tooltip placement="top" content="返回顶部">
+      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="0" :back-position="0" transition-name="fade" />
+    </el-tooltip>
   </el-container>
 
 </template>
 <script>
 import { getDepotRegister } from '@/api/personalCenter/depotRegister'
 import { identityAuth } from '@/api/personalCenter/identityAuth'
+import BackToTop from '@/components/BackToTop'
 
 import UploadImg from '@/components/UploadImg/index.vue'
 
 export default {
   name: 'IdentityAuth',
   components: {
-    UploadImg
+    UploadImg,
+    BackToTop
   },
   data() {
     return {
@@ -366,6 +367,15 @@ export default {
         businessLicense: [],
         certificateTypes: [],
         registerInfo: []
+      },
+      myBackToTopStyle: {
+        right: '50px',
+        bottom: '50px',
+        width: '40px',
+        height: '40px',
+        'border-radius': '4px',
+        'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
+        background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
       }
     }
   },
@@ -449,10 +459,10 @@ export default {
 .container {
     display: -webkit-box;
      -webkit-box-pack:center;
-}
-.footer {
-    margin-left: 50%;
-    transform: translateX(-50%);
+    .btn {
+      display: block;
+      margin:30px 0 0 -100%;
+    }
 }
 .verificationCode {
     el-button {

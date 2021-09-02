@@ -64,7 +64,7 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="userTableList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column type="expand">
+      <!-- <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="邮箱">
@@ -81,7 +81,7 @@
             </el-form-item>
           </el-form>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="用户ID" align="center" prop="id" />
       <el-table-column label="用户姓名【登陆账号】" align="center" prop="username" width="200" />
       <el-table-column label="真实姓名" align="center" prop="realName" />

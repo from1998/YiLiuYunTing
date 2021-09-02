@@ -13,7 +13,7 @@
           </el-form-item>
         </el-row>
 
-        <el-row v-show="isautowithdraw===null">
+        <el-row v-show="!isautowithdraw || isautowithdraw===null">
           <el-col :span="19">
             <el-form-item label="验证码" prop="seqno">
               <el-input v-model="form.seqno" placeholder="请输入验证码" />
@@ -26,7 +26,7 @@
             </el-button>
           </el-col>
           <el-tooltip class="item" effect="dark" content="绑定银行卡后才可以进行到账设置！" placement="right">
-            <el-col v-show="cardBindState===null" :span="5" class="verifyCode">
+            <el-col v-show="!cardBindState || cardBindState===null" :span="5" class="verifyCode">
               <el-button type="primary" size="medium" disabled>
                 获取验证码
               </el-button>
@@ -37,7 +37,7 @@
         <el-row :gutter="20">
           <el-form-item>
             <div class="footer">
-              <el-button v-show="isautowithdraw===null" type="primary" :disabled="cardBindState===1?false:true" @click="onSubmit">提交</el-button>
+              <el-button v-show="!isautowithdraw || isautowithdraw===null" type="primary" :disabled="cardBindState===1?false:true" @click="onSubmit">提交</el-button>
               <el-button v-show="isautowithdraw===1" type="primary" disabled>已设置</el-button>
             </div>
           </el-form-item>
@@ -137,6 +137,7 @@ export default {
     transform: translateX(-50%);
 }
 .verifyCode {
+    padding: 0;
     el-button {
         border-radius: 0!important;
     }

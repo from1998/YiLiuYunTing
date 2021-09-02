@@ -6,10 +6,10 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px">
+      <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px" label-position="left">
         <!-- 注册类型 -->
         <el-form-item label="注册类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择注册类型" clearable>
+          <el-select v-model="form.type" placeholder="请选择注册类型" clearable style="width:350px">
             <el-option
               v-for="item in categoryOptions"
               :key="item.dictValue"
@@ -56,19 +56,17 @@
           </el-col>
         </el-row>
 
-        <el-row>
-          <div class="footer">
-            <el-button v-if="form.registerstatus !== 2" type="primary" @click="onSubmit">提交</el-button>
-            <el-button v-if="form.registerstatus === 2" disabled type="primary">已提交</el-button>
-            <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
-            <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
-            <el-button v-if="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
-            <el-button v-if="form.isconfirmprotocol === 1" type="primary">
-              <router-link to="/personalCenter/identityAuth">
-                去认证
-              </router-link>
-            </el-button>
-          </div>
+        <el-row class="footer">
+          <el-button v-if="form.registerstatus !== 2" type="primary" @click="onSubmit">提交</el-button>
+          <el-button v-if="form.registerstatus === 2" disabled type="primary">已提交</el-button>
+          <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
+          <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
+          <el-button v-if="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
+          <el-button v-if="form.isconfirmprotocol === 1" type="primary">
+            <router-link to="/personalCenter/identityAuth">
+              去认证
+            </router-link>
+          </el-button>
         </el-row>
 
       </el-form>
