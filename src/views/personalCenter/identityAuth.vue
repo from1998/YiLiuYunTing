@@ -392,9 +392,9 @@ export default {
   },
   methods: {
     // 表单字段赋值函数
-    imageAccept: function(src, sqImageId, val) {
-      this.form[src] = val.src
+    imageAccept: function(sqImageId, src, val) {
       this.form[sqImageId] = val.sqImageId
+      this.form[src] = val.src
     },
     handletime() {
       this.IDCardExpiryTime = [this.form.idvaliditybegin, this.form.idvalidity]

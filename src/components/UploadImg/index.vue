@@ -8,6 +8,7 @@
         :data="{merNo:merNo}"
         accept="image/*"
         :on-success="handleSuccess"
+        :on-error="handleError"
         :on-progress="handleProgress"
         :limit="limitCount"
         :headers="headers"
@@ -95,16 +96,16 @@ export default {
         this.$emit('imgagePush', res.data)
       } else {
         this.handHeld = fileList
-        this.hideUpload = fileList.length >= this.limitCount
-        this.msgError(res.msg)
+        this.hideUpload = false
+        this.msgError('上传失败')
       }
     },
     // 上传图片失败
-    // handleError(res, file, fileList) {
-    //   this.handHeld = fileList
-    //   this.hideUpload = false
-    //   this.msgError(res.msg)
-    // },
+    handleError(res, file, fileList) {
+      this.handHeld = fileList
+      this.hideUpload = false
+      this.msgError('上传失败')
+    },
     // 上传图片时
     handleProgress() {
       this.hideUpload = true
