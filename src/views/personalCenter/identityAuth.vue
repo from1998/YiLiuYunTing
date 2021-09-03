@@ -3,6 +3,7 @@
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
       身份认证
+      <el-button v-show="options.registerInfo.registerstatus===''" type="success" icon="el-icon-success" size="mini">未注册</el-button>
       <el-button v-show="options.registerInfo.registerstatus===1" type="success" icon="el-icon-success" size="mini">已认证</el-button>
       <el-button v-show="options.registerInfo.registerstatus===2" type="info" icon="el-icon-info" size="mini">未认证</el-button>
       <el-button v-show="options.registerInfo.registerstatus===3" type="warning" icon="el-icon-warning" size="mini">审核中</el-button>
@@ -11,7 +12,24 @@
     <!-- 主体 -->
     <el-container class="container">
 
-      <el-form :model="form" label-width="150px" style="width:1200px" :disabled="flag">
+      <div v-show="resData===null" class="error">
+        <el-row :gutter="20">
+          <el-button
+            type="warning"
+            circle
+            class="warningBtn"
+            style="max-height: 66px"
+          >
+            <i class="el-icon-warning-outline" style="font-size: 40px;" />
+          </el-button>
+          <p>
+            车场未注册，无法进行身份认证。
+          </p>
+          <el-button type="primary" class="goBack">转到车场注册</el-button>
+        </el-row>
+      </div>
+
+      <el-form v-show="resData!==null" :model="form" label-width="150px" style="width:1200px" :disabled="flag">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
@@ -292,6 +310,8 @@ export default {
   },
   data() {
     return {
+      // 个人信息查询返回值
+      resData: '',
       flag: false,
       // 用户id
       id: '',
@@ -421,7 +441,8 @@ export default {
       this.loading = true // 打开遮罩
       this.id = await this.getID()
       await getDepotRegister(this.id).then(res => {
-        if (res.code === 200) {
+        this.resData = res.data
+        if (res.code === 200 && res.data !== null) {
           this.options.registerInfo = res.data
           this.form = Object.assign(this.form, res.data)
           this.form.longtimeornoper = 1
