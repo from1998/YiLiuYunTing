@@ -12,6 +12,7 @@
         :on-progress="handleProgress"
         :limit="limitCount"
         :headers="headers"
+        :before-upload="handleBeforeUpload"
         list-type="picture-card"
       >
         <i slot="default" class="el-icon-plus" />
@@ -51,6 +52,12 @@ import { getToken } from '@/utils/auth'
 
 export default {
   name: 'UploadImg',
+  props: {
+    title: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
       sonmerno: '',
@@ -64,23 +71,26 @@ export default {
       // 声明上传路径
       uploadPath: undefined,
       // 头
-      headers: undefined,
-      // 文件列表的json对象
-      fileListJsonObj: []
+      headers: undefined
     }
   },
-  created() {
+  async created() {
     // 文件上传的路径
     this.uploadPath = process.env.VUE_APP_BASE_API + '/ylyt/personal/uploadFile'
     // 设置请求头加入token 避免请求认证的问题
     this.headers = { 'token': getToken() }
-    this.sonmerno = window.sessionStorage.getItem('sonmerno')
+    // this.handHeld = await window.sessionStorage.getItem(JSON.parse(this.title))
+    console.log(this.title)
   },
   methods: {
     // 放大预览图片
     handlePictureCardPreview(file) {
       this.uploadImgVisible = true
       this.dialogImageUrl = file.url
+    },
+    // 上传图片前
+    async handleBeforeUpload() {
+      this.sonmerno = await window.sessionStorage.getItem('sonmerno')
     },
     // 上传图片成功
     handleSuccess(res, file, fileList) {
@@ -89,6 +99,8 @@ export default {
         this.hideUpload = fileList.length >= this.limitCount
         this.msgSuccess(res.msg)
         this.$emit('imgagePush', res.data)
+        const arr = [{ name: res.data.filename, url: res.data.src }]
+        window.sessionStorage.setItem(res.data.sqImageId, JSON.stringify(arr))
       } else {
         this.handHeld = fileList
         this.hideUpload = false

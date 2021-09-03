@@ -48,7 +48,7 @@
             </el-form-item>
           </el-col>
 
-          <el-col :span="5" class="verifyCode">
+          <el-col v-show="form.registerstatus !== 1" :span="5" class="verifyCode">
             <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
               <span v-if="codeShow">获取验证码</span>
               <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
@@ -57,12 +57,13 @@
         </el-row>
 
         <el-row class="footer">
-          <el-button v-if="form.registerstatus !== 2" type="primary" @click="onSubmit">提交</el-button>
-          <el-button v-if="form.registerstatus === 2" disabled type="primary">已提交</el-button>
-          <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
-          <el-button v-if="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
-          <el-button v-if="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
-          <el-button v-if="form.isconfirmprotocol === 1" type="primary">
+          <el-button v-show="form.registerstatus === null" type="primary" @click="onSubmit">提交</el-button>
+          <el-button v-show="form.registerstatus !== null" disabled type="primary">已提交</el-button>
+          <el-button v-show="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
+          <el-button v-show="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
+          <el-button v-show="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
+          <el-button v-show="form.registerstatus === 1" type="primary" disabled>已认证</el-button>
+          <el-button v-show="form.isconfirmprotocol === 1 && form.registerstatus === 2" type="primary">
             <router-link to="/personalCenter/identityAuth">
               去认证
             </router-link>
@@ -91,7 +92,7 @@ export default {
   legalpersonname: 'DepotRegister',
   data() {
     return {
-      flag: '',
+      flag: false,
       id: '',
       // 是否启用遮罩层
       loading: false,

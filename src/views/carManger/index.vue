@@ -1,51 +1,51 @@
 <template>
   <div class="app-container">
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-      <el-form-item label="车牌号" prop="carNumber">
-        <el-input
-          v-model="queryParams.carNumber"
-          placeholder="请输入车牌号"
-          clearable
-          size="small"
-          style="width:180px"
-        />
-      </el-form-item>
-      <el-form-item label="车主姓名" prop="carName" label-width="68px">
-        <el-input
-          v-model="queryParams.carName"
-          placeholder="请输入车主姓名"
-          clearable
-          size="small"
-          style="width:150px"
-        />
-      </el-form-item>
-      <el-form-item label="车主手机号" prop="carPhone" label-width="85px">
-        <el-input
-          v-model="queryParams.carPhone"
-          placeholder="请输入车主手机号"
-          clearable
-          size="small"
-          style="width:200px"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 查询条件结束 -->
-
     <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+    <el-row>
+      <el-col :span="4">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">模板下载</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">导入车辆</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">导出车辆</el-button>
+      </el-col>
+      <el-col :span="14" :offset="6">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+          <el-form-item label="车牌号" prop="carNumber">
+            <el-input
+              v-model="queryParams.carNumber"
+              placeholder="请输入车牌号"
+              clearable
+              size="small"
+              style="width:180px"
+            />
+          </el-form-item>
+          <el-form-item label="车主姓名" prop="carName" label-width="68px">
+            <el-input
+              v-model="queryParams.carName"
+              placeholder="请输入车主姓名"
+              clearable
+              size="small"
+              style="width:150px"
+            />
+          </el-form-item>
+          <el-form-item label="车主手机号" prop="carPhone" label-width="85px">
+            <el-input
+              v-model="queryParams.carPhone"
+              placeholder="请输入车主手机号"
+              clearable
+              size="small"
+              style="width:200px"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- 查询条件结束 -->
       </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->

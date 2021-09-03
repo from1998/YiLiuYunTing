@@ -5,13 +5,13 @@
       身份认证
       <el-button v-show="options.registerInfo.registerstatus===1" type="success" icon="el-icon-success" size="mini">已认证</el-button>
       <el-button v-show="options.registerInfo.registerstatus===2" type="info" icon="el-icon-info" size="mini">未认证</el-button>
-      <el-button v-show="options.registerInfo.registerstatus===3" type="info" icon="el-icon-warning" size="mini">审核中</el-button>
-      <el-button v-show="options.registerInfo.registerstatus===0" type="info" icon="el-icon-error" size="mini">认证失败</el-button>
+      <el-button v-show="options.registerInfo.registerstatus===3" type="warning" icon="el-icon-warning" size="mini">审核中</el-button>
+      <el-button v-show="options.registerInfo.registerstatus===0" type="error" icon="el-icon-error" size="mini">认证失败</el-button>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
 
-      <el-form :model="form" label-width="150px" style="width:1200px">
+      <el-form :model="form" label-width="150px" style="width:1200px" :disabled="flag">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
@@ -97,7 +97,7 @@
         <el-row>
           <el-col :span="options.registerInfo.type!==2?6:8">
             <el-form-item label="身份证正面照">
-              <upload-img @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
+              <upload-img :title="form.idimagea" @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
               <el-input v-show="false" v-model="form.idimagea" />
               <el-input v-show="false" v-model="form.idimageasrc" />
             </el-form-item>
@@ -292,6 +292,7 @@ export default {
   },
   data() {
     return {
+      flag: false,
       // 用户id
       id: '',
       // 是否启用遮罩层
@@ -423,6 +424,11 @@ export default {
         if (res.code === 200) {
           this.options.registerInfo = res.data
           this.form = Object.assign(this.form, res.data)
+          this.form.longtimeornoper = 1
+          if (res.data.idvaliditybegin && res.data.idvalidity) {
+            this.handletime()
+          }
+          // this.flag = true
           window.sessionStorage.setItem('sonmerno', res.data.sonmerno)
         }
         this.loading = false // 关闭遮罩

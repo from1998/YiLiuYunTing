@@ -12,19 +12,21 @@
             <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" disabled />
           </el-form-item>
         </el-row>
-
+        <!-- 如果自动到账未设置或状态不存在，则允许设置 -->
         <el-row v-show="!isautowithdraw || isautowithdraw===null">
           <el-col :span="19">
-            <el-form-item label="验证码" prop="seqno">
-              <el-input v-model="form.seqno" placeholder="请输入验证码" />
+            <el-form-item label="验证码" prop="smscode">
+              <el-input v-model="form.smscode" placeholder="请输入验证码" clearable />
             </el-form-item>
           </el-col>
+          <!-- 如果已绑卡，则验证码可用 -->
           <el-col v-show="cardBindState===1" :span="5" class="verifyCode">
             <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
               <span v-if="codeShow">获取验证码</span>
               <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
             </el-button>
           </el-col>
+          <!-- 如果未绑卡或绑卡状态不存在，则验证码禁用并提示用户绑卡 -->
           <el-tooltip class="item" effect="dark" content="绑定银行卡后才可以进行到账设置！" placement="right">
             <el-col v-show="!cardBindState || cardBindState===null" :span="5" class="verifyCode">
               <el-button type="primary" size="medium" disabled>
@@ -59,7 +61,7 @@ export default {
     return {
       // 到账设置状态
       isautowithdraw: '',
-      // 绑卡状态
+      // 绑卡状态 1代表已绑卡
       cardBindState: '',
       // 获取验证码按钮显示
       codeShow: true,
@@ -71,6 +73,8 @@ export default {
         // 用户id
         id: '',
         legalpersonphone: '',
+        // 验证码
+        smscode: '',
         seqno: ''
       }
     }
@@ -106,6 +110,7 @@ export default {
     getVerificationCode() {
       autoWithdrawSms(this.form.id).then(res => {
         this.msgSuccess(res.msg)
+        this.form.seqno = res.data
       }).catch((res) => {
         this.msgError(res.msg)
       })

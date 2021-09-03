@@ -88,6 +88,7 @@ const actions = {
         resetRouter()// 重置路由
         dispatch('tagsView/delAllViews', null, { root: true })
         resolve()
+        window.sessionStorage.clear()
       }).catch(error => {
         reject(error)
       })
