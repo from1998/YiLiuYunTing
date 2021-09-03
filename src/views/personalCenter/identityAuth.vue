@@ -500,4 +500,22 @@ export default {
   padding: 0 5px!important;
   height: 17px;
 }
+.error {
+display: flex;
+margin-top: 50px;
+height: 100px;
+font-size: 20px;
+    .warningBtn {
+      margin: 0 auto 50px;
+      width: 66px;
+      display: block;
+      min-height: 66px;
+      min-width: 66px;
+      cursor: default;
+    }
+    .goBack {
+      margin: 30px auto 0;
+      display: block;
+    }
+}
 </style>
