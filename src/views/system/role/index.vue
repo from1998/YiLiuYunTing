@@ -73,7 +73,7 @@
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="roleTableList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="roleTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="角色ID" align="center" prop="roleId" />
       <el-table-column label="角色名称" align="center" prop="roleName" />

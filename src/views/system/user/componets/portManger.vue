@@ -47,7 +47,7 @@
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="portList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="portList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车位层号" align="center" prop="tierNumber" />
       <el-table-column label="车位区域号" align="center" prop="areaNumber" />

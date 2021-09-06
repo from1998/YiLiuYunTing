@@ -47,6 +47,7 @@
       :data="menuTableList"
       row-key="menuId"
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      stripe
     >
       <el-table-column label="菜单名称" align="left" prop="menuName" />
       <el-table-column label="菜单类型" align="center" prop="menuType">

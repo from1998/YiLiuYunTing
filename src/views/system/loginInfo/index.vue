@@ -90,7 +90,7 @@
     </el-row>
     <!-- 表头按钮结束 -->
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="loginInfoTableList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border :data="loginInfoTableList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="日志ID" align="center" prop="infoId" />
       <el-table-column label="用户姓名" align="center" prop="userName" />

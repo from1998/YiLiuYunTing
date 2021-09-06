@@ -66,7 +66,7 @@
     <!-- 表头按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="dictDataTableList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="dictDataTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编码" prop="dictCode" align="center" />
       <el-table-column label="字典标签" prop="dictLabel" align="center" />

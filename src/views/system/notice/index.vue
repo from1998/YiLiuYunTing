@@ -74,7 +74,7 @@
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="noticeTableList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="noticeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="科室ID" align="center" prop="noticeId" />
       <el-table-column label="科室名称" align="center" prop="noticeTitle" />

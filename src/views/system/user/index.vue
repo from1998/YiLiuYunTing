@@ -62,7 +62,7 @@
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="userTableList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border :data="userTableList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column type="expand">
         <template slot-scope="props">

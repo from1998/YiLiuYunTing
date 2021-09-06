@@ -39,7 +39,7 @@
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="securityList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="securityList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名" align="center" prop="realName" />
       <el-table-column label="手机号码" align="center" prop="mobile" />
@@ -110,25 +110,39 @@
         <el-button @click="cancel">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 所属岗亭 -->
+    <!-- 所属车道 -->
     <el-dialog
-      title="所属岗亭"
-      :visible.sync="openWatchhouse"
-      width="500px"
+      title="车道设置"
+      :visible.sync="laneListOpen"
+      width="650px"
       center
       append-to-body
     >
       <!-- 数据表格开始 -->
-      <el-table v-loading="loading" border :data="laneList">
+      <el-table v-loading="loading" border :data="duelaneList" height="150" stripe>
         <el-table-column label="车道名称" align="center" prop="name" />
         <el-table-column label="车道类型" align="center" prop="type" />
         <el-table-column label="所属岗亭" align="center" prop="workStation" />
         <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
         <el-table-column label="相机IP" align="center" prop="cameraIp" />
         <el-table-column label="是否有屏" align="center" prop="haveScreen" />
-        <el-table-column label="操作" align="center" width="280">
+        <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+            <el-button type="text" icon="el-icon-minus" size="mini" @click="handleUpdate(scope.row)" />
+          </template>
+        </el-table-column>
+      </el-table>
+      <!-- 数据表格开始 -->
+      <el-table v-loading="loading" border :data="otherlaneList" height="150" stripe>
+        <el-table-column label="车道名称" align="center" prop="name" />
+        <el-table-column label="车道类型" align="center" prop="type" />
+        <el-table-column label="所属岗亭" align="center" prop="workStation" />
+        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
+        <el-table-column label="相机IP" align="center" prop="cameraIp" />
+        <el-table-column label="是否有屏" align="center" prop="haveScreen" />
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button type="text" icon="el-icon-plus" size="mini" @click="handleUpdate(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
@@ -162,8 +176,8 @@ export default {
       title: '',
       // 是否显示添加修改弹出层
       open: false,
-      // 是否显示所属岗亭
-      openWatchhouse: false,
+      // 是否显示车道设置
+      laneListOpen: false,
       // 是否显示负责车道
       openAdministerLane: false,
       // 查询参数
@@ -185,10 +199,10 @@ export default {
         // watchhouseName: '',
         // administerLane: ''
       },
-      // 所属岗亭
-      watchhouse: {},
       // 负责车道
-      administerLane: {},
+      duelaneList: [],
+      // 其它车道
+      otherlaneList: [],
       // 待转换的上下班时间,默认朝8晚7
       convertHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)],
       // 遍历数据
@@ -332,6 +346,10 @@ export default {
     timeChange(val) {
       this.form.startWorkTime = val[0]
       this.form.endWorkTime = val[1]
+    },
+    // 打开车道设置的弹出层
+    handleLane() {
+      this.laneListOpen = true
     }
   }
 }

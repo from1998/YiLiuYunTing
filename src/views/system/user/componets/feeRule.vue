@@ -261,9 +261,11 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
+          // 常规
           if (res.data.splittype === 3) {
             this.form.splittimejsonDto = []
             this.form.commonCountFee = []
+            // 分段
           } else if (res.data.splittype === 1) {
             this.handletime()
           } else {
@@ -274,10 +276,13 @@ export default {
       })
     },
     onSubmit() {
+      // 如果是分段计费
       if (this.form.splittype === 1) {
         this.form.splittimejsonDto = this.form.commonCountFee
-        delete this.form.commonCountFee
-        delete this.form.splittimejsonDto.timeDur
+        // delete this.form.commonCountFee
+        // this.form.splittimejsonDto.forEach(ele => {
+        //   delete ele.timeDur
+        // })
       }
       if (this.resdata === null) {
         this.loading = true // 打开遮罩
@@ -294,6 +299,7 @@ export default {
           this.loading = false // 关闭遮罩
         })
       } else {
+        console.log(this.form)
         this.loading = true // 打开遮罩
         updateParkfee(this.form).then(() => {
           this.msgSuccess('修改成功')
@@ -319,6 +325,7 @@ export default {
       })
     },
     deleteRow(index, rows) {
+      console.log(index)
       rows.splice(index, 1)
     },
     // 添加计费规则
@@ -344,12 +351,17 @@ export default {
     },
     // 处理请求到的分段计费
     handletime() {
+      console.log(this.form.splittimejsonDto)
       this.form.commonCountFee = this.form.splittimejsonDto.map(val => {
         return {
           amount: val.amount,
+          // 回显的值需要保留，以待再次提交
+          start: val.start,
+          end: val.end,
           timeDur: [val.start, val.end]
         }
       })
+      console.log(this.form.commonCountFee)
       this.form.splittimejsonDto = []
     },
     // 处理待发送的时间

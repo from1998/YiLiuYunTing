@@ -37,18 +37,18 @@ export function getParkOperationByMid(id) {
 // 添加车场配置
 export function addDepotSet(data) {
   return request({
-    url: '/ylyt/park/addParkOperation',
+    url: '/ylyt/parkOperation/addParkOperation',
     method: 'post',
-    params: data
+    data
   })
 }
 
 // 修改车场配置
 export function updateDepotSet(data) {
   return request({
-    url: '/ylyt/park/updateParkOperation',
+    url: '/ylyt/parkOperation/updateParkOperation',
     method: 'put',
-    params: data
+    data
   })
 }
 // --------------------------------------收费规则

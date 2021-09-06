@@ -56,7 +56,7 @@
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="laneList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="laneList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="40" align="center" />
       <el-table-column label="车道名称" align="center" prop="name" />
       <el-table-column label="车道类型" align="center" prop="type" />

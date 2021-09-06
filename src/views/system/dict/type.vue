@@ -70,7 +70,7 @@
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="dictTypeTableList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="dictTypeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编号" prop="dictId" align="center" />
       <el-table-column label="字典名称" prop="dictName" align="center" :show-overflow-tooltip="true" />

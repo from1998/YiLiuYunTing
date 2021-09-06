@@ -84,7 +84,7 @@
     </el-row>
     <!-- 表头按钮结束 -->
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="operLogTableList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border :data="operLogTableList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="expand">
         <template slot-scope="props">

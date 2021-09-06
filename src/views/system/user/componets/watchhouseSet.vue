@@ -3,36 +3,34 @@
     <el-header height="36px" style="padding:15px 0 45px;font-weight:700" align="center">
       岗亭设置
     </el-header>
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="岗亭名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入岗亭名称"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
     <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+    <el-row>
+      <el-col :span="8">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+      </el-col>
+      <el-col :span="9" :offset="7">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+          <el-form-item label="岗亭名称" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入岗亭名称"
+              clearable
+              size="small"
+              style="width:240px"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="watchhouseList" @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="watchhouseList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="岗亭ID" align="center" prop="id" />
       <el-table-column label="车场名称" align="center" prop="parkName" />
@@ -201,7 +199,7 @@ export default {
     // 执行删除
     handleDelete(row) {
       const userIds = row.id || this.ids
-      this.$confirm('此操作将永久删除该用户数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该岗亭数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

@@ -518,7 +518,7 @@ export default {
     onSubmit() {
       this.form.specialpass = this.form.specialpass.toString()
       // this.timeChange(this.convert.businessHours)
-      if (this.resdata.id === null) {
+      if (this.resdata === null) {
         // this.timeChange()
         this.loading = true // 打开遮罩
         addDepotSet(this.form).then(() => {
@@ -527,6 +527,7 @@ export default {
           this.loading = false // 关闭遮罩
         }).catch(() => {
           this.msgError('添加失败')
+          this.init()
           this.loading = false // 关闭遮罩
         })
       } else {
@@ -538,6 +539,7 @@ export default {
           this.loading = false // 关闭遮罩
         }).catch(() => {
           this.msgError('修改失败')
+          this.init()
           this.loading = false // 关闭遮罩
         })
       }
