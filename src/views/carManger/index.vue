@@ -2,15 +2,21 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="4">
+      <el-col :span="10">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">模板下载</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">导入车辆</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">导出车辆</el-button>
+        <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
+        <el-button type="success" size="mini" @click="handleImport">
+          <svg-icon icon-class="import" />
+          导入车辆
+        </el-button>
+        <el-button type="warning" size="mini" @click="handleExport">
+          导出车辆
+          <svg-icon icon-class="export" />
+        </el-button>
       </el-col>
-      <el-col :span="14" :offset="6">
+      <el-col :span="14" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="车牌号" prop="carNumber">

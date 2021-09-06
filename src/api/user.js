@@ -7,14 +7,6 @@ export function login(data) {
     data
   })
 }
-// export function getVerifyCode(creationTime) {
-//   // debugger
-//   return request({
-//     url: '/login/verificationCode',
-//     method: 'get',
-//     params: { creationTime }
-//   })
-// }
 // 登陆成功之后得到用户信息接口配置
 export function getInfo(token) {
   return request({

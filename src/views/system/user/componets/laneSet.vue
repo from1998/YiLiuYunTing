@@ -351,6 +351,7 @@ export default {
       this.loading = true // 打开遮罩
       getLaneByMid(this.queryParams).then(res => {
         this.laneList = res.data.list
+        console.log(this.laneList)
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
@@ -393,12 +394,12 @@ export default {
     handleUpdate(row) {
       this.title = '修改车道'
       const id = row.id || this.ids
+      console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据id查询岗亭信息
       this.loading = true
-      debugger
       getLaneById(id).then(res => {
         this.form = res.data
         this.loading = false

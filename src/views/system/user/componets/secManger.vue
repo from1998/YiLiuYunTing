@@ -60,8 +60,8 @@
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="danger" icon="el-icon-setting" size="small" @click="handleWatchhouse(scope.row)">岗亭设置</el-button>
-          <el-button type="danger" icon="el-icon-setting" size="small" @click="handleLane(scope.row)">车道设置</el-button>
+          <el-button type="primary" icon="el-icon-setting" size="small" @click="handleWatchhouse(scope.row)">岗亭设置</el-button>
+          <el-button type="primary" icon="el-icon-setting" size="small" @click="handleLane(scope.row)">车道设置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -118,57 +118,20 @@
       center
       append-to-body
     >
-      <el-form ref="watchhouse" :model="watchhouse" label-width="100px">
-        <el-form-item label="所属岗亭">
-          <el-select
-            v-model="watchhouse.name"
-            placeholder="请选择所属岗亭"
-            clearable
-            size="small"
-          >
-            <el-option
-              v-for="item in options.watchhouseName"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </span>
-    </el-dialog>
-    <!-- 负责车道 -->
-    <el-dialog
-      title="负责车道"
-      :visible.sync="openAdministerLane"
-      width="500px"
-      center
-      append-to-body
-    >
-      <el-form ref="administerLane" :model="administerLane" label-width="100px">
-        <el-form-item label="负责车道">
-          <el-select
-            v-model="administerLane.administerLane"
-            placeholder="请选择负责车道"
-            clearable
-            size="small"
-          >
-            <el-option
-              v-for="item in options.laneList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </span>
+      <!-- 数据表格开始 -->
+      <el-table v-loading="loading" border :data="laneList">
+        <el-table-column label="车道名称" align="center" prop="name" />
+        <el-table-column label="车道类型" align="center" prop="type" />
+        <el-table-column label="所属岗亭" align="center" prop="workStation" />
+        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
+        <el-table-column label="相机IP" align="center" prop="cameraIp" />
+        <el-table-column label="是否有屏" align="center" prop="haveScreen" />
+        <el-table-column label="操作" align="center" width="280">
+          <template slot-scope="scope">
+            <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
   </div>
 </template>

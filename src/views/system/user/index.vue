@@ -83,7 +83,7 @@
         </template>
       </el-table-column> -->
       <el-table-column label="用户ID" align="center" prop="id" />
-      <el-table-column label="用户姓名【登陆账号】" align="center" prop="username" width="200" />
+      <el-table-column label="登陆名称" align="center" prop="username" width="200" />
       <el-table-column label="真实姓名" align="center" prop="realName" />
       <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
       <el-table-column label="状态" prop="state" align="center" :formatter="stateFormatter" />
@@ -93,12 +93,18 @@
       <el-table-column label="操作" align="center" width="300">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">分润设置</el-button>
+          <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-show="scope.row.role!==1 && scope.row.role!==6 && scope.row.role!==null" type="text" size="mini" @click="handleShareBenefit(scope.row)">
+            <svg-icon icon-class="money" />
+            分润设置
+          </el-button>
           <!-- 后期路径里面的scope.row.id要换成每个车场的id -->
           <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
             <!-- 129是车场角色的id -->
-            <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleCarSetting(scope.row)">车场配置</el-button>
+            <el-button type="text" size="mini">
+              <svg-icon icon-class="car" />
+              车场配置
+            </el-button>
           </router-link>
         </template>
       </el-table-column>
@@ -211,42 +217,55 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="cancel('open')">取 消</el-button>
       </span>
     </el-dialog>
     <!-- 添加修改弹出层结束 -->
-    <!-- 车厂配置的弹出层开始 -->
+    <!-- 分润设置弹出层开始 -->
     <el-dialog
-      :title="title"
-      :visible.sync="carSettingOpen"
-      width="900px"
+      title="分润设置"
+      :visible.sync="shareBenefitOpen"
+      width="500px"
       center
       append-to-body
     >
-      <el-table
-        v-loading="loading"
-        border
-        :data="carSettingList"
-      >
-        <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="角色ID" align="center" prop="roleId" />
-        <el-table-column label="角色名称" align="center" prop="roleName" />
-        <el-table-column label="权限编码" align="center" prop="roleCode" />
-        <el-table-column label="备注" align="center" prop="remark" />
-        <el-table-column label="创建时间" align="center" prop="createTime" />
-      </el-table>
+      <el-form ref="benefitForm" :model="benefitForm" label-width="120px">
+        <el-form-item label="分润对象">
+          <el-input v-model="benefitForm.name" clearable size="small" disabled />
+        </el-form-item>
+        <el-form-item label="分润类型">
+          <el-select
+            v-model="benefitForm.state"
+            placeholder="请选择分润类型"
+            clearable
+            size="small"
+            style="width:330px"
+          >
+            <el-option
+              v-for="d in stateOptions"
+              :key="d.dictValue"
+              :label="d.dictLabel"
+              :value="d.dictValue"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="分润比例(百分比)">
+          <el-input v-model="benefitForm.mobile" placeholder="请输入分润比例(百分比)" clearable size="small" />
+        </el-form-item>
+
+      </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSaveRoleUserSubmit">确 定</el-button>
-        <el-button @click="cancelRoleUser">取 消</el-button>
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
+        <el-button @click="cancel('shareBenefitOpen')">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 车厂配置的弹出层结束 -->
+    <!-- 分润设置弹出层结束 -->
   </div>
 </template>
 <script>
 // 引入api
 import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
-import { selectAllRole, saveRoleUser } from '@/api/system/role'
+import { selectAllRole } from '@/api/system/role'
 export default {
   // 定义页面数据
   data() {
@@ -267,6 +286,7 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
+      shareBenefitOpen: false,
       // 角色数据字典
       roleOptions: [],
       // 用户信息
@@ -293,6 +313,7 @@ export default {
       },
       // 表单数据
       form: {},
+      benefitForm: {},
       // 表单校验
       rules: {
         username: [
@@ -302,8 +323,6 @@ export default {
           { required: true, validator: this.validatorPhone, trigger: 'blur' }
         ]
       },
-      // 是否显示分配权限的弹出层
-      carSettingOpen: false,
       // roleIds 分配角色列表选择状态
       roleIds: [],
       // 角色数据
@@ -481,8 +500,8 @@ export default {
       })
     },
     // 取消
-    cancel() {
-      this.open = false
+    cancel(val) {
+      this[val] = false
       this.title = ''
     },
     // 重置表单
@@ -515,34 +534,12 @@ export default {
         tx.msgError('重置已取消')
       })
     },
-    handleAddPak() {
-      this.currentParkUserId = this.ids[0]
-    },
-    // 打开车场配置的弹出层
-    handleCarSetting(row) {
-      // console.log();
-      // console.log(this.ids[0])
-      this.carSettingOpen = true
-      this.title = '车场配置'
-      this.currentUserId = row.id || this.ids[0]
-      // 这个导入的函数需要修改
-      selectAllRole().then(res => {
-        this.carSettingList = res.data
-      })
-    },
-    cancelRoleUser() {
-      this.carSettingOpen = false
-    },
-    // 保存用户和角色之间的关系
-    handleSaveRoleUserSubmit() {
-      // console.log(this.roleIds)
-      saveRoleUser(this.currentUserId, this.roleIds).then(res => {
-        this.msgSuccess('分配成功')
-        this.carSettingOpen = false
-        this.getUserList()
-      }).catch(function() {
-        this.msgError('分配失败')
-      })
+    // 打开分润设置
+    handleShareBenefit(row) {
+      console.log(row.role)
+      this.reset()
+      this.shareBenefitOpen = true
+      this.benefitForm.name = row.username
     }
   }
 }
