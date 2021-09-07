@@ -66,7 +66,7 @@
     <!-- 表头按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="dictDataTableList" stripe @selection-change="handleSelectionChnage">
+    <el-table v-loading="loading" border :data="dictDataTableList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="字典编码" prop="dictCode" align="center" />
       <el-table-column label="字典标签" prop="dictLabel" align="center" />
@@ -87,9 +87,9 @@
     <!-- 分页组件开始 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.page"
+      :current-page="queryParams.pageNum"
       :page-sizes="[5, 10, 20, 30]"
-      :page-size="queryParams.size"
+      :page-size="queryParams.pageSize"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -109,16 +109,14 @@
         <el-form-item label="字典类型" prop="dictType">
           <el-input v-model="form.dictType" :disabled="true" size="small" />
         </el-form-item>
-        <el-form-item label="字典名称" prop="dictLabel">
-          <el-input v-model="form.dictLabel" placeholder="请输入字典名称" clearable size="small" />
+        <el-form-item label="数据标签" prop="dictLabel">
+          <el-input v-model="form.dictLabel" placeholder="请输入数据标签" clearable size="small" />
         </el-form-item>
-        <el-form-item label="字典值" prop="dictValue">
-          <el-input v-model="form.dictValue" placeholder="请输入字典值" clearable size="small" />
+        <el-form-item label="数据键值" prop="dictValue">
+          <el-input v-model="form.dictValue" placeholder="请输入数据键值" clearable size="small" />
         </el-form-item>
         <el-form-item label="排序显示" prop="dictSort">
-          <el-tooltip class="item" effect="dark" content="提示:数值越小，显示位置越靠前。" placement="right">
-            <el-input-number v-model="form.dictSort" clearable size="small" :min="0" />
-          </el-tooltip>
+          <el-input-number v-model="form.dictSort" placeholder="请输入数据键值" clearable size="small" :min="0" />
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -130,7 +128,7 @@
             >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="字典备注" prop="remark">
+        <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
         </el-form-item>
       </el-form>
@@ -173,8 +171,8 @@ export default {
       defaultDictType: undefined,
       // 查询参数
       queryParams: {
-        page: 1,
-        size: 10,
+        pageNum: 1,
+        pageSize: 10,
         dictLabel: undefined,
         dictType: undefined,
         status: undefined
@@ -184,10 +182,10 @@ export default {
       // 表单校验
       rules: {
         dictLabel: [
-          { required: true, message: '字典名称不能为空', trigger: 'blur' }
+          { required: true, message: '数据标签不能为空', trigger: 'blur' }
         ],
         dictValue: [
-          { required: true, message: '字典值不能为空', trigger: 'blur' }
+          { required: true, message: '数据键值不能为空', trigger: 'blur' }
         ]
       }
     }
@@ -218,7 +216,7 @@ export default {
       listForPage(this.queryParams).then(res => {
         this.loading = false
         this.dictDataTableList = res.data.list
-        this.total = res.data.total
+        this.total = res.total
       })
     },
     // 条件查询
@@ -239,13 +237,13 @@ export default {
     },
     // 分页pageSize变化时触发
     handleSizeChange(val) {
-      this.queryParams.size = val
+      this.queryParams.pageSize = val
       // 重新查询
       this.getDictDataList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.page = val
+      this.queryParams.pageNum = val
       // 重新查询
       this.getDictDataList()
     },
@@ -311,6 +309,7 @@ export default {
             addDictData(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
+              debugger
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {

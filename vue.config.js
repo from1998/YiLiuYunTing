@@ -6,13 +6,13 @@ const defaultSettings = require('./src/settings.js')
 // const devEnv = require('./proxyConfig/dev.env') // 开发环境
 // const env = process.env.NODE_ENV
 // let target = ''
-// 默认是本地环境
+// // 默认是本地环境
 // if (env === 'production') {
 //   target = proEnv.hosturl
 // } else {
 //   target = devEnv.hosturl
 // }
-
+// console.log(target)
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
@@ -38,7 +38,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
-    open: false,
+    open: true,
     overlay: {
       warnings: false,
       errors: true
@@ -47,7 +47,7 @@ module.exports = {
     // 跨域代理配置
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        target: 'http://192.168.1.66:8089/',
+        target: 'http://127.0.0.1:8089/',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API ]: ''

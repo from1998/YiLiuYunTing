@@ -11,7 +11,7 @@
           style="width:240px"
         />
       </el-form-item>
-      <el-form-item label="手机号" prop="mobile">
+      <el-form-item label="手机号" prop="phone">
         <el-input
           v-model="queryParams.mobile"
           placeholder="请输入手机号"
@@ -23,7 +23,7 @@
       <el-form-item label="状态" prop="state">
         <el-select
           v-model="queryParams.state"
-          placeholder="请选择状态"
+          placeholder="可用状态"
           clearable
           size="small"
           style="width:240px"
@@ -58,13 +58,16 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleResetPwd">重置密码</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button type="success" icon="el-icon-thumb" size="mini" :disabled="single" @click="handleAddPak">车场配置</el-button>
+      </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="userTableList" stripe @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" border :data="userTableList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <!-- <el-table-column type="expand">
+      <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
             <el-form-item label="邮箱">
@@ -81,31 +84,20 @@
             </el-form-item>
           </el-form>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="用户ID" align="center" prop="id" />
-      <el-table-column label="登陆名称" align="center" prop="username" width="200" />
+      <el-table-column label="用户姓名【登陆账号】" align="center" prop="username" width="200" />
       <el-table-column label="真实姓名" align="center" prop="realName" />
       <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
       <el-table-column label="状态" prop="state" align="center" :formatter="stateFormatter" />
       <el-table-column label="角色" prop="role" align="center" :formatter="roleFormatter" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
-      <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="180" />
-      <el-table-column label="操作" align="center" width="300">
+      <el-table-column label="创建时间" align="center" prop="createTime" width="200" />
+      <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="200" />
+      <el-table-column label="操作" align="center" width="250">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button v-show="scope.row.role!==1 && scope.row.role!==6 && scope.row.role!==null" type="text" size="mini" @click="handleShareBenefit(scope.row)">
-            <svg-icon icon-class="money" />
-            分润设置
-          </el-button>
-          <!-- 后期路径里面的scope.row.id要换成每个车场的id -->
-          <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
-            <!-- 129是车场角色的id -->
-            <el-button type="text" size="mini">
-              <svg-icon icon-class="car" />
-              车场配置
-            </el-button>
-          </router-link>
+          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-if="scope.row.id!=1" type="text" icon="el-icon-thumb" size="mini" @click="handleSelectRole(scope.row)">角色配置</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -144,7 +136,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="状态">
+            <el-form-item label="状态" prop="background">
               <el-select
                 v-model="form.state"
                 placeholder="状态"
@@ -164,7 +156,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="角色">
+            <el-form-item label="角色" prop="background">
               <el-select
                 v-model="form.role"
                 placeholder="角色"
@@ -173,10 +165,10 @@
                 style="width:240px"
               >
                 <el-option
-                  v-for="(item, index) in roleOptions"
-                  :key="index"
-                  :label="item.roleName"
-                  :value="item.roleId"
+                  v-for="d in roleOptions"
+                  :key="d.dictValue"
+                  :label="d.dictLabel"
+                  :value="d.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -188,20 +180,19 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="选择父级账号">
+            <el-form-item label="选择父级账号" prop="background">
               <el-select
                 v-model="form.parentId"
                 placeholder="父级账号"
                 clearable
                 size="small"
                 style="width:240px"
-                @change="change()"
               >
                 <el-option
-                  v-for="item in userOptions"
-                  :key="item.id"
-                  :label="item.username"
-                  :value="item.id"
+                  v-for="d in userOptions"
+                  :key="d.id"
+                  :label="d.username"
+                  :value="d.id"
                 />
               </el-select>
             </el-form-item>
@@ -217,55 +208,45 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel('open')">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
       </span>
     </el-dialog>
     <!-- 添加修改弹出层结束 -->
-    <!-- 分润设置弹出层开始 -->
+    <!-- 分配角色的弹出层开始 -->
     <el-dialog
-      title="分润设置"
-      :visible.sync="shareBenefitOpen"
-      width="500px"
+      :title="title"
+      :visible.sync="selectRoleOpen"
+      width="900px"
       center
       append-to-body
     >
-      <el-form ref="benefitForm" :model="benefitForm" label-width="120px">
-        <el-form-item label="分润对象">
-          <el-input v-model="benefitForm.name" clearable size="small" disabled />
-        </el-form-item>
-        <el-form-item label="分润类型">
-          <el-select
-            v-model="benefitForm.state"
-            placeholder="请选择分润类型"
-            clearable
-            size="small"
-            style="width:330px"
-          >
-            <el-option
-              v-for="d in stateOptions"
-              :key="d.dictValue"
-              :label="d.dictLabel"
-              :value="d.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分润比例(百分比)">
-          <el-input v-model="benefitForm.mobile" placeholder="请输入分润比例(百分比)" clearable size="small" />
-        </el-form-item>
-
-      </el-form>
+      <el-table
+        ref="roleListTable"
+        v-loading="loading"
+        border
+        :data="roleTableList"
+        @select="select"
+        @selection-change="handleRoleTableSelectionChange"
+      >
+        <el-table-column type="selection" width="55" align="center" />
+        <el-table-column label="角色ID" align="center" prop="roleId" />
+        <el-table-column label="角色名称" align="center" prop="roleName" />
+        <el-table-column label="权限编码" align="center" prop="roleCode" />
+        <el-table-column label="备注" align="center" prop="remark" />
+        <el-table-column label="创建时间" align="center" prop="createTime" />
+      </el-table>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel('shareBenefitOpen')">取 消</el-button>
+        <el-button type="primary" @click="handleSaveRoleUserSubmit">确 定</el-button>
+        <el-button @click="cancelRoleUser">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 分润设置弹出层结束 -->
+    <!-- 分配角色的弹出层结束 -->
   </div>
 </template>
 <script>
 // 引入api
 import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
-import { selectAllRole } from '@/api/system/role'
+import { selectAllRole, getRoleIdsByUserId, saveRoleUser } from '@/api/system/role'
 export default {
   // 定义页面数据
   data() {
@@ -286,7 +267,6 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
-      shareBenefitOpen: false,
       // 角色数据字典
       roleOptions: [],
       // 用户信息
@@ -313,7 +293,6 @@ export default {
       },
       // 表单数据
       form: {},
-      benefitForm: {},
       // 表单校验
       rules: {
         username: [
@@ -323,10 +302,12 @@ export default {
           { required: true, validator: this.validatorPhone, trigger: 'blur' }
         ]
       },
+      // 是否显示分配权限的弹出层
+      selectRoleOpen: false,
       // roleIds 分配角色列表选择状态
       roleIds: [],
       // 角色数据
-      carSettingList: [],
+      roleTableList: [],
       // 当前选中的用户
       currentUserId: undefined,
       // 添加车场选中的用户
@@ -335,30 +316,22 @@ export default {
   },
   // 勾子
   created() {
-    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  2禁用 1正常
+    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  0禁用 1正常
     this.getDataByType('sys_normal_disable').then(res => {
+      console.log(res.data)
       this.stateOptions = res.data
     })
     // 加载用户级别
-    // this.getDataByType('sys_role_manager').then(res => {
-    //   this.roleOptions = res.data
-    // })
-    selectAllRole().then(res => {
+    this.getDataByType('sys_role_manager').then(res => {
       this.roleOptions = res.data
     })
     // 查询所有用户信息
-    selectNeedSchedulingUsers().then(res => {
-      this.userOptions = res.data
-    })
+    this.selectNeedSchedulingUsers()
     // 查询表格数据
     this.getUserList()
   },
   // 方法
   methods: {
-    // 解决页面v-for中修改item属性值后页面页面值不改变的问题
-    change() {
-      this.$forceUpdate()
-    },
     // 查询表格数据
     getUserList() {
       this.loading = true // 打开遮罩
@@ -366,6 +339,11 @@ export default {
         this.userTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
+      })
+    },
+    selectNeedSchedulingUsers() {
+      selectNeedSchedulingUsers().then(res => {
+        this.userOptions = res.data
       })
     },
 
@@ -411,13 +389,11 @@ export default {
     stateFormatter(row) {
       return this.selectDictLabel(this.stateOptions, row.state.toString())
     },
-    // 翻译角色
     roleFormatter(row) {
-      return this.selectRoleLabel(this.roleOptions, row.role)
+      return this.selectDictLabel(this.roleOptions, row.role.toString())
     },
     // 打开添加的弹出层
     handleAdd() {
-      this.reset()
       this.open = true
       this.form.state = '1'
       this.form.id = ''
@@ -427,12 +403,14 @@ export default {
       this.form.role = ''
       this.form.email = ''
       this.title = '添加用户信息'
+      console.log(this.form)
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改用户信息'
       const id = row.id || this.ids
-      // console.log(row.id)
+      console.log(id)
+      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
@@ -443,9 +421,9 @@ export default {
         this.form.username = res.data.username
         this.form.realName = res.data.realName
         this.form.mobile = res.data.mobile
-        this.form.role = res.data.role
+        this.form.role = res.data.role + ''
         this.form.email = res.data.email
-        this.form.parentId = res.data.parentId
+        console.log(res.data)
         this.loading = false
       })
     },
@@ -477,7 +455,9 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
+          console.log(this.form)
           if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
+            debugger
             addUser(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.getUserList()// 列表重新查询
@@ -500,8 +480,8 @@ export default {
       })
     },
     // 取消
-    cancel(val) {
-      this[val] = false
+    cancel() {
+      this.open = false
       this.title = ''
     },
     // 重置表单
@@ -534,12 +514,62 @@ export default {
         tx.msgError('重置已取消')
       })
     },
-    // 打开分润设置
-    handleShareBenefit(row) {
-      console.log(row.role)
-      this.reset()
-      this.shareBenefitOpen = true
-      this.benefitForm.name = row.username
+    handleAddPak() {
+      this.currentParkUserId = this.ids[0]
+      console.log(this.currentParkUserId)
+    },
+    // 打开分配角色的弹出层
+    handleSelectRole(row) {
+      console.log(this.ids[0])
+      this.selectRoleOpen = true
+      this.title = '分配角色'
+      this.currentUserId = row.id || this.ids[0]
+      const tx = this
+      selectAllRole().then(res => {
+        tx.roleTableList = res.data
+        this.$nextTick(() => {
+          // 根据当前用户查找之前拥有的角色IDS
+          getRoleIdsByUserId(tx.currentUserId).then(res2 => {
+            res2.data.filter(r1 => {
+              tx.roleTableList.filter(r2 => {
+                if (r1 === r2.roleId.toString()) {
+                  // 选中表格checkbox
+                  tx.$refs.roleListTable.toggleRowSelection(r2, true)
+                }
+              })
+            })
+          })
+        })
+      })
+    },
+    cancelRoleUser() {
+      this.selectRoleOpen = false
+    },
+    // 数据表格的多选择框选择时触发
+    handleRoleTableSelectionChange(selection) {
+      this.roleIds = selection.map(item => item.roleId)
+    },
+    // 当用户手动勾选数据行的 Checkbox 时触发的事件,确保只能选中一项数据
+    select(selection, row) {
+      this.$refs.roleListTable.clearSelection()
+      if (selection.length === 0) {
+        return
+      }
+      if (row) {
+        this.selectioned = row
+        this.$refs.roleListTable.toggleRowSelection(row, true)
+      }
+    },
+    // 保存用户和角色之间的关系
+    handleSaveRoleUserSubmit() {
+      console.log(this.roleIds)
+      saveRoleUser(this.currentUserId, this.roleIds).then(res => {
+        this.msgSuccess('分配成功')
+        this.selectRoleOpen = false
+        this.getUserList()
+      }).catch(function() {
+        this.msgError('分配失败')
+      })
     }
   }
 }
