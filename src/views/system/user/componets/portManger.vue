@@ -82,7 +82,7 @@
     >
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="层号">
-          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:390px">
+          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:370px">
             <el-option
               v-for="item in options.tierNumber"
               :key="item.dictValue"
@@ -92,7 +92,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区域号">
-          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:390px">
+          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:370px">
             <el-option
               v-for="item in options.areaNumber"
               :key="item.dictValue"
