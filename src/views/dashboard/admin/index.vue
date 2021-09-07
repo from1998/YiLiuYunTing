@@ -128,7 +128,6 @@ export default {
   },
   methods: {
     fetchData() {
-      // debugger
       // const { data: res } = await getPanelGroup()
       // console.log(res)
       getPanelGroup().then(res => {
