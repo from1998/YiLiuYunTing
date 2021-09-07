@@ -22,7 +22,7 @@
             />
           </el-form-item>
           <el-form-item label="所属岗亭" prop="workstationId">
-            <el-select v-model="queryParams.workstationId" placeholder="请选择所属岗亭" size="small">
+            <el-select v-model="queryParams.workstationId" placeholder="请选择所属岗亭" size="small" clearable>
               <el-option
                 v-for="item in options.watchhouseName"
                 :key="item.id"

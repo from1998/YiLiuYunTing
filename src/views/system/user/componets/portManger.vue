@@ -14,7 +14,7 @@
       <el-col :span="17" :offset="1">
         <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item label="层号">
-            <el-select v-model="queryParams.tierNumber" placeholder="请选择车位层号" size="small">
+            <el-select v-model="queryParams.tierNumber" placeholder="请选择车位层号" size="small" clearable>
               <el-option
                 v-for="item in options.tierNumber"
                 :key="item.dictValue"
@@ -24,7 +24,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="区域号">
-            <el-select v-model="queryParams.areaNumber" placeholder="请选择车位区域号" size="small">
+            <el-select v-model="queryParams.areaNumber" placeholder="请选择车位区域号" size="small" clearable>
               <el-option
                 v-for="item in options.areaNumber"
                 :key="item.dictValue"
@@ -51,10 +51,10 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="portList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="车位层号" align="center" prop="tierNumber" />
-      <el-table-column label="车位区域号" align="center" prop="areaNumber" />
-      <el-table-column label="车位编号" align="center" prop="number" width="180" />
-      <el-table-column label="操作" align="center" width="186">
+      <el-table-column label="车位层号" align="center" prop="tierNumber" :formatter="tierNumberFormatter" />
+      <el-table-column label="车位区域号" align="center" prop="areaNumber" :formatter="areaNumberFormatter" />
+      <el-table-column label="车位编号" align="center" prop="number" />
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
@@ -178,6 +178,14 @@ export default {
   },
   // 方法
   methods: {
+    // 翻译车位层号
+    tierNumberFormatter(row) {
+      return this.selectDictLabel(this.options.tierNumber, row.tierNumber.toString())
+    },
+    // 翻译车位区域号
+    areaNumberFormatter(row) {
+      return this.selectDictLabel(this.options.areaNumber, row.areaNumber.toString())
+    },
     // 查询表格数据
     getPortList() {
       this.loading = true // 打开遮罩

@@ -122,11 +122,11 @@
       <!-- 数据表格开始 -->
       <el-table v-loading="loading" border :data="duelaneList" height="150" stripe>
         <el-table-column label="车道名称" align="center" prop="name" />
-        <el-table-column label="车道类型" align="center" prop="type" />
-        <el-table-column label="所属岗亭" align="center" prop="workStation" />
-        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" width="90" />
+        <el-table-column label="车道类型" align="center" prop="type" :formatter="typeFormatter" />
+        <el-table-column label="所属岗亭" align="center" prop="workStationName" />
+        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" width="90" :formatter="cameraBrandTypeFormatter" />
         <el-table-column label="相机IP" align="center" prop="cameraIp" />
-        <el-table-column label="是否有屏" align="center" prop="haveScreen" />
+        <el-table-column label="是否有屏" align="center" prop="haveScreen" :formatter="statusFormatter" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-minus" size="small" @click="handleRow(scope.row,'del')" />
@@ -139,11 +139,11 @@
       <!-- 数据表格开始 -->
       <el-table v-loading="loading" border :data="otherlaneList" height="150" stripe>
         <el-table-column label="车道名称" align="center" prop="name" />
-        <el-table-column label="车道类型" align="center" prop="type" />
-        <el-table-column label="所属岗亭" align="center" prop="workStation" />
-        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
+        <el-table-column label="车道类型" align="center" prop="type" :formatter="typeFormatter" />
+        <el-table-column label="所属岗亭" align="center" prop="workStationName" />
+        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" width="90" :formatter="cameraBrandTypeFormatter" />
         <el-table-column label="相机IP" align="center" prop="cameraIp" />
-        <el-table-column label="是否有屏" align="center" prop="haveScreen" />
+        <el-table-column label="是否有屏" align="center" prop="haveScreen" :formatter="statusFormatter" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-plus" size="small" @click="handleRow(scope.row,'add')" />
@@ -212,11 +212,27 @@ export default {
       // 待转换的上下班时间,默认朝8晚7
       convertHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)],
       // 遍历数据
-      options: []
+      options: {
+        laneCategory: [],
+        cameraBrandType: [],
+        status: []
+      }
     }
   },
   // 勾子
   created() {
+    // 获取车道类型字典数据
+    this.getDataByType('LaneTypeDic').then(res => {
+      this.options.laneCategory = res.data
+    })
+    // 获取相机品牌字典
+    this.getDataByType('CameraBrandTypeDic').then(res => {
+      this.options.cameraBrandType = res.data
+    })
+    // 获取是否字典
+    this.getDataByType('yesOrNo').then(res => {
+      this.options.status = res.data
+    })
     // 取路由路径上的参数
     this.queryParams.parentId = this.manageridBak = this.form.parentId = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
@@ -224,6 +240,20 @@ export default {
   },
   // 方法
   methods: {
+    // 翻译是否状态
+    statusFormatter(row, column, cellValue) {
+      if (cellValue !== null) {
+        return this.selectDictLabel(this.options.status, cellValue.toString())
+      }
+    },
+    // 翻译相机品牌
+    cameraBrandTypeFormatter(row) {
+      return this.selectDictLabel(this.options.cameraBrandType, row.cameraBrandType.toString())
+    },
+    // 翻译车道类型
+    typeFormatter(row) {
+      return this.selectDictLabel(this.options.laneCategory, row.type.toString())
+    },
     // 其他车道，添加
     handleRow(row, type) {
       const form = {
@@ -390,12 +420,8 @@ export default {
     getlaneLists(id) {
       // 根据id查询岗亭信息
       this.loading = true
-      // this.duelaneList = []
-      // this.otherlaneList = []
       getLaneListByMid(id).then(res => {
-        // res.data.userLaneList.map(val => {
-        //   this.duelaneList.push(val.lane)
-        // })
+        console.log(res.data.otherList)
         this.otherlaneList = res.data.otherList
         this.duelaneList = res.data.rtnLaneList
         this.loading = false
