@@ -3,75 +3,69 @@
     <el-header height="36px" style="padding:15px 0 45px;font-weight:700" align="center">
       车道设置
     </el-header>
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="车道名称" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入车道名称"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="所属岗亭" prop="workstationId">
-        <el-select v-model="queryParams.workstationId" placeholder="请选择所属岗亭" size="small">
-          <el-option
-            v-for="item in options.watchhouseName"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="车道类型" prop="type">
-        <el-select
-          v-model="queryParams.type"
-          placeholder="请选择车道类型"
-          clearable
-          size="small"
-        >
-          <el-option
-            v-for="item in options.laneCategory"
-            :key="item.dictValue"
-            :label="item.dictLabel"
-            :value="Number(item.dictValue)"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+    <el-row>
+      <!-- 表格工具按钮开始 -->
+      <el-col :span="5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+      </el-col>
+      <!-- 查询条件开始 -->
+      <el-col :span="18" :offset="1">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+          <el-form-item label="车道名称" prop="name">
+            <el-input
+              v-model="queryParams.name"
+              placeholder="请输入车道名称"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="所属岗亭" prop="workstationId">
+            <el-select v-model="queryParams.workstationId" placeholder="请选择所属岗亭" size="small">
+              <el-option
+                v-for="item in options.watchhouseName"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="车道类型" prop="type">
+            <el-select
+              v-model="queryParams.type"
+              placeholder="请选择车道类型"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="item in options.laneCategory"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="laneList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="40" align="center" />
       <el-table-column label="车道名称" align="center" prop="name" />
-      <el-table-column label="车道类型" align="center" prop="type" />
-      <el-table-column label="所属岗亭" align="center" prop="workStation" />
-      <!-- <el-table-column label="相机状态" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.cameraState }}</span>
-        </template>
-      </el-table-column> -->
-      <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
+      <el-table-column label="车道类型" align="center" prop="type" :formatter="typeFormatter" />
+      <el-table-column label="所属岗亭" align="center" prop="workStationName" />
+      <el-table-column label="相机品牌" align="center" prop="cameraBrandType" :formatter="cameraBrandTypeFormatter" />
       <el-table-column label="相机识别码" align="center" prop="cameraSn" />
       <el-table-column label="相机IP" align="center" prop="cameraIp" />
-      <el-table-column label="控制卡类型" align="center" prop="controllerCard" />
-      <el-table-column label="是否有屏" align="center" prop="haveScreen" />
-      <el-table-column label="是否显示余位" align="center" prop="remainder" />
+      <el-table-column label="是否在线" align="center" prop="isOnLine" :formatter="statusFormatter" />
+      <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" />
+      <el-table-column label="是否有屏" align="center" prop="haveScreen" :formatter="statusFormatter" />
+      <el-table-column label="是否显示余位" align="center" prop="remainder" :formatter="statusFormatter" />
       <!-- <el-table-column label="闸口状态" align="center">
         <template slot-scope="scope">
           <el-switch
@@ -148,7 +142,7 @@
               v-for="item in options.watchhouseName"
               :key="item.id"
               :label="item.name"
-              :value="item.id"
+              :value="Number(item.id)"
             />
           </el-select>
         </el-form-item>
@@ -216,6 +210,22 @@
               {{ item.dictLabel }}
             </el-radio>
           </el-radio-group>
+        </el-form-item>
+        <!-- 广告一 -->
+        <el-form-item label="广告一">
+          <el-input v-model="form.ggone" placeholder="请输入广告一" clearable size="small" />
+        </el-form-item>
+        <!-- 广告二 -->
+        <el-form-item label="广告二">
+          <el-input v-model="form.ggtwo" placeholder="请输入广告二" clearable size="small" />
+        </el-form-item>
+        <!-- 广告三 -->
+        <el-form-item label="广告三">
+          <el-input v-model="form.ggthree" placeholder="请输入广告三" clearable size="small" />
+        </el-form-item>
+        <!-- 广告四 -->
+        <el-form-item label="广告四">
+          <el-input v-model="form.ggfour" placeholder="请输入广告四" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -288,6 +298,7 @@ export default {
         controllerCard: '',
         haveScreen: '',
         lineCount: '',
+        isOnLine: '',
         remainder: '',
         managerid: undefined
         // gateState: undefined
@@ -339,19 +350,36 @@ export default {
     // 查询表格数据
     this.getlaneList()
   },
-  mounted() {
-    this.bus.$on('watchHouse', val => {
+  async mounted() {
+    await this.bus.$on('watchHouse', val => {
       this.options.watchhouseName = val
     })
   },
   // 方法
   methods: {
+    // 翻译是否状态
+    statusFormatter(row, column, cellValue) {
+      if (cellValue !== null) {
+        return this.selectDictLabel(this.options.status, cellValue.toString())
+      }
+    },
+    // 翻译车道类型
+    typeFormatter(row) {
+      return this.selectDictLabel(this.options.laneCategory, row.type.toString())
+    },
+    // 翻译相机品牌
+    cameraBrandTypeFormatter(row) {
+      return this.selectDictLabel(this.options.cameraBrandType, row.cameraBrandType.toString())
+    },
+    // 翻译控制卡类型
+    controllerCardFormatter(row) {
+      return this.selectDictLabel(this.options.controllerCard, row.controllerCard.toString())
+    },
     // 查询表格数据
     getlaneList() {
       this.loading = true // 打开遮罩
       getLaneByMid(this.queryParams).then(res => {
         this.laneList = res.data.list
-        console.log(this.laneList)
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
@@ -394,11 +422,11 @@ export default {
     handleUpdate(row) {
       this.title = '修改车道'
       const id = row.id || this.ids
-      console.log(id)
+      // console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
-      // 根据id查询岗亭信息
+      // 根据id查询车道信息
       this.loading = true
       getLaneById(id).then(res => {
         this.form = res.data
@@ -422,16 +450,16 @@ export default {
       })
     },
     // 监听 switch 闸口状态的改变
-    async gateStateChanged(row) {
-      // const { data: res } = await this.$http.put(
-      //   `users/${row.id}/state/${row.gateState}`
-      // )
-      // if (res.meta.status !== 200) {
-      //   row.gateState = !row.gateState
-      //   return this.$message.error('更新用户状态失败！')
-      // }
-      this.msgSuccess('闸口状态修改成功！')
-    },
+    // async gateStateChanged(row) {
+    // const { data: res } = await this.$http.put(
+    //   `users/${row.id}/state/${row.gateState}`
+    // )
+    // if (res.meta.status !== 200) {
+    //   row.gateState = !row.gateState
+    //   return this.$message.error('更新用户状态失败！')
+    // }
+    //   this.msgSuccess('闸口状态修改成功！')
+    // },
     handleIn() {
       this.qrcodeDialogVisible = true
     },

@@ -58,7 +58,6 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-
             <el-form-item label="支付逗留时长" placeholder="请输入支付逗留时长">
               <el-input v-model="form.payduration" />
             </el-form-item>

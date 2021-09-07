@@ -134,7 +134,7 @@ export function getWorkStationLikeName(name) {
 // 查询车道列表
 export function getLaneByMid(query) {
   return request({
-    url: '/ylyt/lane/getLaneByMid/',
+    url: '/ylyt/lane/getLaneList/',
     method: 'get',
     params: query
   })
@@ -152,7 +152,7 @@ export function addLane(data) {
   return request({
     url: '/ylyt/lane/addLane',
     method: 'post',
-    params: data
+    data
   })
 }
 
@@ -161,7 +161,7 @@ export function updateLane(data) {
   return request({
     url: '/ylyt/lane/updateLane',
     method: 'put',
-    params: data
+    data
   })
 }
 
@@ -216,6 +216,22 @@ export function deleteBaoAn(id) {
   })
 }
 
+// 根据当前保安ID查询保安负责车道信息
+export function getLaneListByMid(id) {
+  return request({
+    url: '/ylyt/baoAn/getLaneListByMid/' + id,
+    method: 'get'
+  })
+}
+
+// 车道设置或岗亭设置
+export function baoAnSetting(data) {
+  return request({
+    url: '/ylyt/baoAn/laneOrStation',
+    method: 'post',
+    data
+  })
+}
 // -------------------------------------车位管理
 
 // 查询车位列表

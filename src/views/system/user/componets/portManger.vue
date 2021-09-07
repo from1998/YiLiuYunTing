@@ -3,47 +3,49 @@
     <el-header height="36px" style="padding:15px 0 45px;font-weight:700" align="center">
       车位管理
     </el-header>
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="车位层号" prop="tierNumber">
-        <el-input
-          v-model="queryParams.tierNumber"
-          placeholder="请输入车位层号"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="车位区域号" label-width="96px" prop="areaNumber">
-        <el-input
-          v-model="queryParams.areaNumber"
-          placeholder="请输入车位区域号"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="车位编号" label-width="96px" prop="number">
-        <el-input
-          v-model="queryParams.number"
-          placeholder="请输入车位编号"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+    <el-row>
+      <!-- 表格工具按钮开始 -->
+      <el-col :span="6">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+      </el-col>
+      <!-- 查询条件开始 -->
+      <el-col :span="17" :offset="1">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
+          <el-form-item label="层号">
+            <el-select v-model="queryParams.tierNumber" placeholder="请选择车位层号" size="small">
+              <el-option
+                v-for="item in options.tierNumber"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="区域号">
+            <el-select v-model="queryParams.areaNumber" placeholder="请选择车位区域号" size="small">
+              <el-option
+                v-for="item in options.areaNumber"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="编号" prop="number">
+            <el-input
+              v-model="queryParams.number"
+              placeholder="请输入车位编号"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
@@ -80,10 +82,24 @@
     >
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item label="层号">
-          <el-input v-model="form.tierNumber" placeholder="请输入车位层号" clearable size="small" />
+          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small">
+            <el-option
+              v-for="item in options.tierNumber"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="区域号">
-          <el-input v-model="form.areaNumber" placeholder="请输入车位区域号" clearable size="small" />
+          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small">
+            <el-option
+              v-for="item in options.areaNumber"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="编号">
           <el-input v-model="form.number" placeholder="请输入车位编号" clearable size="small" />
@@ -138,11 +154,23 @@ export default {
         areaNumber: undefined,
         number: undefined,
         remark: ''
+      },
+      options: {
+        tierNumber: [],
+        areaNumber: []
       }
     }
   },
   // 勾子
   created() {
+    // 获取车位层号字典数据
+    this.getDataByType('TierNumberDic').then(res => {
+      this.options.tierNumber = res.data
+    })
+    // 获取车位区域号字典数据
+    this.getDataByType('AreaNumberDic').then(res => {
+      this.options.areaNumber = res.data
+    })
     // 取路由路径上的参数
     this.queryParams.managerid = this.manageridBak = this.form.parentId = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
@@ -205,7 +233,6 @@ export default {
         this.form = res.data
         this.loading = false
       })
-      this.msgSuccess('修改弹出成功')
     },
     // 执行删除
     handleDelete(row) {

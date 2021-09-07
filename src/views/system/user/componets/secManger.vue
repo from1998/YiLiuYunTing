@@ -3,42 +3,41 @@
     <el-header height="36px" style="padding:15px 0 45px;font-weight:700" align="center">
       保安管理
     </el-header>
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="保安姓名" prop="realName">
-        <el-input
-          v-model="queryParams.realName"
-          placeholder="请输入保安姓名"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item label="保安手机号码" label-width="96px" prop="mobile">
-        <el-input
-          v-model="queryParams.mobile"
-          placeholder="请输入保安手机号码"
-          clearable
-          size="small"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+    <el-row>
+      <!-- 表格工具按钮开始 -->
+      <el-col :span="6">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+      </el-col>
+      <!-- 查询条件开始 -->
+      <el-col :span="14" :offset="4">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+          <el-form-item label="保安姓名" prop="realName">
+            <el-input
+              v-model="queryParams.realName"
+              placeholder="请输入保安姓名"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="保安手机号码" label-width="96px" prop="mobile">
+            <el-input
+              v-model="queryParams.mobile"
+              placeholder="请输入保安手机号码"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
       </el-col>
     </el-row>
     <!-- 数据表格开始 -->
+
     <el-table v-loading="loading" border :data="securityList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="姓名" align="center" prop="realName" />
@@ -60,7 +59,6 @@
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="primary" icon="el-icon-setting" size="small" @click="handleWatchhouse(scope.row)">岗亭设置</el-button>
           <el-button type="primary" icon="el-icon-setting" size="small" @click="handleLane(scope.row)">车道设置</el-button>
         </template>
       </el-table-column>
@@ -114,24 +112,30 @@
     <el-dialog
       title="车道设置"
       :visible.sync="laneListOpen"
-      width="650px"
+      width="800px"
       center
       append-to-body
     >
+      <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
+        在管车道
+      </el-header>
       <!-- 数据表格开始 -->
       <el-table v-loading="loading" border :data="duelaneList" height="150" stripe>
         <el-table-column label="车道名称" align="center" prop="name" />
         <el-table-column label="车道类型" align="center" prop="type" />
         <el-table-column label="所属岗亭" align="center" prop="workStation" />
-        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" />
+        <el-table-column label="相机品牌" align="center" prop="cameraBrandType" width="90" />
         <el-table-column label="相机IP" align="center" prop="cameraIp" />
         <el-table-column label="是否有屏" align="center" prop="haveScreen" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="text" icon="el-icon-minus" size="mini" @click="handleUpdate(scope.row)" />
+            <el-button type="primary" icon="el-icon-minus" size="small" @click="handleRow(scope.row,'del')" />
           </template>
         </el-table-column>
       </el-table>
+      <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
+        其它车道
+      </el-header>
       <!-- 数据表格开始 -->
       <el-table v-loading="loading" border :data="otherlaneList" height="150" stripe>
         <el-table-column label="车道名称" align="center" prop="name" />
@@ -142,7 +146,7 @@
         <el-table-column label="是否有屏" align="center" prop="haveScreen" />
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
-            <el-button type="text" icon="el-icon-plus" size="mini" @click="handleUpdate(scope.row)" />
+            <el-button type="primary" icon="el-icon-plus" size="small" @click="handleRow(scope.row,'add')" />
           </template>
         </el-table-column>
       </el-table>
@@ -151,13 +155,15 @@
 </template>
 <script>
 // 引入api
-import { getBaoAnList, getBaoAnById, addBaoAn, updateBaoAn, deleteBaoAn } from '@/api/system/carSetting'
+import { getBaoAnList, getBaoAnById, addBaoAn, updateBaoAn, deleteBaoAn, getLaneListByMid, baoAnSetting } from '@/api/system/carSetting'
 
 export default {
   name: 'SecManger', // 和对应路由表中配置的name值一致',
   // 定义页面数据
   data() {
     return {
+      // 保安id
+      secId: '',
       // 用户id备份
       manageridBak: '',
       // 是否启用遮罩层
@@ -218,6 +224,34 @@ export default {
   },
   // 方法
   methods: {
+    // 其他车道，添加
+    handleRow(row, type) {
+      const form = {
+        laneId: row.id,
+        mangerId: this.secId,
+        type: type
+      }
+      // if (type === 'del') {
+      //   form.laneId = row.userLaneId
+      // }
+      this.setting(form)
+    },
+    setting(form) {
+      this.loading = true // 打开遮罩
+      baoAnSetting(form).then(res => {
+        if (res.code === 200) {
+          this.msgSuccess('设置成功')
+          this.getlaneLists(form.mangerId)
+          this.loading = false // 关闭遮罩
+        } else {
+          this.msgError('设置失败')
+          this.loading = false // 关闭遮罩
+        }
+      }).catch(() => {
+        this.msgError('设置失败')
+        this.loading = false // 关闭遮罩
+      })
+    },
     // 查询列表数据
     getSecurityList() {
       getBaoAnList(this.queryParams).then(res => {
@@ -348,8 +382,24 @@ export default {
       this.form.endWorkTime = val[1]
     },
     // 打开车道设置的弹出层
-    handleLane() {
+    handleLane(row) {
       this.laneListOpen = true
+      this.secId = row.id || this.ids
+      this.getlaneLists(this.secId)
+    },
+    getlaneLists(id) {
+      // 根据id查询岗亭信息
+      this.loading = true
+      // this.duelaneList = []
+      // this.otherlaneList = []
+      getLaneListByMid(id).then(res => {
+        // res.data.userLaneList.map(val => {
+        //   this.duelaneList.push(val.lane)
+        // })
+        this.otherlaneList = res.data.otherList
+        this.duelaneList = res.data.rtnLaneList
+        this.loading = false
+      })
     }
   }
 }

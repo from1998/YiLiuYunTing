@@ -299,7 +299,6 @@ export default {
           this.loading = false // 关闭遮罩
         })
       } else {
-        console.log(this.form)
         this.loading = true // 打开遮罩
         updateParkfee(this.form).then(() => {
           this.msgSuccess('修改成功')
@@ -325,7 +324,6 @@ export default {
       })
     },
     deleteRow(index, rows) {
-      console.log(index)
       rows.splice(index, 1)
     },
     // 添加计费规则
@@ -351,7 +349,6 @@ export default {
     },
     // 处理请求到的分段计费
     handletime() {
-      console.log(this.form.splittimejsonDto)
       this.form.commonCountFee = this.form.splittimejsonDto.map(val => {
         return {
           amount: val.amount,
@@ -361,7 +358,6 @@ export default {
           timeDur: [val.start, val.end]
         }
       })
-      console.log(this.form.commonCountFee)
       this.form.splittimejsonDto = []
     },
     // 处理待发送的时间
