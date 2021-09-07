@@ -311,7 +311,6 @@ export default {
             addDictData(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
-              debugger
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
