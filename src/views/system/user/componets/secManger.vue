@@ -40,6 +40,7 @@
 
     <el-table v-loading="loading" border :data="securityList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="姓名" align="center" prop="realName" />
       <el-table-column label="手机号码" align="center" prop="mobile" />
       <el-table-column label="上下班时间" align="center" prop="workTimeDur" width="392">
@@ -55,11 +56,14 @@
           />
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="500">
+      <el-table-column label="操作" align="center" width="360">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="primary" icon="el-icon-setting" size="small" @click="handleLane(scope.row)">车道设置</el-button>
+          <el-button type="primary" size="small" @click="handleLane(scope.row)">
+            <svg-icon icon-class="carLine" />
+            车道设置
+          </el-button>
         </template>
       </el-table-column>
     </el-table>

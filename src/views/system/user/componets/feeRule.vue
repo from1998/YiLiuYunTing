@@ -311,7 +311,6 @@ export default {
       }
     },
     onReset() {
-      debugger
       this.$confirm('确定重置?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -319,7 +318,6 @@ export default {
       }).then(() => {
         // this.form = this.formBak
         this.clear()
-        this.convert.businessHours = [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
         this.msgSuccess('重置成功')
       }).catch(() => {
         this.msgError('重置已取消')

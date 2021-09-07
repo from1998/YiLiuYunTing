@@ -6,9 +6,9 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px" label-position="left">
+      <el-form ref="registerForm" :model="form" label-width="150px" style="width:500px" label-position="left" :rules="validate">
         <!-- 注册类型 -->
-        <el-form-item label="注册类型" prop="type">
+        <el-form-item label="注册类型" prop="notEmpty">
           <el-select v-model="form.type" placeholder="请选择注册类型" clearable style="width:350px" :disabled="flag">
             <el-option
               v-for="item in categoryOptions"
@@ -19,7 +19,7 @@
           </el-select>
         </el-form-item>
         <!-- 个人/法人姓名 -->
-        <el-form-item prop="legalpersonname">
+        <el-form-item prop="notEmpty">
           <span slot="label">
             <span v-show="form.type===''">个人/法人姓名</span>
             <span v-show="form.type===1">法人姓名</span>
@@ -37,13 +37,13 @@
           <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" :disabled="flag" />
         </el-form-item>
         <!-- 企业名称 -->
-        <el-form-item v-if="form.type===1" label="企业名称" prop="merchantname">
+        <el-form-item v-if="form.type===1" label="企业名称" prop="notEmpty">
           <el-input v-model="form.merchantname" placeholder="请输入企业名称" :disabled="flag" />
         </el-form-item>
         <!-- 验证码 -->
         <el-row v-show="form.registerstatus !== 2">
           <el-col :span="19">
-            <el-form-item label="验证码" prop="registersmscode">
+            <el-form-item label="验证码" prop="notEmpty">
               <el-input v-model="form.registersmscode" placeholder="请输入验证码" :disabled="flag" />
             </el-form-item>
           </el-col>
@@ -87,11 +87,14 @@
 </template>
 <script>
 import { getDepotRegister, addDepotRegister, registerSmsCode, getConfirmPage, getConfirmStatus } from '@/api/personalCenter/depotRegister'
+import validate from '@/utils/validate.js'
 
 export default {
   legalpersonname: 'DepotRegister',
   data() {
     return {
+      // 验证规则
+      validate,
       flag: false,
       id: '',
       // 是否启用遮罩层

@@ -144,9 +144,9 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="停车费分成(千分比)">
-              <el-tooltip class="item" effect="dark" content="请输入停车费分成(千分比)" placement="right">
-                <el-input-number v-model="form.parkfeecharge" :precision="0" :step="1" />
+            <el-form-item label="停车费分成比(0-10)">
+              <el-tooltip class="item" effect="dark" content="请输入停车费分成(占比)" placement="right">
+                <el-input-number v-model="form.parkfeecharge" :precision="0" :step="1" :max="10" :min="0" />
               </el-tooltip>
             </el-form-item>
           </el-col>

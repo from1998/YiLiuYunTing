@@ -552,7 +552,7 @@ export default {
       }).then(() => {
         // this.form = this.formBak
         this.clear()
-        this.convert.businessHours = [new Date(), new Date()]
+        // this.convert.businessHours = [new Date(), new Date()]
         this.msgSuccess('重置成功')
       }).catch(() => {
         this.msgError('重置已取消')

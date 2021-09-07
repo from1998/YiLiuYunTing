@@ -77,8 +77,8 @@
       </el-table-column> -->
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
           <el-button
             v-if="scope.row.type==='入口'"
             type="text"

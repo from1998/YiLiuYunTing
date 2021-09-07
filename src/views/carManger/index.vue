@@ -106,7 +106,7 @@
         <el-form-item label="车主姓名" prop="carName">
           <el-input v-model="form.carName" placeholder="请输入车主姓名" clearable size="small" />
         </el-form-item>
-        <el-form-item label="车主手机号">
+        <el-form-item label="车主手机号" prop="phoneNumber">
           <el-input v-model="form.carPhone" placeholder="请输入车主手机号" clearable size="small" />
         </el-form-item>
         <el-form-item label="车辆地址" prop="carAddress">
@@ -251,7 +251,7 @@
 <script>
 // 引入api
 import { listRoleForPage, addRole, updateRole, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
-import validate from '@/utils/validate'
+import validate from '@/utils/validate.js'
 
 export default {
   // 定义页面数据
