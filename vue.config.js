@@ -12,7 +12,6 @@ const defaultSettings = require('./src/settings.js')
 // } else {
 //   target = devEnv.hosturl
 // }
-
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
