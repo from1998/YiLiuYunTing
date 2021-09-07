@@ -38,7 +38,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     port: port,
-    open: true,
+    open: false,
     overlay: {
       warnings: false,
       errors: true
@@ -47,7 +47,7 @@ module.exports = {
     // 跨域代理配置
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        target: 'http://127.0.0.1:8089/',
+        target: 'http://192.168.1.66:8089/',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API ]: ''

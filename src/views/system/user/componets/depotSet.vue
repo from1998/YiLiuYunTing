@@ -190,7 +190,7 @@
           </el-col>
         </el-row>
         <!-- 进出场超时处理 -->
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item label="进场超时处理">
               <el-select v-model="form.intimeoutaction" placeholder="请选择类型">
@@ -215,9 +215,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
         <!-- 进出场超时时间 -->
-        <el-row>
+        <!-- <el-row>
           <el-col :span="12">
             <el-form-item label="进场超时时间(分钟)">
               <el-tooltip class="item" effect="dark" content="请输入超时分钟数" placement="right">
@@ -232,7 +232,7 @@
               </el-tooltip>
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
         <!-- 空闲车位计数与自动清理天数 -->
         <el-row>
           <el-col :span="12">
@@ -247,7 +247,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!--  -->
           <el-col :span="12">
             <el-form-item label="自动清理天数">
               <el-tooltip class="item" effect="dark" content="请输入数字" placement="right">
@@ -433,23 +432,23 @@ export default {
         tempcarzeroout: '',
         registercarnovoidaction: '',
         tempcarnovoidaction: '',
-        overduecarin: '',
-        overduecarout: '',
+        overduecarin: 2,
+        overduecarout: 2,
         norecordtempcarout: '',
         norecordtempcaroutamount: '',
         freecarsitecount: '',
         autocleancar: '',
-        yellowcarin: '',
-        bluecarin: '',
-        fixedcarmoresitemorecar: '',
+        yellowcarin: 0,
+        bluecarin: 0,
+        fixedcarmoresitemorecar: 0,
         moresitemorecarrule: '',
-        nonumbercarcharge: '',
-        isfeebytype: '',
-        specialpass: [2, 3, 4, 6, 12],
-        intimeout: '',
-        outtimeout: '',
-        intimeoutaction: '',
-        outtimeoutaction: ''
+        nonumbercarcharge: 1,
+        isfeebytype: 0,
+        specialpass: [3, 4, 6, 12]
+        // intimeout: '',
+        // outtimeout: '',
+        // intimeoutaction: '',
+        // outtimeoutaction: ''
       },
       options: {
         // 车辆进出场
@@ -551,7 +550,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.form = this.formBak
+        // this.form = this.formBak
+        this.clear()
         this.convert.businessHours = [new Date(), new Date()]
         this.msgSuccess('重置成功')
       }).catch(() => {
@@ -565,6 +565,34 @@ export default {
         arrNumber.push(Number(val))
       })
       this.form.specialpass = arrNumber
+    },
+    clear() {
+      var data = {
+        fixedcarin: '',
+        fixedcarout: '',
+        fixedcarduplicatein: '',
+        fixedcarduplicateout: '',
+        tempcarin: '',
+        tempcarout: '',
+        tempcarduplicatein: '',
+        tempcarzeroout: '',
+        registercarnovoidaction: '',
+        tempcarnovoidaction: '',
+        overduecarin: 2,
+        overduecarout: 2,
+        norecordtempcarout: '',
+        norecordtempcaroutamount: '',
+        freecarsitecount: '',
+        autocleancar: '',
+        yellowcarin: 0,
+        bluecarin: 0,
+        fixedcarmoresitemorecar: 0,
+        moresitemorecarrule: '',
+        nonumbercarcharge: 1,
+        isfeebytype: 0,
+        specialpass: [3, 4, 6, 12]
+      }
+      this.form = data
     }
     // 处理时间
   //   timeChange(val) {

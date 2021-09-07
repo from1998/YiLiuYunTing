@@ -211,7 +211,7 @@ export default {
   data() {
     return {
       limitNumber: '24',
-      formBak: {},
+      // formBak: {},
       form: {
         // 用户id
         managerid: '',
@@ -243,7 +243,7 @@ export default {
   },
   created() {
     this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
-    this.formBak = this.form
+    // this.formBak = this.form
     this.init()
     // 获取收费规则车辆类型字典数据
     this.getDataByType('FeeNumberTypeDic').then(res => {
@@ -311,12 +311,14 @@ export default {
       }
     },
     onReset() {
+      debugger
       this.$confirm('确定重置?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.form = this.formBak
+        // this.form = this.formBak
+        this.clear()
         this.convert.businessHours = [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
         this.msgSuccess('重置成功')
       }).catch(() => {
@@ -364,6 +366,30 @@ export default {
     timeChange(row, val) {
       row.start = val[0]
       row.end = val[1]
+    },
+    clear() {
+      var data = {
+        // 用户id
+        managerid: '',
+        numbertype: 0,
+        daypriceup: '',
+        freeperiod: '',
+        yduration: '',
+        ymoney: '',
+        overunit: '',
+        overmoney: '',
+        // 默认常规计费
+        splittype: 3,
+        splittimejsonDto: [],
+        // 分段计费
+        commonCountFee: [
+          {
+            timeDur: [],
+            amount: ''
+          }
+        ]
+      }
+      this.form = data
     }
   }
 }

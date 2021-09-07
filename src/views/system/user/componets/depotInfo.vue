@@ -276,7 +276,6 @@ export default {
         // 待转换的营业时间,默认朝8晚7
         businessHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
       },
-      formBak: {},
       form: {
         // 用户id
         managerid: '',
@@ -353,7 +352,6 @@ export default {
     // 取路由路径上的参数
     this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // 根据字典类型ID查询字典的dictType
-    this.formBak = this.form
     this.init()
     // 获取是否字典数据
     this.getDataByType('yesOrNo').then(res => {
@@ -415,7 +413,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.form = this.formBak
+        this.clear()
         this.convert.region = []
         this.convert.businessHours = [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
         this.msgSuccess('重置成功')
@@ -455,6 +453,59 @@ export default {
     timeChange(val) {
       this.form.starthours = val[0]
       this.form.endhours = val[1]
+    },
+    clear() {
+      var data = {
+        // 用户id
+        managerid: '',
+        // 车场名称
+        name: '',
+        // 车场简称
+        shortname: '',
+        // 地区 省市区
+        provincename: '',
+        cityname: '',
+        areaname: '',
+        // 详细地址
+        address: '',
+        // 车场类型
+        lottype: '',
+        // 车场电话
+        mobile: '',
+        // 支付后逗留时长
+        payduration: '',
+        // 经纬度
+        longitude: '',
+        latitude: '',
+        // 总车位数
+        total: '',
+        // 空闲车位数
+        emptynum: '',
+        // 是否展示车位
+        isshowsite: 1,
+        // 连接方式
+        linktype: 2,
+        // 是否收费
+        charge: 1,
+        // 手续费
+        commissioncharge: null,
+        // 停车费
+        parkfeecharge: null,
+        // 是否有充电桩
+        chargingpile: 1,
+        // 是否可用
+        state: 1,
+        // 是否上传监管平台
+        isuploaddata: 1,
+        // 上传的监管平台
+        uploadplatform: '',
+        // 监管平台标识码
+        uploadplatformsn: '',
+        // 营业时间
+        starthours: '08-00-00',
+        endhours: '19-00-00'
+      }
+      this.form = data
     }
   }
 }
