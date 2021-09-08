@@ -23,7 +23,7 @@
         <!-- 地区 详细地址 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="地区">
+            <el-form-item label="地区" prop="region">
               <el-cascader
                 v-model="convert.region"
                 :options="addressOptions"
@@ -35,13 +35,13 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="详细地址">
+            <el-form-item label="详细地址" prop="address">
               <el-input v-model="form.address" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 车场类型 -->
-        <el-form-item label="类型">
+        <el-form-item label="类型" prop="lottype">
           <el-select v-cloak v-model="form.lottype" placeholder="请选择车场类型">
             <el-option
               v-for="item in categoryOptions"
@@ -53,12 +53,12 @@
         </el-form-item>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手机/电话">
+            <el-form-item label="手机/电话" prop="mobile">
               <el-input v-model="form.mobile" placeholder="请输入手机/电话号码" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="支付逗留时长" placeholder="请输入支付逗留时长">
+            <el-form-item label="支付逗留时长" placeholder="请输入支付逗留时长" prop="payduration">
               <el-input v-model="form.payduration" />
             </el-form-item>
           </el-col>
@@ -79,12 +79,12 @@
         <!-- 总车位数与空闲车位数 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="总车位数">
+            <el-form-item label="总车位数" prop="total">
               <el-input v-model="form.total" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="空闲车位数">
+            <el-form-item label="空闲车位数" prop="emptynum">
               <el-input v-model="form.emptynum" />
             </el-form-item>
           </el-col>
@@ -92,7 +92,7 @@
         <!-- 连接方式与展示车位 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="连接方式">
+            <el-form-item label="连接方式" prop="linktype">
               <el-radio-group v-model="form.linktype">
                 <el-radio
                   v-for="item in linkTypeOptions"
@@ -105,7 +105,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否展示车位">
+            <el-form-item label="是否展示车位" prop="isshowsite">
               <el-radio-group v-model="form.isshowsite">
                 <el-radio
                   v-for="item in stateOptions"
@@ -121,7 +121,7 @@
         <!-- 是否收费 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否收费">
+            <el-form-item label="是否收费" prop="charge">
               <el-radio-group v-model="form.charge">
                 <el-radio
                   v-for="item in stateOptions"
@@ -137,14 +137,14 @@
         <!-- 手续费及停车费分成 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手续费(千分比)">
+            <el-form-item label="手续费(千分比)" prop="commissioncharge">
               <el-tooltip class="item" effect="dark" content="请输入手续费(千分比)" placement="right">
                 <el-input-number v-model="form.commissioncharge" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="停车费分成比(0-10)">
+            <el-form-item label="停车费分成比(0-10)" prop="parkfeecharge">
               <el-tooltip class="item" effect="dark" content="请输入停车费分成(占比)" placement="right">
                 <el-input-number v-model="form.parkfeecharge" :precision="0" :step="1" :max="10" :min="0" />
               </el-tooltip>
@@ -154,7 +154,7 @@
         <!-- 是否有充电桩 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否有充电桩">
+            <el-form-item label="是否有充电桩" prop="chargingpile">
               <el-radio-group v-model="form.chargingpile">
                 <el-radio
                   v-for="item in stateOptions"
@@ -168,7 +168,7 @@
           </el-col>
           <!-- 状态 -->
           <el-col :span="12">
-            <el-form-item label="是否可用">
+            <el-form-item label="是否可用" prop="state">
               <el-radio-group v-model="form.state">
                 <el-radio
                   v-for="item in stateOptions"
@@ -185,7 +185,7 @@
         <!-- 上传监管平台与上传平台 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否上传监管平台">
+            <el-form-item label="是否上传监管平台" prop="isuploaddata">
               <el-radio-group v-model="form.isuploaddata">
                 <el-radio
                   v-for="item in stateOptions"
@@ -201,7 +201,7 @@
         <!-- 平台及识别码 -->
         <el-row v-if="form.isuploaddata === 1">
           <el-col :span="12">
-            <el-form-item label="平台">
+            <el-form-item label="平台" prop="uploadplatform">
               <el-select v-model="form.uploadplatform" placeholder="请选择平台">
                 <el-option
                   v-for="item in monitorPlatformOptions"
@@ -213,7 +213,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="平台识别码">
+            <el-form-item label="平台识别码" prop="uploadplatformsn">
               <el-input v-model="form.uploadplatformsn" />
             </el-form-item>
           </el-col>
@@ -251,10 +251,35 @@ import { getDepotById, addDepotInfo, updateDepotInfo } from '@/api/system/carSet
 
 import area from '@/assets/json/citys.json'
 
+import validate from '@/utils/validate'
+
 export default {
   name: 'DepotInfo',
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        mobile: validate.phone,
+        name: validate.notEmpty,
+        shortname: validate.notEmpty,
+        region: validate.notEmpty,
+        address: validate.notEmpty,
+        lottype: validate.notEmpty,
+        payduration: validate.notEmpty,
+        total: validate.notEmpty,
+        emptynum: validate.notEmpty,
+        linktype: validate.notEmpty,
+        isshowsite: validate.notEmpty,
+        charge: validate.notEmpty,
+        commissioncharge: validate.notEmpty,
+        parkfeecharge: validate.notEmpty,
+        chargingpile: validate.notEmpty,
+        state: validate.notEmpty,
+        isuploaddata: validate.notEmpty,
+        uploadplatform: validate.notEmpty,
+        uploadplatformsn: validate.notEmpty
+      },
       // 是否启用遮罩层
       loading: false,
       // SubmitTitle: '提交',
@@ -325,12 +350,6 @@ export default {
         // 营业时间
         starthours: '08-00-00',
         endhours: '19-00-00'
-      },
-      // 表单校验
-      rules: {
-        name: [
-          { required: true, message: '车场名称不为空', trigger: 'blur' }
-        ]
       },
       addressOptions: area
     }

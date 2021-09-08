@@ -6,7 +6,7 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form :model="form" label-width="100px" style="width:500px" label-position="left">
+      <el-form :model="form" label-width="100px" style="width:500px" label-position="left" :rules="rules">
         <el-row>
           <el-form-item label="手机号码" prop="legalpersonphone">
             <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" disabled />
@@ -55,10 +55,18 @@
 import { getDepotRegister } from '@/api/personalCenter/depotRegister'
 import { autoWithdraw, autoWithdrawSms } from '@/api/personalCenter/intoAccountSet'
 
+import validate from '@/utils/validate'
+
 export default {
   name: 'IntoAccountSet',
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        legalpersonphone: validate.phone,
+        smscode: validate.notEmpty
+      },
       // 到账设置状态
       isautowithdraw: '',
       // 绑卡状态 1代表已绑卡

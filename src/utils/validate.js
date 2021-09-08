@@ -124,7 +124,7 @@ export function IDCardValid(rule, value, callback) {
 // 不能为空
 export function notEmptyValid(rule, value, callback, val) {
   console.log(rule)
-  if (value && value.trim() !== '') {
+  if (value === 0 || (value && value.trim() !== '')) {
     callback()
   } else {
     callback(new Error('该字段不能为空'))
@@ -135,10 +135,10 @@ export default {
   carNumber: [
     { required: true, validator: carPhoneValid, trigger: 'blur' }
   ],
-  legalpersonphone: [
+  phone: [
     { required: true, validator: phoneValid, trigger: 'blur' }
   ],
-  idnumber: [
+  idNumber: [
     { required: true, validator: IDCardValid, trigger: 'blur' }
   ],
   notEmpty: [

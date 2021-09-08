@@ -87,11 +87,11 @@
       center
       append-to-body
     >
-      <el-form ref="form" :model="form" label-width="100px">
-        <el-form-item label="姓名">
+      <el-form ref="form" :model="form" label-width="100px" :rules="rules">
+        <el-form-item label="姓名" prop="realName">
           <el-input v-model="form.realName" placeholder="请输入保安姓名" clearable size="small" />
         </el-form-item>
-        <el-form-item label="手机号码">
+        <el-form-item label="手机号码" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入保安手机号码" clearable size="small" />
         </el-form-item>
         <el-form-item label="上下班时间">
@@ -160,12 +160,19 @@
 <script>
 // 引入api
 import { getBaoAnList, getBaoAnById, addBaoAn, updateBaoAn, deleteBaoAn, getLaneListByMid, baoAnSetting } from '@/api/system/carSetting'
+import validate from '@/utils/validate'
 
 export default {
   name: 'SecManger', // 和对应路由表中配置的name值一致',
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        realName: validate.notEmpty,
+        mobile: validate.phone
+      },
       // 保安id
       secId: '',
       // 用户id备份

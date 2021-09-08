@@ -22,8 +22,8 @@
           <el-button type="primary" class="goBack" @click="goIdentityAuth">转到身份认证</el-button>
         </el-row>
       </div>
-      <el-form v-show="registerstatus===1" :model="form" label-width="150px" style="width:550px" label-position="left" :disabled="cardBindState===1?true:false">
-        <el-form-item label="绑卡商户号" prop="name">
+      <el-form v-show="registerstatus===1" :model="form" label-width="150px" style="width:550px" label-position="left" :disabled="cardBindState===1?true:false" :rules="rules">
+        <el-form-item label="绑卡商户号" prop="sonmerno">
           <el-input v-model="form.sonmerno" placeholder="请输入绑卡商户号" disabled />
         </el-form-item>
         <!-- 银行卡类型 -->
@@ -103,10 +103,25 @@
 import { getDepotRegister } from '@/api/personalCenter/depotRegister'
 import { getBankList, bindCard, sponsorRemit } from '@/api/personalCenter/tiedCard'
 
+import validate from '@/utils/validate'
+
 export default {
   name: 'TiedCard',
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        legalpersonphone: validate.phone,
+        idnumber: validate.idNumber,
+        sonmerno: validate.notEmpty,
+        legalpersonname: validate.notEmpty,
+        cardno: validate.notEmpty,
+        bankno: validate.notEmpty,
+        smscode: validate.notEmpty,
+        account: validate.notEmpty,
+        cardtype: validate.notEmpty
+      },
       submitTitle: '发起打款',
       // 认证状态
       registerstatus: '',

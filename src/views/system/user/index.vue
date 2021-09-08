@@ -144,7 +144,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="状态">
+            <el-form-item label="状态" prop="state">
               <el-select
                 v-model="form.state"
                 placeholder="状态"
@@ -164,7 +164,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="角色">
+            <el-form-item label="角色" prop="role">
               <el-select
                 v-model="form.role"
                 placeholder="角色"
@@ -266,10 +266,19 @@
 // 引入api
 import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
 import { selectAllRole } from '@/api/system/role'
+import validate from '@/utils/validate'
 export default {
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        mobile: validate.phone,
+        username: validate.notEmpty,
+        state: validate.notEmpty,
+        role: validate.notEmpty
+      },
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -314,15 +323,6 @@ export default {
       // 表单数据
       form: {},
       benefitForm: {},
-      // 表单校验
-      rules: {
-        username: [
-          { required: true, message: '登录名称不为空', trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, validator: this.validatorPhone, trigger: 'blur' }
-        ]
-      },
       // roleIds 分配角色列表选择状态
       roleIds: [],
       // 角色数据

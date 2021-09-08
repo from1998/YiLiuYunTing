@@ -25,15 +25,15 @@
           <p>
             车场未注册，无法进行身份认证。
           </p>
-          <el-button type="primary" class="goBack">转到车场注册</el-button>
+          <el-button type="primary" class="goBack" @click="goDepotRegister">转到车场注册</el-button>
         </el-row>
       </div>
 
-      <el-form v-show="resData!==null" :model="form" label-width="150px" style="width:1200px" :disabled="flag">
+      <el-form v-show="resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
-            <el-form-item label="注册类型">
+            <el-form-item label="注册类型" prop="type">
               <el-select v-model="options.registerInfo.type" placeholder="请选择注册类型" clearable disabled>
                 <el-option
                   v-for="item in options.categoryOptions"
@@ -45,7 +45,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="个人/法人姓名">
+            <el-form-item label="个人/法人姓名" prop="legalpersonname">
               <el-input v-model="options.registerInfo.legalpersonname" disabled />
               <span slot="label">
                 <span v-show="options.registerInfo.type===''">个人/法人姓名</span>
@@ -58,12 +58,12 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手机号码">
+            <el-form-item label="手机号码" prop="legalpersonphone">
               <el-input v-model="options.registerInfo.legalpersonphone" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="身份证号码">
+            <el-form-item label="身份证号码" prop="idnumber">
               <el-input v-model="options.registerInfo.idnumber" disabled />
             </el-form-item>
           </el-col>
@@ -97,7 +97,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="身份证有效日期">
+            <el-form-item label="身份证有效日期" prop="IDCardExpiryTime">
               <el-date-picker
                 v-model="IDCardExpiryTime"
                 value-format="yyyy-MM-dd"
@@ -114,14 +114,14 @@
         <!-- 上传证件照片 -->
         <el-row>
           <el-col :span="options.registerInfo.type!==2?6:8">
-            <el-form-item label="身份证正面照">
+            <el-form-item label="身份证正面照" prop="notEmpty">
               <upload-img :title="form.idimagea" @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
               <el-input v-show="false" v-model="form.idimagea" />
               <el-input v-show="false" v-model="form.idimageasrc" />
             </el-form-item>
           </el-col>
           <el-col :span="options.registerInfo.type!==2?6:8">
-            <el-form-item label="身份证反面照" prop="IDCardReverse">
+            <el-form-item label="身份证反面照" prop="notEmpty">
               <upload-img @imgagePush="imageAccept('idimageb','idimagebsrc',$event)" />
               <el-input v-show="false" v-model="form.idimageb" />
               <el-input v-show="false" v-model="form.idimagebsrc" />
@@ -137,7 +137,7 @@
             </el-tooltip>
           </el-col>
           <el-col v-if="options.registerInfo.type!==2" :span="6">
-            <el-form-item label="开户意愿书" prop="held">
+            <el-form-item label="开户意愿书" prop="notEmpty">
               <upload-img @imgagePush="imageAccept('accountLicense','accountLicensesrc',$event)" />
               <el-input v-show="false" v-model="form.accountLicense" />
               <el-input v-show="false" v-model="form.accountLicensesrc" />
@@ -160,8 +160,8 @@
         <!-- 商户号与统一社会信用码 -->
         <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
-            <el-form-item label="商户号">
-              <el-input v-model="options.registerInfo.sonmerno" placeholder="请输入商户全称" disabled />
+            <el-form-item label="商户号" prop="sonmerno">
+              <el-input v-model="options.registerInfo.sonmerno" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -226,7 +226,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="营业执照有效日期">
+            <el-form-item label="营业执照有效日期" prop="businesslicencevalidity">
               <el-date-picker
                 v-model="form.businesslicencevalidity"
                 value-format="yyyy-MM-dd"
@@ -254,28 +254,28 @@
         <!-- 上传企业证件照片 -->
         <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="6">
-            <el-form-item label="营业执照">
+            <el-form-item label="营业执照" prop="notEmpty">
               <upload-img @imgagePush="imageAccept('businesslicencecopy','businesslicencecopysrc',$event)" />
               <el-input v-show="false" v-model="form.businesslicencecopy" />
               <el-input v-show="false" v-model="form.businesslicencecopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="税务登记证副本">
+            <el-form-item label="税务登记证副本" prop="notEmpty">
               <upload-img @imgagePush="imageAccept('taxregistrationcopy','taxregistrationcopysrc',$event)" />
               <el-input v-show="false" v-model="form.taxregistrationcopy" />
               <el-input v-show="false" v-model="form.taxregistrationcopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="组织结构代码证副本">
+            <el-form-item label="组织结构代码证副本" prop="notEmpty">
               <upload-img @imgagePush="imageAccept('organizationcodecopy','organizationcodecopysrc',$event)" />
               <el-input v-show="false" v-model="form.organizationcodecopy" />
               <el-input v-show="false" v-model="form.organizationcodecopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
-            <el-form-item label="银行开户许可证">
+            <el-form-item label="银行开户许可证" prop="notEmpty">
               <upload-img @imgagePush="imageAccept('licenceforopeningaccounts','licenceforopeningaccountssrc',$event)" />
               <el-input v-show="false" v-model="form.licenceforopeningaccounts" />
               <el-input v-show="false" v-model="form.licenceforopeningaccountssrc" />
@@ -302,6 +302,8 @@ import BackToTop from '@/components/BackToTop'
 
 import UploadImg from '@/components/UploadImg/index.vue'
 
+import validate from '@/utils/validate'
+
 export default {
   name: 'IdentityAuth',
   components: {
@@ -310,6 +312,28 @@ export default {
   },
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        legalpersonphone: validate.phone,
+        merchantphone: validate.phone,
+        idnumber: validate.idNumber,
+        address: validate.notEmpty,
+        type: validate.notEmpty,
+        legalpersonname: validate.notEmpty,
+        longtimeornoper: validate.notEmpty,
+        typeofid: validate.notEmpty,
+        merchantname: validate.notEmpty,
+        businesslicencevalidity: validate.notEmpty,
+        sonmerno: validate.notEmpty,
+        businesslicenceno: validate.notEmpty,
+        IDCardExpiryTime: validate.notEmpty,
+        merchantnamesimple: validate.notEmpty,
+        businesslicencetype: validate.notEmpty,
+        businessscope: validate.notEmpty,
+        registeredcapital: validate.notEmpty,
+        notEmpty: validate.notEmpty
+      },
       // 个人信息查询返回值
       resData: '',
       flag: false,
@@ -364,9 +388,9 @@ export default {
         // 商户简称
         merchantnamesimple: '',
         // 所属行业
-        industry: '',
+        industry: 14,
         // 法人证件类型
-        typeofid: '',
+        typeofid: 0,
         // 商户电话
         merchantphone: '',
         // 营业地址
@@ -425,6 +449,9 @@ export default {
     this.init()
   },
   methods: {
+    goDepotRegister() {
+      this.$router.push('/personalCenter/depotRegister')
+    },
     // 表单字段赋值函数
     imageAccept: function(sqImageId, src, val) {
       this.form[sqImageId] = val.sqImageId

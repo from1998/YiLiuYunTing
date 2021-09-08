@@ -4,11 +4,11 @@
       收费规则
     </el-header>
     <el-container class="container">
-      <el-form ref="form" :model="form" label-width="180px" style="width:860px">
+      <el-form ref="form" :model="form" label-width="180px" style="width:860px" :rules="rules">
         <!-- 车牌类型 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label="车牌类型">
+            <el-form-item label="车牌类型" prop="numbertype">
               <el-select v-model="form.numbertype" placeholder="请选择车牌类型" style="width:566px" disabled>
                 <el-option
                   v-for="item in options.carNumberCategory"
@@ -23,14 +23,14 @@
         <!-- 单次停车免费时长(分钟) 及单日封顶价格(元) -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="单次停车免费时长(分钟)">
+            <el-form-item label="单次停车免费时长(分钟)" prop="freeperiod">
               <el-tooltip class="item" effect="dark" content="请输入单次停车免费时长(分钟)" placement="right">
                 <el-input-number v-model="form.freeperiod" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="单日封顶价格(元)">
+            <el-form-item label="单日封顶价格(元)" prop="daypriceup">
               <el-tooltip class="item" effect="dark" content="请输入单日封顶价格(元)" placement="right">
                 <el-input-number v-model="form.daypriceup" :precision="2" :step="1" />
               </el-tooltip>
@@ -40,14 +40,14 @@
         <!-- 首停时长及费用 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="首停时长(分钟)">
+            <el-form-item label="首停时长(分钟)" prop="yduration">
               <el-tooltip class="item" effect="dark" content="请输入首停时长(分钟)" placement="right">
                 <el-input-number v-model="form.yduration" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="首停时长费用(元)">
+            <el-form-item label="首停时长费用(元)" prop="ymoney">
               <el-tooltip class="item" effect="dark" content="请输入首停时长费用(元)" placement="right">
                 <el-input-number v-model="form.ymoney" :precision="2" :step="1" />
               </el-tooltip>
@@ -57,14 +57,14 @@
         <!-- 续费时长及单价 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="续费时长(分钟)">
+            <el-form-item label="续费时长(分钟)" prop="overunit">
               <el-tooltip class="item" effect="dark" content="请输入续费时长(分钟)" placement="right">
                 <el-input-number v-model="form.overunit" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="续费单价(元/分钟)">
+            <el-form-item label="续费单价(元/分钟)" prop="overmoney">
               <el-tooltip class="item" effect="dark" content="请输入续费单价(元/分钟)" placement="right">
                 <el-input-number v-model="form.overmoney" :precision="2" :step="1" />
               </el-tooltip>
@@ -74,7 +74,7 @@
         <!-- 分段收费类型 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label="收费类型">
+            <el-form-item label="收费类型" prop="splittype">
               <el-radio-group v-model="form.splittype">
                 <el-radio
                   v-for="item in options.sectionChargeType"
@@ -205,11 +205,24 @@
 <script>
 
 import { getParkfeeByMid, addParkfee, updateParkfee } from '@/api/system/carSetting'
+import validate from '@/utils/validate'
 
 export default {
   name: 'FeeRule',
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        numbertype: validate.notEmpty,
+        daypriceup: validate.notEmpty,
+        freeperiod: validate.notEmpty,
+        yduration: validate.notEmpty,
+        ymoney: validate.notEmpty,
+        overunit: validate.notEmpty,
+        overmoney: validate.notEmpty,
+        splittype: validate.notEmpty
+      },
       limitNumber: '24',
       // formBak: {},
       form: {

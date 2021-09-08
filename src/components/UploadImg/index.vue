@@ -94,7 +94,7 @@ export default {
     },
     // 上传图片成功
     handleSuccess(res, file, fileList) {
-      if (res.code === 200) {
+      if (res.data === 200) {
         this.handHeld = fileList
         this.hideUpload = fileList.length >= this.limitCount
         this.msgSuccess(res.msg)
@@ -102,14 +102,14 @@ export default {
         const arr = [{ name: res.data.filename, url: res.data.src }]
         window.sessionStorage.setItem(res.data.sqImageId, JSON.stringify(arr))
       } else {
-        this.handHeld = fileList
+        this.handHeld = []
         this.hideUpload = false
         this.msgError('上传失败')
       }
     },
     // 上传图片失败
     handleError(res, file, fileList) {
-      this.handHeld = fileList
+      this.handHeld = []
       this.hideUpload = false
       this.msgError('上传失败')
     },

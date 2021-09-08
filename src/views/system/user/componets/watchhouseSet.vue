@@ -77,12 +77,18 @@
 <script>
 // 引入api
 import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, getWorkStationLikeName } from '@/api/system/carSetting'
+import validate from '@/utils/validate'
 
 export default {
   name: 'WatchhouseSet',
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        name: validate.notEmpty
+      },
       // 用户id备份
       manageridBak: '',
       // 是否启用遮罩层
@@ -111,12 +117,6 @@ export default {
       // 表单数据
       form: {
         managerid: ''
-      },
-      // 表单校验
-      rules: {
-        watchhouseName: [
-          { required: true, message: '岗亭名称不能为空', trigger: 'blur' }
-        ]
       }
     }
   },

@@ -116,16 +116,16 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="600px"
       center
     >
-      <el-form ref="form" :model="form" label-width="100px">
+      <el-form ref="form" :model="form" label-width="120px" :rules="rules">
         <!-- 车道名称 -->
-        <el-form-item label="车道名称">
+        <el-form-item label="车道名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入车道名称" clearable size="small" />
         </el-form-item>
         <!-- 车道类型 -->
-        <el-form-item label="车道类型">
+        <el-form-item label="车道类型" prop="type">
           <el-select v-model="form.type" placeholder="请选择车道类型" size="small">
             <el-option
               v-for="item in options.laneCategory"
@@ -147,7 +147,7 @@
           </el-select>
         </el-form-item>
         <!-- 相机品牌 -->
-        <el-form-item label="相机品牌">
+        <el-form-item label="相机品牌" prop="cameraBrandType">
           <el-select v-model="form.cameraBrandType" placeholder="请选择相机品牌" size="small">
             <el-option
               v-for="item in options.cameraBrandType"
@@ -158,15 +158,15 @@
           </el-select>
         </el-form-item>
         <!-- 相机识别码 -->
-        <el-form-item label="相机识别码">
+        <el-form-item label="相机识别码" prop="cameraSn">
           <el-input v-model="form.cameraSn" placeholder="请输入相机识别码" clearable size="small" />
         </el-form-item>
         <!-- 相机IP -->
-        <el-form-item label="相机IP">
+        <el-form-item label="相机IP" prop="cameraIp">
           <el-input v-model="form.cameraIp" placeholder="请输入相机IP" clearable size="small" />
         </el-form-item>
         <!-- 控制卡类型 -->
-        <el-form-item label="控制卡类型">
+        <el-form-item label="控制卡类型" prop="controllerCard">
           <el-select v-model="form.controllerCard" placeholder="请选择控制卡类型" size="small">
             <el-option
               v-for="item in options.controllerCard"
@@ -177,7 +177,7 @@
           </el-select>
         </el-form-item>
         <!-- 是否有屏 -->
-        <el-form-item label="是否有屏">
+        <el-form-item label="是否有屏" prop="haveScreen">
           <el-radio-group v-model="form.haveScreen">
             <el-radio
               v-for="item in options.status"
@@ -189,7 +189,7 @@
           </el-radio-group>
         </el-form-item>
         <!-- 屏幕行数 -->
-        <el-form-item v-show="form.haveScreen === 1" label="屏幕行数">
+        <el-form-item v-show="form.haveScreen === 1" label="屏幕行数" prop="lineCount">
           <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small">
             <el-option
               v-for="item in options.screenLines"
@@ -200,7 +200,7 @@
           </el-select>
         </el-form-item>
         <!-- 是否显示余位 -->
-        <el-form-item label="是否显示余位">
+        <el-form-item label="是否显示余位" prop="remainder">
           <el-radio-group v-model="form.remainder">
             <el-radio
               v-for="item in options.status"
@@ -250,12 +250,27 @@
 <script>
 // 引入api
 import { getLaneByMid, getLaneById, addLane, updateLane, deleteLaneById } from '@/api/system/carSetting'
+import validate from '@/utils/validate'
 
 export default {
   name: 'LaneSet',
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        name: validate.notEmpty,
+        type: validate.notEmpty,
+        cameraBrandType: validate.notEmpty,
+        cameraSn: validate.notEmpty,
+        cameraIp: validate.notEmpty,
+        controllerCard: validate.notEmpty,
+        haveScreen: validate.notEmpty,
+        lineCount: validate.notEmpty,
+        isOnLine: validate.notEmpty,
+        remainder: validate.notEmpty
+      },
       // 初始表单备份
       formBak: {},
       // 用户id备份

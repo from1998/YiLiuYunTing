@@ -206,7 +206,9 @@ export default {
         status: undefined
       },
       // 表单数据
-      form: {},
+      form: {
+        status: 0
+      },
       // 表单校验
       rules: {
         roleName: [

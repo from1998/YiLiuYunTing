@@ -80,8 +80,8 @@
       width="500px"
       center
     >
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="层号">
+      <el-form ref="form" :model="form" label-width="80px" :rules="rules">
+        <el-form-item label="层号" prop="tierNumber">
           <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:370px">
             <el-option
               v-for="item in options.tierNumber"
@@ -91,7 +91,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="区域号">
+        <el-form-item label="区域号" prop="areaNumber">
           <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:370px">
             <el-option
               v-for="item in options.areaNumber"
@@ -101,7 +101,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="编号">
+        <el-form-item label="编号" prop="number">
           <el-input v-model="form.number" placeholder="请输入车位编号" clearable size="small" />
         </el-form-item>
       </el-form>
@@ -115,12 +115,20 @@
 <script>
 // 引入api
 import { getSiteByMid, getSiteById, addCarSite, updateSite, deleteSiteByList } from '@/api/system/carSetting'
+import validate from '@/utils/validate'
 
 export default {
   name: 'PortManger', // 和对应路由表中配置的name值一致
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        tierNumber: validate.notEmpty,
+        areaNumber: validate.notEmpty,
+        number: validate.notEmpty
+      },
       // 用户id备份
       manageridBak: '',
       // 是否启用遮罩层
