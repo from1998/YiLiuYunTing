@@ -168,14 +168,18 @@ export default {
       })
     },
     onSubmit() {
-      this.loading = true // 打开遮罩
-      addDepotRegister(this.form).then(() => {
-        this.msgSuccess('注册成功')
-        this.init()
-        this.loading = false // 关闭遮罩
-      }).catch(() => {
-        this.msgError('注册失败')
-        this.loading = false // 关闭遮罩
+      this.$refs['registerForm'].validate((valid) => {
+        if (valid) {
+          this.loading = true // 打开遮罩
+          addDepotRegister(this.form).then(() => {
+            this.msgSuccess('注册成功')
+            this.init()
+            this.loading = false // 关闭遮罩
+          }).catch(() => {
+            this.msgError('注册失败')
+            this.loading = false // 关闭遮罩
+          })
+        }
       })
     },
     getVerificationCode() {

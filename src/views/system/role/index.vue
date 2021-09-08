@@ -128,7 +128,6 @@
               v-for="dict in statusOptions"
               :key="dict.dictValue"
               :label="dict.dictValue"
-              :value="dict.dictValue"
             >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
@@ -207,7 +206,7 @@ export default {
       },
       // 表单数据
       form: {
-        status: 0
+        status: '1'
       },
       // 表单校验
       rules: {

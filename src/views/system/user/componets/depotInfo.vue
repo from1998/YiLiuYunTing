@@ -23,13 +23,14 @@
         <!-- 地区 详细地址 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="地区" prop="region">
+            <el-form-item label="地区">
               <el-cascader
                 v-model="convert.region"
                 :options="addressOptions"
                 :props="{ expandTrigger: 'hover' }"
                 label-width="260px"
                 filterable
+                clearable
                 @change="handleChange(addressOptions,$event)"
               />
             </el-form-item>
@@ -263,7 +264,6 @@ export default {
         mobile: validate.phone,
         name: validate.notEmpty,
         shortname: validate.notEmpty,
-        region: validate.notEmpty,
         address: validate.notEmpty,
         lottype: validate.notEmpty,
         payduration: validate.notEmpty,
@@ -404,27 +404,31 @@ export default {
       })
     },
     onSubmit() {
-      if (this.resdata === null) {
-        this.loading = true // 打开遮罩
-        addDepotInfo(this.form).then(res => {
-          this.msgSuccess('添加成功')
-          this.init()
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('添加失败')
-          this.loading = false // 关闭遮罩
-        })
-      } else {
-        this.loading = true // 打开遮罩
-        updateDepotInfo(this.form).then(() => {
-          this.msgSuccess('修改成功')
-          this.init()
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('修改失败')
-          this.loading = false // 关闭遮罩
-        })
-      }
+      this.$refs['depotForm'].validate((valid) => {
+        if (valid) {
+          if (this.resdata === null) {
+            this.loading = true // 打开遮罩
+            addDepotInfo(this.form).then(res => {
+              this.msgSuccess('添加成功')
+              this.init()
+              this.loading = false // 关闭遮罩
+            }).catch(() => {
+              this.msgError('添加失败')
+              this.loading = false // 关闭遮罩
+            })
+          } else {
+            this.loading = true // 打开遮罩
+            updateDepotInfo(this.form).then(() => {
+              this.msgSuccess('修改成功')
+              this.init()
+              this.loading = false // 关闭遮罩
+            }).catch(() => {
+              this.msgError('修改失败')
+              this.loading = false // 关闭遮罩
+            })
+          }
+        }
+      })
     },
     onReset() {
       this.$confirm('确定重置?', '提示', {
@@ -451,6 +455,7 @@ export default {
         }
         return null
       })
+      console.log(this.convert.region)
     },
     handleChange(opt, val) {
       const vals = val.map(function(value) {

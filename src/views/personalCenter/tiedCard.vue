@@ -22,7 +22,7 @@
           <el-button type="primary" class="goBack" @click="goIdentityAuth">转到身份认证</el-button>
         </el-row>
       </div>
-      <el-form v-show="registerstatus===1" :model="form" label-width="150px" style="width:550px" label-position="left" :disabled="cardBindState===1?true:false" :rules="rules">
+      <el-form v-show="registerstatus===1" :ref="form" :model="form" label-width="150px" style="width:550px" label-position="left" :disabled="cardBindState===1?true:false" :rules="rules">
         <el-form-item label="绑卡商户号" prop="sonmerno">
           <el-input v-model="form.sonmerno" placeholder="请输入绑卡商户号" disabled />
         </el-form-item>
@@ -190,14 +190,18 @@ export default {
       }
     },
     onSubmit() {
-      this.loading = true // 打开遮罩
-      bindCard(this.form).then(res => {
-        this.msgSuccess(res.msg)
-        this.init()
-        this.loading = false // 关闭遮罩
-      }).catch((res) => {
-        this.msgError(res.msg)
-        this.loading = false // 关闭遮罩
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.loading = true // 打开遮罩
+          bindCard(this.form).then(res => {
+            this.msgSuccess(res.msg)
+            this.init()
+            this.loading = false // 关闭遮罩
+          }).catch((res) => {
+            this.msgError(res.msg)
+            this.loading = false // 关闭遮罩
+          })
+        }
       })
     },
     getAccount() {

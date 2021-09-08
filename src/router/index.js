@@ -74,6 +74,20 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/quickMonitoring',
+    component: Layout,
+    redirect: '/quickMonitoring/index',
+    name: '/quickMonitoring',
+    children: [
+      {
+        path: 'index',
+        name: '/quickMonitoring/index',
+        component: () => import('@/views/quickMonitoring/index'),
+        meta: { title: '监控中心', icon: 'monitoring', noCache: true }
+      }
+    ]
+  },
+  {
     path: '/system',
     component: Layout,
     redirect: 'noRedirect',

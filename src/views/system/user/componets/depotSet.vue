@@ -4,7 +4,7 @@
       车场配置
     </el-header>
     <el-container class="container">
-      <el-form ref="form" :model="form" label-width="180px" style="width:750px" name="depotSetForm" :rules="rules">
+      <el-form ref="depotSetForm" :model="form" label-width="180px" style="width:750px" name="depotSetForm" :rules="rules">
         <!-- 固定车辆进出场 -->
         <el-row>
           <el-col :span="12">
@@ -369,7 +369,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item v-if="form.fixedcarmoresitemorecar === 1" label="多位多车规则" prop="moresitemorecarrule">
+            <el-form-item v-if="form.fixedcarmoresitemorecar === 1" label="多位多车规则">
               <el-select v-model="form.moresitemorecarrule" placeholder="请选择类型">
                 <el-option
                   v-for="item in options.access"
@@ -436,7 +436,6 @@ export default {
         yellowcarin: validate.notEmpty,
         bluecarin: validate.notEmpty,
         fixedcarmoresitemorecar: validate.notEmpty,
-        moresitemorecarrule: validate.notEmpty,
         nonumbercarcharge: validate.notEmpty,
         isfeebytype: validate.notEmpty,
         specialpass: validate.notEmpty
@@ -544,33 +543,36 @@ export default {
       })
     },
     onSubmit() {
-      this.form.specialpass = this.form.specialpass.toString()
-      // this.timeChange(this.convert.businessHours)
-      if (this.resdata === null) {
-        // this.timeChange()
-        this.loading = true // 打开遮罩
-        addDepotSet(this.form).then(() => {
-          this.msgSuccess('添加成功')
-          this.init()
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('添加失败')
-          this.init()
-          this.loading = false // 关闭遮罩
-        })
-      } else {
-        this.loading = true // 打开遮罩
-
-        updateDepotSet(this.form).then(() => {
-          this.msgSuccess('修改成功')
-          this.init()
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('修改失败')
-          this.init()
-          this.loading = false // 关闭遮罩
-        })
-      }
+      this.$refs['depotSetForm'].validate((valid) => {
+        if (valid) {
+          this.form.specialpass = this.form.specialpass.toString()
+          // this.timeChange(this.convert.businessHours)
+          if (this.resdata === null) {
+            // this.timeChange()
+            this.loading = true // 打开遮罩
+            addDepotSet(this.form).then(() => {
+              this.msgSuccess('添加成功')
+              this.init()
+              this.loading = false // 关闭遮罩
+            }).catch(() => {
+              this.msgError('添加失败')
+              this.init()
+              this.loading = false // 关闭遮罩
+            })
+          } else {
+            this.loading = true // 打开遮罩
+            updateDepotSet(this.form).then(() => {
+              this.msgSuccess('修改成功')
+              this.init()
+              this.loading = false // 关闭遮罩
+            }).catch(() => {
+              this.msgError('修改失败')
+              this.init()
+              this.loading = false // 关闭遮罩
+            })
+          }
+        }
+      })
     },
     onReset() {
       this.$confirm('确定重置?', '提示', {

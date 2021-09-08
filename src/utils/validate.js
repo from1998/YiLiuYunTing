@@ -122,9 +122,20 @@ export function IDCardValid(rule, value, callback) {
 }
 
 // 不能为空
-export function notEmptyValid(rule, value, callback, val) {
-  console.log(rule)
-  if (value === 0 || (value && value.trim() !== '')) {
+export function notEmptyValid(rule, value, callback) {
+  let str = value
+  if (value instanceof Array) {
+    if (value.length === 0) {
+      callback(new Error('该字段不能为空'))
+    } else {
+      callback()
+    }
+  } else {
+    if (typeof (value) !== 'string') {
+      str = String(value)
+    }
+  }
+  if (str.trim() !== '' && str !== 'undefined' && str !== 'null') {
     callback()
   } else {
     callback(new Error('该字段不能为空'))

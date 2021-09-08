@@ -4,7 +4,7 @@
       收费规则
     </el-header>
     <el-container class="container">
-      <el-form ref="form" :model="form" label-width="180px" style="width:860px" :rules="rules">
+      <el-form ref="freeRuleForm" :model="form" label-width="180px" style="width:860px" :rules="rules">
         <!-- 车牌类型 -->
         <el-row>
           <el-col :span="24">
@@ -88,11 +88,11 @@
           </el-col>
         </el-row>
         <!-- 计费时间段 -->
-        <el-row v-if="form.splittype !==3 ">
+        <el-row v-if="form.splittype !==1 ">
           <el-col :span="24">
             <el-form-item label="计费时间段">
               <!-- 分段计费 -->
-              <el-row v-if="form.splittype ===1 ">
+              <el-row v-if="form.splittype ===3 ">
                 <el-table
                   :data="form.commonCountFee"
                   border
@@ -236,7 +236,7 @@ export default {
         overunit: '',
         overmoney: '',
         // 默认常规计费
-        splittype: 3,
+        splittype: 1,
         splittimejsonDto: [],
         // 分段计费
         commonCountFee: [
@@ -289,39 +289,43 @@ export default {
       })
     },
     onSubmit() {
-      // 如果是分段计费
-      if (this.form.splittype === 1) {
-        this.form.splittimejsonDto = this.form.commonCountFee
-        // delete this.form.commonCountFee
-        // this.form.splittimejsonDto.forEach(ele => {
-        //   delete ele.timeDur
-        // })
-      }
-      if (this.resdata === null) {
-        this.loading = true // 打开遮罩
-        addParkfee(this.form).then(res => {
-          if (res.data.code === 200) {
-            this.msgSuccess('添加成功')
-            this.init()
-            this.loading = false // 关闭遮罩
-          } else {
-            this.loading = false // 关闭遮罩
+      this.$refs['freeRuleForm'].validate((valid) => {
+        if (valid) {
+          // 如果是分段计费
+          if (this.form.splittype === 1) {
+            this.form.splittimejsonDto = this.form.commonCountFee
+            // delete this.form.commonCountFee
+            // this.form.splittimejsonDto.forEach(ele => {
+            //   delete ele.timeDur
+            // })
           }
-        }).catch(() => {
-          this.msgError('添加失败')
-          this.loading = false // 关闭遮罩
-        })
-      } else {
-        this.loading = true // 打开遮罩
-        updateParkfee(this.form).then(() => {
-          this.msgSuccess('修改成功')
-          this.init()
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('修改失败')
-          this.loading = false // 关闭遮罩
-        })
-      }
+          if (this.resdata === null) {
+            this.loading = true // 打开遮罩
+            addParkfee(this.form).then(res => {
+              if (res.data.code === 200) {
+                this.msgSuccess('添加成功')
+                this.init()
+                this.loading = false // 关闭遮罩
+              } else {
+                this.loading = false // 关闭遮罩
+              }
+            }).catch(() => {
+              this.msgError('添加失败')
+              this.loading = false // 关闭遮罩
+            })
+          } else {
+            this.loading = true // 打开遮罩
+            updateParkfee(this.form).then(() => {
+              this.msgSuccess('修改成功')
+              this.init()
+              this.loading = false // 关闭遮罩
+            }).catch(() => {
+              this.msgError('修改失败')
+              this.loading = false // 关闭遮罩
+            })
+          }
+        }
+      })
     },
     onReset() {
       this.$confirm('确定重置?', '提示', {
@@ -390,7 +394,7 @@ export default {
         overunit: '',
         overmoney: '',
         // 默认常规计费
-        splittype: 3,
+        splittype: 1,
         splittimejsonDto: [],
         // 分段计费
         commonCountFee: [

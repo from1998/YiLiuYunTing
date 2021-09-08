@@ -6,7 +6,7 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form :model="form" label-width="100px" style="width:500px" label-position="left" :rules="rules">
+      <el-form :ref="form" :model="form" label-width="100px" style="width:500px" label-position="left" :rules="rules">
         <el-row>
           <el-form-item label="手机号码" prop="legalpersonphone">
             <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" disabled />
@@ -105,14 +105,18 @@ export default {
       })
     },
     onSubmit() {
-      this.loading = true // 打开遮罩
-      autoWithdraw(this.form).then(res => {
-        this.msgSuccess(res.msg)
-        this.init()
-        this.loading = false // 关闭遮罩
-      }).catch((res) => {
-        this.msgError(res.msg)
-        this.loading = false // 关闭遮罩
+      this.$refs['form'].validate((valid) => {
+        if (valid) {
+          this.loading = true // 打开遮罩
+          autoWithdraw(this.form).then(res => {
+            this.msgSuccess(res.msg)
+            this.init()
+            this.loading = false // 关闭遮罩
+          }).catch((res) => {
+            this.msgError(res.msg)
+            this.loading = false // 关闭遮罩
+          })
+        }
       })
     },
     getVerificationCode() {
