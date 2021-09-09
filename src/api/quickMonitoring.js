@@ -8,10 +8,18 @@ export function getbaoAnLane() {
   })
 }
 
-// 查询
+// 开闸
 export function openLane(id) {
   return request({
     url: '/ylyt/baoAn/open_lane/' + id,
+    method: 'get'
+  })
+}
+
+// 关闸
+export function closeLane(id) {
+  return request({
+    url: '/ylyt/baoAn/close_lane/' + id,
     method: 'get'
   })
 }

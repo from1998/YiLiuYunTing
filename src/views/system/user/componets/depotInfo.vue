@@ -3,6 +3,7 @@
     <!-- 标题 -->
     <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
       车场信息
+      <el-button type="info" icon="el-icon-info" size="mini">{{ 'SN:' }}</el-button>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
@@ -455,7 +456,6 @@ export default {
         }
         return null
       })
-      console.log(this.convert.region)
     },
     handleChange(opt, val) {
       const vals = val.map(function(value) {
@@ -538,6 +538,10 @@ export default {
 .container {
     display: -webkit-box;
      -webkit-box-pack:center;
+}
+.el-button--mini {
+  padding: 0 5px!important;
+  height: 17px;
 }
 .footer {
     margin-left: 50%;

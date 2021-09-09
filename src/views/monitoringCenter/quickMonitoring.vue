@@ -73,7 +73,7 @@
             <el-col :span="4" :offset="0" :gutter="0">
               <el-button type="success" round size="mini" icon="el-icon-d-arrow-left" style="cursor:default">{{ item.lane.name }}</el-button>
             </el-col>
-            <el-col v-show="item.lane.isOnLine==='在线'" :span="5" :offset="6" :gutter="0">
+            <el-col v-show="item.lane.isOnLineName==='在线'" :span="5" :offset="6" :gutter="0">
               <el-button type="success" icon="el-icon-check" circle size="mini" class="btnStatus" />
               <span style="color:#67C23A;font-weight:700">{{ item.lane.isOnLineName }}</span>
             </el-col>
@@ -82,8 +82,8 @@
               <span style="color:#F56C6C;font-weight:700">{{ item.lane.isOnLineName }}</span>
             </el-col>
             <el-col :span="8" :offset="1" :gutter="0">
-              <el-button type="primary" size="mini" round>远程开闸</el-button>
-              <el-button type="warning" size="mini" round style="margin-left:30px">远程关闸</el-button>
+              <el-button type="primary" size="mini" round :disabled="item.lane.isOnLineName==='离线'?true:false" @click="openRemoteLane(item.lane.id)">远程开闸</el-button>
+              <el-button type="warning" size="mini" round style="margin-left:30px" :disabled="item.lane.isOnLineName==='离线'?true:false" @click="closeRemoteLane(item.lane.id)">远程关闸</el-button>
             </el-col>
           </el-row>
         </el-header>
@@ -101,7 +101,6 @@
           </el-main>
         </el-container>
       </div>
-
     </el-container>
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="0" :back-position="0" transition-name="fade" />
@@ -110,17 +109,18 @@
 
 </template>
 <script>
-import { getbaoAnLane } from '@/api/quickMonitoring'
+import { getbaoAnLane, openLane, closeLane } from '@/api/quickMonitoring'
 import validate from '@/utils/validate'
 import BackToTop from '@/components/BackToTop'
 
 export default {
-  legalpersonname: 'DepotRegister',
   components: {
     BackToTop
   },
   data() {
     return {
+      //   定时器
+      timer: null,
       // 验证规则
       validate,
       rules: {
@@ -141,6 +141,8 @@ export default {
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
       },
+      // 是否启用遮罩层
+      loading: false,
       // 是否显示弹出层
       open: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
@@ -151,23 +153,66 @@ export default {
     // 获取保安管辖的车道信息
     this.init()
   },
+  beforeDestroy() {
+    clearInterval(this.timer)
+  },
   methods: {
+    // 远程开闸
+    openRemoteLane(id) {
+      this.$confirm('确定开闸?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        this.loading = true // 开启遮罩
+        openLane(id).then(res => {
+          if (res.code === 200) {
+            this.msgSuccess('开闸成功')
+          }
+          this.loading = false // 关闭遮罩
+        }).catch(() => {
+          this.msgError('开闸失败')
+        })
+      }).catch(() => {
+        this.msgError('开闸已取消')
+      })
+    },
+    // 远程关闸
+    closeRemoteLane(id) {
+      this.$confirm('确定关闸?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 开启遮罩
+        closeLane(id).then(res => {
+          if (res.code === 200) {
+            this.msgSuccess('关闸成功')
+          }
+          this.loading = false // 关闭遮罩
+        }).catch(() => {
+          this.msgError('关闸失败')
+        })
+      }).catch(() => {
+        this.msgError('关闸已取消')
+      })
+    },
     handleDetail() {
       this.open = true
     },
     // ================================
-    async init() {
-      this.loading = true // 打开遮罩
-      this.id = await this.getID()
-      await getbaoAnLane().then(res => {
-        this.resdata = res.data.userLanes
-        console.log(res.data)
-        // if (res.data !== null) {
-        //   this.form = res.data
-        //   this.flag = true
-        // }
-        this.loading = false // 关闭遮罩
-      })
+    init() {
+      this.timer = setInterval(() => {
+        this.loading = true // 打开遮罩
+        getbaoAnLane().then(res => {
+          if (res.data !== null) {
+            this.resdata = res.data.userLanes
+          }
+          this.loading = false // 关闭遮罩
+        }).catch(() => {
+          this.loading = false // 关闭遮罩
+        })
+      }, 2000)
     }
   }
 }

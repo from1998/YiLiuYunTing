@@ -90,7 +90,6 @@ export function isArray(arg) {
 // 车牌号
 export function carPhoneValid(rule, value, callback) {
   const plateNumber = /^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})$/
-  console.log(rule)
   if (plateNumber.test(value)) {
     callback()
   } else {
@@ -102,7 +101,6 @@ export function carPhoneValid(rule, value, callback) {
 /* 是否手机号码*/
 export function phoneValid(rule, value, callback) {
   const validReg = /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/
-  console.log(rule)
   if (validReg.test(value)) {
     callback()
   } else {
@@ -113,7 +111,6 @@ export function phoneValid(rule, value, callback) {
 // 身份证号码验证
 export function IDCardValid(rule, value, callback) {
   const validReg = /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/
-  console.log(rule)
   if (validReg.test(value)) {
     callback()
   } else {
@@ -124,17 +121,17 @@ export function IDCardValid(rule, value, callback) {
 // 不能为空
 export function notEmptyValid(rule, value, callback) {
   let str = value
-  if (value instanceof Array) {
-    if (value.length === 0) {
-      callback(new Error('该字段不能为空'))
-    } else {
-      callback()
-    }
-  } else {
-    if (typeof (value) !== 'string') {
-      str = String(value)
-    }
+  // if (value instanceof Array) {
+  //   if (value.length === 0) {
+  //     callback(new Error('该字段不能为空'))
+  //   } else {
+  //     callback()
+  //   }
+  // } else {
+  if (typeof (value) !== 'string') {
+    str = String(value)
   }
+  // }
   if (str.trim() !== '' && str !== 'undefined' && str !== 'null') {
     callback()
   } else {

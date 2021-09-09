@@ -74,16 +74,60 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/quickMonitoring',
+    path: '/monitoringCenter',
     component: Layout,
-    redirect: '/quickMonitoring/index',
-    name: '/quickMonitoring',
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/monitoringCenter',
+    meta: {
+      title: '监控中心',
+      icon: 'monitoring'
+    },
     children: [
       {
-        path: 'index',
-        name: '/quickMonitoring/index',
-        component: () => import('@/views/quickMonitoring/index'),
-        meta: { title: '监控中心', icon: 'monitoring', noCache: true }
+        path: 'quickMonitoring',
+        component: () => import('@/views/monitoringCenter/quickMonitoring'),
+        name: '/monitoringCenter/quickMonitoring',
+        meta: {
+          title: '快捷监控',
+          icon: 'monitoring'
+        }
+      },
+      {
+        path: 'feeRule',
+        component: () => import('@/views/monitoringCenter/feeRule'),
+        name: '/monitoringCenter/feeRule',
+        meta: {
+          title: '收费规则',
+          icon: 'money'
+        }
+      },
+      {
+        path: 'fixedCarInspection',
+        component: () => import('@/views/monitoringCenter/fixedCarInspection'),
+        name: '/monitoringCenter/fixedCarInspection',
+        meta: {
+          title: '固定车查看',
+          icon: 'car'
+        }
+      },
+      {
+        path: 'accessRecord',
+        component: () => import('@/views/monitoringCenter/accessRecord'),
+        name: '/monitoringCenter/accessRecord',
+        meta: {
+          title: '进出记录',
+          icon: 'access'
+        }
+      },
+      {
+        path: 'deviceStates',
+        component: () => import('@/views/monitoringCenter/deviceStates'),
+        name: '/monitoringCenter/deviceStates',
+        meta: {
+          title: '设备状态',
+          icon: 'equipment'
+        }
       }
     ]
   },
