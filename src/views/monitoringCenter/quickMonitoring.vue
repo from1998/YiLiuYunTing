@@ -1,11 +1,29 @@
 <template>
   <el-container>
     <!-- 标题 -->
-    <el-header class="container" height="46px" style="padding:25px 0 45px;font-size:30px;font-weight:700;text-align:center;background-color: #fff;">
+    <el-header class="container" height="46px" style="padding:25px 0 60px;font-size:30px;font-weight:700;text-align:center;background-color: #fff;">
       监控中心
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
+      <!-- 开闸放行弹出层 -->
+      <el-dialog
+        title="开闸放行"
+        :visible.sync="openLane"
+        width="500px"
+        center
+        append-to-body
+      >
+        <el-form ref="form" v-loading="loading" :model="form" label-width="70px">
+          <el-form-item label="来访原因" prop="comereason">
+            <el-input v-model="form.comereason" />
+          </el-form-item>
+        </el-form>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="handleSubmit">确认</el-button>
+          <el-button type="primary" @click="openLane=false">取消</el-button>
+        </span>
+      </el-dialog>
       <!-- 查看详情弹出层 -->
       <el-dialog
         title="进出场详情"
@@ -16,7 +34,7 @@
       >
         <el-row :gutter="20">
           <el-col :span="8" :offset="0">
-            <div border="true">车牌号:</div>
+            <span>车辆类型:</span>
           </el-col>
           <el-col :span="8" :offset="0">
             <span>车辆类型:</span>
@@ -56,7 +74,7 @@
           </el-col>
         </el-row>
         <!-- 图片 -->
-        <el-image :src="src" style="width:100%">
+        <el-image :src="src" style="width:100%" :preview-src-list="[src]">
           <div slot="placeholder" class="image-slot">
             加载中<span class="dot">...</span>
           </div>
@@ -91,13 +109,22 @@
         <el-container class="container">
           <el-main class="main">
             <!-- 图片 -->
-            <el-image :src="src">
+            <el-image :src="src" :preview-src-list="[src]">
               <div slot="placeholder" class="image-slot">
                 加载中<span class="dot">...</span>
               </div>
             </el-image>
-            <el-button type="primary" size="mini" round class="detail" @click="handleDetail">查看详情</el-button>
             <!-- 查看详情按钮 -->
+            <el-button v-if="item.carRecord!==null && item.lane.type===2" type="primary" size="mini" round class="detail" @click="handleDetail(item.lane.id,item.carRecord.id)">查看详情</el-button>
+            <!-- 开闸放行 -->
+            <el-row v-if="item.carRecord!==null && item.lane.type===1" :gutter="0" class="openLane">
+              <el-col :span="8" :offset="0">
+                <span>{{ item.carRecord.carnumber }}</span>
+              </el-col>
+              <el-col :span="3" :offset="13" style="margin-bottom:5px">
+                <el-button type="warning" size="mini" round style="vertical-align: middle;" @click="handleOpenLane(item.carRecord.id)">开闸放行</el-button>
+              </el-col>
+            </el-row>
           </el-main>
         </el-container>
       </div>
@@ -109,8 +136,7 @@
 
 </template>
 <script>
-import { getbaoAnLane, openLane, closeLane } from '@/api/quickMonitoring'
-import validate from '@/utils/validate'
+import { getbaoAnLane, openLane, closeLane, getLaneDetail, confirmOpenLane } from '@/api/quickMonitoring'
 import BackToTop from '@/components/BackToTop'
 
 export default {
@@ -121,15 +147,9 @@ export default {
     return {
       //   定时器
       timer: null,
-      // 验证规则
-      validate,
-      rules: {
-        legalpersonphone: validate.phone,
-        idnumber: validate.idNumber,
-        type: validate.notEmpty,
-        legalpersonname: validate.notEmpty,
-        merchantname: validate.notEmpty,
-        registersmscode: validate.notEmpty
+      form: {
+        id: '',
+        comereason: ''
       },
       // 返回顶部
       myBackToTopStyle: {
@@ -145,13 +165,20 @@ export default {
       loading: false,
       // 是否显示弹出层
       open: false,
+      openLane: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
-      resdata: []
+      resdata: [],
+      detailOptions: []
     }
   },
   created() {
     // 获取保安管辖的车道信息
     this.init()
+  },
+  mounted() {
+    this.timer = setInterval(() => {
+      this.init()
+    }, 2000)
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -159,7 +186,7 @@ export default {
   methods: {
     // 远程开闸
     openRemoteLane(id) {
-      this.$confirm('确定开闸?', '提示', {
+      this.$confirm('请确认周围环境是否安全?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'info'
@@ -179,7 +206,7 @@ export default {
     },
     // 远程关闸
     closeRemoteLane(id) {
-      this.$confirm('确定关闸?', '提示', {
+      this.$confirm('请确认周围环境是否安全?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -197,22 +224,54 @@ export default {
         this.msgError('关闸已取消')
       })
     },
-    handleDetail() {
+    handleDetail(laneId, resId) {
       this.open = true
+      const query = {
+        laneId: laneId,
+        resId: resId
+      }
+      this.loading = true // 开启遮罩
+      getLaneDetail(query).then(res => {
+        if (res.code === 200) {
+          this.msgSuccess(res.data)
+        }
+        this.loading = false // 关闭遮罩
+      }).catch(() => {
+        // this.msgError('关闸失败')
+        this.loading = false // 关闭遮罩
+      })
     },
     // ================================
     init() {
-      this.timer = setInterval(() => {
-        this.loading = true // 打开遮罩
-        getbaoAnLane().then(res => {
-          if (res.data !== null) {
-            this.resdata = res.data.userLanes
+      this.loading = true // 打开遮罩
+      getbaoAnLane().then(res => {
+        if (res.data !== null) {
+          this.resdata = res.data.userLanes
+          if (res.data.userLanes.carRecord !== null) {
+            this.src = res.data.userLanes.carRecord.epicture
           }
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.loading = false // 关闭遮罩
-        })
-      }, 2000)
+          // this.msgSuccess(res.data.userLanes[0].carRecord)
+        }
+        this.loading = false // 关闭遮罩
+      }).catch(() => {
+        this.loading = false // 关闭遮罩
+      })
+    },
+    // 点击确认开闸
+    handleOpenLane(id) {
+      this.openLane = true
+      this.form.id = id
+    },
+    handleSubmit() {
+      confirmOpenLane(this.form).then(res => {
+        if (res.data !== null) {
+          this.msgSuccess(res.data)
+        }
+        this.loading = false // 关闭遮罩
+      }).catch(() => {
+        this.loading = false // 关闭遮罩
+      })
+      this.openLane = false
     }
   }
 }
@@ -247,6 +306,7 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
     margin: 3% 0 0 6.66%;
     position: relative;
     float: left;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
     .el-header {
     background-color: #E9EEF3;
     color: #333;
@@ -263,6 +323,18 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
         position: absolute;
         top: 83%;
         left: 76%;
+      }
+      .openLane {
+        width: 90%;
+        margin: 0 0 0 5%;
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 28px;
+        color: #409EFF;
+        background-color: rgba(0, 0, 0, .01);
+        position: absolute;
+        bottom: 5%;
+        left: 0;
       }
     }
   }

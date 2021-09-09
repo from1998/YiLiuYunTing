@@ -23,3 +23,21 @@ export function closeLane(id) {
     method: 'get'
   })
 }
+
+// 查看详情
+export function getLaneDetail(query) {
+  return request({
+    url: '/ylyt/baoAn/detail',
+    method: 'get',
+    params: query
+  })
+}
+
+// 确认开闸
+export function confirmOpenLane(data) {
+  return request({
+    url: '/ylyt/baoAn/enter_setting',
+    method: 'post',
+    data
+  })
+}

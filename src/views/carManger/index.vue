@@ -231,7 +231,6 @@
       append-to-body
     >
       <el-table v-loading="loading" border :data="carTableList" @selection-change="handleSelectionChnage">
-        <el-table-column type="selection" width="55" align="center" />
         <el-table-column label="车牌号" align="center" prop="carNumber" />
         <el-table-column label="车主姓名" align="center" prop="carName" />
         <el-table-column label="车主手机号" align="center" prop="carPhone" />

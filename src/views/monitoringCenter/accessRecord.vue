@@ -1,264 +1,295 @@
 <template>
-  <el-container>
-    <!-- 标题 -->
-    <el-header class="container" height="46px" style="padding:25px 0 45px;font-size:30px;font-weight:700;text-align:center;background-color: #fff;">
-      监控中心
-    </el-header>
-    <!-- 主体 -->
-    <el-container class="container">
-      <!-- 查看详情弹出层 -->
-      <el-dialog
-        title="进出场详情"
-        :visible.sync="open"
-        width="600px"
-        center
-        append-to-body
-      >
-        <el-row :gutter="20">
-          <el-col :span="8" :offset="0">
-            <div border="true">车牌号:</div>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>车辆类型:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>车牌类型:</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20" style="margin-top:15px">
-          <el-col :span="8" :offset="0">
-            <span>是否进场:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>进场车道:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>进场时间:</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20" style="margin-top:15px">
-          <el-col :span="8" :offset="0">
-            <span>是否出场:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>出场车道:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>出场时间:</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20" style="margin-top:15px;margin-bottom:25px">
-          <el-col :span="8" :offset="0">
-            <span>停车时长:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>应交金额:</span>
-          </el-col>
-        </el-row>
-        <!-- 图片 -->
-        <el-image :src="src" style="width:100%">
-          <div slot="placeholder" class="image-slot">
-            加载中<span class="dot">...</span>
-          </div>
-        </el-image>
-        <span slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="open=false">关闭</el-button>
-        </span>
-      </el-dialog>
-      <!-- 每一个组件快 -->
-      <div v-for="item in resdata" :key="item.id" class="block">
-        <!-- 组件快头部 -->
-        <el-header height="50px">
-          <el-row :gutter="0">
-            <el-col :span="4" :offset="0" :gutter="0">
-              <el-button type="success" round size="mini" icon="el-icon-d-arrow-left" style="cursor:default">{{ item.lane.name }}</el-button>
-            </el-col>
-            <el-col v-show="item.lane.isOnLineName==='在线'" :span="5" :offset="6" :gutter="0">
-              <el-button type="success" icon="el-icon-check" circle size="mini" class="btnStatus" />
-              <span style="color:#67C23A;font-weight:700">{{ item.lane.isOnLineName }}</span>
-            </el-col>
-            <el-col v-show="item.lane.isOnLineName==='离线'" :span="5" :offset="6" :gutter="0">
-              <el-button type="danger" icon="el-icon-close" circle size="mini" class="btnStatus" />
-              <span style="color:#F56C6C;font-weight:700">{{ item.lane.isOnLineName }}</span>
-            </el-col>
-            <el-col :span="8" :offset="1" :gutter="0">
-              <el-button type="primary" size="mini" round :disabled="item.lane.isOnLineName==='离线'?true:false" @click="openRemoteLane(item.lane.id)">远程开闸</el-button>
-              <el-button type="warning" size="mini" round style="margin-left:30px" :disabled="item.lane.isOnLineName==='离线'?true:false" @click="closeRemoteLane(item.lane.id)">远程关闸</el-button>
-            </el-col>
-          </el-row>
-        </el-header>
-        <!-- 组件块主体 -->
-        <el-container class="container">
-          <el-main class="main">
-            <!-- 图片 -->
-            <el-image :src="src">
-              <div slot="placeholder" class="image-slot">
-                加载中<span class="dot">...</span>
-              </div>
-            </el-image>
-            <el-button type="primary" size="mini" round class="detail" @click="handleDetail">查看详情</el-button>
-            <!-- 查看详情按钮 -->
-          </el-main>
-        </el-container>
-      </div>
-    </el-container>
-    <el-tooltip placement="top" content="返回顶部">
-      <back-to-top :custom-style="myBackToTopStyle" :visibility-height="0" :back-position="0" transition-name="fade" />
-    </el-tooltip>
-  </el-container>
+  <div class="app-container">
+    <!-- 表格工具按钮开始 -->
+    <el-row>
+      <el-col :span="24" :offset="0">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+          <el-form-item label="车牌号" prop="carNumber">
+            <el-input
+              v-model="queryParams.carNumber"
+              placeholder="请输入车牌号"
+              clearable
+              size="small"
+              style="width:180px"
+            />
+          </el-form-item>
+          <el-form-item label="是否离场" prop="isLeave" label-width="70px">
+            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px">
+              <el-option
+                v-for="item in stateOptions"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否支付" prop="isPayed" label-width="70px">
+            <el-select v-cloak v-model="queryParams.isPayed" style="width:180px">
+              <el-option
+                v-for="item in stateOptions"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="进场时间范围" label-width="96px">
+            <el-date-picker
+              v-model="queryParams.dateRangeIn"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholde="开始日期"
+              end-placeholde="结束日期"
+              style="width:240px"
+            />
+          </el-form-item>
+          <el-form-item label="出场时间范围" label-width="96px">
+            <el-date-picker
+              v-model="queryParams.dateRangeOut"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholde="开始日期"
+              end-placeholde="结束日期"
+              style="width:240px"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- 查询条件结束 -->
+      </el-col>
+    </el-row>
+    <!-- 表格工具按钮结束 -->
 
+    <!-- 数据表格开始 -->
+    <el-table v-loading="loading" border :data="carTableList" stripe>
+      <el-table-column label="车牌号" align="center" prop="carNumber" />
+      <el-table-column label="车主姓名" align="center" prop="carName" />
+      <el-table-column label="车主手机号" align="center" prop="carPhone" />
+      <el-table-column label="车辆类型" align="center" prop="carCategory" />
+      <el-table-column label="车位类型" align="center" prop="depotCategory" />
+      <el-table-column label="是否在租" align="center" prop="carStatus" :formatter="carStatusFormate" />
+      <el-table-column label="租车时间段" align="center" prop="timeSection" />
+      <el-table-column label="车辆地址" align="center" prop="carAddress" />
+      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="操作" align="center" width="280">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
+            查看进出场图片
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <!-- 数据表格结束 -->
+    <!-- 分页控件开始 -->
+    <el-pagination
+      v-show="total>0"
+      :current-page="queryParams.page"
+      :page-sizes="[5, 10, 20, 30]"
+      :page-size="queryParams.size"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+    />
+    <!-- 分页控件结束 -->
+
+    <!-- 续费历史弹出层开始 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="RenewHistoryOpen"
+      width="500px"
+      center
+      append-to-body
+    >
+      <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
+        <el-row :gutter="0">
+          <el-col :span="4" :offset="0" :gutter="0">
+            进场图片
+          </el-col>
+          <el-col :span="2" :offset="18" :gutter="0">
+            <el-button type="success" round size="mini" icon="el-icon-d-arrow-left" style="cursor:default;height:18px;line-height:18px;padding-top:0" />
+          </el-col>
+        </el-row>
+      </el-header>
+      <!-- 图片 -->
+      <el-image :src="src" :preview-src-list="[src]">
+        <div slot="placeholder" class="image-slot">
+          加载中<span class="dot">...</span>
+        </div>
+      </el-image>
+      <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
+        <el-row :gutter="0">
+          <el-col :span="4" :offset="0" :gutter="0">
+            出场图片
+          </el-col>
+          <el-col :span="2" :offset="18" :gutter="0">
+            <el-button type="warning" round size="mini" icon="el-icon-d-arrow-right" style="cursor:default;height:18px;line-height:18px;padding-top:0" />
+          </el-col>
+        </el-row>
+      </el-header>
+      <!-- 图片 -->
+      <el-image :src="src" :preview-src-list="[src]">
+        <div slot="placeholder" class="image-slot">
+          加载中<span class="dot">...</span>
+        </div>
+      </el-image>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" align="center" @click="RenewHistoryOpen=false">关 闭</el-button>
+      </span>
+    </el-dialog>
+    <!-- 续费历史弹出层结束 -->
+
+  </div>
 </template>
 <script>
-import { getbaoAnLane, openLane, closeLane } from '@/api/quickMonitoring'
-import validate from '@/utils/validate'
-import BackToTop from '@/components/BackToTop'
+// 引入api
+// import { listRoleForPage } from '@/api/system/role'
+import validate from '@/utils/validate.js'
 
 export default {
-  components: {
-    BackToTop
-  },
+  // 定义页面数据
   data() {
     return {
+      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+      stateOptions: [],
+      // daysTotal: undefined,
+      renewFeeTime: [],
       // 验证规则
       validate,
-      rules: {
-        legalpersonphone: validate.phone,
-        idnumber: validate.idNumber,
-        type: validate.notEmpty,
-        legalpersonname: validate.notEmpty,
-        merchantname: validate.notEmpty,
-        registersmscode: validate.notEmpty
-      },
-      // 返回顶部
-      myBackToTopStyle: {
-        right: '50px',
-        bottom: '50px',
-        width: '40px',
-        height: '40px',
-        'border-radius': '4px',
-        'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
-        background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
-      },
       // 是否启用遮罩层
       loading: false,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 分页数据总条数
+      total: 0,
+      // 字典表格数据
+      carTableList: [],
+      // 弹出层标题
+      title: '',
       // 是否显示弹出层
       open: false,
-      src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
-      resdata: []
+      // 日期范围
+      dateRange: [],
+      // 下拉列表
+      carCategoryOptions: [],
+      depotCategoryOptions: [],
+      timeCategoryOptions: [],
+      // 查询参数
+      queryParams: {
+        page: 1,
+        size: 10,
+        dateRangeIn: [],
+        dateRangeOut: [],
+        isPayed: undefined,
+        isLeave: undefined,
+        carNumber: undefined
+      },
+      // 表单校验
+      // 是否打开分配权限的弹出层
+      RenewOpen: false,
+      RenewHistoryOpen: false,
+      // 菜单树的数据
+      menuOptions: [],
+      // 当前选中持角色ID
+      currentRoleId: undefined
     }
   },
+  // 勾子
   created() {
-    // 获取保安管辖的车道信息
-    this.init()
+    // 查询下拉列表数据
+    // this.getSelectData()
+    // 获取是否字典数据
+    this.getDataByType('yesOrNo').then(res => {
+      this.stateOptions = res.data
+    })
+    // 查询表格数据
+    this.getRoleList()
   },
+  // 方法
   methods: {
-    // 远程开闸
-    openRemoteLane(id) {
-      this.$confirm('确定开闸?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'info'
-      }).then(() => {
-        this.loading = true // 开启遮罩
-        openLane(id).then(res => {
-          if (res.code === 200) {
-            this.msgSuccess('开闸成功')
-          }
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('开闸失败')
-        })
-      }).catch(() => {
-        this.msgError('开闸已取消')
-      })
+    // 格式化是否在租
+    carStatusFormate() {
+      // `this` 指向 vm 实例
+      if (this.carStatus === '1') {
+        return '在租'
+      } else {
+        return '不在租'
+      }
     },
-    // 远程关闸
-    closeRemoteLane(id) {
-      this.$confirm('确定关闸?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.loading = true // 开启遮罩
-        closeLane(id).then(res => {
-          if (res.code === 200) {
-            this.msgSuccess('关闸成功')
-          }
-          this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('关闸失败')
-        })
-      }).catch(() => {
-        this.msgError('关闸已取消')
-      })
-    },
-    handleDetail() {
-      this.open = true
-    },
-    // ================================
-    async init() {
+    // 查询表格数据
+    getRoleList() {
       this.loading = true // 打开遮罩
-      this.id = await this.getID()
-      await getbaoAnLane().then(res => {
-        this.resdata = res.data.userLanes
-        console.log(res.data)
-        // if (res.data !== null) {
-        //   this.form = res.data
-        //   this.flag = true
-        // }
-        this.loading = false // 关闭遮罩
-      })
+      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
+      // this.carTableList = res.data.list
+      this.carTableList = [
+        {
+          carNumber: '皖A22333',
+          carName: '赵六',
+          carPhone: '13155556666',
+          carStatus: '1',
+          carCategory: '小车',
+          depotCategory: '储值车',
+          timeCategory: '全天',
+          timeSection: '',
+          carAddress: '安徽省合肥市蜀山区南湖春城',
+          remark: '这是一个备注'
+        },
+        {
+          carNumber: '粤C66666',
+          carName: '王五',
+          carPhone: '13855556666',
+          carStatus: '1',
+          carCategory: '小车',
+          depotCategory: '临时车',
+          timeCategory: '分时段',
+          timeSection: '2020-09-27 16：30：27 至 2021-09-27 16：30：27',
+          carAddress: '广东省深圳市南山区人民法院',
+          remark: '这是另一个备注'
+        }
+      ]
+      // this.total = res.data.total
+      this.loading = false// 关闭遮罩
+      // })
+    },
+    // 条件查询
+    handleQuery() {
+      this.getRoleList()
+    },
+    // 重置查询条件
+    resetQuery() {
+      this.resetForm('queryForm')
+      this.dateRange = []
+      this.getRoleList()
+    },
+    // 分页size变化时触发
+    handleSizeChange(val) {
+      this.queryParams.size = val
+      // 重新查询
+      this.getRoleList()
+    },
+    // 点击上一页  下一页，跳转到哪一页面时触发
+    handleCurrentChange(val) {
+      this.queryParams.page = val
+      // 重新查询
+      this.getRoleList()
+    },
+    handleAccessImg(row) {
+      this.currentRoleId = row.carId || this.ids[0]
+      this.title = '进出场图片'
+      this.RenewHistoryOpen = true
     }
   }
 }
 </script>
-<style lang="scss" scoped>
-.container {
-display: block;
-// background-color: #E9EEF9;
-box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
-}
-.footer {
-  margin-bottom: 5%;
-    margin-left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: space-between;
-        el-button {
-        flex: 1;
-    }
-}
-.verifyCode {
-  padding: 0;
-    el-button {
-        border-radius: 0!important;
-    }
-}
-.count {
-    cursor:not-allowed;
-}
-  .block {
-    width: 40%;
-    margin: 3% 0 0 6.66%;
-    position: relative;
-    float: left;
-    .el-header {
-    background-color: #E9EEF3;
-    color: #333;
-    line-height: 50px;
-    .btnStatus {
-      vertical-align: middle;
-      cursor: default;
-    }
-    }
-    .el-main {
-      background-color: #B3C0D1;
-      color: #333;
-      .detail {
-        position: absolute;
-        top: 83%;
-        left: 76%;
-      }
-    }
-  }
-</style>
