@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, removeMenu, removeID, setID, setUserName } from '@/utils/auth'
+import { getToken, setToken, removeToken, removeMenu, removeID, setID, setUserName, removeUserName, setRoleID, removeRoleID } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
@@ -42,7 +42,8 @@ const actions = {
         commit('SET_TOKEN', token)
         setToken(token)
         setID(user.id)
-        setUserName(user.username)
+        setRoleID(user.role)
+        setUserName(user.realName)
         resolve()
       }).catch(error => {
         reject(error)
@@ -62,6 +63,9 @@ const actions = {
           commit('SET_PERMISSIONS', [])
           removeToken()
           removeMenu()
+          removeID()
+          removeUserName()
+          removeRoleID()
           resetRouter()// 重置路由
           resolve()
         }
@@ -86,6 +90,8 @@ const actions = {
         removeToken()
         removeMenu()
         removeID()
+        removeUserName()
+        removeRoleID()
         resetRouter()// 重置路由
         dispatch('tagsView/delAllViews', null, { root: true })
         resolve()

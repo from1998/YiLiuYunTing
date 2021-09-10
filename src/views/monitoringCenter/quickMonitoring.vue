@@ -136,7 +136,7 @@
 
 </template>
 <script>
-import { getbaoAnLane, openLane, closeLane, getLaneDetail, confirmOpenLane } from '@/api/quickMonitoring'
+import { getbaoAnLane, openLane, closeLane, getLaneDetail, confirmOpenLane } from '@/api/monitoringCenter/quickMonitoring'
 import BackToTop from '@/components/BackToTop'
 
 export default {

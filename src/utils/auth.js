@@ -4,6 +4,7 @@ const TokenKey = 'Admin-Token'
 const MenuKey = 'Admin-Menu'
 const IDKey = 'User-ID'
 const userNameKey = 'User-Name'
+const RoleIDKey = 'User-RoleID'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -50,5 +51,16 @@ export function setUserName(name) {
 
 export function removeUserName() {
   return Cookies.remove(userNameKey)
+}
+export function getRoleID() {
+  return Cookies.get(RoleIDKey)
+}
+
+export function setRoleID(roleID) {
+  return Cookies.set(RoleIDKey, roleID)
+}
+
+export function removeRoleID() {
+  return Cookies.remove(RoleIDKey)
 }
 

@@ -4,7 +4,7 @@
       收费规则
     </el-header>
     <el-container class="container">
-      <el-form ref="freeRuleForm" :model="form" label-width="180px" style="width:860px" :rules="rules">
+      <el-form ref="freeRuleForm" :model="form" label-width="180px" style="width:860px" :rules="rules" :disabled="flag">
         <!-- 车牌类型 -->
         <el-row>
           <el-col :span="24">
@@ -211,6 +211,7 @@ export default {
   name: 'FeeRule',
   data() {
     return {
+      flag: false,
       // 验证规则
       validate,
       rules: {
@@ -226,6 +227,7 @@ export default {
       limitNumber: '24',
       // formBak: {},
       form: {
+        roleId: '',
         // 用户id
         managerid: '',
         numbertype: 0,
@@ -257,7 +259,7 @@ export default {
   created() {
     this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
     // this.formBak = this.form
-    this.init()
+    this.init(this.form.managerid)
     // 获取收费规则车辆类型字典数据
     this.getDataByType('FeeNumberTypeDic').then(res => {
       this.options.carNumberCategory = res.data
@@ -268,9 +270,19 @@ export default {
     })
   },
   methods: {
-    async init() {
+    async init(id) {
+      if (id === undefined) {
+        id = this.getID()
+        this.roleId = this.getRoleID()
+        console.log(this.roleId)
+        // b保安的roleID是6
+        if (this.roleId === '6') {
+          this.flag = true
+          console.log(this.flag)
+        }
+      }
       this.loading = true // 打开遮罩
-      await getParkfeeByMid(this.form.managerid).then(res => {
+      await getParkfeeByMid(id).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data

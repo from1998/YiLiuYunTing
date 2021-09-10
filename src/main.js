@@ -20,12 +20,13 @@ Vue.use(dataV)
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)
 
-import { getID, getUserName } from '@/utils/auth'
+import { getID, getUserName, getRoleID } from '@/utils/auth'
 import { getDataByType } from '@/api/system/dict/data'
 import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType, getDataByMoreType, convertCarCategory } from '@/utils/his-utils'
 // 全局方法挂载
 Vue.prototype.getID = getID
 Vue.prototype.getUserName = getUserName
+Vue.prototype.getRoleID = getRoleID
 Vue.prototype.resetForm = resetForm
 Vue.prototype.addDateRange = addDateRange
 Vue.prototype.selectDictLabel = selectDictLabel

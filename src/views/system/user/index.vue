@@ -98,9 +98,7 @@
             <svg-icon icon-class="money" />
             分润设置
           </el-button>
-          <!-- 后期路径里面的scope.row.id要换成每个车场的id -->
           <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
-            <!-- 129是车场角色的id -->
             <el-button type="text" size="mini">
               <svg-icon icon-class="car" />
               车场配置

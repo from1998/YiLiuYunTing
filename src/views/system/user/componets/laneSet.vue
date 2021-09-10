@@ -62,7 +62,12 @@
       <el-table-column label="相机品牌" align="center" prop="cameraBrandType" :formatter="cameraBrandTypeFormatter" />
       <el-table-column label="相机识别码" align="center" prop="cameraSn" />
       <el-table-column label="相机IP" align="center" prop="cameraIp" />
-      <el-table-column label="是否在线" align="center" prop="isOnLine" :formatter="statusFormatter" />
+      <el-table-column label="是否在线" align="center">
+        <template slot-scope="scope">
+          <el-button v-show="scope.row.isOnLine===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在线</el-button>
+          <el-button v-show="scope.row.isOnLine===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">离线</el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" />
       <el-table-column label="是否有屏" align="center" prop="haveScreen" :formatter="statusFormatter" />
       <el-table-column label="是否显示余位" align="center" prop="remainder" :formatter="statusFormatter" />
@@ -540,5 +545,11 @@ export default {
 .container {
 width: 80%;
 margin: 0 auto;
+}
+.btnMini {
+  padding: 0 5px!important;
+  height: 17px;
+  margin-left: 0;
+  cursor: default;
 }
 </style>
