@@ -28,18 +28,18 @@
               style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="车主姓名" prop="carName" label-width="68px">
+          <el-form-item label="车主姓名" prop="userName" label-width="68px">
             <el-input
-              v-model="queryParams.carName"
+              v-model="queryParams.userName"
               placeholder="请输入车主姓名"
               clearable
               size="small"
               style="width:150px"
             />
           </el-form-item>
-          <el-form-item label="车主手机号" prop="carPhone" label-width="85px">
+          <el-form-item label="车主手机号" prop="mobile" label-width="85px">
             <el-input
-              v-model="queryParams.carPhone"
+              v-model="queryParams.mobile"
               placeholder="请输入车主手机号"
               clearable
               size="small"
@@ -60,20 +60,57 @@
     <el-table v-loading="loading" border :data="carTableList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车牌号" align="center" prop="carNumber" />
-      <el-table-column label="车主姓名" align="center" prop="carName" />
-      <el-table-column label="车主手机号" align="center" prop="carPhone" />
-      <el-table-column label="车辆类型" align="center" prop="carCategory" />
-      <el-table-column label="车位类型" align="center" prop="depotCategory" />
-      <el-table-column label="是否在租" align="center" prop="carStatus" :formatter="carStatusFormate" />
-      <el-table-column label="租车时间段" align="center" prop="timeSection" />
-      <el-table-column label="车辆地址" align="center" prop="carAddress" />
+      <el-table-column label="车主姓名" align="center" prop="userName" />
+      <el-table-column label="车主手机号" align="center" prop="mobile" />
+      <el-table-column label="车辆类型" align="center" prop="carType" :formatter="carTypeFormatter" />
+      <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
+      <el-table-column label="是否在租" align="center">
+        <template slot-scope="scope">
+          <el-button v-show=" scope.row.status===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在租中</el-button>
+          <el-button v-show="scope.row.status===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">不在租</el-button>
+        </template>
+      </el-table-column>
+      <el-table-column label="租车时间段" align="center" prop="workTimeDur" width="392">
+        <template slot-scope="scope">
+          <el-row :gutter="0">
+            <el-col :span="11" :offset="0">
+              <el-time-picker
+                v-model="scope.row.effectiveTime"
+                value-format="HH-mm-ss"
+                placeholder="起租时间"
+                style="width:140px"
+                disabled
+              />
+            </el-col>
+            <el-col :span="2" :offset="0" style="margin-top:6px">
+              --
+            </el-col>
+            <el-col :span="11" :offset="0">
+              <el-time-picker
+                v-model="scope.row.expireTime"
+                value-format="HH-mm-ss"
+                placeholder="到期时间"
+                style="width:140px"
+                disabled
+              />
+            </el-col>
+          </el-row>
+        </template>
+      </el-table-column>
+      <el-table-column label="车辆地址" align="center" prop="address" />
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleRenew(scope.row)">续费</el-button>
-          <el-button type="text" icon="el-icon-thumb" size="mini" @click="handleRenewHistory(scope.row)">续费历史</el-button>
+          <el-button type="text" icon="el-icon-coin" size="mini" @click="handleRenew(scope.row)">
+            <span>续费</span>
+          </el-button>
+          <router-link :to="'/carManger/index/renewHistory/' + scope.row.id" class="link-type">
+            <el-button type="text" size="mini" icon="el-icon-tickets">
+              <span>续费历史</span>
+            </el-button>
+          </router-link>
         </template>
       </el-table-column>
     </el-table>
@@ -99,77 +136,89 @@
       center
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="validate" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="车牌号" prop="carNumber">
           <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
         </el-form-item>
-        <el-form-item label="车主姓名" prop="carName">
-          <el-input v-model="form.carName" placeholder="请输入车主姓名" clearable size="small" />
+        <el-form-item label="姓名" prop="userName">
+          <el-input v-model="form.userName" placeholder="请输入车主姓名" clearable size="small" />
         </el-form-item>
-        <el-form-item label="车主手机号" prop="phoneNumber">
-          <el-input v-model="form.carPhone" placeholder="请输入车主手机号" clearable size="small" />
+        <el-form-item label="手机号" prop="mobile">
+          <el-input v-model="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
         </el-form-item>
-        <el-form-item label="车辆地址" prop="carAddress">
-          <el-input v-model="form.carAddress" placeholder="请输入车辆地址" clearable size="small" />
+        <el-form-item label="车辆地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入车辆地址" clearable size="small" />
         </el-form-item>
-        <el-form-item label="车辆类型" prop="carCategory">
+        <el-form-item label="车辆类型" prop="carType">
           <el-select
-            v-model="form.carCategory"
+            v-model="form.carType"
             placeholder="请选择车辆类型"
             clearable
             size="small"
-            style="width:240px"
+            style="width:365px"
           >
             <el-option
-              v-for="item in carCategoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in options.carCategoryOptions"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="车位类型" prop="depotCategory">
+        <el-form-item label="车位类型" prop="registerType">
           <el-select
-            v-model="form.depotCategory"
+            v-model="form.registerType"
             placeholder="请选择车位类型"
             clearable
             size="small"
-            style="width:240px"
+            style="width:365px"
           >
             <el-option
-              v-for="item in depotCategoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in options.depotCategoryOptions"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="时长类型" prop="timeCategory">
+        <el-form-item v-if="form.registerType===3" label="时长类型" prop="splitType">
           <el-select
-            v-model="form.timeCategory"
+            v-model="form.splitType"
             placeholder="请选择时长类型"
             clearable
             size="small"
-            style="width:240px"
+            style="width:365px"
           >
             <el-option
-              v-for="item in timeCategoryOptions"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in options.timeCategoryOptions"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
             />
           </el-select>
         </el-form-item>
-        <el-form-item v-if="form.timeCategory==='分时段'" label="时间范围" prop="timeSection">
-          <el-time-picker
-            v-model="timeSection"
-            is-range
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            placeholder="请选择时间范围"
-          />
-        </el-form-item>
+        <el-row v-if="form.splitType===2" :gutter="0">
+          <el-col :span="12" :offset="0">
+            <el-form-item label="开始时间" prop="startSplit">
+              <el-time-picker
+                v-model="form.startSplit"
+                value-format="HH-mm-ss"
+                placeholder="开始时间"
+                style="width:140px"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="结束时间" prop="endSplit">
+              <el-time-picker
+                v-model="form.endSplit"
+                value-format="HH-mm-ss"
+                placeholder="结束时间"
+                style="width:140px"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
@@ -179,41 +228,52 @@
         <el-button @click="cancel">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 添加修改弹出层结束 -->
 
     <!-- 续费弹出层开始 -->
     <el-dialog
-      :title="title"
+      title="续费"
       :visible.sync="RenewOpen"
-      width="600px"
+      width="500px"
       center
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="validate" label-width="100px">
+      <el-form ref="renewForm" :model="renewform" :rules="rules" label-width="100px">
         <el-form-item label="车牌号" prop="carNumber">
-          <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" :disabled="true" />
+          <el-input v-model="renewform.carNumber" placeholder="请输入车牌号" clearable size="small" :disabled="true" />
         </el-form-item>
-        <el-form-item label="车主姓名" prop="carName">
-          <el-input v-model="form.carName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
+        <el-form-item label="车主姓名" prop="userName">
+          <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
         </el-form-item>
-        <el-form-item label="续费金额" prop="renewFee">
+        <el-form-item label="层号" prop="tierNumber">
+          <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px">
+            <el-option
+              v-for="item in options.tierNumber"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="区域号" prop="areaNumber">
+          <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px">
+            <el-option
+              v-for="item in options.areaNumber"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="编号" prop="number">
+          <el-input v-model="renewform.number" placeholder="请输入车位编号" clearable size="small" />
+        </el-form-item>
+        <el-form-item label="续费金额" prop="amount">
           <el-tooltip class="item" effect="dark" content="请输入续费金额" placement="right">
-            <el-input-number v-model="form.renewFee" :precision="2" :step="1" clearable size="small" />
+            <el-input-number v-model="renewform.amount" :precision="2" :step="1" clearable size="small" :min="0" style="width:350px" />
           </el-tooltip>
         </el-form-item>
-        <el-form-item label="续租时间" prop="renewFeeTime">
-          <el-date-picker
-            v-model="renewFeeTime"
-            type="datetimerange"
-            :picker-options="pickerOptions"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期"
-            align="right"
-          />
-        </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
+          <el-input v-model="renewform.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -221,43 +281,30 @@
         <el-button @click="cancelRenew">取 消</el-button>
       </span>
     </el-dialog>
-    <!-- 续费弹出层结束 -->
-    <!-- 续费历史弹出层开始 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="RenewHistoryOpen"
-      width="900px"
-      center
-      append-to-body
-    >
-      <el-table v-loading="loading" border :data="carTableList" @selection-change="handleSelectionChnage">
-        <el-table-column label="车牌号" align="center" prop="carNumber" />
-        <el-table-column label="车主姓名" align="center" prop="carName" />
-        <el-table-column label="车主手机号" align="center" prop="carPhone" />
-        <el-table-column label="续费时间段" align="center" prop="" />
-        <el-table-column label="续费时间" align="center" prop="time" />
-        <el-table-column label="续费金额" align="center" prop="renewFee" />
-        <el-table-column label="备注" align="center" prop="remark" />
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" align="center" @click="handleRenewHistorySubmit">确 定</el-button>
-      </span>
-    </el-dialog>
-    <!-- 续费历史弹出层结束 -->
 
   </div>
 </template>
 <script>
 // 引入api
-import { listRoleForPage, addRole, updateRole, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
+import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar } from '@/api/carManger'
 import validate from '@/utils/validate.js'
 
 export default {
   // 定义页面数据
   data() {
     return {
-      // daysTotal: undefined,
-      renewFeeTime: [],
+      // 验证规则
+      validate,
+      rules: {
+        carNumber: validate.carNumber,
+        address: validate.notEmpty,
+        carType: validate.notEmpty,
+        registerType: validate.notEmpty,
+        splitType: validate.notEmpty,
+        tierNumber: validate.notEmpty,
+        areaNumber: validate.notEmpty,
+        number: validate.notEmpty
+      },
       // 日期快捷选择
       pickerOptions: {
         shortcuts: [{
@@ -300,8 +347,6 @@ export default {
           }
         }]
       },
-      // 验证规则
-      validate,
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -312,124 +357,96 @@ export default {
       multiple: true,
       // 分页数据总条数
       total: 0,
-      // 字典表格数据
+      // 车位列表数据
       carTableList: [],
-      // 弹出层标题
+      // 续费历史列表数据
+      renewTableList: [],
+      // 添加修改弹出层标题
       title: '',
-      // 是否显示弹出层
+      // 添加修改弹出层
       open: false,
-      // 日期范围
-      dateRange: [],
-      // 下拉列表
-      carCategoryOptions: [],
-      depotCategoryOptions: [],
-      timeCategoryOptions: [],
+      // 续费弹出层
+      RenewOpen: false,
+      // 续费历史弹出层
+      RenewHistoryOpen: false,
+      // 下拉列表数据
+      options: {
+        carCategoryOptions: [],
+        depotCategoryOptions: [],
+        timeCategoryOptions: [],
+        areaNumber: [],
+        tierNumber: []
+      },
       // 查询参数
       queryParams: {
         page: 1,
         size: 10,
         carName: undefined,
-        carPhone: undefined,
-        carNumber: undefined
+        userName: undefined,
+        mobile: undefined
       },
       // 表单数据
       form: {},
-      // 表单校验
-      // 是否打开分配权限的弹出层
-      RenewOpen: false,
-      RenewHistoryOpen: false,
-      // 菜单树的数据
-      menuOptions: [],
-      // 当前选中持角色ID
-      currentRoleId: undefined
+      renewform: {
+        registerId: ''
+      }
     }
   },
   // 勾子
   created() {
-    // 查询下拉列表数据
-    this.getSelectData()
-    // 查询表格数据
-    this.getRoleList()
+    // 获取车辆类型字典数据
+    this.getDataByType('CarTypeDic').then(res => {
+      this.options.carCategoryOptions = res.data
+    })
+    // 获取时段类型字典数据
+    this.getDataByType('RegisterSplitTypeDic').then(res => {
+      this.options.timeCategoryOptions = res.data
+    })
+    // 获取车位层号字典数据
+    this.getDataByType('TierNumberDic').then(res => {
+      this.options.tierNumber = res.data
+    })
+    // 获取车位区域号字典数据
+    this.getDataByType('AreaNumberDic').then(res => {
+      this.options.areaNumber = res.data
+    })
+    // 获取车位类型数据
+    getPortType().then(res => {
+      this.options.depotCategoryOptions = res.data
+    })
+    // 查询车位列表数据
+    this.getList()
   },
-  // 方法
   methods: {
-    // 格式化是否在租
-    carStatusFormate() {
-      // `this` 指向 vm 实例
-      if (this.carStatus === '1') {
-        return '在租'
-      } else {
-        return '不在租'
-      }
+    // 翻译车辆类型
+    carTypeFormatter(row) {
+      return this.selectDictLabel(this.options.carCategoryOptions, row.carType.toString())
     },
-    // 查询下拉列表数据
-    getSelectData() {
-      this.carCategoryOptions = [
-        { label: '通用', value: '1' },
-        { label: '大车', value: '2' },
-        { label: '小车', value: '3' }
-      ]
-      this.depotCategoryOptions = [
-        { label: '免费车', value: '1' },
-        { label: '产权车', value: '2' },
-        { label: '储值车', value: '3' },
-        { label: '临时车', value: '4' },
-        { label: '特殊车', value: '5' },
-        { label: '无牌车', value: '6' }
-      ]
-      this.timeCategoryOptions = [
-        { label: '全天', value: '1' },
-        { label: '分时段', value: '2' }
-      ]
+    // 翻译车位类型
+    registerTypeFormatter(row) {
+      return this.selectDictLabel(this.options.depotCategoryOptions, row.registerType.toString())
     },
-    // 查询表格数据
-    getRoleList() {
+    // 查询车位列表数据
+    getList() {
       this.loading = true // 打开遮罩
-      listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-        // this.carTableList = res.data.list
-        this.carTableList = [
-          {
-            carNumber: '皖A22333',
-            carName: '赵六',
-            carPhone: '13155556666',
-            carStatus: '1',
-            carCategory: '小车',
-            depotCategory: '储值车',
-            timeCategory: '全天',
-            timeSection: '',
-            carAddress: '安徽省合肥市蜀山区南湖春城',
-            remark: '这是一个备注'
-          },
-          {
-            carNumber: '粤C66666',
-            carName: '王五',
-            carPhone: '13855556666',
-            carStatus: '1',
-            carCategory: '小车',
-            depotCategory: '临时车',
-            timeCategory: '分时段',
-            timeSection: '2020-09-27 16：30：27 至 2021-09-27 16：30：27',
-            carAddress: '广东省深圳市南山区人民法院',
-            remark: '这是另一个备注'
-          }
-        ]
+      getPortList(this.queryParams).then(res => {
+        this.carTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },
     // 条件查询
     handleQuery() {
-      this.getRoleList()
+      this.getList()
     },
-    // 重置查询条件
+    // 重置条件查询
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
-      this.getRoleList()
+      this.getList()
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
-      this.ids = selection.map(item => item.carId)
+      this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
     },
@@ -437,13 +454,13 @@ export default {
     handleSizeChange(val) {
       this.queryParams.size = val
       // 重新查询
-      this.getRoleList()
+      this.getList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
       this.queryParams.page = val
       // 重新查询
-      this.getRoleList()
+      this.getList()
     },
     // 打开添加的弹出层
     handleAdd() {
@@ -454,30 +471,33 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改车辆'
-      // const carId = row.carId || this.ids
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
+      const portIds = row.id || this.ids[0]
       this.reset()
-      // 根据dictId查询一个字典信息
+      this.getInfoById(portIds, 'form')
+    },
+    // 根据id查询车辆信息
+    getInfoById(id, form) {
       this.loading = true
-      // getRoleById(carId).then(res => {
-      //   this.form = res.data
-      //   this.loading = false
-      // })
+      const query = { 'id': id }
+      getPortById(query).then(res => {
+        this[form] = res.data
+        this.loading = false
+      })
     },
     // 执行删除
     handleDelete(row) {
-      const roleIds = row.carId || this.ids
+      const portIds = row.id || this.ids
       this.$confirm('此操作将永久删除该车辆数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.loading = true
-        deleteRoleByIds(roleIds).then(res => {
-          this.loading = false
+        deletePort(portIds).then(res => {
           this.msgSuccess('删除成功')
-          this.getRoleList()// 全查询
+          this.getList()
+          this.loading = false
         })
       }).catch(() => {
         this.msgError('删除已取消')
@@ -488,22 +508,21 @@ export default {
     handleSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
-          // 做添加
           this.loading = true
-          if (this.form.carId === undefined) {
-            addRole(this.form).then(res => {
+          if (this.form.id === undefined || this.form.id === null || this.form.id === '') { // 做添加
+            addPort(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
-              this.getRoleList()// 列表重新查询
+              this.getList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false
             })
           } else { // 做修改
-            updateRole(this.form).then(res => {
+            updatePort(this.form).then(res => {
               this.msgSuccess('修改成功')
               this.loading = false
-              this.getRoleList()// 列表重新查询
+              this.getList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false
@@ -512,7 +531,7 @@ export default {
         }
       })
     },
-    // 取消
+    // 取消添加或修改
     cancel() {
       this.open = false
       this.loading = false
@@ -521,58 +540,63 @@ export default {
     // 重置表单
     reset() {
       this.resetForm('form')
-      // this.form = {
-      //   carId: undefined,
-      //   carNumber: '0',
-      //   carName: undefined,
-      //   carPhone: undefined,
-      //   carStatus: undefined,
-      //   remark: undefined
-      // }
+      this.resetForm('renewform')
     },
-    // 打开分配权限和菜单的弹出层
+    // 打开续费弹出层
     handleRenew(row) {
-      this.currentRoleId = row.carId || this.ids[0]
-      this.title = '续费'
       this.RenewOpen = true
-      // 查询所有可用的菜单
-      // selectMenuTree().then(res => {
-      //   this.menuOptions = this.handleTree(res.data, 'menuId')
-      // })
-      // 根据角色ID查询当前角色拥有的哪些菜单权限
-      // getMenuIdsByRoleId(this.currentRoleId).then(res => {
-      //   this.$refs.menu.setCheckedKeys(res.data)
-      // })
-    },
-    handleRenewHistory(row) {
-      this.currentRoleId = row.carId || this.ids[0]
-      this.title = '续费历史'
-      this.RenewHistoryOpen = true
+      const portIds = row.id || this.ids
+      this.reset()
+      this.getInfoById(portIds, 'renewform')
     },
     // 续费确定操作
     handleRenewSubmit() {
-      // 获取选中的keys
-      const checkedKeys = this.$refs.menu.getCheckedKeys()
-      // 获取半选的keys
-      const halfCheckKeys = this.$refs.menu.getHalfCheckedKeys()
-      // 组合成最后的keys
-      const finalKey = halfCheckKeys.concat(checkedKeys)
-      // console.log(finalKey)
-      saveRoleMenu(this.currentRoleId, finalKey).then(res => {
-        this.msgSuccess('分配成功')
-      }).catch(() => {
-        this.msgSuccess('分配失败')
+      this.renewform.registerId = this.renewform.id
+      this.$refs['renewForm'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          doRenew(this.renewform).then(res => {
+            this.msgSuccess('续费成功')
+            this.loading = false
+            this.getList()// 列表重新查询
+            this.RenewOpen = false// 关闭弹出层
+          }).catch(() => {
+            this.msgError('续费失败')
+            this.loading = false
+          })
+        }
       })
     },
     // 取消续费操作
     cancelRenew() {
       this.RenewOpen = false
-      this.menuOptions = []
     },
-    // 续费历史确定操作
-    handleRenewHistorySubmit() {
-      this.RenewHistoryOpen = false
+    // 模板下载
+    handleDownload() {
+      this.loading = true
+      exportRegisterCar(this.renewform).then(res => {
+        this.loading = false
+      }).catch(() => {
+        this.msgError('模板下载失败')
+        this.loading = false
+      })
+    },
+    // 导入车辆
+    handleImport() {
+      console.log('导入成功')
+    },
+    // 导出车辆
+    handleExport() {
+      console.log('导出成功')
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+  .btnMini {
+    padding: 0 5px!important;
+    height: 17px;
+    margin-left: 0;
+    cursor: default;
+  }
+</style>

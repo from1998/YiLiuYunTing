@@ -209,7 +209,6 @@ export default {
     // 不分页，查询所有的类型
     selectAllDictType().then(res => {
       this.typeOptions = res.data
-      console.log(res)
     })
   },
   methods: {

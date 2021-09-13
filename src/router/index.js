@@ -507,8 +507,21 @@ export const lastRoute = [
       {
         path: 'carSetting/:id(\\d+)',
         component: () => import('@/views/system/user/carSetting'),
-        name: '/user',
+        name: '/carSetting',
         meta: { title: '车场设置', noCache: true }
+      }
+    ]
+  },
+  {
+    path: '/carManger/index',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'renewHistory/:id(\\d+)',
+        component: () => import('@/views/carManger/renewHistory'),
+        name: '/renewHistory',
+        meta: { title: '续费历史', noCache: true }
       }
     ]
   },
