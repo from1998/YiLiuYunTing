@@ -244,7 +244,7 @@
         <el-form-item label="车主姓名" prop="userName">
           <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
         </el-form-item>
-        <el-form-item label="续租时间段">
+        <el-form-item v-if="form.registerType===3" label="续租时间段">
           <el-row :gutter="0">
             <el-col :span="11" :offset="0">
               <el-time-picker
