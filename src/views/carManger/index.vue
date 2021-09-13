@@ -244,6 +244,29 @@
         <el-form-item label="车主姓名" prop="userName">
           <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
         </el-form-item>
+        <el-form-item label="续租时间段">
+          <el-row :gutter="0">
+            <el-col :span="11" :offset="0">
+              <el-time-picker
+                v-model="renewform.effectiveTime"
+                value-format="HH-mm-ss"
+                placeholder="起租时间"
+                style="width:140px"
+              />
+            </el-col>
+            <el-col :span="2" :offset="0">
+              --
+            </el-col>
+            <el-col :span="11" :offset="0">
+              <el-time-picker
+                v-model="renewform.expireTime"
+                value-format="HH-mm-ss"
+                placeholder="到期时间"
+                style="width:140px"
+              />
+            </el-col>
+          </el-row>
+        </el-form-item>
         <el-form-item label="层号" prop="tierNumber">
           <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px">
             <el-option

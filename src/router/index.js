@@ -69,7 +69,7 @@ export const asyncRoutes = [
         path: 'index',
         name: '/carManger/index',
         component: () => import('@/views/carManger/index'),
-        meta: { title: '车辆管理', icon: 'car', noCache: true }
+        meta: { title: '固定车', icon: 'car', noCache: true }
       }
     ]
   },
