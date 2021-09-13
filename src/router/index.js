@@ -74,6 +74,37 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/recordsQuery',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/recordsQuery',
+    meta: {
+      title: '记录查询',
+      icon: 'el-icon-tickets'
+    },
+    children: [
+      {
+        path: 'accessRecord',
+        component: () => import('@/views/recordsQuery/accessRecord'),
+        name: '/recordsQuery/accessRecord',
+        meta: {
+          title: '进出记录',
+          icon: 'access'
+        }
+      },
+      {
+        path: 'orderRecord',
+        component: () => import('@/views/recordsQuery/orderRecord'),
+        name: '/recordsQuery/orderRecord',
+        meta: {
+          title: '订单记录',
+          icon: 'el-icon-s-claim'
+        }
+      }
+    ]
+  },
+  {
     path: '/monitoringCenter',
     component: Layout,
     redirect: 'noRedirect',
