@@ -244,26 +244,32 @@
         <el-form-item label="车主姓名" prop="userName">
           <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
         </el-form-item>
-        <el-form-item v-if="form.registerType===3" label="续租时间段">
+        <el-form-item v-if="renewform.registerType===3" label="续租时间段" prop="notEmpty">
           <el-row :gutter="0">
             <el-col :span="11" :offset="0">
-              <el-time-picker
-                v-model="renewform.effectiveTime"
-                value-format="HH-mm-ss"
-                placeholder="起租时间"
-                style="width:140px"
-              />
+              <el-form-item prop="effectiveTime" label="" label-width="0">
+                <el-date-picker
+                  v-model="renewform.effectiveTime"
+                  value-format="yyyy-MM-dd"
+                  placeholder="起租时间"
+                  style="width:157px"
+                  type="date"
+                />
+              </el-form-item>
             </el-col>
-            <el-col :span="2" :offset="0">
+            <el-col :span="1" :offset="0">
               --
             </el-col>
             <el-col :span="11" :offset="0">
-              <el-time-picker
-                v-model="renewform.expireTime"
-                value-format="HH-mm-ss"
-                placeholder="到期时间"
-                style="width:140px"
-              />
+              <el-form-item prop="expireTime" label="" label-width="0">
+                <el-date-picker
+                  v-model="renewform.expireTime"
+                  value-format="yyyy-MM-dd"
+                  placeholder="到期时间"
+                  style="width:175px"
+                  type="date"
+                />
+              </el-form-item>
             </el-col>
           </el-row>
         </el-form-item>
@@ -288,7 +294,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="编号" prop="number">
-          <el-input v-model="renewform.number" placeholder="请输入车位编号" clearable size="small" />
+          <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px" @focus="handleNumberFocus">
+            <el-option
+              v-for="item in options.number"
+              :key="item.id"
+              :label="item.number"
+              :value="item.number"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item label="续费金额" prop="amount">
           <el-tooltip class="item" effect="dark" content="请输入续费金额" placement="right">
@@ -310,6 +323,7 @@
 <script>
 // 引入api
 import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar } from '@/api/carManger'
+import { getSiteByMid } from '@/api/system/carSetting'
 import validate from '@/utils/validate.js'
 
 export default {
@@ -326,6 +340,8 @@ export default {
         splitType: validate.notEmpty,
         tierNumber: validate.notEmpty,
         areaNumber: validate.notEmpty,
+        effectiveTime: validate.notEmpty,
+        expireTime: validate.notEmpty,
         number: validate.notEmpty
       },
       // 日期快捷选择
@@ -398,7 +414,8 @@ export default {
         depotCategoryOptions: [],
         timeCategoryOptions: [],
         areaNumber: [],
-        tierNumber: []
+        tierNumber: [],
+        number: []
       },
       // 查询参数
       queryParams: {
@@ -441,6 +458,24 @@ export default {
     this.getList()
   },
   methods: {
+    // 编号选择框获得焦点事件
+    handleNumberFocus() {
+      const query = {
+        managerid: this.getID(),
+        tierNumber: this.renewform.tierNumber,
+        areaNumber: this.renewform.areaNumber
+      }
+      this.options.number = []
+      getSiteByMid(query).then((res) => {
+        res.data.map(val => {
+          this.options.number.push({
+            number: val.number,
+            id: val.id
+          })
+        })
+        console.log(this.options.number)
+      })
+    },
     // 翻译车辆类型
     carTypeFormatter(row) {
       return this.selectDictLabel(this.options.carCategoryOptions, row.carType.toString())

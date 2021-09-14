@@ -234,14 +234,24 @@ export function baoAnSetting(data) {
 }
 // -------------------------------------车位管理
 
-// 查询车位列表
+// 查询车位列表：不分页
 export function getSiteByMid(query) {
   return request({
-    url: '/ylyt/carSite/getSiteByMid',
+    url: '/ylyt/carSite/getSiteList',
     method: 'get',
     params: query
   })
 }
+
+// 查询车位列表：分页
+export function getSiteListByPage(query) {
+  return request({
+    url: '/ylyt/carSite/getSiteListByPage',
+    method: 'get',
+    params: query
+  })
+}
+
 // 根据ID查询车位
 export function getSiteById(id) {
   return request({

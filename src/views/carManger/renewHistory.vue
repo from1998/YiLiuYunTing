@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="22" :offset="2">
+      <el-col :span="18" :offset="6">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="姓名" prop="userName" label-width="68px">
@@ -55,8 +55,8 @@
     <el-table v-loading="loading" border :data="renewTableList" @selection-change="handleSelectionChnage">
       <el-table-column label="车主姓名" align="center" prop="userName" />
       <el-table-column label="车牌号" align="center" prop="carNumber" />
-      <el-table-column label="层号" align="center" prop="tierNumber" />
-      <el-table-column label="区域号" align="center" prop="areaNumber" />
+      <el-table-column label="层号" align="center" prop="tierNumber" :formatter="tierNumberFormatter" />
+      <el-table-column label="区域号" align="center" prop="areaNumber" :formatter="areaNumberFormatter" />
       <el-table-column label="编号" align="center" prop="number" />
       <el-table-column label="起租时间" align="center" prop="effectiveTime" />
       <el-table-column label="到期时间" align="center" prop="expireTime" />
@@ -119,7 +119,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="续费金额" prop="amount">
-          <el-input v-model="form.amount" type="textarea" placeholder="请输入续费金额" clearable size="small" />
+          <el-input-number v-model="form.amount" :precision="2" :step="1" clearable size="small" :min="0" style="width:370px" placeholder="请输入续费金额" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -132,7 +132,7 @@
 </template>
 <script>
 // 引入api
-import { getPortRenewHistory } from '@/api/carManger'
+import { getPortRenewHistory, getRenewHistory } from '@/api/carManger'
 import validate from '@/utils/validate.js'
 
 export default {
@@ -248,6 +248,14 @@ export default {
     this.getList()
   },
   methods: {
+    // 翻译车位层号
+    tierNumberFormatter(row) {
+      return this.selectDictLabel(this.options.tierNumber, row.tierNumber.toString())
+    },
+    // 翻译车位区域号
+    areaNumberFormatter(row) {
+      return this.selectDictLabel(this.options.areaNumber, row.areaNumber.toString())
+    },
     // 查询续费历史记录列表数据
     getList() {
       this.loading = true // 打开遮罩
@@ -288,9 +296,15 @@ export default {
     handleUpdate(row) {
       this.title = '修改续费记录'
       this.open = true
-      const portIds = row.id || this.ids[0]
+      const id = row.id
       this.reset()
-      this.getInfoById(portIds)
+      this.loading = true
+      const query = { 'id': id }
+      getRenewHistory(query).then(res => {
+        console.log(res.data)
+        this.form = res.data
+        this.loading = false
+      })
     },
     // 保存
     handleSubmit() {
@@ -328,38 +342,6 @@ export default {
     // 重置表单
     reset() {
       this.resetForm('form')
-      console.log(this.form)
-    },
-    // 打开续费弹出层
-    handleRenew(row) {
-      this.RenewOpen = true
-      const portIds = row.id || this.ids
-      this.getInfoById(portIds)
-      this.reset()
-    },
-    // 打开续费历史弹出层
-    handleRenewHistory(row) {
-      this.RenewHistoryOpen = true
-      const portIds = row.id || this.ids
-      this.loading = true // 打开遮罩
-      getPortRenewHistory(portIds).then(res => {
-        this.renewTableList = res.data.list
-        this.total = res.data.total
-        this.loading = false// 关闭遮罩
-      })
-    },
-    // 编辑续费历史
-    handleEdit() {
-      console.log('编辑成功')
-    },
-    // 取消续费操作
-    cancelRenew() {
-      this.RenewOpen = false
-    },
-    // 续费历史关闭操作
-    handleRenewHistoryClose() {
-      this.RenewHistoryOpen = false
-      this.renewTableList = []
     }
   }
 }

@@ -287,11 +287,11 @@ export default {
         if (res.data !== null) {
           this.form = res.data
           // 常规
-          if (res.data.splittype === 3) {
+          if (res.data.splittype === 1) {
             this.form.splittimejsonDto = []
             this.form.commonCountFee = []
             // 分段
-          } else if (res.data.splittype === 1) {
+          } else if (res.data.splittype === 3) {
             this.handletime()
           } else {
             this.form.commonCountFee = []
@@ -304,7 +304,7 @@ export default {
       this.$refs['freeRuleForm'].validate((valid) => {
         if (valid) {
           // 如果是分段计费
-          if (this.form.splittype === 1) {
+          if (this.form.splittype === 3) {
             this.form.splittimejsonDto = this.form.commonCountFee
             // delete this.form.commonCountFee
             // this.form.splittimejsonDto.forEach(ele => {

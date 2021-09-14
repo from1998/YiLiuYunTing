@@ -76,12 +76,12 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="noticeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="科室ID" align="center" prop="noticeId" />
-      <el-table-column label="科室名称" align="center" prop="noticeTitle" />
-      <el-table-column label="状态" prop="noticeType" align="center" :formatter="noticeTypeFormatter" />
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
+      <el-table-column label="标题" align="center" prop="noticeTitle" />
+      <el-table-column label="内容" align="center" prop="noticeContent" />
+      <el-table-column label="类型" prop="noticeType" align="center" />
+      <el-table-column label="状态" prop="status" align="center" />
       <el-table-column label="发布者" align="center" prop="createBy" />
-      <el-table-column label="创建时间" align="center" prop="createTime" />
+      <el-table-column label="发布时间" align="center" prop="createTime" />
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -261,8 +261,8 @@ export default {
     getNoticeList() {
       this.loading = true // 打开遮罩
       listNoticeForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-        this.noticeTableList = res.data
-        this.total = res.total
+        this.noticeTableList = res.data.list
+        this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },

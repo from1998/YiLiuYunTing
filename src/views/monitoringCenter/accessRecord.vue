@@ -151,7 +151,7 @@
 </template>
 <script>
 // 引入api
-// import { listRoleForPage } from '@/api/system/role'
+import { getRecordList } from '@/api/monitoringCenter/accessRecord'
 import validate from '@/utils/validate.js'
 
 export default {
@@ -190,8 +190,6 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        dateRangeIn: [],
-        dateRangeOut: [],
         isPayed: undefined,
         isLeave: undefined,
         carNumber: undefined
@@ -215,7 +213,7 @@ export default {
       this.stateOptions = res.data
     })
     // 查询表格数据
-    this.getRoleList()
+    this.getAccessList()
   },
   // 方法
   methods: {
@@ -229,39 +227,13 @@ export default {
       }
     },
     // 查询表格数据
-    getRoleList() {
+    getAccessList() {
       this.loading = true // 打开遮罩
-      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-      // this.carTableList = res.data.list
-      this.carTableList = [
-        {
-          carNumber: '皖A22333',
-          carName: '赵六',
-          carPhone: '13155556666',
-          carStatus: '1',
-          carCategory: '小车',
-          depotCategory: '储值车',
-          timeCategory: '全天',
-          timeSection: '',
-          carAddress: '安徽省合肥市蜀山区南湖春城',
-          remark: '这是一个备注'
-        },
-        {
-          carNumber: '粤C66666',
-          carName: '王五',
-          carPhone: '13855556666',
-          carStatus: '1',
-          carCategory: '小车',
-          depotCategory: '临时车',
-          timeCategory: '分时段',
-          timeSection: '2020-09-27 16：30：27 至 2021-09-27 16：30：27',
-          carAddress: '广东省深圳市南山区人民法院',
-          remark: '这是另一个备注'
-        }
-      ]
-      // this.total = res.data.total
-      this.loading = false// 关闭遮罩
-      // })
+      getRecordList(this.queryParams).then(res => {
+        this.carTableList = res.data.list
+        this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      })
     },
     // 条件查询
     handleQuery() {

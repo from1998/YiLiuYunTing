@@ -196,7 +196,12 @@ export default {
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 带查询参数的编程式导航，query是一个对象，是查询
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              if (this.getRoleID() === '1' || this.getRoleID() === '4') {
+                this.$router.push('/dashboard')
+              } else if (this.getRoleID() === '6') {
+                this.$router.push('/monitoringCenter/quickMonitoring')
+              }
               // 强制刷新
               // this.$router.go(0)
               this.loading = false
@@ -295,7 +300,7 @@ $light_gray:#eee;
   width: 100%;
   overflow: hidden;
 .logo {
-    padding-top: 160px;
+    padding-top: 10%;
   margin: 0 auto;
   text-align: center;
   width: 100px;

@@ -3,7 +3,8 @@
     <!-- 标题 -->
     <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
       车场信息
-      <el-button type="info" icon="el-icon-info" size="mini">{{ 'SN:' }}</el-button>
+      <span>{{ 'SN:'+ form.sn }}</span>
+      <!-- <el-button type="primary" icon="el-icon-success" size="mini" @clicl="handelCopy"></el-button> -->
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
@@ -391,6 +392,9 @@ export default {
     })
   },
   methods: {
+    handelCopy() {
+      document.execCommand(this.form.sn)
+    },
     async init() {
       this.loading = true // 打开遮罩
       await getDepotById(this.form.managerid).then(res => {

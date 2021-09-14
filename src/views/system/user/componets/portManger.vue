@@ -114,7 +114,7 @@
 </template>
 <script>
 // 引入api
-import { getSiteByMid, getSiteById, addCarSite, updateSite, deleteSiteByList } from '@/api/system/carSetting'
+import { getSiteListByPage, getSiteById, addCarSite, updateSite, deleteSiteByList } from '@/api/system/carSetting'
 import validate from '@/utils/validate'
 
 export default {
@@ -197,7 +197,7 @@ export default {
     // 查询表格数据
     getPortList() {
       this.loading = true // 打开遮罩
-      getSiteByMid(this.queryParams).then(res => {
+      getSiteListByPage(this.queryParams).then(res => {
         this.portList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩

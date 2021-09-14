@@ -38,27 +38,29 @@ export const constantRoutes = [
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
-  },
-  {
-    path: '/carPlay',
-    component: () => import('@/views/carPlay/index'),
-    meta: { title: '可视化', icon: 'view' }
-  },
+  }
+]
+export const asyncRoutes = [
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
+    name: '/dashboard',
     children: [
       {
         path: 'dashboard',
-        name: '',
+        name: '/dashboard/index',
         component: () => import('@/views/dashboard/index'),
         meta: { title: '首页', icon: 'dashboard' }
       }
     ]
-  }
-]
-export const asyncRoutes = [
+  },
+  {
+    path: '/carPlay',
+    name: '/carPlay',
+    component: () => import('@/views/carPlay/index'),
+    meta: { title: '可视化', icon: 'view' }
+  },
   {
     path: '/carManger',
     component: Layout,
@@ -99,6 +101,55 @@ export const asyncRoutes = [
         name: '/recordsQuery/orderRecord',
         meta: {
           title: '订单记录',
+          icon: 'el-icon-s-claim'
+        }
+      }
+    ]
+  },
+  {
+    path: '/coupons',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/coupons',
+    meta: {
+      title: '优惠券',
+      icon: 'el-icon-money'
+    },
+    children: [
+      {
+        path: 'couponsManger',
+        component: () => import('@/views/coupons/couponsManger'),
+        name: '/coupons/couponsManger',
+        meta: {
+          title: '优惠券管理',
+          icon: 'couponsManger'
+        }
+      },
+      {
+        path: 'merchantManger',
+        component: () => import('@/views/coupons/merchantManger'),
+        name: '/coupons/merchantManger',
+        meta: {
+          title: '商家管理',
+          icon: 'el-icon-s-shop'
+        }
+      },
+      {
+        path: 'merchantCoupons',
+        component: () => import('@/views/coupons/merchantCoupons'),
+        name: '/coupons/merchantCoupons',
+        meta: {
+          title: '商家优惠券',
+          icon: 'el-icon-money'
+        }
+      },
+      {
+        path: 'couponsRecord',
+        component: () => import('@/views/coupons/couponsRecord'),
+        name: '/coupons/couponsRecord',
+        meta: {
+          title: '优惠券记录',
           icon: 'el-icon-s-claim'
         }
       }
@@ -179,7 +230,7 @@ export const asyncRoutes = [
         name: '/system/user',
         meta: {
           title: '用户管理',
-          icon: 'list'
+          icon: 'user'
         }
       },
       {

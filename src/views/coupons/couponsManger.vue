@@ -5,17 +5,17 @@
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item label="车牌号" prop="carNumber">
+          <el-form-item label="名称" prop="carNumber">
             <el-input
               v-model="queryParams.carNumber"
-              placeholder="请输入车牌号"
+              placeholder="请输入优惠券名称"
               clearable
               size="small"
               style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="是否离场" prop="isLeave" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px">
+          <el-form-item label="类型" prop="isLeave" label-width="70px">
+            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券类型">
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -24,8 +24,8 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="是否支付" prop="isPayed" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isPayed" style="width:180px">
+          <el-form-item label="是否开放" prop="isLeave" label-width="70px">
+            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券是否开放">
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -33,30 +33,6 @@
                 :value="Number(item.dictValue)"
               />
             </el-select>
-          </el-form-item>
-          <el-form-item label="进场时间范围" label-width="96px">
-            <el-date-picker
-              v-model="queryParams.dateRangeIn"
-              size="small"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholde="开始日期"
-              end-placeholde="结束日期"
-              style="width:240px"
-            />
-          </el-form-item>
-          <el-form-item label="出场时间范围" label-width="96px">
-            <el-date-picker
-              v-model="queryParams.dateRangeOut"
-              size="small"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholde="开始日期"
-              end-placeholde="结束日期"
-              style="width:240px"
-            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -70,39 +46,20 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="车牌号" align="center" prop="carNumber" />
-      <el-table-column label="进场时间" align="center">
+      <el-table-column label="名称" align="center" prop="carNumber" />
+      <el-table-column label="类型" align="center" prop="carNumber" />
+      <el-table-column label="是否开放" align="center">
         <template slot-scope="scope">
-          <el-date-picker
-            v-model="scope.time"
-            type="datetime"
-            placeholder="暂无"
+          <el-switch
+            v-model="scope.row.gateState"
+            :active-text="scope.row.gateState?'开放':'关闭'"
+            @change="gateStateChanged(scope.row)"
           />
         </template>
       </el-table-column>
-      <el-table-column label="进场车道" align="center" prop="carPhone" />
-      <el-table-column label="出场时间" align="center">
-        <template slot-scope="scope">
-          <el-date-picker
-            v-model="scope.time"
-            type="datetime"
-            placeholder="暂无"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="出场车道" align="center" prop="carPhone" />
-      <el-table-column label="车位类型" align="center" prop="depotCategory" />
-      <el-table-column label="记录类型" align="center" prop="carCategory" />
-      <el-table-column label="进场检查情况" align="center" prop="carStatus" :formatter="carStatusFormate" />
-      <el-table-column label="出场检查情况" align="center" prop="timeSection" />
-      <el-table-column label="是否进场" align="center" prop="carAddress" />
-      <el-table-column label="是否出场" align="center" prop="remark" />
-      <el-table-column label="支付时间" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
-            查看进出场图片
-          </el-button>
+          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
         </template>
       </el-table-column>
     </el-table>

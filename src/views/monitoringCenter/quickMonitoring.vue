@@ -28,53 +28,54 @@
       <el-dialog
         title="进出场详情"
         :visible.sync="open"
-        width="600px"
+        width="700px"
         center
         append-to-body
       >
         <el-row :gutter="20">
           <el-col :span="8" :offset="0">
-            <span>车辆类型:</span>
+            <span>车牌号: {{ detailOptions.length!==0 && detailOptions.carnumber }}</span>
+
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>车辆类型:</span>
+            <span>车辆类型: {{ detailOptions.length!==0 && detailOptions.recordcartype }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>车牌类型:</span>
-          </el-col>
-        </el-row>
-        <el-row :gutter="20" style="margin-top:15px">
-          <el-col :span="8" :offset="0">
-            <span>是否进场:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>进场车道:</span>
-          </el-col>
-          <el-col :span="8" :offset="0">
-            <span>进场时间:</span>
+            <span>车牌类型: {{ detailOptions.length!==0 && detailOptions.numbertype }}</span>
           </el-col>
         </el-row>
         <el-row :gutter="20" style="margin-top:15px">
           <el-col :span="8" :offset="0">
-            <span>是否出场:</span>
+            <span>是否进场: {{ detailOptions.length!==0 && (detailOptions.isenter===1?'已进场':'未进场') }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>出场车道:</span>
+            <span>进场车道: {{ detailOptions.length!==0 && detailOptions.entermid }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>出场时间:</span>
+            <span>进场时间: {{ detailOptions.length!==0 && detailOptions.entered }}</span>
+          </el-col>
+        </el-row>
+        <el-row :gutter="20" style="margin-top:15px">
+          <el-col :span="8" :offset="0">
+            <span>是否出场: {{ detailOptions.length!==0 && (detailOptions.isleave===1?'已出场':'未出场') }}</span>
+          </el-col>
+          <el-col :span="8" :offset="0">
+            <span>出场车道: {{ detailOptions.length!==0 && detailOptions.leavemid }}</span>
+          </el-col>
+          <el-col :span="8" :offset="0">
+            <span>出场时间: {{ detailOptions.length!==0 && detailOptions.leaved }}</span>
           </el-col>
         </el-row>
         <el-row :gutter="20" style="margin-top:15px;margin-bottom:25px">
           <el-col :span="8" :offset="0">
-            <span>停车时长:</span>
+            <span>停车时长: {{ detailOptions.length!==0 && (detailOptions.duration / 60).toFixed(2) }} 小时</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>应交金额:</span>
+            <span>应交金额: {{ detailOptions.length!==0 && detailOptions.amount }}</span>
           </el-col>
         </el-row>
         <!-- 图片 -->
-        <el-image :src="src" style="width:100%" :preview-src-list="[src]">
+        <el-image :src="detailOptions.length!==0?detailOptions.lpicture:src" style="width:100%" :preview-src-list="[detailOptions.length!==0?detailOptions.lpicture:src]">
           <div slot="placeholder" class="image-slot">
             加载中<span class="dot">...</span>
           </div>
@@ -84,7 +85,7 @@
         </span>
       </el-dialog>
       <!-- 每一个组件快 -->
-      <div v-for="item in resdata" :key="item.id" class="block">
+      <div v-for="(item,index) in resdata" :key="item.id" class="block">
         <!-- 组件快头部 -->
         <el-header height="50px">
           <el-row :gutter="0">
@@ -109,13 +110,13 @@
         <el-container class="container">
           <el-main class="main">
             <!-- 图片 -->
-            <el-image :src="src" :preview-src-list="[src]">
+            <el-image :src="item.carRecord!==null?(item.lane.type===1?item.carRecord.epicture:item.carRecord.lpicture):src" :preview-src-list="[item.carRecord!==null?(item.lane.type===1?item.carRecord.epicture:item.carRecord.lpicture):src]">
               <div slot="placeholder" class="image-slot">
                 加载中<span class="dot">...</span>
               </div>
             </el-image>
             <!-- 查看详情按钮 -->
-            <el-button v-if="item.carRecord!==null && item.lane.type===2" type="primary" size="mini" round class="detail" @click="handleDetail(item.lane.id,item.carRecord.id)">查看详情</el-button>
+            <el-button v-if="item.carRecord!==null && item.lane.type===2" type="primary" size="mini" round class="detail" @click="handleDetail(index)">查看详情</el-button>
             <!-- 开闸放行 -->
             <el-row v-if="item.carRecord!==null && item.lane.type===1" :gutter="0" class="openLane">
               <el-col :span="8" :offset="0">
@@ -136,7 +137,8 @@
 
 </template>
 <script>
-import { getbaoAnLane, openLane, closeLane, getLaneDetail, confirmOpenLane } from '@/api/monitoringCenter/quickMonitoring'
+import { getbaoAnLane, openLane, closeLane, confirmOpenLane } from '@/api/monitoringCenter/quickMonitoring'
+import { getLaneById } from '@/api/system/carSetting'
 import BackToTop from '@/components/BackToTop'
 
 export default {
@@ -168,17 +170,32 @@ export default {
       openLane: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       resdata: [],
-      detailOptions: []
+      carCategory: [],
+      carNumber: [],
+      detailOptions: {
+        carRecord: {
+          carnumber: '',
+          carnumbercolor: ''
+        }
+      }
     }
   },
   created() {
     // 获取保安管辖的车道信息
     this.init()
+    // 车牌类型  numbertype
+    this.getDataByType('CarNumberTypeDic').then(res => {
+      this.carCategory = res.data
+    })
+    // 车辆类型  recordcartype
+    this.getDataByType('RecordCarTypeDic').then(res => {
+      this.carNumber = res.data
+    })
   },
   mounted() {
     this.timer = setInterval(() => {
       this.init()
-    }, 2000)
+    }, 5000)
   },
   beforeDestroy() {
     clearInterval(this.timer)
@@ -224,21 +241,20 @@ export default {
         this.msgError('关闸已取消')
       })
     },
-    handleDetail(laneId, resId) {
+    handleDetail(index) {
       this.open = true
-      const query = {
-        laneId: laneId,
-        resId: resId
-      }
-      this.loading = true // 开启遮罩
-      getLaneDetail(query).then(res => {
-        if (res.code === 200) {
-          this.msgSuccess(res.data)
+      this.detailOptions = this.resdata[index].carRecord
+      this.carNumber.some(val => {
+        if (this.detailOptions.recordcartype.toString() === val.dictValue) {
+          this.detailOptions.recordcartype = val.dictLabel
+          return true
         }
-        this.loading = false // 关闭遮罩
-      }).catch(() => {
-        // this.msgError('关闸失败')
-        this.loading = false // 关闭遮罩
+      })
+      getLaneById(this.detailOptions.entermid).then(res => {
+        this.detailOptions.entermid = res.data.name
+      })
+      getLaneById(this.detailOptions.leavemid).then(res => {
+        this.detailOptions.leavemid = res.data.name
       })
     },
     // ================================
@@ -247,10 +263,6 @@ export default {
       getbaoAnLane().then(res => {
         if (res.data !== null) {
           this.resdata = res.data.userLanes
-          if (res.data.userLanes.carRecord !== null) {
-            this.src = res.data.userLanes.carRecord.epicture
-          }
-          // this.msgSuccess(res.data.userLanes[0].carRecord)
         }
         this.loading = false // 关闭遮罩
       }).catch(() => {
@@ -321,8 +333,8 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
       color: #333;
       .detail {
         position: absolute;
-        top: 83%;
-        left: 76%;
+        top: 85%;
+        left: 83%;
       }
       .openLane {
         width: 90%;
