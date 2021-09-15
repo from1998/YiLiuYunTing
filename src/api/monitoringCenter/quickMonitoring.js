@@ -41,3 +41,22 @@ export function confirmOpenLane(data) {
     data
   })
 }
+
+// 离场放行:免费
+export function confirmFreeLeave(query) {
+  return request({
+    url: '/ylyt/baoAn/leave_setting',
+    method: 'get',
+    params: query
+  })
+}
+
+// 离场放行:收费
+export function confirmFeeLeave(query) {
+  return request({
+    url: '/ylyt/baoAn/pay',
+    method: 'get',
+    params: query
+  })
+}
+

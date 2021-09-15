@@ -292,7 +292,12 @@ export default {
             this.form.commonCountFee = []
             // 分段
           } else if (res.data.splittype === 3) {
-            this.handletime()
+            if (res.data.splittimejsonDto !== null) {
+              this.handletime()
+            } else {
+              this.form.splittimejsonDto = []
+              this.form.commonCountFee = []
+            }
           } else {
             this.form.commonCountFee = []
           }

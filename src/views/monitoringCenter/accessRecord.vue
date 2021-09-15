@@ -70,7 +70,7 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="车牌号" align="center" prop="carNumber" />
+      <el-table-column label="车牌号" align="center" prop="carnumber" />
       <el-table-column label="车主姓名" align="center" prop="carName" />
       <el-table-column label="车主手机号" align="center" prop="carPhone" />
       <el-table-column label="车辆类型" align="center" prop="carCategory" />

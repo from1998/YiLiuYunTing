@@ -5,17 +5,17 @@
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item label="车牌号" prop="carNumber">
+          <el-form-item label="车牌号" prop="carnumber">
             <el-input
-              v-model="queryParams.carNumber"
+              v-model="queryParams.carnumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
               style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="是否离场" prop="isLeave" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px">
+          <el-form-item label="是否离场" prop="isleave" label-width="70px">
+            <el-select v-cloak v-model="queryParams.isleave" style="width:180px" clearable>
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -24,10 +24,10 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="是否支付" prop="isPayed" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isPayed" style="width:180px">
+          <el-form-item label="车位类型" prop="recordcartype" label-width="70px">
+            <el-select v-cloak v-model="queryParams.recordcartype" style="width:180px" clearable>
               <el-option
-                v-for="item in stateOptions"
+                v-for="item in laneOptions"
                 :key="item.dictValue"
                 :label="item.dictLabel"
                 :value="Number(item.dictValue)"
@@ -36,7 +36,7 @@
           </el-form-item>
           <el-form-item label="进场时间范围" label-width="96px">
             <el-date-picker
-              v-model="queryParams.dateRangeIn"
+              v-model="dateRangeIn"
               size="small"
               value-format="yyyy-MM-dd"
               type="daterange"
@@ -44,11 +44,13 @@
               start-placeholde="开始日期"
               end-placeholde="结束日期"
               style="width:240px"
+              clearable
+              @change="timeChange('enterStart','enterEnd',dateRangeIn)"
             />
           </el-form-item>
           <el-form-item label="出场时间范围" label-width="96px">
             <el-date-picker
-              v-model="queryParams.dateRangeOut"
+              v-model="dateRangeOut"
               size="small"
               value-format="yyyy-MM-dd"
               type="daterange"
@@ -56,6 +58,8 @@
               start-placeholde="开始日期"
               end-placeholde="结束日期"
               style="width:240px"
+              clearable
+              @change="timeChange('leaveStart','leaveEnd',dateRangeOut)"
             />
           </el-form-item>
           <el-form-item>
@@ -70,34 +74,30 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="车牌号" align="center" prop="carNumber" />
-      <el-table-column label="进场时间" align="center">
+      <el-table-column label="车牌号" align="center" prop="carnumber" />
+      <el-table-column label="进场时间" align="center" prop="entered" width="180px" />
+      <el-table-column label="进场车道" align="center" prop="elaneName" />
+      <el-table-column label="出场时间" align="center" prop="leaved" width="180px" />
+      <el-table-column label="出场车道" align="center" prop="llaneName" />
+      <!-- RecordCarTypeDic -->
+      <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" />
+      <!-- CarRecordStatusDic -->
+      <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" />
+      <el-table-column label="进场检查情况" align="center" prop="echeckmark" />
+      <el-table-column label="出场检查情况" align="center" prop="lcheckmark" />
+      <el-table-column label="是否进场" align="center">
         <template slot-scope="scope">
-          <el-date-picker
-            v-model="scope.time"
-            type="datetime"
-            placeholder="暂无"
-          />
+          <el-button v-show=" scope.row.isleave===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已进场</el-button>
+          <el-button v-show="scope.row.isleave===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未进场</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="进场车道" align="center" prop="carPhone" />
-      <el-table-column label="出场时间" align="center">
+      <el-table-column label="是否出场" align="center">
         <template slot-scope="scope">
-          <el-date-picker
-            v-model="scope.time"
-            type="datetime"
-            placeholder="暂无"
-          />
+          <el-button v-show=" scope.row.isleave===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已出场</el-button>
+          <el-button v-show="scope.row.isleave===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未出场</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="出场车道" align="center" prop="carPhone" />
-      <el-table-column label="车位类型" align="center" prop="depotCategory" />
-      <el-table-column label="记录类型" align="center" prop="carCategory" />
-      <el-table-column label="进场检查情况" align="center" prop="carStatus" :formatter="carStatusFormate" />
-      <el-table-column label="出场检查情况" align="center" prop="timeSection" />
-      <el-table-column label="是否进场" align="center" prop="carAddress" />
-      <el-table-column label="是否出场" align="center" prop="remark" />
-      <el-table-column label="支付时间" align="center" prop="remark" />
+      <el-table-column label="支付时间" align="center" prop="pay" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
@@ -120,7 +120,7 @@
     />
     <!-- 分页控件结束 -->
 
-    <!-- 续费历史弹出层开始 -->
+    <!-- 查看图片弹出层开始 -->
     <el-dialog
       :title="title"
       :visible.sync="RenewHistoryOpen"
@@ -131,58 +131,63 @@
       <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
         <el-row :gutter="0">
           <el-col :span="4" :offset="0" :gutter="0">
-            进场图片
-          </el-col>
-          <el-col :span="2" :offset="18" :gutter="0">
-            <el-button type="success" round size="mini" icon="el-icon-d-arrow-left" style="cursor:default;height:18px;line-height:18px;padding-top:0" />
+            <el-button type="success" round size="mini" style="cursor:default;height:18px;line-height:17px;padding-top:0">
+              进场图片
+            </el-button>
           </el-col>
         </el-row>
       </el-header>
       <!-- 图片 -->
-      <el-image :src="src" :preview-src-list="[src]">
+      <el-image v-show="accessInSrc!==null" :src="accessInSrc!==null?accessInSrc:src" :preview-src-list="[accessInSrc!==null?accessInSrc:src]">
         <div slot="placeholder" class="image-slot">
           加载中<span class="dot">...</span>
         </div>
       </el-image>
+      <el-row v-show="accessInSrc===null" :gutter="0">
+        <el-col :span="6" :offset="9">
+          <el-button type="info" icon="el-icon-close" size="mini" class="btnMini">暂无进场图片</el-button>
+        </el-col>
+      </el-row>
       <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
         <el-row :gutter="0">
           <el-col :span="4" :offset="0" :gutter="0">
-            出场图片
-          </el-col>
-          <el-col :span="2" :offset="18" :gutter="0">
-            <el-button type="warning" round size="mini" icon="el-icon-d-arrow-right" style="cursor:default;height:18px;line-height:18px;padding-top:0" />
+            <el-button type="warning" round size="mini" style="cursor:default;height:18px;line-height:17px;padding-top:0">
+              出场图片
+            </el-button>
           </el-col>
         </el-row>
       </el-header>
       <!-- 图片 -->
-      <el-image :src="src" :preview-src-list="[src]">
+      <el-image v-show="accessOutSrc!==null" :src="accessOutSrc!==null?accessOutSrc:src" :preview-src-list="[accessOutSrc!==null?accessOutSrc:src]">
         <div slot="placeholder" class="image-slot">
           加载中<span class="dot">...</span>
         </div>
       </el-image>
+      <el-row v-show="accessOutSrc===null" :gutter="0">
+        <el-col :span="6" :offset="9">
+          <el-button type="info" icon="el-icon-close" size="mini" class="btnMini">暂无出场图片</el-button>
+        </el-col>
+      </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" align="center" @click="RenewHistoryOpen=false">关 闭</el-button>
       </span>
     </el-dialog>
-    <!-- 续费历史弹出层结束 -->
-
   </div>
 </template>
 <script>
 // 引入api
-// import { listRoleForPage } from '@/api/system/role'
-import validate from '@/utils/validate.js'
+import { getRecordList } from '@/api/monitoringCenter/accessRecord'
 
 export default {
   // 定义页面数据
   data() {
     return {
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
+      accessInSrc: '',
+      accessOutSrc: '',
       stateOptions: [],
       // daysTotal: undefined,
       renewFeeTime: [],
-      // 验证规则
-      validate,
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -199,30 +204,29 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
-      // 日期范围
-      dateRange: [],
       // 下拉列表
-      carCategoryOptions: [],
-      depotCategoryOptions: [],
-      timeCategoryOptions: [],
+      laneOptions: [],
+      recordOptions: [],
+      dateRangeIn: [],
+      dateRangeOut: [],
       // 查询参数
       queryParams: {
         page: 1,
         size: 10,
-        dateRangeIn: [],
-        dateRangeOut: [],
-        isPayed: undefined,
-        isLeave: undefined,
-        carNumber: undefined
+        carnumber: undefined,
+        isleave: undefined,
+        recordcartype: undefined,
+        enterStart: undefined,
+        enterEnd: undefined,
+        leaveStart: undefined,
+        leaveEnd: undefined
       },
       // 表单校验
       // 是否打开分配权限的弹出层
       RenewOpen: false,
       RenewHistoryOpen: false,
       // 菜单树的数据
-      menuOptions: [],
-      // 当前选中持角色ID
-      currentRoleId: undefined
+      menuOptions: []
     }
   },
   // 勾子
@@ -233,11 +237,31 @@ export default {
     this.getDataByType('yesOrNo').then(res => {
       this.stateOptions = res.data
     })
+    // 获取车位类型字典数据
+    this.getDataByType('RecordCarTypeDic').then(res => {
+      this.laneOptions = res.data
+    })
+    // 获取记录类型字典数据
+    this.getDataByType('CarRecordStatusDic').then(res => {
+      this.recordOptions = res.data
+    })
     // 查询表格数据
-    this.getRoleList()
+    this.getAccessList()
   },
   // 方法
   methods: {
+    timeChange(start, end, val) {
+      this.queryParams[start] = val[0]
+      this.queryParams[end] = val[1]
+    },
+    // 翻译车位类型
+    registerTypeFormatter(row) {
+      return this.selectDictLabel(this.laneOptions, row.recordcartype.toString())
+    },
+    // 翻译记录类型
+    recordTypeFormatter(row) {
+      return this.selectDictLabel(this.recordOptions, row.status.toString())
+    },
     // 格式化是否在租
     carStatusFormate() {
       // `this` 指向 vm 实例
@@ -248,67 +272,51 @@ export default {
       }
     },
     // 查询表格数据
-    getRoleList() {
+    getAccessList() {
       this.loading = true // 打开遮罩
-      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-      // this.carTableList = res.data.list
-      this.carTableList = [
-        // {
-        //   carNumber: '皖A22333',
-        //   carName: '赵六',
-        //   carPhone: '13155556666',
-        //   carStatus: '1',
-        //   carCategory: '小车',
-        //   depotCategory: '储值车',
-        //   timeCategory: '全天',
-        //   timeSection: '',
-        //   carAddress: '安徽省合肥市蜀山区南湖春城',
-        //   remark: '这是一个备注'
-        // },
-        // {
-        //   carNumber: '粤C66666',
-        //   carName: '王五',
-        //   carPhone: '13855556666',
-        //   carStatus: '1',
-        //   carCategory: '小车',
-        //   depotCategory: '临时车',
-        //   timeCategory: '分时段',
-        //   timeSection: '2020-09-27 16：30：27 至 2021-09-27 16：30：27',
-        //   carAddress: '广东省深圳市南山区人民法院',
-        //   remark: '这是另一个备注'
-        // }
-      ]
-      // this.total = res.data.total
-      this.loading = false// 关闭遮罩
-      // })
+      getRecordList(this.queryParams).then(res => {
+        this.carTableList = res.data.list
+        this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      })
     },
     // 条件查询
     handleQuery() {
-      this.getRoleList()
+      this.getAccessList()
     },
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
-      this.getRoleList()
+      this.dateRangeIn = []
+      this.dateRangeOut = []
+      this.getAccessList()
     },
     // 分页size变化时触发
     handleSizeChange(val) {
       this.queryParams.size = val
       // 重新查询
-      this.getRoleList()
+      this.getAccessList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
       this.queryParams.page = val
       // 重新查询
-      this.getRoleList()
+      this.getAccessList()
     },
     handleAccessImg(row) {
-      this.currentRoleId = row.carId || this.ids[0]
       this.title = '进出场图片'
       this.RenewHistoryOpen = true
+      this.accessInSrc = row.epicture
+      this.accessOutSrc = row.lpicture
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+  .btnMini {
+    padding: 0 5px!important;
+    height: 17px;
+    margin-left: 0;
+    cursor: default;
+  }
+</style>

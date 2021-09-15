@@ -389,6 +389,7 @@ export default {
       }).catch(() => {
         this.msgSuccess('分配失败')
       })
+      this.selectMenuOpen = false
     },
     // 关闭分配权限和菜单的弹出层
     cancelSelectMenu() {

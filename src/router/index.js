@@ -123,7 +123,7 @@ export const asyncRoutes = [
         name: '/coupons/couponsManger',
         meta: {
           title: '优惠券管理',
-          icon: 'couponsManger'
+          icon: 'el-icon-edit-outline'
         }
       },
       {

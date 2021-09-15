@@ -41,7 +41,7 @@
             <span>车辆类型: {{ detailOptions.length!==0 && detailOptions.recordcartype }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>车牌类型: {{ detailOptions.length!==0 && detailOptions.numbertype }}</span>
+            <span>车辆颜色: {{ detailOptions.length!==0 && detailOptions.carnumbercolor }}</span>
           </el-col>
         </el-row>
         <el-row :gutter="20" style="margin-top:15px">
@@ -116,6 +116,8 @@
               </div>
             </el-image>
             <!-- 查看详情按钮 -->
+            <el-button v-if="item.carRecord!==null && item.lane.type===2" type="success" size="mini" round class="detail leave" @click="handleLeave('free',item.carRecord.id)">免费放行</el-button>
+            <el-button v-if="item.carRecord!==null && item.lane.type===2" type="danger" size="mini" round class="detail fee" @click="handleLeave('fee',item.carRecord.id,item.lane.id)">收费放行</el-button>
             <el-button v-if="item.carRecord!==null && item.lane.type===2" type="primary" size="mini" round class="detail" @click="handleDetail(index)">查看详情</el-button>
             <!-- 开闸放行 -->
             <el-row v-if="item.carRecord!==null && item.lane.type===1" :gutter="0" class="openLane">
@@ -137,7 +139,7 @@
 
 </template>
 <script>
-import { getbaoAnLane, openLane, closeLane, confirmOpenLane } from '@/api/monitoringCenter/quickMonitoring'
+import { getbaoAnLane, openLane, closeLane, confirmOpenLane, confirmFeeLeave, confirmFreeLeave } from '@/api/monitoringCenter/quickMonitoring'
 import { getLaneById } from '@/api/system/carSetting'
 import BackToTop from '@/components/BackToTop'
 
@@ -170,7 +172,6 @@ export default {
       openLane: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       resdata: [],
-      carCategory: [],
       carNumber: [],
       detailOptions: {
         carRecord: {
@@ -183,10 +184,6 @@ export default {
   created() {
     // 获取保安管辖的车道信息
     this.init()
-    // 车牌类型  numbertype
-    this.getDataByType('CarNumberTypeDic').then(res => {
-      this.carCategory = res.data
-    })
     // 车辆类型  recordcartype
     this.getDataByType('RecordCarTypeDic').then(res => {
       this.carNumber = res.data
@@ -241,6 +238,46 @@ export default {
         this.msgError('关闸已取消')
       })
     },
+    // 出场放行
+    handleLeave(type, carRecordId, laneId) {
+      this.$confirm('请确认周围环境是否安全?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 开启遮罩
+        let query
+        if (type === 'free') {
+          query = {
+            id: carRecordId
+          }
+          confirmFreeLeave(query).then(res => {
+            if (res.code === 200) {
+              this.msgSuccess('免费放行成功')
+            }
+            this.loading = false // 关闭遮罩
+          }).catch(() => {
+            this.msgError('免费放行失败')
+          })
+        } else if (type === 'fee') {
+          query = {
+            recordId: carRecordId,
+            laneId: laneId
+          }
+          confirmFeeLeave(query).then(res => {
+            if (res.code === 200) {
+              this.msgSuccess('收费放行成功')
+            }
+            this.loading = false // 关闭遮罩
+          }).catch(() => {
+            this.msgError('收费放行失败')
+          })
+        }
+      }).catch(() => {
+        this.msgError('出场放行已取消')
+      })
+    },
+    // 查看详情
     handleDetail(index) {
       this.open = true
       this.detailOptions = this.resdata[index].carRecord
@@ -335,6 +372,13 @@ box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)
         position: absolute;
         top: 85%;
         left: 83%;
+      }
+      .leave {
+        left: 55%;
+      }
+      .fee {
+
+      left: 68%;
       }
       .openLane {
         width: 90%;

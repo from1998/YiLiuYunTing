@@ -1,62 +1,67 @@
 <template>
   <div class="app-container">
     <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="88px">
-      <el-form-item label="公告标题" prop="noticeTitle">
-        <el-input
-          v-model="queryParams.noticeTitle"
-          placeholder="请输入通知公告标题"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="发布者" prop="createBy">
-        <el-input
-          v-model="queryParams.createBy"
-          placeholder="请输入发布者"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="类型" prop="noticeType">
-        <el-select
-          v-model="queryParams.noticeType"
-          placeholder="类型"
-          clearable
-          size="small"
-          style="width:240px"
-        >
-          <el-option
-            v-for="dict in noticeTypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="可用状态"
-          clearable
-          size="small"
-          style="width:240px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
+    <el-row :gutter="0">
+      <el-col :span="20" :offset="4">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
+          <el-form-item label="标题" prop="noticeTitle">
+            <el-input
+              v-model="queryParams.noticeTitle"
+              placeholder="请输入通知公告标题"
+              clearable
+              size="small"
+              style="width:240px"
+            />
+          </el-form-item>
+          <el-form-item label="发布者" prop="createBy" label-width="55px">
+            <el-input
+              v-model="queryParams.createBy"
+              placeholder="请输入发布者"
+              clearable
+              size="small"
+              style="width:240px"
+            />
+          </el-form-item>
+          <el-form-item label="类型" prop="noticeType">
+            <el-select
+              v-model="queryParams.noticeType"
+              placeholder="类型"
+              clearable
+              size="small"
+              style="width:240px"
+            >
+              <el-option
+                v-for="dict in noticeTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="可用状态"
+              clearable
+              size="small"
+              style="width:240px"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
     <!-- 查询条件结束 -->
 
     <!-- 表格工具按钮开始 -->
@@ -77,12 +82,14 @@
     <el-table v-loading="loading" border :data="noticeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="标题" align="center" prop="noticeTitle" />
-      <el-table-column label="内容" align="center" prop="noticeContent" />
-      <el-table-column label="类型" prop="noticeType" align="center" />
-      <el-table-column label="状态" prop="status" align="center" />
+      <el-table-column label="内容" align="center" prop="noticeContent" width="300px" />
+      <el-table-column label="类型" prop="noticeType" align="center" :formatter="noticeTypeFormatter" />
+      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
       <el-table-column label="发布者" align="center" prop="createBy" />
-      <el-table-column label="发布时间" align="center" prop="createTime" />
-      <el-table-column label="操作" align="center">
+      <el-table-column label="发布时间" align="center" prop="createTime" width="160px" />
+      <el-table-column label="更新者" align="center" prop="updateBy" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" width="160px" />
+      <el-table-column label="操作" align="center" width="300px">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
