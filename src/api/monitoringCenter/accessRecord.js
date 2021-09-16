@@ -8,3 +8,12 @@ export function getRecordList(query) {
     params: query
   })
 }
+
+// 清理车辆信息
+export function delRecordList(query) {
+  return request({
+    url: '/park/record/clean_record',
+    method: 'delete',
+    params: query
+  })
+}

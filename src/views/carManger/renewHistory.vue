@@ -23,7 +23,7 @@
               style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="层号">
+          <el-form-item label="层号" prop="tierNumber">
             <el-select v-model="queryParams.tierNumber" placeholder="请选择车位层号" size="small" clearable>
               <el-option
                 v-for="item in options.tierNumber"
@@ -33,7 +33,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="区域号">
+          <el-form-item label="区域号" prop="areaNumber">
             <el-select v-model="queryParams.areaNumber" placeholder="请选择车位区域号" size="small" clearable>
               <el-option
                 v-for="item in options.areaNumber"
@@ -64,6 +64,7 @@
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,15 +90,15 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="姓名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入车主姓名" clearable size="small" />
+          <el-input v-model="form.userName" placeholder="请输入车主姓名" clearable size="small" disabled />
         </el-form-item>
         <el-form-item label="车牌号" prop="carNumber">
-          <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
+          <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" disabled />
         </el-form-item>
         <el-form-item v-if="form.registerType===3" label="续租时间段">
           <el-row :gutter="0">
             <el-col :span="12" :offset="0">
-              <el-form-item label="开始时间" prop="startSplit">
+              <el-form-item label="" prop="startSplit">
                 <el-time-picker
                   v-model="form.startSplit"
                   value-format="HH-mm-ss"
@@ -107,7 +108,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="12" :offset="0">
-              <el-form-item label="结束时间" prop="endSplit">
+              <el-form-item label="" prop="endSplit">
                 <el-time-picker
                   v-model="form.endSplit"
                   value-format="HH-mm-ss"
@@ -132,7 +133,7 @@
 </template>
 <script>
 // 引入api
-import { getPortRenewHistory, getRenewHistory } from '@/api/carManger'
+import { getPortRenewHistory, delRenewHistory } from '@/api/carManger'
 import validate from '@/utils/validate.js'
 
 export default {
@@ -222,8 +223,10 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        carName: undefined,
         userName: undefined,
+        tierNumber: undefined,
+        areaNumber: undefined,
+        registerId: undefined,
         mobile: undefined
       },
       // 表单数据
@@ -235,7 +238,7 @@ export default {
   // 勾子
   created() {
     // 取路由路径上的参数
-    this.form.registerId = this.$route.params && this.$route.params.id // 路由传参
+    this.queryParams.registerId = this.form.registerId = this.$route.params && this.$route.params.id // 路由传参
     // 获取车位层号字典数据
     this.getDataByType('TierNumberDic').then(res => {
       this.options.tierNumber = res.data
@@ -259,7 +262,7 @@ export default {
     // 查询续费历史记录列表数据
     getList() {
       this.loading = true // 打开遮罩
-      getPortRenewHistory({ 'registerId': this.form.registerId }).then(res => {
+      getPortRenewHistory(this.queryParams).then(res => {
         this.renewTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
@@ -296,14 +299,18 @@ export default {
     handleUpdate(row) {
       this.title = '修改续费记录'
       this.open = true
-      const id = row.id
       this.reset()
-      this.loading = true
-      const query = { 'id': id }
-      getRenewHistory(query).then(res => {
-        console.log(res.data)
-        this.form = res.data
-        this.loading = false
+      this.form = {
+        userName: row.userName,
+        carNumber: row.carNumber,
+        amount: row.amount
+      }
+    },
+    // 打开删除的弹出层
+    handleDelete(row) {
+      delRenewHistory(row.id).then(res => {
+        this.msgSuccess('删除成功')
+        this.getList()
       })
     },
     // 保存

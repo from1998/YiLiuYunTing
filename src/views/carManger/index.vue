@@ -66,33 +66,51 @@
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
       <el-table-column label="是否在租" align="center">
         <template slot-scope="scope">
-          <el-button v-show=" scope.row.status===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在租中</el-button>
+          <el-button v-show="scope.row.status===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在租中</el-button>
           <el-button v-show="scope.row.status===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">不在租</el-button>
         </template>
       </el-table-column>
       <el-table-column label="租车时间段" align="center" prop="workTimeDur" width="392">
         <template slot-scope="scope">
-          <el-row :gutter="0">
-            <el-col :span="11" :offset="0">
-              <el-time-picker
-                v-model="scope.row.effectiveTime"
-                value-format="HH-mm-ss"
-                placeholder="起租时间"
-                style="width:140px"
-                disabled
-              />
-            </el-col>
-            <el-col :span="2" :offset="0" style="margin-top:6px">
-              --
-            </el-col>
-            <el-col :span="11" :offset="0">
-              <el-time-picker
-                v-model="scope.row.expireTime"
-                value-format="HH-mm-ss"
-                placeholder="到期时间"
-                style="width:140px"
-                disabled
-              />
+          <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
+            <template>
+              <el-popover trigger="hover" placement="top">
+                <p style="line: height 1.5em;">
+                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length===0">暂无续费记录！</span>
+                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0">最近三条续费记录:</span>
+                  <span v-show="scope.row.recentRecord===undefined">点击查看最近三条续费记录</span>
+                  <br>
+                  <span v-for="item in scope.row.recentRecord" :key="item.id">
+                    {{ item.effectiveTime +' -- '+ item.expireTime }}
+                    <br>
+                  </span>
+                </p>
+                <div slot="reference" class="name-wrapper">
+                  <el-tag size="small" style="cursor:pointer" @click="handleMouseEnter(scope.row.id)">
+                    <el-row v-show="scope.row.effectiveTime!==null && scope.row.effectiveTime!==null" :gutter="0">
+                      <el-col :span="11" :offset="0">
+                        {{ scope.row.effectiveTime }}
+                      </el-col>
+                      <el-col :span="2" :offset="1" style="margin-left:4px">
+                        --
+                      </el-col>
+                      <el-col :span="10" :offset="0">
+                        {{ scope.row.expireTime }}
+                      </el-col>
+                    </el-row>
+                    <el-row :gutter="0">
+                      <el-col :span="24" :offset="0">
+                        <span>当前时间未在租</span>
+                      </el-col>
+                    </el-row>
+                  </el-tag>
+                </div>
+              </el-popover>
+            </template>
+          </el-row>
+          <el-row v-show="scope.row.registerType!==3" :gutter="20">
+            <el-col :span="12" :offset="6">
+              <span>该车位长期有效</span>
             </el-col>
           </el-row>
         </template>
@@ -250,7 +268,7 @@
               <el-form-item prop="effectiveTime" label="" label-width="0">
                 <el-date-picker
                   v-model="renewform.effectiveTime"
-                  value-format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                   placeholder="起租时间"
                   style="width:157px"
                   type="date"
@@ -264,7 +282,7 @@
               <el-form-item prop="expireTime" label="" label-width="0">
                 <el-date-picker
                   v-model="renewform.expireTime"
-                  value-format="yyyy-MM-dd"
+                  value-format="yyyy-MM-dd HH:mm:ss"
                   placeholder="到期时间"
                   style="width:175px"
                   type="date"
@@ -274,7 +292,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="层号" prop="tierNumber">
-          <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px">
+          <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" @change="handleNumberFocus">
             <el-option
               v-for="item in options.tierNumber"
               :key="item.dictValue"
@@ -284,7 +302,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区域号" prop="areaNumber">
-          <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px">
+          <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" @change="handleNumberFocus">
             <el-option
               v-for="item in options.areaNumber"
               :key="item.dictValue"
@@ -294,7 +312,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="编号" prop="number">
-          <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px" @focus="handleNumberFocus">
+          <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px">
             <el-option
               v-for="item in options.number"
               :key="item.id"
@@ -317,19 +335,20 @@
         <el-button @click="cancelRenew">取 消</el-button>
       </span>
     </el-dialog>
-
   </div>
 </template>
 <script>
 // 引入api
-import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar } from '@/api/carManger'
+import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
 import { getSiteByMid } from '@/api/system/carSetting'
+
 import validate from '@/utils/validate.js'
 
 export default {
   // 定义页面数据
   data() {
     return {
+      managerid: '',
       // 验证规则
       validate,
       rules: {
@@ -454,27 +473,54 @@ export default {
     getPortType().then(res => {
       this.options.depotCategoryOptions = res.data
     })
+    this.managerid = this.getID()
     // 查询车位列表数据
     this.getList()
   },
+  // mounted() {
+
+  // },
   methods: {
-    // 编号选择框获得焦点事件
-    handleNumberFocus() {
+    // 鼠标移入事件
+    handleMouseEnter(id) {
+    // 查询续费历史记录列表数据三条
+      this.loading = true // 打开遮罩
       const query = {
-        managerid: this.getID(),
+        page: 1,
+        size: 3,
+        registerId: id
+      }
+      getPortRenewHistory(query).then(res => {
+        this.carTableList.some(val => {
+          if (val.id === id) {
+            this.$set(val, 'recentRecord', res.data.list)
+            // val.recentRecord = res.data.list
+            return true
+          }
+        })
+        this.loading = false// 关闭遮罩
+        // }
+      })
+      console.log(this.carTableList)
+    },
+    // 选择框值改变事件
+    handleNumberFocus() {
+      this.options.number = []
+      const query = {
+        managerid: this.managerid,
         tierNumber: this.renewform.tierNumber,
         areaNumber: this.renewform.areaNumber
       }
-      this.options.number = []
-      getSiteByMid(query).then((res) => {
-        res.data.map(val => {
-          this.options.number.push({
-            number: val.number,
-            id: val.id
+      if ((query.tierNumber !== null && query.tierNumber !== undefined) && (query.areaNumber !== null && query.areaNumber !== undefined)) {
+        getSiteByMid(query).then((res) => {
+          res.data.map(val => {
+            this.options.number.push({
+              number: val.number,
+              id: val.id
+            })
           })
         })
-        console.log(this.options.number)
-      })
+      }
     },
     // 翻译车辆类型
     carTypeFormatter(row) {
@@ -619,7 +665,6 @@ export default {
             this.getList()// 列表重新查询
             this.RenewOpen = false// 关闭弹出层
           }).catch(() => {
-            this.msgError('续费失败')
             this.loading = false
           })
         }

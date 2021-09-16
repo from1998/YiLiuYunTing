@@ -2,6 +2,27 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row>
+      <el-col :span="6" :offset="18">
+        <el-form ref="cleanForm" :model="cleanForm" :inline="true">
+          <el-form-item>
+            <el-button type="danger" icon="el-icon-close" size="mini" @click="handleError">清理异常车辆</el-button>
+          </el-form-item>
+          <el-form-item label="" prop="days">
+            <el-input
+              v-model="cleanForm.days"
+              placeholder="请输入清理天数"
+              clearable
+              size="small"
+              style="width:140px"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="warning" icon="el-icon-delete" size="mini" @click="handleCar">清理车辆</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+    <el-row :gutter="20">
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
@@ -70,35 +91,54 @@
         <!-- 查询条件结束 -->
       </el-col>
     </el-row>
+
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="车牌号" align="center" prop="carnumber" />
-      <el-table-column label="进场时间" align="center" prop="entered" width="180px" />
-      <el-table-column label="进场车道" align="center" prop="elaneName" />
-      <el-table-column label="出场时间" align="center" prop="leaved" width="180px" />
-      <el-table-column label="出场车道" align="center" prop="llaneName" />
+      <el-table-column label="车牌号" align="center" prop="carnumber" width="120" />
+      <el-table-column label="进场时间" align="center" prop="entered" width="180" />
+      <el-table-column label="进场车道" align="center" prop="elaneName" width="80" />
+      <el-table-column label="出场时间" align="center" prop="leaved" width="180" />
+      <el-table-column label="出场车道" align="center" prop="llaneName" width="80" />
       <!-- RecordCarTypeDic -->
-      <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" />
+      <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" width="80" />
       <!-- CarRecordStatusDic -->
-      <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" />
-      <el-table-column label="进场检查情况" align="center" prop="echeckmark" />
-      <el-table-column label="出场检查情况" align="center" prop="lcheckmark" />
-      <el-table-column label="是否进场" align="center">
+      <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" width="80" />
+      <el-table-column label="进场检查情况" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>进场检查情况: {{ scope.row.echeckmark }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="small">{{ scope.row.echeckmark }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="出场检查情况" align="center" prop="lcheckmark">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>出场检查情况: {{ scope.row.lcheckmark }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="small">{{ scope.row.lcheckmark }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="是否进场" align="center" width="90">
         <template slot-scope="scope">
           <el-button v-show=" scope.row.isleave===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已进场</el-button>
           <el-button v-show="scope.row.isleave===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未进场</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="是否出场" align="center">
+      <el-table-column label="是否出场" align="center" width="90">
         <template slot-scope="scope">
           <el-button v-show=" scope.row.isleave===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已出场</el-button>
           <el-button v-show="scope.row.isleave===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未出场</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="支付时间" align="center" prop="pay" />
-      <el-table-column label="操作" align="center" width="280">
+      <el-table-column label="支付时间" align="center" prop="pay" width="168" />
+      <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
             查看进出场图片
@@ -176,7 +216,7 @@
 </template>
 <script>
 // 引入api
-import { getRecordList } from '@/api/monitoringCenter/accessRecord'
+import { getRecordList, delRecordList } from '@/api/monitoringCenter/accessRecord'
 
 export default {
   // 定义页面数据
@@ -202,6 +242,7 @@ export default {
       carTableList: [],
       // 弹出层标题
       title: '',
+      cleanForm: {},
       // 是否显示弹出层
       open: false,
       // 下拉列表
@@ -240,6 +281,7 @@ export default {
     // 获取车位类型字典数据
     this.getDataByType('RecordCarTypeDic').then(res => {
       this.laneOptions = res.data
+      console.log(this.laneOptions)
     })
     // 获取记录类型字典数据
     this.getDataByType('CarRecordStatusDic').then(res => {
@@ -250,9 +292,22 @@ export default {
   },
   // 方法
   methods: {
+    // 清理异常车辆
+    handleError() {
+      console.log('success')
+    },
+    // 清理指定天数车辆
+    handleCar() {
+      delRecordList
+    },
     timeChange(start, end, val) {
-      this.queryParams[start] = val[0]
-      this.queryParams[end] = val[1]
+      if (val === null) {
+        this.queryParams[start] = undefined
+        this.queryParams[end] = undefined
+      } else {
+        this.queryParams[start] = val[0]
+        this.queryParams[end] = val[1]
+      }
     },
     // 翻译车位类型
     registerTypeFormatter(row) {

@@ -156,6 +156,37 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/statisticalForm',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/statisticalForm',
+    meta: {
+      title: '统计报表',
+      icon: 'el-icon-s-marketing'
+    },
+    children: [
+      {
+        path: 'trafficStatistics',
+        component: () => import('@/views/statisticalForm/trafficStatistics'),
+        name: '/statisticalForm/trafficStatistics',
+        meta: {
+          title: '车流统计',
+          icon: 'car'
+        }
+      },
+      {
+        path: 'feeStatistical',
+        component: () => import('@/views/statisticalForm/feeStatistical'),
+        name: '/statisticalForm/feeStatistical',
+        meta: {
+          title: '收费统计',
+          icon: 'money'
+        }
+      }
+    ]
+  },
+  {
     path: '/monitoringCenter',
     component: Layout,
     redirect: 'noRedirect',

@@ -81,7 +81,7 @@ export function exportRegisterCar() {
 // 根据id删除续费历史
 export function delRenewHistory(id) {
   return request({
-    url: '/ylyt/car_register/edit/' + id,
+    url: '/ylyt/car_register/delete/' + id,
     method: 'delete'
   })
 }

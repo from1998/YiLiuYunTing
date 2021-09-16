@@ -22,6 +22,9 @@
       <el-tab-pane label="车位管理" name="portManger">
         <port-manger />
       </el-tab-pane>
+      <el-tab-pane label="图片预览" name="portManger">
+        <img-view />
+      </el-tab-pane>
     </el-tabs>
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="0" :back-position="0" transition-name="fade" />
@@ -30,7 +33,7 @@
 </template>
 <script>
 // 导入组件
-import depotInfo from './componets/depotInfo.vue'
+import depotInfo from './componets/depotInfo'
 import depotSet from './componets/depotSet'
 import feeRule from './componets/feeRule'
 import laneSet from './componets/laneSet'
@@ -38,6 +41,7 @@ import portManger from './componets/portManger'
 import secManger from './componets/secManger'
 import watchhouseSet from './componets/watchhouseSet'
 import BackToTop from '@/components/BackToTop'
+import imgView from './componets/imgView'
 
 import { getDepotById } from '@/api/system/carSetting'
 
@@ -50,7 +54,8 @@ export default {
     portManger,
     secManger,
     watchhouseSet,
-    BackToTop
+    BackToTop,
+    imgView
   },
   data() {
     return {
