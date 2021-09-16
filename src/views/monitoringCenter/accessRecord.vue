@@ -2,7 +2,6 @@
   <el-container>
     <accessRecord />
   </el-container>
-
 </template>
 <script>
 import accessRecord from '@/views/recordsQuery/accessRecord'
