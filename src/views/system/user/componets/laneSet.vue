@@ -88,7 +88,7 @@
             v-if="scope.row.type===1"
             type="text"
             size="mini"
-            @click="handleIn(scope.row)"
+            @click="handleAccess(scope.row)"
           >
             <svg-icon icon-class="qrcode" />
             无牌进场二维码
@@ -97,7 +97,7 @@
             v-if="scope.row.type===2"
             type="text"
             size="mini"
-            @click="handleOut(scope.row)"
+            @click="handleAccess(scope.row)"
           >
             <svg-icon icon-class="pay" />
             出场支付二维码
@@ -238,16 +238,40 @@
         <el-button @click="cancel">取 消</el-button>
       </span>
     </el-dialog>
+    <!-- 二维码 -->
+    <canvas v-show="false" id="canvas" />
+    <!-- 联系方式 -->
+    <canvas v-show="false" id="textCanvas" />
     <!-- 二维码弹出层 -->
     <el-dialog
       title="无牌车进场请扫码"
       :visible.sync="qrcodeDialogVisible"
-      width="30%"
+      width="770px"
       center
     >
+      <canvas
+        id="myCanvas"
+        width="720"
+      />
       <span slot="footer" class="dialog-footer">
+        <el-button :loading="loading" type="success" icon="el-icon-s-opportunity" @click="handleEmergency">设置应急联系方式</el-button>
         <el-button :loading="loading" type="primary" icon="el-icon-download" @click="handleDownload">下载</el-button>
-        <el-button type="primary" @click="qrcodeDialogVisible = false">关闭</el-button>
+        <el-button :loading="loading" type="warning" icon="el-icon-refresh" @click="handleChangeStyle">换个样式</el-button>
+        <el-button type="danger" icon="el-icon-close" @click="qrcodeDialogVisible = false">关闭</el-button>
+      </span>
+    </el-dialog>
+    <!-- 应急联系方式弹出层设置 -->
+    <el-dialog
+      title="应急联系方式设置"
+      :visible.sync="emergencyOpen"
+      width="500px"
+      center
+      append-to-body
+    >
+      <el-input v-model="emergencyPhone" clearable size="small" placeholder="请输入应急联系方式" />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleEmergencyConfirm">确 定</el-button>
+        <el-button @click="emergencyOpen = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -255,6 +279,7 @@
 <script>
 // 引入api
 import { getLaneByMid, getLaneById, addLane, updateLane, deleteLaneById } from '@/api/system/carSetting'
+import QRCode from 'qrcode'
 import validate from '@/utils/validate'
 
 export default {
@@ -262,6 +287,21 @@ export default {
   // 定义页面数据
   data() {
     return {
+      // 图片下载地址
+      src: '',
+      qrcodeBg: '', // 二维码背景图
+      // 二维码是否弹出
+      qrcodeDialogVisible: false,
+      // 应急联系方式设置
+      emergencyOpen: false,
+      // 应急联系方式
+      emergencyPhone: undefined,
+      // 应急联系方式的dataUrl
+      emergencyPhoneImg: undefined,
+      // 二维码的dataUrl
+      qrcodeUrl: '',
+      // 生成二维码的url
+      creatCodeUrl: 'http://thirddev.yiliuyunting.com/query_car_14.html?carNumber=%E4%B8%B4K3KXTH&cameraId=35',
       // 验证规则
       validate,
       rules: {
@@ -280,8 +320,6 @@ export default {
       formBak: {},
       // 用户id备份
       manageridBak: '',
-      // 二维码是否弹出
-      qrcodeDialogVisible: false,
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -480,24 +518,120 @@ export default {
     // }
     //   this.msgSuccess('闸口状态修改成功！')
     // },
-    handleIn() {
+    // 确认二维码应急联系方式
+    async handleEmergencyConfirm() {
+      window.sessionStorage.setItem('emergencyPhone', this.emergencyPhone)
+      await this.createText(this.emergencyPhone)
+      this.drawAndShareImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg)
+      this.emergencyOpen = false
+    },
+    // 设置二维码应急联系方式
+    handleEmergency() {
+      this.emergencyOpen = true
+    },
+    // 点击查看二维码
+    async handleAccess(row) {
+      if (row.type === 1) {
+        this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
+      } else {
+        this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
+      }
       this.qrcodeDialogVisible = true
+      this.emergencyPhone = await window.sessionStorage.getItem('emergencyPhone')
+      await this.createQrcode(this.creatCodeUrl)
+      await this.createText(this.emergencyPhone)
+      this.drawAndShareImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg)
+    },
+    // 生成二维码
+    createQrcode(text) {
+      const canvas = document.getElementById('canvas')
+      QRCode.toCanvas(canvas, text, {
+        margin: 0
+      })
+      const data = canvas.toDataURL('image/png', 1)
+      this.qrcodeUrl = data
+    },
+    createText(text) {
+      const canvas = document.getElementById('textCanvas')
+      canvas.style.letterSpacing = '8px'
+      var context = canvas.getContext('2d')
+      context.clearRect(0, 0, 300, 150)
+      context.font = '18px KaiTi KaiTi_GB2312'
+      // 创建渐变
+      var gradient = context.createLinearGradient(0, 0, canvas.width, 0)
+      gradient.addColorStop('0', 'magenta')
+      gradient.addColorStop('0.5', 'blue')
+      gradient.addColorStop('1.0', 'red')
+      // 用渐变填色
+      context.fillStyle = gradient
+      context.fillText(text, 10, 50)
+      this.emergencyPhoneImg = canvas.toDataURL('image/png', 1)
+    },
+    // img1背景图、img2二维码
+    drawAndShareImage(bgImg, qrCodeImg, emergency) {
+      const canvas = document.getElementById('myCanvas')
+      canvas.width = 720
+      canvas.height = 446
+      const context = canvas.getContext('2d')
+      context.rect(0, 0, canvas.width, canvas.height)
+      context.fillStyle = '#FFF'
+      context.fill()
+      const bgImage = new Image()
+      bgImage.src = bgImg
+      bgImage.crossOrigin = 'Anonymous'
+      bgImage.onload = () => {
+        context.drawImage(bgImage, 0, 0, 720, 446)
+
+        const qrCodeImage = new Image()
+        qrCodeImage.src = qrCodeImg
+        qrCodeImage.crossOrigin = 'Anonymous'
+        qrCodeImage.onload = () => {
+          context.drawImage(qrCodeImage, 60, 150, 175, 175)
+        }
+
+        const emergencyImg = new Image()
+        emergencyImg.src = emergency
+        emergencyImg.crossOrigin = 'Anonymous'
+        emergencyImg.onload = () => {
+          context.drawImage(emergencyImg, 185, 353, 200, 200)
+          const base64 = canvas.toDataURL('image/png')
+          const img = document.getElementById('myCanvas')
+          img.setAttribute('src', base64)
+          this.src = base64
+        }
+      }
     },
     // 二维码下载
     handleDownload() {
       this.loading = true
-      // import('@/vendor/Export2Excel').then(excel => {
-      //   const tHeader = ['timestamp', 'title', 'type', 'importance', 'status']
-      //   const filterVal = ['timestamp', 'title', 'type', 'importance', 'status']
-      //   const data = this.formatJson(filterVal)
-      //   excel.export_json_to_excel({
-      //     header: tHeader,
-      //     data,
-      //     filename: 'table-list'
-      //   })
-      //   this.loading = false
-      // })
+      var a = document.createElement('a')
+      var event = new MouseEvent('click')
+      if (this.qrcodeBg === require('@/assets/images/accessInBg1.jpg') || this.qrcodeBg === require('@/assets/images/accessInBg2.jpg')) {
+        a.download = '无牌车进场二维码'
+      } else {
+        a.download = '出场支付二维码'
+      }
+      a.href = this.src
+      a.dispatchEvent(event)
       this.loading = false
+    },
+    // 二维码换个样式
+    handleChangeStyle() {
+      switch (this.qrcodeBg) {
+        case require('@/assets/images/accessInBg1.jpg'):
+          this.qrcodeBg = require('@/assets/images/accessInBg2.jpg')
+          break
+        case require('@/assets/images/accessInBg2.jpg'):
+          this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
+          break
+        case require('@/assets/images/accessOutBg1.jpg'):
+          this.qrcodeBg = require('@/assets/images/accessOutBg2.jpg')
+          break
+        case require('@/assets/images/accessOutBg2.jpg'):
+          this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
+          break
+      }
+      this.drawAndShareImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg)
     },
     // 保存
     handleSubmit() {

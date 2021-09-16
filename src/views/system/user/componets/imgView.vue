@@ -44,9 +44,8 @@ export default {
     closeSharePopup() {
       this.showSharePopup = false
     },
+    // 生成二维码
     createQrcode(text) {
-      console.log('text333', text)
-      // 生成二维码
       const canvas = document.getElementById('canvas')
       QRCode.toCanvas(canvas, text, {
         margin: 0
