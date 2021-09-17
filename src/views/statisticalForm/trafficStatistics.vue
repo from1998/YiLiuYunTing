@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-date-picker
-      v-model="value2"
+      v-model="trafficMonth"
       type="month"
       placeholder="选择月"
     />
@@ -44,6 +44,8 @@ export default {
   // 定义页面数据
   data() {
     return {
+      // 所属月份
+      trafficMonth: '',
       // 是否启用遮罩层
       loading: false,
       // 分页数据总条数

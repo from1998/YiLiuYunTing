@@ -2,10 +2,10 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="6" :offset="18">
+      <el-col :span="7" :offset="18">
         <el-form ref="cleanForm" :model="cleanForm" :inline="true">
           <el-form-item>
-            <el-button type="danger" icon="el-icon-close" size="mini" @click="handleError">清理异常车辆</el-button>
+            <el-button type="danger" icon="el-icon-close" size="mini" @click="handleLeave">清理离场车辆</el-button>
           </el-form-item>
           <el-form-item label="" prop="days">
             <el-input
@@ -17,12 +17,12 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="warning" icon="el-icon-delete" size="mini" @click="handleCar">清理车辆</el-button>
+            <el-button type="warning" icon="el-icon-delete" size="mini" @click="handleEnter(cleanForm.days)">清理在场车辆</el-button>
           </el-form-item>
         </el-form>
       </el-col>
     </el-row>
-    <el-row :gutter="20">
+    <el-row :gutter="0">
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
@@ -127,8 +127,8 @@
       </el-table-column>
       <el-table-column label="是否进场" align="center" width="90">
         <template slot-scope="scope">
-          <el-button v-show=" scope.row.isleave===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已进场</el-button>
-          <el-button v-show="scope.row.isleave===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未进场</el-button>
+          <el-button v-show=" scope.row.isenter===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已进场</el-button>
+          <el-button v-show="scope.row.isenter===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未进场</el-button>
         </template>
       </el-table-column>
       <el-table-column label="是否出场" align="center" width="90">
@@ -216,7 +216,7 @@
 </template>
 <script>
 // 引入api
-import { getRecordList, delRecordList } from '@/api/monitoringCenter/accessRecord'
+import { getRecordList, cleanLeaveRecord, cleanEnterRecord } from '@/api/monitoringCenter/accessRecord'
 
 export default {
   // 定义页面数据
@@ -281,7 +281,6 @@ export default {
     // 获取车位类型字典数据
     this.getDataByType('RecordCarTypeDic').then(res => {
       this.laneOptions = res.data
-      console.log(this.laneOptions)
     })
     // 获取记录类型字典数据
     this.getDataByType('CarRecordStatusDic').then(res => {
@@ -293,12 +292,25 @@ export default {
   // 方法
   methods: {
     // 清理异常车辆
-    handleError() {
-      console.log('success')
+    handleLeave() {
+      this.loading = true // 打开遮罩
+      cleanLeaveRecord().then(res => {
+        if (res.code === 200) {
+          this.msgSuccess('清理离场车辆成功')
+          this.getAccessList()
+        }
+      })
+      this.loading = false// 关闭遮罩
     },
     // 清理指定天数车辆
-    handleCar() {
-      delRecordList
+    handleEnter(days) {
+      console.log(days)
+      this.loading = true // 打开遮罩
+      cleanEnterRecord(days).then(() => {
+        this.msgSuccess(days + '天前的在场车辆已被成功清理')
+        this.getAccessList()
+      })
+      this.loading = false// 关闭遮罩
     },
     timeChange(start, end, val) {
       if (val === null) {

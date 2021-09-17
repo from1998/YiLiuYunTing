@@ -1,15 +1,27 @@
 <template>
   <div class="app-container">
+    <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
+      <el-row :gutter="0">
+        <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
+          <span>收费曲线图</span>
+        </el-col>
+      </el-row>
+    </el-header>
+    <div class="lineStack">
+      <lineStack />
+    </div>
     <el-date-picker
-      v-model="value2"
+      v-model="feeMonth"
       type="month"
       placeholder="选择月"
     />
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
-        <el-col :span="4" :offset="0" :gutter="0">
-          收费报表
-          <el-button type="success" size="mini" @click="handleExport">
+        <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
+          <span>收费报表</span>
+        </el-col>
+        <el-col :span="2" :offset="18" :gutter="0">
+          <el-button type="success" size="mini" style="margin-left:56px" @click="handleExport">
             导出表格
           </el-button>
         </el-col>
@@ -40,11 +52,17 @@
 <script>
 // 引入api
 import { getRecordList } from '@/api/monitoringCenter/accessRecord'
+import lineStack from '@/views/statisticalForm/lineStack.vue'
 
 export default {
+  components: {
+    lineStack
+  },
   // 定义页面数据
   data() {
     return {
+      // 所属月份
+      feeMonth: '',
       // 是否启用遮罩层
       loading: false,
       // 分页数据总条数

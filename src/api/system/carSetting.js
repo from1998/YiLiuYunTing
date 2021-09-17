@@ -232,6 +232,14 @@ export function baoAnSetting(data) {
     data
   })
 }
+
+// getQrcodeDoMain
+export function getQrcodeDoMain() {
+  return request({
+    url: '/getQrcodeDoMain',
+    method: 'get'
+  })
+}
 // -------------------------------------车位管理
 
 // 查询车位列表：不分页

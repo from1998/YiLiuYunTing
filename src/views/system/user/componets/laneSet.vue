@@ -121,7 +121,7 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="600px"
+      width="500px"
       center
     >
       <el-form ref="form" :model="form" label-width="120px" :rules="rules">
@@ -131,7 +131,7 @@
         </el-form-item>
         <!-- 车道类型 -->
         <el-form-item label="车道类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择车道类型" size="small">
+          <el-select v-model="form.type" placeholder="请选择车道类型" size="small" clearable style="width:330px">
             <el-option
               v-for="item in options.laneCategory"
               :key="item.dictValue"
@@ -142,7 +142,7 @@
         </el-form-item>
         <!-- 所属岗亭 -->
         <el-form-item label="所属岗亭">
-          <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small">
+          <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small" clearable style="width:330px">
             <el-option
               v-for="item in options.watchhouseName"
               :key="item.id"
@@ -153,7 +153,7 @@
         </el-form-item>
         <!-- 相机品牌 -->
         <el-form-item label="相机品牌" prop="cameraBrandType">
-          <el-select v-model="form.cameraBrandType" placeholder="请选择相机品牌" size="small">
+          <el-select v-model="form.cameraBrandType" placeholder="请选择相机品牌" size="small" clearable style="width:330px">
             <el-option
               v-for="item in options.cameraBrandType"
               :key="item.dictValue"
@@ -172,7 +172,7 @@
         </el-form-item>
         <!-- 控制卡类型 -->
         <el-form-item label="控制卡类型" prop="controllerCard">
-          <el-select v-model="form.controllerCard" placeholder="请选择控制卡类型" size="small">
+          <el-select v-model="form.controllerCard" placeholder="请选择控制卡类型" size="small" clearable style="width:330px">
             <el-option
               v-for="item in options.controllerCard"
               :key="item.dictValue"
@@ -195,7 +195,7 @@
         </el-form-item>
         <!-- 屏幕行数 -->
         <el-form-item v-show="form.haveScreen === 1" label="屏幕行数" prop="lineCount">
-          <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small">
+          <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small" clearable style="width:330px">
             <el-option
               v-for="item in options.screenLines"
               :key="item.dictValue"
@@ -216,22 +216,25 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <!-- 广告一 -->
-        <el-form-item label="广告一">
-          <el-input v-model="form.ggone" placeholder="请输入广告一" clearable size="small" />
-        </el-form-item>
-        <!-- 广告二 -->
-        <el-form-item label="广告二">
-          <el-input v-model="form.ggtwo" placeholder="请输入广告二" clearable size="small" />
-        </el-form-item>
-        <!-- 广告三 -->
-        <el-form-item label="广告三">
-          <el-input v-model="form.ggthree" placeholder="请输入广告三" clearable size="small" />
-        </el-form-item>
-        <!-- 广告四 -->
-        <el-form-item label="广告四">
-          <el-input v-model="form.ggfour" placeholder="请输入广告四" clearable size="small" />
-        </el-form-item>
+        <div v-show="form.lineCount !== ''" :gutter="0">
+          <!-- 广告一 -->
+          <el-form-item label="广告一">
+            <el-input v-model="form.ggone" placeholder="请输入广告一" clearable size="small" />
+          </el-form-item>
+          <!-- 广告二 -->
+          <el-form-item label="广告二">
+            <el-input v-model="form.ggtwo" placeholder="请输入广告二" clearable size="small" />
+          </el-form-item>
+          <!-- 广告三 -->
+          <el-form-item v-show="form.lineCount === 4" label="广告三">
+            <el-input v-model="form.ggthree" placeholder="请输入广告三" clearable size="small" />
+          </el-form-item>
+          <!-- 广告四 -->
+          <el-form-item v-show="form.lineCount === 4" label="广告四">
+            <el-input v-model="form.ggfour" placeholder="请输入广告四" clearable size="small" />
+          </el-form-item>
+        </div>
+
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
@@ -242,6 +245,8 @@
     <canvas v-show="false" id="canvas" />
     <!-- 联系方式 -->
     <canvas v-show="false" id="textCanvas" />
+    <!-- 车道 -->
+    <canvas v-show="false" id="laneCanvas" />
     <!-- 二维码弹出层 -->
     <el-dialog
       title="无牌车进场请扫码"
@@ -278,7 +283,7 @@
 </template>
 <script>
 // 引入api
-import { getLaneByMid, getLaneById, addLane, updateLane, deleteLaneById } from '@/api/system/carSetting'
+import { getLaneByMid, getLaneById, addLane, updateLane, deleteLaneById, getQrcodeDoMain } from '@/api/system/carSetting'
 import QRCode from 'qrcode'
 import validate from '@/utils/validate'
 
@@ -298,10 +303,12 @@ export default {
       emergencyPhone: undefined,
       // 应急联系方式的dataUrl
       emergencyPhoneImg: undefined,
+      // 车道的dataUrl
+      laneImg: undefined,
       // 二维码的dataUrl
       qrcodeUrl: '',
       // 生成二维码的url
-      creatCodeUrl: 'http://thirddev.yiliuyunting.com/query_car_14.html?carNumber=%E4%B8%B4K3KXTH&cameraId=35',
+      creatCodeUrl: '',
       // 验证规则
       validate,
       rules: {
@@ -374,7 +381,9 @@ export default {
         // 相机品牌
         cameraBrandType: [],
         // 所属岗亭
-        watchhouseName: []
+        watchhouseName: [],
+        // 车场sn
+        sn: ''
       }
     }
   },
@@ -412,6 +421,9 @@ export default {
     await this.bus.$on('watchHouse', val => {
       this.options.watchhouseName = val
     })
+    await this.bus.$on('postSN', val => {
+      this.options.sn = val
+    })
   },
   // 方法
   methods: {
@@ -439,6 +451,8 @@ export default {
       getLaneByMid(this.queryParams).then(res => {
         this.laneList = res.data.list
         this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      }).catch(() => {
         this.loading = false// 关闭遮罩
       })
     },
@@ -489,6 +503,8 @@ export default {
       getLaneById(id).then(res => {
         this.form = res.data
         this.loading = false
+      }).catch(() => {
+        this.loading = false// 关闭遮罩
       })
     },
     // 执行删除
@@ -522,7 +538,7 @@ export default {
     async handleEmergencyConfirm() {
       window.sessionStorage.setItem('emergencyPhone', this.emergencyPhone)
       await this.createText(this.emergencyPhone)
-      this.drawAndShareImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg)
+      await this.drawqrCodeImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg, this.laneImg)
       this.emergencyOpen = false
     },
     // 设置二维码应急联系方式
@@ -537,10 +553,18 @@ export default {
         this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
       }
       this.qrcodeDialogVisible = true
+      await getQrcodeDoMain().then(res => {
+        this.creatCodeUrl = res.data + '/no_plate_enter_' + this.options.sn + '_' + row.id
+        console.log(this.creatCodeUrl)
+        // this.msgSuccess(this.creatCodeUrl)
+      }).catch(() => {
+        this.msgError('二维码获取失败')
+      })
       this.emergencyPhone = await window.sessionStorage.getItem('emergencyPhone')
       await this.createQrcode(this.creatCodeUrl)
       await this.createText(this.emergencyPhone)
-      this.drawAndShareImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg)
+      await this.createLane(row.name)
+      this.drawqrCodeImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg, this.laneImg)
     },
     // 生成二维码
     createQrcode(text) {
@@ -551,24 +575,35 @@ export default {
       const data = canvas.toDataURL('image/png', 1)
       this.qrcodeUrl = data
     },
+    // 生成应急联系方式
     createText(text) {
+      if (text === null) {
+        text = ''
+      }
       const canvas = document.getElementById('textCanvas')
-      canvas.style.letterSpacing = '8px'
+      canvas.style.letterSpacing = '5px'
       var context = canvas.getContext('2d')
       context.clearRect(0, 0, 300, 150)
       context.font = '18px KaiTi KaiTi_GB2312'
-      // 创建渐变
-      var gradient = context.createLinearGradient(0, 0, canvas.width, 0)
-      gradient.addColorStop('0', 'magenta')
-      gradient.addColorStop('0.5', 'blue')
-      gradient.addColorStop('1.0', 'red')
-      // 用渐变填色
-      context.fillStyle = gradient
+      context.fillStyle = '#FFF'
       context.fillText(text, 10, 50)
       this.emergencyPhoneImg = canvas.toDataURL('image/png', 1)
     },
+    // 生成车道
+    createLane(text) {
+      const canvas = document.getElementById('laneCanvas')
+      canvas.width = 500
+      canvas.height = 150
+      // canvas.style.letterSpacing = '8px'
+      var context = canvas.getContext('2d')
+      context.clearRect(0, 0, 500, 150)
+      context.font = '26px KaiTi KaiTi_GB2312'
+      context.fillStyle = '#fff'
+      context.fillText('<<=== ' + text + ' ===>>', (canvas.width - context.measureText(text).width) / 4, 30)
+      this.laneImg = canvas.toDataURL('image/png', 1)
+    },
     // img1背景图、img2二维码
-    drawAndShareImage(bgImg, qrCodeImg, emergency) {
+    drawqrCodeImage(bgImg, qrCodeImg, emergency, lane) {
       const canvas = document.getElementById('myCanvas')
       canvas.width = 720
       canvas.height = 446
@@ -581,28 +616,45 @@ export default {
       bgImage.crossOrigin = 'Anonymous'
       bgImage.onload = () => {
         context.drawImage(bgImage, 0, 0, 720, 446)
-
-        const qrCodeImage = new Image()
-        qrCodeImage.src = qrCodeImg
-        qrCodeImage.crossOrigin = 'Anonymous'
-        qrCodeImage.onload = () => {
-          context.drawImage(qrCodeImage, 60, 150, 175, 175)
+        const that = this
+        function func1() {
+          const qrCodeImage = new Image()
+          qrCodeImage.src = qrCodeImg
+          qrCodeImage.crossOrigin = 'Anonymous'
+          qrCodeImage.onload = () => {
+            context.drawImage(qrCodeImage, 58, 149, 180, 180)
+          }
         }
 
-        const emergencyImg = new Image()
-        emergencyImg.src = emergency
-        emergencyImg.crossOrigin = 'Anonymous'
-        emergencyImg.onload = () => {
-          context.drawImage(emergencyImg, 185, 353, 200, 200)
-          const base64 = canvas.toDataURL('image/png')
-          const img = document.getElementById('myCanvas')
-          img.setAttribute('src', base64)
-          this.src = base64
+        function func2() {
+          const laneImage = new Image()
+          laneImage.src = lane
+          laneImage.crossOrigin = 'Anonymous'
+          laneImage.onload = () => {
+            context.drawImage(laneImage, 228, 100, 500, 150)
+          }
         }
+
+        function func3() {
+          const emergencyImg = new Image()
+          emergencyImg.src = emergency
+          emergencyImg.crossOrigin = 'Anonymous'
+          emergencyImg.onload = () => {
+            context.drawImage(emergencyImg, 182, 369, 300, 150)
+            const base64 = canvas.toDataURL('image/png')
+            const img = document.getElementById('myCanvas')
+            img.setAttribute('src', base64)
+            that.src = base64
+          }
+        }
+        func1()
+        func2()
+        func3()
       }
     },
     // 二维码下载
     handleDownload() {
+      debugger
       this.loading = true
       var a = document.createElement('a')
       var event = new MouseEvent('click')
@@ -631,7 +683,7 @@ export default {
           this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
           break
       }
-      this.drawAndShareImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg)
+      this.drawqrCodeImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg, this.laneImg)
     },
     // 保存
     handleSubmit() {

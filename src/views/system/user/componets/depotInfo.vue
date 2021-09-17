@@ -401,6 +401,7 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
+          this.bus.$emit('postSN', res.data.sn)
           // this.SubmitTitle = '已提交'
           this.handleRegion(this.addressOptions)
           this.handletime()

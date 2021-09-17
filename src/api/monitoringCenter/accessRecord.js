@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-// --------------------------------------车场信息
+// --------------------------------------进出记录
 // 查询
 export function getRecordList(query) {
   return request({
@@ -9,11 +9,18 @@ export function getRecordList(query) {
   })
 }
 
-// 清理车辆信息
-export function delRecordList(query) {
+// 清理离场车辆信息
+export function cleanLeaveRecord() {
   return request({
-    url: '/park/record/clean_record',
-    method: 'delete',
-    params: query
+    url: '/park/record/clean_leave_record',
+    method: 'delete'
+  })
+}
+
+// 清理在场车辆信息
+export function cleanEnterRecord(days) {
+  return request({
+    url: '/park/record/clean_record/' + days,
+    method: 'delete'
   })
 }
