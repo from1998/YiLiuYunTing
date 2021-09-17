@@ -3,23 +3,23 @@
     <el-row>
       <!-- 表格工具按钮开始 -->
       <el-col :span="6">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加优惠券</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <!--        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加优惠券</el-button>-->
+        <!--        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>-->
       </el-col>
       <!-- 查询条件开始 -->
       <el-col :span="18" :offset="0">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item label="名称" prop="carNumber">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
+          <el-form-item label="所属商户" prop="merchantId">
             <el-input
-              v-model="queryParams.carNumber"
-              placeholder="请输入优惠券名称"
+              v-model="queryParams.merchantId"
+              placeholder="请输入所属商户"
               clearable
               size="small"
               style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="类型" prop="isLeave" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券类型">
+          <el-form-item label="优惠类型" prop="category" label-width="70px">
+            <el-select v-cloak v-model="queryParams.category" style="width:180px" placeholder="请选择优惠券类型">
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -28,15 +28,24 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="是否开放" prop="isLeave" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券是否开放">
-              <el-option
-                v-for="item in stateOptions"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="Number(item.dictValue)"
-              />
-            </el-select>
+          <!--          <el-form-item label="是否开放" prop="isLeave" label-width="70px">-->
+          <!--            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券是否开放">-->
+          <!--              <el-option-->
+          <!--                v-for="item in stateOptions"-->
+          <!--                :key="item.dictValue"-->
+          <!--                :label="item.dictLabel"-->
+          <!--                :value="Number(item.dictValue)"-->
+          <!--              />-->
+          <!--            </el-select>-->
+          <!--          </el-form-item>-->
+          <el-form-item label="使用车牌" prop="carNumber">
+            <el-input
+              v-model="queryParams.carNumber"
+              placeholder="请输入车牌号"
+              clearable
+              size="small"
+              style="width:180px"
+            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -49,23 +58,13 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="名称" align="center" prop="carNumber" />
-      <el-table-column label="类型" align="center" prop="carNumber" />
-      <el-table-column label="是否开放" align="center">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.gateState"
-            :active-text="scope.row.gateState?'开放':'关闭'"
-            @change="gateStateChanged(scope.row)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column label="操作" align="center" width="280">
-        <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="ID" align="center" prop="id" />
+      <el-table-column label="所属商户" align="center" prop="merchantId" />
+      <el-table-column label="所属优惠券" align="center" prop="couponsId" />
+      <el-table-column label="优惠类型" align="center" prop="category" :formatter="carTypeFormatter" />
+      <el-table-column label="是否使用" align="center" prop="isUsed" :formatter="statusFormatter" />
+      <el-table-column label="使用车牌" align="center" prop="carNumber" />
+      <el-table-column label="使用时间" align="center" prop="used" />
     </el-table>
 
     <!-- 分页控件开始 -->
@@ -122,7 +121,7 @@
 <script>
 // 引入api
 // import { listRoleForPage } from '@/api/system/role'
-
+import { getListCouponsRecord } from '@/api/coupons/record'
 export default {
   // 定义页面数据
   data() {
@@ -165,7 +164,10 @@ export default {
       // 菜单树的数据
       menuOptions: [],
       // 当前选中持角色ID
-      currentRoleId: undefined
+      currentRoleId: undefined,
+      id: '',
+      YesOrNo: [],
+      stateOptions: []
     }
   },
   // 勾子
@@ -174,19 +176,37 @@ export default {
     this.getDataByType('sys_normal_disable').then(res => {
       this.statusOptions = res.data
     })
+    // 使用全局的根据字典类型查询字典数据的方法查询字典数据  2禁用 1正常
+    this.getDataByType('CouponsCategoryDic').then((res) => {
+      this.stateOptions = res.data
+    })
+    // 获取是否字典
+    this.getDataByType('yesOrNo').then(res => {
+      this.YesOrNo = res.data
+      this.dayList = res.data
+    })
     // 查询表格数据
     this.getRoleList()
+    this.id = this.getID()
   },
   // 方法
   methods: {
     // 查询表格数据
     getRoleList() {
       this.loading = true // 打开遮罩
-      // listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
-      //   this.roleTableList = res.data.list
-      //   this.total = res.data.total
-      //   this.loading = false// 关闭遮罩
-      // })
+      getListCouponsRecord(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
+        this.carTableList = res.data.list
+        this.total = res.data.total
+        this.loading = false// 关闭遮罩
+      })
+    },
+    // 翻译状态 是否立即生效
+    statusFormatter(row) {
+      return this.selectDictLabel(this.YesOrNo, row.isUsed.toString())
+    },
+    // 翻译类型
+    carTypeFormatter(row) {
+      return this.selectDictLabel(this.stateOptions, row.category.toString())
     },
     // 条件查询
     handleQuery() {
@@ -217,9 +237,9 @@ export default {
       this.getRoleList()
     },
     // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
+    // statusFormatter(row) {
+    //   return this.selectDictLabel(this.statusOptions, row.status)
+    // },
     // 打开添加的弹出层
     handleAdd() {
       this.open = true

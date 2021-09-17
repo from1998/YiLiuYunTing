@@ -29,6 +29,25 @@
           label-width="58px"
         >
           <el-form-item
+            label="车厂"
+            prop="category"
+            label-width="70px"
+          >
+            <el-select
+              v-cloak
+              v-model="queryParams.category"
+              style="width:180px"
+              placeholder="请选择优惠券类型"
+            >
+              <el-option
+                v-for="item in stateOptions"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item
             label="名称"
             prop="name"
           >
@@ -128,7 +147,7 @@
         <template slot-scope="scope">
           <el-switch
             v-model="scope.row.isActive"
-            :active-text="scope.row.isActive == 1?'开放':'关闭'"
+            :active-text="scope.row.isActive === 1?'开放':'关闭'"
             :active-value="1"
             :inactive-value="0"
             @change="gateStateChanged($event,scope.row)"
@@ -152,7 +171,7 @@
             type="danger"
             icon="el-icon-delete"
             size="mini"
-            @click="handleDelete(scope.row)"
+            @click="handleDeletes(scope.row)"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -195,10 +214,30 @@
             size="small"
           />
         </el-form-item>
-        <el-form-item label="优惠劵类型">
+        <el-form-item label="优惠劵">
           <el-select
             v-model="form.category"
             placeholder="请选择优惠劵类型"
+            clearable
+            size="small"
+            style="width:330px"
+          >
+            <el-option
+              v-for="d in stateOptions"
+              :key="d.dictValue"
+              :label="d.dictLabel"
+              :value="Number(d.dictValue)"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item
+          v-if="id === 1"
+          label="车厂"
+          prop="name"
+        >
+          <el-select
+            v-model="form.category"
+            placeholder="请选择车厂"
             clearable
             size="small"
             style="width:330px"
@@ -232,7 +271,6 @@ import {
   addCoupons,
   listCouponsForPage,
   openCoupons,
-  deleteCouponsByIds,
   getCouponsById,
   updateCoupons,
   deleteCouponsId
@@ -284,7 +322,8 @@ export default {
       switchData: {
         id: '',
         isActive: ''
-      }
+      },
+      id: ''
     }
   },
   // 勾子
@@ -299,6 +338,8 @@ export default {
     })
     // 查询表格数据
     this.getCouponsList()
+    // 角色id
+    this.id = this.getID()
   },
   // 方法
   methods: {
@@ -338,7 +379,7 @@ export default {
         }
         //   const data = {
         //     id: row.id,
-        //     isActive: row.isActive == true ? 1 : 0
+        //     isActive: row.isActive === true ? 1 : 0
         //   }
         //   await openCoupons(data).then((res) => {
         //     console.log(res)
@@ -394,27 +435,27 @@ export default {
       })
     },
     // 执行删除
-    handleDelete(row) {
-      const roleIds = row.id || this.ids
-      this.$confirm('此操作将永久删除该优惠券, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      })
-        .then(() => {
-          this.loading = true
-          deleteCouponsByIds(roleIds).then((res) => {
-            console.log(res)
-            this.loading = false
-            this.msgSuccess('删除成功')
-            this.getCouponsList() // 全查询
-          })
-        })
-        .catch(() => {
-          this.msgError('删除已取消')
-          this.loading = false
-        })
-    },
+    // handleDelete(row) {
+    //   const roleIds = row.id || this.ids
+    //   this.$confirm('此操作将永久删除该优惠券, 是否继续?', '提示', {
+    //     confirmButtonText: '确定',
+    //     cancelButtonText: '取消',
+    //     type: 'warning'
+    //   })
+    //     .then(() => {
+    //       this.loading = true
+    //       deleteCouponsByIds(roleIds).then((res) => {
+    //         console.log(res)
+    //         this.loading = false
+    //         this.msgSuccess('删除成功')
+    //         this.getCouponsList() // 全查询
+    //       })
+    //     })
+    //     .catch(() => {
+    //       this.msgError('删除已取消')
+    //       this.loading = false
+    //     })
+    // },
     // 多选删除
     // 执行删除
     handleDeletes(row) {
