@@ -5,16 +5,20 @@
         <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
           <span>收费曲线图</span>
         </el-col>
+        <el-col :span="4" :offset="16" :gutter="0" style="margin-top:7px">
+          <el-date-picker
+            v-model="feeMonth"
+            type="month"
+            placeholder="选择月"
+            style="margin-left:-10px"
+          />
+        </el-col>
       </el-row>
     </el-header>
     <div class="lineStack">
       <lineStack />
     </div>
-    <el-date-picker
-      v-model="feeMonth"
-      type="month"
-      placeholder="选择月"
-    />
+
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
         <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
@@ -123,6 +127,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-
-</style>

@@ -65,7 +65,7 @@ export default {
       })
       return {
         textStyle: {
-          color: 'aqua'
+          color: '#000'
         },
         tooltip: {
           trigger: 'axis'
@@ -75,7 +75,7 @@ export default {
           top: '3%',
           right: '4%',
           textStyle: {
-            color: 'aqua'
+            color: '#000'
           },
           data: legendData
         },
@@ -105,12 +105,12 @@ export default {
 
 <style lang="scss" scoped>
 .lineStack {
-    height: 500px;
+    height: 350px;
     width: 100%;
     display: flex;
     #park {
         flex: 1;
-        color: aqua;
+        color: #000;
     }
 }
 </style>
