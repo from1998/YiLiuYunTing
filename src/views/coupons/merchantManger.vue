@@ -10,7 +10,6 @@
       <el-col :span="18" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item
-            v-if="roleId === '1'"
             label="车场"
             prop="parentId"
             label-width="70px"
