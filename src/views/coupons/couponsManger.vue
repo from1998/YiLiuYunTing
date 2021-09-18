@@ -38,6 +38,7 @@
               v-model="queryParams.parkId"
               style="width:180px"
               placeholder="请选择车场"
+              size="small"
             >
               <el-option
                 v-for="(item, index) in CarList"
@@ -219,10 +220,10 @@
         <el-form-item label="优惠劵">
           <el-select
             v-model="form.category"
+            style="width:100%"
             placeholder="请选择优惠劵类型"
             clearable
             size="small"
-            style="width:330px"
           >
             <el-option
               v-for="d in stateOptions"
@@ -232,37 +233,18 @@
             />
           </el-select>
         </el-form-item>
-        <!--        <el-form-item-->
-        <!--          v-if="id === '1' "-->
-        <!--          label="车厂"-->
-        <!--          prop="parkId"-->
-        <!--        >-->
-        <!--          <el-select-->
-        <!--            v-model="form.parkId"-->
-        <!--            placeholder="请选择车厂"-->
-        <!--            clearable-->
-        <!--            size="small"-->
-        <!--            style="width:330px"-->
-        <!--          >-->
-        <!--            <el-option-->
-        <!--              v-for="(d,index) in CarList"-->
-        <!--              :key="index"-->
-        <!--              :label="d.name"-->
-        <!--              :value="Number(d.parkId)"-->
-        <!--            />-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
         <el-form-item
-          v-if="title !== '添加商家信息' && roleId !== 1 "
+          v-if="title === '添加优惠券信息' && roleId === '1' "
           label="车场"
           prop="parkId"
           label-width="70px"
         >
           <el-select
-            v-cloak
             v-model="form.parkId"
-            style="width:180px"
+            style="width:100%"
             placeholder="请选择车场"
+            clearable
+            size="small"
           >
             <el-option
               v-for="(item, index) in CarList"
@@ -374,7 +356,7 @@ export default {
       listAll().then(res => {
         console.log(res)
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
+        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -394,7 +376,6 @@ export default {
         this.addDateRange(this.queryParams, this.dateRange)
       ).then((res) => {
         this.couponsTableList = res.data.list
-
         this.total = res.data.total
         console.log(this.total)
         this.loading = false // 关闭遮罩
@@ -415,12 +396,6 @@ export default {
         } else {
           this.msgSuccess('操作失败')
         }
-        //   const data = {
-        //     id: row.id,
-        //     isActive: row.isActive === true ? 1 : 0
-        //   }
-        //   await openCoupons(data).then((res) => {
-        //     console.log(res)
       })
     },
     // 条件查询
@@ -430,6 +405,13 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      console.log(this.roleId)
+      if (this.roleId === '4') {
+        this.queryParams.parkId = this.CarList[0].id
+      }
+      if (this.roleId === '1') {
+        this.queryParams.parkId = ''
+      }
       this.dateRange = []
       this.getCouponsList()
     },
@@ -461,8 +443,6 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改优惠券信息'
-      // const roleId = row.roleId || this.ids
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
@@ -472,28 +452,6 @@ export default {
         this.loading = false
       })
     },
-    // 执行删除
-    // handleDelete(row) {
-    //   const roleIds = row.id || this.ids
-    //   this.$confirm('此操作将永久删除该优惠券, 是否继续?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   })
-    //     .then(() => {
-    //       this.loading = true
-    //       deleteCouponsByIds(roleIds).then((res) => {
-    //         console.log(res)
-    //         this.loading = false
-    //         this.msgSuccess('删除成功')
-    //         this.getCouponsList() // 全查询
-    //       })
-    //     })
-    //     .catch(() => {
-    //       this.msgError('删除已取消')
-    //       this.loading = false
-    //     })
-    // },
     // 多选删除
     // 执行删除
     handleDeletes(row) {
@@ -533,8 +491,7 @@ export default {
               if (res.code === 200) {
                 this.msgSuccess('保存成功')
                 this.open = false // 关闭弹出层
-
-                this.getCouponsList() // 列表重新查询
+                this.resetQuery()
               } else {
                 this.msgSuccess('保存失败')
               }

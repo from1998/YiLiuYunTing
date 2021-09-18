@@ -9,6 +9,24 @@
       <!-- 查询条件开始 -->
       <el-col :span="18" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
+          <el-form-item
+            label="车场"
+            prop="parkId"
+          >
+            <el-select
+              v-cloak
+              v-model="queryParams.parkId"
+              placeholder="请选择车场"
+              size="small"
+            >
+              <el-option
+                v-for="(item, index) in CarList"
+                :key="index"
+                :label="item.name"
+                :value="Number(item.id)"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="所属商户" prop="merchantId">
             <el-input
               v-model="queryParams.merchantId"
@@ -28,16 +46,6 @@
               />
             </el-select>
           </el-form-item>
-          <!--          <el-form-item label="是否开放" prop="isLeave" label-width="70px">-->
-          <!--            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券是否开放">-->
-          <!--              <el-option-->
-          <!--                v-for="item in stateOptions"-->
-          <!--                :key="item.dictValue"-->
-          <!--                :label="item.dictLabel"-->
-          <!--                :value="Number(item.dictValue)"-->
-          <!--              />-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
           <el-form-item label="使用车牌" prop="carNumber">
             <el-input
               v-model="queryParams.carNumber"
@@ -59,9 +67,9 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
       <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="所属商户" align="center" prop="merchantId" />
-      <el-table-column label="所属优惠券" align="center" prop="couponsId" />
-      <el-table-column label="优惠类型" align="center" prop="category" :formatter="carTypeFormatter" />
+      <el-table-column label="所属商户" align="center" prop="merchantIdString" />
+      <el-table-column label="所属优惠券" align="center" prop="category" :formatter="carTypeFormatter" />
+      <el-table-column label="优惠类型" align="center" prop="couponsIdString" />
       <el-table-column label="是否使用" align="center" prop="isUsed" :formatter="statusFormatter" />
       <el-table-column label="使用车牌" align="center" prop="carNumber" />
       <el-table-column label="使用时间" align="center" prop="used" />
@@ -122,6 +130,7 @@
 // 引入api
 // import { listRoleForPage } from '@/api/system/role'
 import { getListCouponsRecord } from '@/api/coupons/record'
+import { listAll } from '@/api/coupons/couponsManger'
 export default {
   // 定义页面数据
   data() {
@@ -153,7 +162,8 @@ export default {
         size: 10,
         roleName: undefined,
         roleCode: undefined,
-        status: undefined
+        status: undefined,
+        parkId: undefined
       },
       // 表单数据
       form: {
@@ -167,7 +177,8 @@ export default {
       currentRoleId: undefined,
       id: '',
       YesOrNo: [],
-      stateOptions: []
+      stateOptions: [],
+      CarList: []
     }
   },
   // 勾子
@@ -188,9 +199,20 @@ export default {
     // 查询表格数据
     this.getRoleList()
     this.id = this.getID()
+    this.getCarList()
   },
   // 方法
   methods: {
+    // 获取车厂信息
+    getCarList() {
+      listAll().then(res => {
+        console.log(res)
+        this.CarList = res.data
+        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 查询表格数据
     getRoleList() {
       this.loading = true // 打开遮罩
@@ -210,11 +232,21 @@ export default {
     },
     // 条件查询
     handleQuery() {
+      // var arr = this.CarList.filter(item => {
+      //   return item.name === this.queryParams.parkId
+      // })
+      // this.queryParams.parkId = arr[0].id
       this.getRoleList()
     },
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      if (this.roleId === '4') {
+        this.queryParams.parkId = this.CarList[0].id
+      }
+      if (this.roleId === '1') {
+        this.queryParams.parkId = ''
+      }
       this.dateRange = []
       this.getRoleList()
     },

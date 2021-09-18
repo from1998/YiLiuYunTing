@@ -53,3 +53,10 @@ export function selectMerchantByParkId(id) {
     method: 'get'
   })
 }
+// 根据车场ID查询优惠券
+export function selectCouponsByParkId(id) {
+  return request({
+    url: '/ylyt/merchant/selectCouponsByParkId/' + id,
+    method: 'get'
+  })
+}
