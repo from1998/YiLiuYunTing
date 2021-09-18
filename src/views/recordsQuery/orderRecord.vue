@@ -1,8 +1,13 @@
 <template>
   <div class="app-container">
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding:5px 0 15px 0">
+        <span>多威尔车场</span>
+      </el-col>
+    </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="18" :offset="6">
+      <el-col :span="18" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="车牌号" prop="carNumber">
@@ -49,6 +54,20 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
+      <el-col :span="6" :offset="0">
+        <el-form ref="carForm" :model="parkForm" label-width="180px" :disabled="flag" style="margin-left:10px">
+          <el-form-item label="" prop="id">
+            <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+              <el-option
+                v-for="item in options.parkCategory"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
 
     <!-- 数据表格 -->
@@ -86,6 +105,11 @@ export default {
   // 定义页面数据
   data() {
     return {
+      parkForm: {
+        // 车场id
+        id: ''
+      },
+      flag: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       accessInSrc: '',
       accessOutSrc: '',
@@ -122,7 +146,9 @@ export default {
         // 支付平台
         payChannel: [],
         // 支付类目
-        orderSkuType: []
+        orderSkuType: [],
+        // 车场类型
+        parkCategory: []
       }
     }
   },

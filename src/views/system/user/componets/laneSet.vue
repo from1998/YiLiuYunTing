@@ -554,7 +554,7 @@ export default {
       }
       this.qrcodeDialogVisible = true
       await getQrcodeDoMain().then(res => {
-        this.creatCodeUrl = res.data + '/no_plate_enter_' + this.options.sn + '_' + row.id
+        this.creatCodeUrl = res.data + '/third/no_plate_enter_' + this.options.sn + '_' + row.id
         console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
       }).catch(() => {

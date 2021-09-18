@@ -37,6 +37,7 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
+    disableHostCheck: true,
     port: port,
     open: false,
     overlay: {
@@ -47,7 +48,7 @@ module.exports = {
     // 跨域代理配置
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        target: 'http://192.168.1.5:8089/',
+        target: 'https://thirddev.yiliuyunting.com/',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API ]: ''

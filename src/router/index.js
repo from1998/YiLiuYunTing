@@ -38,6 +38,22 @@ export const constantRoutes = [
     path: '/401',
     component: () => import('@/views/error-page/401'),
     hidden: true
+  },
+  {
+    path: '/qrcodeAccess/accessIn',
+    component: () => import('@/views/qrcodeAccess/accessIn'),
+    meta: {
+      title: '扫码进场',
+      icon: 'el-icon-d-arrow-left'
+    }
+  },
+  {
+    path: '/qrcodeAccess/accessOut',
+    component: () => import('@/views/qrcodeAccess/accessOut'),
+    meta: {
+      title: '扫码出场',
+      icon: 'el-icon-d-arrow-right'
+    }
   }
 ]
 export const asyncRoutes = [

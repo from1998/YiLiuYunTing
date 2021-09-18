@@ -1,8 +1,13 @@
 <template>
   <div class="app-container">
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>多威尔车场</span>
+      </el-col>
+    </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="7" :offset="18">
+      <el-col :span="8" :offset="0">
         <el-form ref="cleanForm" :model="cleanForm" :inline="true">
           <el-form-item>
             <el-button type="danger" icon="el-icon-close" size="mini" @click="handleLeave">清理离场车辆</el-button>
@@ -18,6 +23,20 @@
           </el-form-item>
           <el-form-item>
             <el-button type="warning" icon="el-icon-delete" size="mini" @click="handleEnter(cleanForm.days)">清理在场车辆</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
+      <el-col :span="6" :offset="10">
+        <el-form ref="carForm" :model="parkForm" label-width="180px" :disabled="flag">
+          <el-form-item label="" prop="id">
+            <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+              <el-option
+                v-for="item in parkCategory"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
           </el-form-item>
         </el-form>
       </el-col>
@@ -222,6 +241,11 @@ export default {
   // 定义页面数据
   data() {
     return {
+      parkForm: {
+        // 车场id
+        id: ''
+      },
+      flag: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       accessInSrc: '',
       accessOutSrc: '',
@@ -246,6 +270,8 @@ export default {
       // 是否显示弹出层
       open: false,
       // 下拉列表
+      // 车场类型
+      parkCategory: [],
       laneOptions: [],
       recordOptions: [],
       dateRangeIn: [],

@@ -1,5 +1,25 @@
 <template>
   <div class="app-container">
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>多威尔车场</span>
+      </el-col>
+      <el-col :span="6" :offset="3">
+        <el-form ref="carForm" :model="parkForm" label-width="180px" :disabled="flag" style="margin-left:10px">
+          <el-form-item label="" prop="id">
+            <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+              <el-option
+                v-for="item in options.parkCategory"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-col>
+    </el-row>
+
     <!-- 表格工具按钮开始 -->
     <el-row>
       <el-col :span="10">
@@ -54,6 +74,7 @@
         <!-- 查询条件结束 -->
       </el-col>
     </el-row>
+
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
@@ -237,6 +258,36 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-form-item label="层号" prop="tierNumber">
+          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" @change="handleNumberFocus">
+            <el-option
+              v-for="item in options.tierNumber"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="区域号" prop="areaNumber">
+          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" @change="handleNumberFocus">
+            <el-option
+              v-for="item in options.areaNumber"
+              :key="item.dictValue"
+              :label="item.dictLabel"
+              :value="Number(item.dictValue)"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="编号" prop="number">
+          <el-select v-model="form.number" placeholder="请选择车位编号" size="small" style="width:350px">
+            <el-option
+              v-for="item in options.number"
+              :key="item.id"
+              :label="item.number"
+              :value="item.number"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
@@ -292,7 +343,7 @@
           </el-row>
         </el-form-item>
         <el-form-item label="层号" prop="tierNumber">
-          <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" @change="handleNumberFocus">
+          <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" disabled>
             <el-option
               v-for="item in options.tierNumber"
               :key="item.dictValue"
@@ -302,7 +353,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区域号" prop="areaNumber">
-          <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" @change="handleNumberFocus">
+          <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" disabled>
             <el-option
               v-for="item in options.areaNumber"
               :key="item.dictValue"
@@ -312,7 +363,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="编号" prop="number">
-          <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px">
+          <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px" disabled>
             <el-option
               v-for="item in options.number"
               :key="item.id"
@@ -348,6 +399,11 @@ export default {
   // 定义页面数据
   data() {
     return {
+      parkForm: {
+        // 车场id
+        id: ''
+      },
+      flag: false,
       managerid: '',
       // 验证规则
       validate,
@@ -357,11 +413,9 @@ export default {
         carType: validate.notEmpty,
         registerType: validate.notEmpty,
         splitType: validate.notEmpty,
-        tierNumber: validate.notEmpty,
-        areaNumber: validate.notEmpty,
         effectiveTime: validate.notEmpty,
-        expireTime: validate.notEmpty,
-        number: validate.notEmpty
+        amount: validate.notEmpty,
+        expireTime: validate.notEmpty
       },
       // 日期快捷选择
       pickerOptions: {
@@ -434,7 +488,9 @@ export default {
         timeCategoryOptions: [],
         areaNumber: [],
         tierNumber: [],
-        number: []
+        number: [],
+        // 车场类型
+        parkCategory: []
       },
       // 查询参数
       queryParams: {
@@ -508,9 +564,10 @@ export default {
       this.options.number = []
       const query = {
         managerid: this.managerid,
-        tierNumber: this.renewform.tierNumber,
-        areaNumber: this.renewform.areaNumber
+        tierNumber: this.form.tierNumber,
+        areaNumber: this.form.areaNumber
       }
+      console.log(query)
       if ((query.tierNumber !== null && query.tierNumber !== undefined) && (query.areaNumber !== null && query.areaNumber !== undefined)) {
         getSiteByMid(query).then((res) => {
           res.data.map(val => {

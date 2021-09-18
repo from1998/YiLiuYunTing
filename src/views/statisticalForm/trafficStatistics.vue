@@ -1,17 +1,36 @@
 <template>
   <div class="app-container">
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>多威尔车场</span>
+      </el-col>
+    </el-row>
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
         <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
           <span>车流曲线图</span>
         </el-col>
-        <el-col :span="4" :offset="16" :gutter="0" style="margin-top:7px">
+        <el-col :span="4" :offset="12" :gutter="0">
           <el-date-picker
             v-model="trafficMonth"
             type="month"
-            placeholder="选择月"
-            style="margin-left:-10px"
+            placeholder="请选择您要查看的月份"
+            style="margin-left:40px"
           />
+        </el-col>
+        <el-col :span="4" :offset="0">
+          <el-form ref="carForm" :model="parkForm" label-width="0" :disabled="flag">
+            <el-form-item label="" prop="id">
+              <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+                <el-option
+                  v-for="item in parkCategory"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-form>
         </el-col>
       </el-row>
     </el-header>
@@ -63,6 +82,13 @@ export default {
   // 定义页面数据
   data() {
     return {
+      parkForm: {
+        // 车场id
+        id: ''
+      },
+      flag: false,
+      // 车场类型
+      parkCategory: [],
       // 所属月份
       trafficMonth: '',
       // 是否启用遮罩层

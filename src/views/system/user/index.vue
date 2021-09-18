@@ -350,13 +350,13 @@ export default {
     })
     // 查询表格数据
     this.getUserList()
-    this.encode64('abcdefg')
+    this.encode64('13_16\\19')
   },
   // 方法
   methods: {
     encode64(input) {
       debugger
-      const keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/' + '='
+      const keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/_' + '='
       let output = ''
       let chr1 = ''
       let chr2 = ''

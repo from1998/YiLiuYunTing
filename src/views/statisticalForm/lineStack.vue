@@ -68,12 +68,30 @@ export default {
           color: '#000'
         },
         tooltip: {
+          show: true, // 必须引入 tooltip 组件
           trigger: 'axis'
         },
+
+        toolbox: {
+          show: true,
+          right: '4%',
+          showTitle: true, // 隐藏默认文字，否则两者位置会重叠
+          feature: {
+            saveAsImage: {
+              show: true,
+              title: '保存为图片'
+            },
+            dataView: {
+              show: true,
+              title: '切换到数据视图'
+            }
+          }
+        },
+
         color: ['#FF0000', '#00FF00', '#FFFFFF'],
         legend: {
           top: '3%',
-          right: '4%',
+          left: 'center',
           textStyle: {
             color: '#000'
           },
