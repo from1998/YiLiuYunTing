@@ -253,7 +253,7 @@
         <!--          </el-select>-->
         <!--        </el-form-item>-->
         <el-form-item
-          v-if="roleId === '1'"
+          v-if="title !== '添加商家信息' && roleId !== 1 "
           label="车场"
           prop="parkId"
           label-width="70px"
@@ -330,7 +330,8 @@ export default {
         roleName: undefined,
         roleCode: undefined,
         status: undefined,
-        name: undefined
+        name: undefined,
+        parkId: ''
       },
       // 表单数据
       form: {},
@@ -360,11 +361,11 @@ export default {
     this.getDataByType('yesOrNo').then((res) => {
       this.statusOptions = res.data
     })
+    this.getCarList()
     // 查询表格数据
     this.getCouponsList()
     // 角色权限
     this.roleId = this.getRoleID()
-    this.getCarList()
   },
   // 方法
   methods: {
@@ -564,7 +565,6 @@ export default {
     cancel() {
       this.open = false
       this.title = ''
-      this.getCouponsList()
     },
     // 重置表单
     reset() {

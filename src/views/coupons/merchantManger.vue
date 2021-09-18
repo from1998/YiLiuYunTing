@@ -139,7 +139,7 @@
           <el-input v-model="form.email" placeholder="商家地址" clearable size="small" />
         </el-form-item>
         <el-form-item
-          v-if="roleId === '1'"
+          v-if="roleId === '1' && title === '添加商家信息' "
           label="车场"
           prop="parentId"
           label-width="70px"
@@ -203,7 +203,8 @@ export default {
         size: 10,
         roleName: undefined,
         roleCode: undefined,
-        status: undefined
+        status: undefined,
+        parentId: undefined
       },
       // 表单数据
       form: {
@@ -377,7 +378,6 @@ export default {
     cancel() {
       this.open = false
       this.title = ''
-      this.getRoleList()
     },
     // 重置表单
     reset() {

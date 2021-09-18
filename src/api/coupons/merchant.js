@@ -46,3 +46,10 @@ export function getMerchantCoupons(query) {
     params: query
   })
 }
+// 根据车场ID查询商家
+export function selectMerchantByParkId(id) {
+  return request({
+    url: '/ylyt/merchant/selectMerchantByParkId/' + id,
+    method: 'get'
+  })
+}

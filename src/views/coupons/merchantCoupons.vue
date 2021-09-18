@@ -9,6 +9,23 @@
       <!-- 查询条件开始 -->
       <el-col :span="18" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+          <el-form-item
+            label="车场"
+            prop="parkId"
+          >
+            <el-select
+              v-cloak
+              v-model="queryParams.parkId"
+              placeholder="请选择车场"
+            >
+              <el-option
+                v-for="(item, index) in CarList"
+                :key="index"
+                :label="item.name"
+                :value="Number(item.id)"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="名称" prop="name">
             <el-input
               v-model="queryParams.name"
@@ -138,10 +155,29 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item
+          v-if="roleId === '1' && title === '添加商家优惠券' "
+          label="车场"
+          prop="parkId"
+        >
+          <el-select
+            v-cloak
+            v-model="form.parkId"
+            placeholder="请选择车场"
+            @change="getShopName"
+          >
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="所属商家" prop="merchantId">
           <el-select
             v-model="form.merchantId"
-            placeholder="请选择"
+            placeholder="请先选择车场"
             clearable
             size="small"
             style="width:330px"
@@ -262,12 +298,8 @@
   </div>
 </template>
 <script>
-// 引入api
-// import { listRoleForPage } from '@/api/system/role'
-import { listMerchantForPage, addMerchant, getMerchantCouponsById, updateMerchantCoupons, deleteMerchantCoupons, getMerchantCoupons } from '@/api/coupons/merchant'
-import { listCouponsMerchantForPage } from '@/api/coupons/merchantManger'
-// import validate from '@/utils/validate'
-import { listCouponsForPage } from '@/api/coupons/couponsManger'
+import { listMerchantForPage, addMerchant, getMerchantCouponsById, updateMerchantCoupons, deleteMerchantCoupons, getMerchantCoupons, selectMerchantByParkId } from '@/api/coupons/merchant'
+import { listAll, listCouponsForPage } from '@/api/coupons/couponsManger'
 export default {
   // 定义页面数据
   data() {
@@ -301,7 +333,8 @@ export default {
         size: 10,
         roleName: undefined,
         roleCode: undefined,
-        status: undefined
+        status: undefined,
+        parkId: undefined
       },
       queryParams1: {},
       // 表单数据
@@ -333,6 +366,9 @@ export default {
         merchantId: [
           { required: true, message: '请选择', trigger: 'blur' }
         ],
+        parkId: [
+          { required: true, message: '请选择', trigger: 'blur' }
+        ],
         name: [
           { required: true, message: '请输入商家优惠券名称', trigger: 'blur' }
         ],
@@ -359,7 +395,9 @@ export default {
       grantShow: false,
       grantRules: {
         carNumber: { required: true, message: '请输入车牌号', trigger: 'blur' }
-      }
+      },
+      CarList: [],
+      stateOptions: []
     }
   },
   // 勾子
@@ -382,13 +420,25 @@ export default {
       this.payType = res.data
     })
     // 查询表格数据
-    this.getRoleList()
-    this.getShopName()
+    this.getMerchantCouponsList()
+    // this.getShopName()
+    this.roleId = this.getRoleID()
     this.id = this.getID()
     this.getCouponsList()
+    this.getCarList()
   },
   // 方法
   methods: {
+    // 获取车厂信息
+    getCarList() {
+      listAll().then(res => {
+        console.log(res)
+        this.CarList = res.data
+        this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].name
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 查询优惠券表格数据
     getCouponsList() {
       listCouponsForPage(
@@ -410,7 +460,7 @@ export default {
             console.log(res)
             this.msgSuccess('操作成功')
             this.grantShow = false
-            this.getRoleList()
+            this.getMerchantCouponsList()
           }).catch(err => {
             console.log(err)
           })
@@ -420,7 +470,7 @@ export default {
     // 发放弹出层隐藏
     grantCancel() {
       this.grantShow = false
-      this.getRoleList()
+      this.getMerchantCouponsList()
     },
     // 发放按钮
     grant(row) {
@@ -461,8 +511,8 @@ export default {
     },
     // 所属商家列表
     getShopName() {
-      listCouponsMerchantForPage(this.id).then(res => {
-        this.shopList = res.data.list
+      selectMerchantByParkId(this.form.parkId).then(res => {
+        this.shopList = res.data
         console.log(this.shopList)
       }).catch(err => {
         console.log(err)
@@ -474,7 +524,7 @@ export default {
     //   return this.selectDictLabel(this.stateOptions, row.couponsId.toString())
     // },
     // 查询表格数据
-    getRoleList() {
+    getMerchantCouponsList() {
       this.loading = true // 打开遮罩
       listMerchantForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.carTableList = res.data.list
@@ -484,13 +534,13 @@ export default {
     },
     // 条件查询
     handleQuery() {
-      this.getRoleList()
+      this.getMerchantCouponsList()
     },
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
       this.dateRange = []
-      this.getRoleList()
+      this.getMerchantCouponsList()
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
@@ -503,13 +553,13 @@ export default {
     handleSizeChange(val) {
       this.queryParams.size = val
       // 重新查询
-      this.getRoleList()
+      this.getMerchantCouponsList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
       this.queryParams.page = val
       // 重新查询
-      this.getRoleList()
+      this.getMerchantCouponsList()
     },
     // 翻译状态
     // statusFormatter(row) {
@@ -555,7 +605,7 @@ export default {
         deleteMerchantCoupons(roleIds).then(res => {
           this.loading = false
           this.msgSuccess('删除成功')
-          this.getRoleList()// 全查询
+          this.getMerchantCouponsList()// 全查询
         })
       }).catch(() => {
         this.msgError('删除已取消')
@@ -584,7 +634,7 @@ export default {
             addMerchant(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
-              this.getRoleList()// 列表重新查询
+              this.getMerchantCouponsList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false
@@ -597,7 +647,7 @@ export default {
             updateMerchantCoupons(this.form).then(res => {
               this.msgSuccess('修改成功')
               this.loading = false
-              this.getRoleList()// 列表重新查询
+              this.getMerchantCouponsList()// 列表重新查询
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false
