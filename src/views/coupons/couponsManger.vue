@@ -396,20 +396,10 @@ export default {
         } else {
           this.msgSuccess('操作失败')
         }
-        //   const data = {
-        //     id: row.id,
-        //     isActive: row.isActive === true ? 1 : 0
-        //   }
-        //   await openCoupons(data).then((res) => {
-        //     console.log(res)
       })
     },
     // 条件查询
     handleQuery() {
-      // var arr = this.CarList.filter(item => {
-      //   return item.name === this.queryParams.parkId
-      // })
-      // this.queryParams.parkId = arr[0].id
       this.getCouponsList()
     },
     // 重置查询条件
@@ -453,8 +443,6 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改优惠券信息'
-      // const roleId = row.roleId || this.ids
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
@@ -464,28 +452,6 @@ export default {
         this.loading = false
       })
     },
-    // 执行删除
-    // handleDelete(row) {
-    //   const roleIds = row.id || this.ids
-    //   this.$confirm('此操作将永久删除该优惠券, 是否继续?', '提示', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //     type: 'warning'
-    //   })
-    //     .then(() => {
-    //       this.loading = true
-    //       deleteCouponsByIds(roleIds).then((res) => {
-    //         console.log(res)
-    //         this.loading = false
-    //         this.msgSuccess('删除成功')
-    //         this.getCouponsList() // 全查询
-    //       })
-    //     })
-    //     .catch(() => {
-    //       this.msgError('删除已取消')
-    //       this.loading = false
-    //     })
-    // },
     // 多选删除
     // 执行删除
     handleDeletes(row) {
@@ -525,7 +491,7 @@ export default {
               if (res.code === 200) {
                 this.msgSuccess('保存成功')
                 this.open = false // 关闭弹出层
-                this.getCouponsList() // 列表重新查询
+                this.resetQuery()
               } else {
                 this.msgSuccess('保存失败')
               }

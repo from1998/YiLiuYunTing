@@ -364,7 +364,7 @@ export default {
             addMerchant(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
-              this.getRoleList()// 列表重新查询
+              this.resetQuery()
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false

@@ -299,8 +299,8 @@
   </div>
 </template>
 <script>
-import { listMerchantForPage, addMerchant, getMerchantCouponsById, updateMerchantCoupons, deleteMerchantCoupons, getMerchantCoupons, selectMerchantByParkId } from '@/api/coupons/merchant'
-import { listAll, listCouponsForPage } from '@/api/coupons/couponsManger'
+import { listMerchantForPage, addMerchant, getMerchantCouponsById, updateMerchantCoupons, deleteMerchantCoupons, getMerchantCoupons, selectMerchantByParkId, selectCouponsByParkId } from '@/api/coupons/merchant'
+import { listAll } from '@/api/coupons/couponsManger'
 export default {
   // 定义页面数据
   data() {
@@ -364,6 +364,9 @@ export default {
         category: [
           { required: true, message: '请选择', trigger: 'blur' }
         ],
+        couponsId: [
+          { required: true, message: '请选择', trigger: 'blur' }
+        ],
         merchantId: [
           { required: true, message: '请选择', trigger: 'blur' }
         ],
@@ -425,7 +428,6 @@ export default {
     // this.getShopName()
     this.roleId = this.getRoleID()
     this.id = this.getID()
-    this.getCouponsList()
     this.getCarList()
   },
   // 方法
@@ -438,14 +440,6 @@ export default {
         this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
       }).catch(err => {
         console.log(err)
-      })
-    },
-    // 查询优惠券表格数据
-    getCouponsList() {
-      listCouponsForPage(
-        this.addDateRange(this.queryParams1, this.dateRange)
-      ).then((res) => {
-        this.listCoupons = res.data.list
       })
     },
     // 发放确定按钮
@@ -498,6 +492,12 @@ export default {
     },
     // 所属商家列表
     getShopName() {
+      selectCouponsByParkId(this.form.parkId).then(res => {
+        console.log(res)
+        this.listCoupons = res.data.data
+      }).catch(err => {
+        console.log(err)
+      })
       selectMerchantByParkId(this.form.parkId).then(res => {
         this.shopList = res.data
         console.log(this.shopList)
@@ -633,7 +633,7 @@ export default {
             addMerchant(this.form).then(res => {
               this.msgSuccess('保存成功')
               this.loading = false
-              this.getMerchantCouponsList()// 列表重新查询
+              this.resetQuery()
               this.open = false// 关闭弹出层
             }).catch(() => {
               this.loading = false
