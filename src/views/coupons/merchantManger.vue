@@ -19,6 +19,7 @@
               v-model="queryParams.parentId"
               style="width:180px"
               placeholder="请选择车场"
+              size="small"
             >
               <el-option
                 v-for="(item, index) in CarList"
@@ -125,7 +126,27 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-
+        <el-form-item
+          v-if="roleId === '1' && title === '添加商家信息' "
+          label="车场"
+          prop="parentId"
+          label-width="70px"
+        >
+          <el-select
+            v-cloak
+            v-model="form.parentId"
+            style="width:100%"
+            placeholder="请选择车场"
+            size="small"
+          >
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="商户号" prop="username">
           <el-input v-model="form.username" placeholder="商家账号" clearable size="small" />
         </el-form-item>
@@ -138,26 +159,7 @@
         <el-form-item label="地址" prop="email">
           <el-input v-model="form.email" placeholder="商家地址" clearable size="small" />
         </el-form-item>
-        <el-form-item
-          v-if="roleId === '1' && title === '添加商家信息' "
-          label="车场"
-          prop="parentId"
-          label-width="70px"
-        >
-          <el-select
-            v-cloak
-            v-model="form.parentId"
-            style="width:180px"
-            placeholder="请选择车场"
-          >
-            <el-option
-              v-for="(item, index) in CarList"
-              :key="index"
-              :label="item.name"
-              :value="Number(item.id)"
-            />
-          </el-select>
-        </el-form-item>
+
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
@@ -259,7 +261,7 @@ export default {
       listAll().then(res => {
         console.log(res)
         this.CarList = res.data
-        this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].name
+        this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -284,6 +286,12 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      if (this.roleId === '4') {
+        this.queryParams.parentId = this.CarList[0].id
+      }
+      if (this.roleId === '1') {
+        this.queryParams.parentId = ''
+      }
       this.dateRange = []
       this.getRoleList()
     },

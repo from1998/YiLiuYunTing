@@ -17,6 +17,7 @@
               v-cloak
               v-model="queryParams.parkId"
               placeholder="请选择车场"
+              size="small"
             >
               <el-option
                 v-for="(item, index) in CarList"
@@ -35,7 +36,7 @@
             />
           </el-form-item>
           <el-form-item label="类型" prop="category" label-width="70px">
-            <el-select v-cloak v-model="queryParams.category" clearable style="width:180px" placeholder="请选择优惠券类型">
+            <el-select v-cloak v-model="queryParams.category" clearable style="width:180px" placeholder="请选择优惠券类型" size="small">
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -45,7 +46,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="付款方式" prop="payType" label-width="70px">
-            <el-select v-cloak v-model="queryParams.payType" clearable style="width:180px" placeholder="请选择付款方式">
+            <el-select v-cloak v-model="queryParams.payType" clearable style="width:180px" placeholder="请选择付款方式" size="small">
               <el-option
                 v-for="item in payType"
                 :key="item.dictValue"
@@ -139,6 +140,26 @@
       append-to-body
     >
       <el-form ref="form" :model="form" label-width="150px" :rules="rules">
+        <el-form-item
+          v-if="roleId === '1' && title === '添加商家优惠券' "
+          label="车场"
+          prop="parkId"
+        >
+          <el-select
+            v-cloak
+            v-model="form.parkId"
+            placeholder="请选择车场"
+            style="width:330px"
+            @change="getShopName"
+          >
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="所属优惠劵" prop="couponsId">
           <el-select
             v-model="form.couponsId"
@@ -152,25 +173,6 @@
               :key="index"
               :label="d.name"
               :value="Number(d.id)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item
-          v-if="roleId === '1' && title === '添加商家优惠券' "
-          label="车场"
-          prop="parkId"
-        >
-          <el-select
-            v-cloak
-            v-model="form.parkId"
-            placeholder="请选择车场"
-            @change="getShopName"
-          >
-            <el-option
-              v-for="(item, index) in CarList"
-              :key="index"
-              :label="item.name"
-              :value="Number(item.id)"
             />
           </el-select>
         </el-form-item>
@@ -236,7 +238,6 @@
             clearable
             size="small"
             style="width:330px"
-            :change="isDay()"
           >
             <el-option
               v-for="d in dayList"
@@ -253,7 +254,7 @@
             style="width:157px"
             type="date"
           />
-          <el-input v-if="form.isExpireDay=== 1" v-model="form.days" placeholder="有效期(天)" size="small" />
+          <el-input v-if="form.isExpireDay=== 1" v-model="form.days" placeholder="有效期(天)" size="small" style="width: 330px" />
         </el-form-item>
         <!--        <el-form-item prop="expireTime" label-width="0" v-if="form.isExpireDay === 0">-->
         <!--          <el-date-picker-->
@@ -434,7 +435,7 @@ export default {
       listAll().then(res => {
         console.log(res)
         this.CarList = res.data
-        this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].name
+        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
       }).catch(err => {
         console.log(err)
       })
@@ -445,7 +446,6 @@ export default {
         this.addDateRange(this.queryParams1, this.dateRange)
       ).then((res) => {
         this.listCoupons = res.data.list
-        console.log(this.listCoupons)
       })
     },
     // 发放确定按钮
@@ -470,7 +470,6 @@ export default {
     // 发放弹出层隐藏
     grantCancel() {
       this.grantShow = false
-      this.getMerchantCouponsList()
     },
     // 发放按钮
     grant(row) {
@@ -497,18 +496,6 @@ export default {
         this.form.effectiveTime = ''
       }
     },
-    // 是否按天有效
-    isDay() {
-      // console.log(this.form.isExpireDay)
-      // if (this.form.isExpireDay === 0) {
-      //   this.form.days = ''
-      // }
-      // this.form.days = this.form.isExpireDay === 0 ? '' : this.form.days
-      // if (this.form.isExpireDay === 1) {
-      //   this.form.expireTime = ''
-      // }
-
-    },
     // 所属商家列表
     getShopName() {
       selectMerchantByParkId(this.form.parkId).then(res => {
@@ -528,17 +515,28 @@ export default {
       this.loading = true // 打开遮罩
       listMerchantForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.carTableList = res.data.list
+        // this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },
     // 条件查询
     handleQuery() {
+      // var arr = this.CarList.filter(item => {
+      //   return item.name === this.queryParams.parkId
+      // })
+      // this.queryParams.parkId = arr[0].id
       this.getMerchantCouponsList()
     },
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      if (this.roleId === '4') {
+        this.queryParams.parkId = this.CarList[0].id
+      }
+      if (this.roleId === '1') {
+        this.queryParams.parkId = ''
+      }
       this.dateRange = []
       this.getMerchantCouponsList()
     },
@@ -618,6 +616,7 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
+          console.log(this.form)
           if (this.form.id === undefined) {
             console.log(this.shopList)
             const arr = this.shopList.filter((item) => {
@@ -640,10 +639,6 @@ export default {
               this.loading = false
             })
           } else { // 做修改
-            const arr = this.shopList.filter((item) => {
-              return this.form.merchantId === item.realName
-            })
-            this.form.merchantId = arr[0].id
             updateMerchantCoupons(this.form).then(res => {
               this.msgSuccess('修改成功')
               this.loading = false
@@ -659,6 +654,7 @@ export default {
     // 取消
     cancel() {
       this.open = false
+      this.loading = false
       this.title = ''
     },
     // 重置表单

@@ -38,6 +38,7 @@
               v-model="queryParams.parkId"
               style="width:180px"
               placeholder="请选择车场"
+              size="small"
             >
               <el-option
                 v-for="(item, index) in CarList"
@@ -219,10 +220,10 @@
         <el-form-item label="优惠劵">
           <el-select
             v-model="form.category"
+            style="width:100%"
             placeholder="请选择优惠劵类型"
             clearable
             size="small"
-            style="width:330px"
           >
             <el-option
               v-for="d in stateOptions"
@@ -232,37 +233,18 @@
             />
           </el-select>
         </el-form-item>
-        <!--        <el-form-item-->
-        <!--          v-if="id === '1' "-->
-        <!--          label="车厂"-->
-        <!--          prop="parkId"-->
-        <!--        >-->
-        <!--          <el-select-->
-        <!--            v-model="form.parkId"-->
-        <!--            placeholder="请选择车厂"-->
-        <!--            clearable-->
-        <!--            size="small"-->
-        <!--            style="width:330px"-->
-        <!--          >-->
-        <!--            <el-option-->
-        <!--              v-for="(d,index) in CarList"-->
-        <!--              :key="index"-->
-        <!--              :label="d.name"-->
-        <!--              :value="Number(d.parkId)"-->
-        <!--            />-->
-        <!--          </el-select>-->
-        <!--        </el-form-item>-->
         <el-form-item
-          v-if="title !== '添加商家信息' && roleId !== 1 "
+          v-if="title === '添加优惠券信息' && roleId === '1' "
           label="车场"
           prop="parkId"
           label-width="70px"
         >
           <el-select
-            v-cloak
             v-model="form.parkId"
-            style="width:180px"
+            style="width:100%"
             placeholder="请选择车场"
+            clearable
+            size="small"
           >
             <el-option
               v-for="(item, index) in CarList"
@@ -374,7 +356,7 @@ export default {
       listAll().then(res => {
         console.log(res)
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
+        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -394,7 +376,6 @@ export default {
         this.addDateRange(this.queryParams, this.dateRange)
       ).then((res) => {
         this.couponsTableList = res.data.list
-
         this.total = res.data.total
         console.log(this.total)
         this.loading = false // 关闭遮罩
@@ -425,11 +406,22 @@ export default {
     },
     // 条件查询
     handleQuery() {
+      // var arr = this.CarList.filter(item => {
+      //   return item.name === this.queryParams.parkId
+      // })
+      // this.queryParams.parkId = arr[0].id
       this.getCouponsList()
     },
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      console.log(this.roleId)
+      if (this.roleId === '4') {
+        this.queryParams.parkId = this.CarList[0].id
+      }
+      if (this.roleId === '1') {
+        this.queryParams.parkId = ''
+      }
       this.dateRange = []
       this.getCouponsList()
     },
@@ -533,7 +525,6 @@ export default {
               if (res.code === 200) {
                 this.msgSuccess('保存成功')
                 this.open = false // 关闭弹出层
-
                 this.getCouponsList() // 列表重新查询
               } else {
                 this.msgSuccess('保存失败')
