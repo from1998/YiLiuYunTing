@@ -9,6 +9,26 @@
       <!-- 查询条件开始 -->
       <el-col :span="18" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+          <el-form-item
+            v-if="roleId === '1'"
+            label="车场"
+            prop="parentId"
+            label-width="70px"
+          >
+            <el-select
+              v-cloak
+              v-model="queryParams.parentId"
+              style="width:180px"
+              placeholder="请选择车场"
+            >
+              <el-option
+                v-for="(item, index) in CarList"
+                :key="index"
+                :label="item.name"
+                :value="Number(item.id)"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="商户号" prop="username">
             <el-input
               v-model="queryParams.username"
@@ -119,6 +139,26 @@
         <el-form-item label="地址" prop="email">
           <el-input v-model="form.email" placeholder="商家地址" clearable size="small" />
         </el-form-item>
+        <el-form-item
+          v-if="roleId === '1'"
+          label="车场"
+          prop="parentId"
+          label-width="70px"
+        >
+          <el-select
+            v-cloak
+            v-model="form.parentId"
+            style="width:180px"
+            placeholder="请选择车场"
+          >
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
@@ -132,6 +172,7 @@
 // import { listRoleForPage } from '@/api/system/role'
 import { listCouponsMerchantForPage, addMerchant, deleteMerchantId, getMerchantById, updateMerchant } from '@/api/coupons/merchantManger'
 import validate from '@/utils/validate'
+import { listAll } from '@/api/coupons/couponsManger'
 export default {
   // 定义页面数据
   data() {
@@ -175,6 +216,7 @@ export default {
       menuOptions: [],
       // 当前选中持角色ID
       currentRoleId: undefined,
+      CarList: [],
       // 验证规则
       validate,
       rules: {
@@ -187,8 +229,12 @@ export default {
         mobile: validate.phone,
         email: [
           { required: true, message: '请输入地址', trigger: 'blur' }
+        ],
+        parentId: [
+          { required: true, message: '请选择车厂', trigger: 'blur' }
         ]
-      }
+      },
+      roleId: ''
     }
   },
   // 勾子
@@ -203,9 +249,21 @@ export default {
     })
     // 查询表格数据
     this.getRoleList()
+    this.getCarList()
+    this.roleId = this.getRoleID()
   },
   // 方法
   methods: {
+    // 获取车厂信息
+    getCarList() {
+      listAll().then(res => {
+        console.log(res)
+        this.CarList = res.data
+        this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].name
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 翻译类型
     carTypeFormatter(row) {
       return this.selectDictLabel(this.stateOptions, row.category.toString())

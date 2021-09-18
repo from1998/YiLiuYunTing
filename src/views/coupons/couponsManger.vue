@@ -29,21 +29,21 @@
           label-width="58px"
         >
           <el-form-item
-            label="车厂"
-            prop="category"
+            label="车场"
+            prop="parkId"
             label-width="70px"
           >
             <el-select
               v-cloak
-              v-model="queryParams.category"
+              v-model="queryParams.parkId"
               style="width:180px"
-              placeholder="请选择优惠券类型"
+              placeholder="请选择车场"
             >
               <el-option
-                v-for="item in stateOptions"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="Number(item.dictValue)"
+                v-for="(item, index) in CarList"
+                :key="index"
+                :label="item.name"
+                :value="Number(item.id)"
               />
             </el-select>
           </el-form-item>
@@ -207,12 +207,14 @@
           label="名称"
           prop="name"
         >
-          <el-input
-            v-model="form.name"
-            placeholder="请输入优惠劵名称"
-            clearable
-            size="small"
-          />
+          <el-row :span="5">
+            <el-input
+              v-model="form.name"
+              placeholder="请输入优惠劵名称"
+              clearable
+              size="small"
+            />
+          </el-row>
         </el-form-item>
         <el-form-item label="优惠劵">
           <el-select
@@ -230,23 +232,43 @@
             />
           </el-select>
         </el-form-item>
+        <!--        <el-form-item-->
+        <!--          v-if="id === '1' "-->
+        <!--          label="车厂"-->
+        <!--          prop="parkId"-->
+        <!--        >-->
+        <!--          <el-select-->
+        <!--            v-model="form.parkId"-->
+        <!--            placeholder="请选择车厂"-->
+        <!--            clearable-->
+        <!--            size="small"-->
+        <!--            style="width:330px"-->
+        <!--          >-->
+        <!--            <el-option-->
+        <!--              v-for="(d,index) in CarList"-->
+        <!--              :key="index"-->
+        <!--              :label="d.name"-->
+        <!--              :value="Number(d.parkId)"-->
+        <!--            />-->
+        <!--          </el-select>-->
+        <!--        </el-form-item>-->
         <el-form-item
-          v-if="id === 1"
-          label="车厂"
-          prop="name"
+          v-if="roleId === '1'"
+          label="车场"
+          prop="parkId"
+          label-width="70px"
         >
           <el-select
-            v-model="form.category"
-            placeholder="请选择车厂"
-            clearable
-            size="small"
-            style="width:330px"
+            v-cloak
+            v-model="form.parkId"
+            style="width:180px"
+            placeholder="请选择车场"
           >
             <el-option
-              v-for="d in stateOptions"
-              :key="d.dictValue"
-              :label="d.dictLabel"
-              :value="Number(d.dictValue)"
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
             />
           </el-select>
         </el-form-item>
@@ -273,7 +295,8 @@ import {
   openCoupons,
   getCouponsById,
   updateCoupons,
-  deleteCouponsId
+  deleteCouponsId,
+  listAll
 } from '@/api/coupons/couponsManger'
 export default {
   // 定义页面数据
@@ -323,7 +346,8 @@ export default {
         id: '',
         isActive: ''
       },
-      id: ''
+      roleId: '',
+      CarList: []
     }
   },
   // 勾子
@@ -338,11 +362,22 @@ export default {
     })
     // 查询表格数据
     this.getCouponsList()
-    // 角色id
-    this.id = this.getID()
+    // 角色权限
+    this.roleId = this.getRoleID()
+    this.getCarList()
   },
   // 方法
   methods: {
+    // 获取车厂信息
+    getCarList() {
+      listAll().then(res => {
+        console.log(res)
+        this.CarList = res.data
+        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     // 翻译类型
     carTypeFormatter(row) {
       return this.selectDictLabel(this.stateOptions, row.category.toString())
@@ -358,7 +393,9 @@ export default {
         this.addDateRange(this.queryParams, this.dateRange)
       ).then((res) => {
         this.couponsTableList = res.data.list
+
         this.total = res.data.total
+        console.log(this.total)
         this.loading = false // 关闭遮罩
       })
     },
