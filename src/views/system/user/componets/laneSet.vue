@@ -422,6 +422,7 @@ export default {
       this.options.watchhouseName = val
     })
     await this.bus.$on('postSN', val => {
+      // this.options.sn = this.encode64(val)
       this.options.sn = val
     })
   },
@@ -552,8 +553,11 @@ export default {
       } else {
         this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
       }
+      // const id = this.encode64(row.id.toString())
       this.qrcodeDialogVisible = true
-      await getQrcodeDoMain().then(res => {
+      await getQrcodeDoMain().then(async res => {
+        // await this.encode64(this.options.sn)
+        // await this.encode64(row.id)
         this.creatCodeUrl = res.data + '/third/no_plate_enter_' + this.options.sn + '_' + row.id
         console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
@@ -654,7 +658,6 @@ export default {
     },
     // 二维码下载
     handleDownload() {
-      debugger
       this.loading = true
       var a = document.createElement('a')
       var event = new MouseEvent('click')

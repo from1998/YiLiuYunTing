@@ -22,7 +22,7 @@ Vue.use(VueParticles)
 
 import { getID, getUserName, getRoleID } from '@/utils/auth'
 import { getDataByType } from '@/api/system/dict/data'
-import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType, getDataByMoreType, convertCarCategory } from '@/utils/his-utils'
+import { resetForm, addDateRange, selectDictLabel, selectRoleLabel, handleTree, getAge, getCurrentTimeType, getDataByMoreType, convertCarCategory, encode64 } from '@/utils/his-utils'
 // 全局方法挂载
 Vue.prototype.getID = getID
 Vue.prototype.getUserName = getUserName
@@ -38,6 +38,7 @@ Vue.prototype.getAge = getAge// 挂载全局的根据出生年月日计算年龄
 Vue.prototype.getCurrentTimeType = getCurrentTimeType// 挂载全局计算时段的方法
 Vue.prototype.moment = moment
 Vue.prototype.getDataByMoreType = getDataByMoreType // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
+Vue.prototype.encode64 = encode64 // 加密解密
 Vue.prototype.bus = new Vue() // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 // 挂载全局消息框
 Vue.prototype.msgSuccess = function(msg) {

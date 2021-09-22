@@ -5,7 +5,6 @@
         <!-- height:'500rpx'; -->
         <div class="topItem">
           <span class="check" @click="check">中/英</span>
-          <span class="contentShow">{{ oinp }}</span>
           <span class="exit" @click="vehicleTap(&quot;exit&quot;)">取消</span>
 
         </div>
@@ -80,10 +79,6 @@ export default {
       type: Boolean,
       required: false,
       default: true
-    },
-    oinp: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -105,7 +100,6 @@ export default {
   },
   methods: {
     vehicleTap: function(event) {
-      console.log(event)
       switch (event) {
         case 'delete':
           this.$emit('delete')

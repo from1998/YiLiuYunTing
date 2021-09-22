@@ -5,7 +5,7 @@ import { getToken } from '@/utils/auth'
 
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  timeout: 10000000000 // 设置请求超时间
+  timeout: 50000 // 设置请求超时间
 })
 
 // 请求拦截
@@ -45,14 +45,14 @@ service.interceptors.response.use(
         type: 'error',
         message: res.msg
       })
-      return Promise.reject('error')// 记录错误
+      return Promise.reject('error') // 记录错误
     } else if (res.code === 400) { // 可能是其它参数出错
       Message({
         showClose: true,
         type: 'error',
         message: res.msg
       })
-      return Promise.reject('error')// 记录错误
+      return Promise.reject('error') // 记录错误
     } else {
       // 以上验证通过之后再放行
       return res
