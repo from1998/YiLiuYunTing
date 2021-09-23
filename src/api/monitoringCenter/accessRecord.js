@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询
 export function getRecordList(query) {
   return request({
-    url: '/park/record/list',
+    url: '/ylyt/park/getCarOrderList',
     method: 'get',
     params: query
   })
@@ -22,5 +22,21 @@ export function cleanEnterRecord(days) {
   return request({
     url: '/park/record/clean_record/' + days,
     method: 'delete'
+  })
+}
+// 查询车流报表
+export function getCarOrder(data) {
+  return request({
+    url: '/ylyt/park/getCarOrder',
+    method: 'get',
+    params: data
+  })
+}
+// 查询收费报表
+export function getOrders(data) {
+  return request({
+    url: '/ylyt/park/getOrders',
+    method: 'get',
+    params: data
   })
 }

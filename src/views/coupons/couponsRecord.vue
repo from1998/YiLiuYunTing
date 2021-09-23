@@ -7,7 +7,7 @@
         <!--        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>-->
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="18" :offset="0">
+      <el-col :span="20" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
           <el-form-item
             label="车场"
@@ -200,13 +200,14 @@ export default {
     this.getRoleList()
     this.id = this.getID()
     this.getCarList()
+    // 角色权限
+    this.roleId = this.getRoleID()
   },
   // 方法
   methods: {
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {
-        console.log(res)
         this.CarList = res.data
         this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
@@ -232,10 +233,6 @@ export default {
     },
     // 条件查询
     handleQuery() {
-      // var arr = this.CarList.filter(item => {
-      //   return item.name === this.queryParams.parkId
-      // })
-      // this.queryParams.parkId = arr[0].id
       this.getRoleList()
     },
     // 重置查询条件
@@ -281,34 +278,19 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改角色信息'
-      // const roleId = row.roleId || this.ids
-      // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
-      // getRoleById(roleId).then(res => {
-      //   this.form = res.data
-      //   this.loading = false
-      // })
     },
     // 执行删除
     handleDelete(row) {
-      // const roleIds = row.roleId || this.ids
       this.$confirm('此操作将永久删除该角色数据, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.loading = true
-      //   deleteRoleByIds(roleIds).then(res => {
-      //     this.loading = false
-      //     this.msgSuccess('删除成功')
-      //     this.getRoleList()// 全查询
-      //   })
-      // }).catch(() => {
-      //   this.msgError('删除已取消')
-      //   this.loading = false
       })
     },
     // 保存

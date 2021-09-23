@@ -94,10 +94,10 @@
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button v-show="scope.row.role!==1 && scope.row.role!==6 && scope.row.role!==null" type="text" size="mini" @click="handleShareBenefit(scope.row)">
-            <svg-icon icon-class="money" />
-            分润设置
-          </el-button>
+          <!--          <el-button v-show="scope.row.role!==1 && scope.row.role!==6 && scope.row.role!==null" type="text" size="mini" @click="handleShareBenefit(scope.row)">-->
+          <!--            <svg-icon icon-class="money" />-->
+          <!--            分润设置-->
+          <!--          </el-button>-->
           <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
             <el-button type="text" size="mini">
               <svg-icon icon-class="car" />
@@ -353,6 +353,36 @@ export default {
   },
   // 方法
   methods: {
+    encode64(input) {
+      const keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/_' + '='
+      let output = ''
+      let chr1 = ''
+      let chr2 = ''
+      let chr3 = ''
+      let enc1 = ''
+      let enc2 = ''
+      let enc3 = ''
+      let enc4 = ''
+      var i = 0
+      do {
+        chr1 = input.charCodeAt(i++)
+        chr2 = input.charCodeAt(i++)
+        chr3 = input.charCodeAt(i++)
+        enc1 = chr1 >> 2
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4)
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6)
+        enc4 = chr3 & 63
+        if (isNaN(chr2)) {
+          enc3 = enc4 = 64
+        } else if (isNaN(chr3)) {
+          enc4 = 64
+        }
+        output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4)
+        chr1 = chr2 = chr3 = ''
+        enc1 = enc2 = enc3 = enc4 = ''
+      } while (i < input.length)
+      console.log(output)
+    },
     // 解决页面v-for中修改item属性值后页面页面值不改变的问题
     change() {
       this.$forceUpdate()

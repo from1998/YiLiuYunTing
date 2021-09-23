@@ -206,7 +206,10 @@ export default {
         roleName: undefined,
         roleCode: undefined,
         status: undefined,
-        parentId: undefined
+        parentId: undefined,
+        mobile: undefined,
+        realName: '',
+        username: ''
       },
       // 表单数据
       form: {
@@ -259,7 +262,6 @@ export default {
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {
-        console.log(res)
         this.CarList = res.data
         this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
@@ -300,7 +302,6 @@ export default {
       this.ids = selection.map(item => item.id)
       this.single = selection.length !== 1
       this.multiple = !selection.length
-      console.log(this.multiple)
     },
     // 分页size变化时触发
     handleSizeChange(val) {
@@ -340,6 +341,7 @@ export default {
     },
     // 执行删除
     handleDelete(row) {
+      console.log(row)
       const roleIds = row.id || this.ids
       this.$confirm('此操作将永久删除该角色数据, 是否继续?', '提示', {
         confirmButtonText: '确定',

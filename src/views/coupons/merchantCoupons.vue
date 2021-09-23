@@ -335,7 +335,10 @@ export default {
         roleName: undefined,
         roleCode: undefined,
         status: undefined,
-        parkId: undefined
+        parkId: undefined,
+        payType: undefined,
+        category: undefined,
+        name: undefined
       },
       queryParams1: {},
       // 表单数据
@@ -401,7 +404,8 @@ export default {
         carNumber: { required: true, message: '请输入车牌号', trigger: 'blur' }
       },
       CarList: [],
-      stateOptions: []
+      stateOptions: [],
+      parkId: ''
     }
   },
   // 勾子
@@ -435,9 +439,8 @@ export default {
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {
-        console.log(res)
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
+        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -445,7 +448,6 @@ export default {
     // 发放确定按钮
     grantSubmit() {
       this.$refs['grantForm'].validate((valid) => {
-        console.log(valid)
         if (valid) {
           getMerchantCoupons({
             sn: this.grantForm.sn,
@@ -470,7 +472,6 @@ export default {
       this.grantShow = true
       getMerchantCouponsById(row.id).then(res => {
         this.grantForm = res.data
-        console.log(this.grantForm)
       })
     },
     // 翻译类型 优惠卷类型
@@ -491,7 +492,11 @@ export default {
       }
     },
     // 所属商家列表
-    getShopName() {
+    getShopName(e) {
+      // this.form.parkId = this.queryParams.parkId
+      if (e) {
+        this.form.parkId = e
+      }
       selectCouponsByParkId(this.form.parkId).then(res => {
         console.log(res)
         this.listCoupons = res.data.data
@@ -500,7 +505,6 @@ export default {
       })
       selectMerchantByParkId(this.form.parkId).then(res => {
         this.shopList = res.data
-        console.log(this.shopList)
       }).catch(err => {
         console.log(err)
       })
@@ -568,9 +572,15 @@ export default {
       this.open = true
       this.reset()
       this.title = '添加商家优惠券'
+      if (this.roleId === '4') {
+        this.parkId = this.queryParams.parkId
+        this.getShopName(this.parkId)
+      }
     },
     // 打开修改的弹出层
     handleUpdate(row) {
+      this.parkId = row.parkId
+      this.getShopName(this.parkId)
       this.title = '修改商家优惠券'
       // const roleId = row.roleId || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
@@ -580,13 +590,9 @@ export default {
       this.loading = true
       getMerchantCouponsById(row.id).then(res => {
         this.form = res.data
-        console.log(this.form)
-        console.log(this.shopList)
-
         const arr = this.shopList.filter((item) => {
           return this.form.merchantId === item.id
         })
-        console.log(arr)
         this.form.merchantId = arr[0].realName
         this.loading = false
       })
@@ -616,13 +622,11 @@ export default {
         if (valid) {
           // 做添加
           this.loading = true
-          console.log(this.form)
           if (this.form.id === undefined) {
             console.log(this.shopList)
             const arr = this.shopList.filter((item) => {
               return this.form.merchantId === item.realName
             })
-            console.log(arr)
             this.form.merchantId = arr[0].id
             // 是否按天有效
             if (this.form.isExpireDay === 0) {
@@ -639,6 +643,11 @@ export default {
               this.loading = false
             })
           } else { // 做修改
+            const arr = this.shopList.filter((item) => {
+              return this.form.merchantId === item.realName
+            })
+            console.log(arr)
+            this.form.merchantId = arr[0].id
             updateMerchantCoupons(this.form).then(res => {
               this.msgSuccess('修改成功')
               this.loading = false
