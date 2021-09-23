@@ -5,7 +5,7 @@
         <!-- height:'500rpx'; -->
         <div class="topItem">
           <span class="check" @click="check">中/英</span>
-          <span class="exit" @click="vehicleTap(&quot;exit&quot;)">取消</span>
+          <span class="exit" @click="vehicleTap(&quot;exit&quot;)">关闭</span>
 
         </div>
         <!--省份简写键盘-->

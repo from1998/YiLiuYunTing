@@ -7,18 +7,27 @@
     <el-row :gutter="0" style="margin-top:5%">
       <el-col :span="16" :offset="2">请输入车牌号进行缴费查询</el-col>
     </el-row>
-    <el-row :gutter="0" style="margin-top:10%;">
-      <el-col :span="20" :offset="2">
-        <div id="home_input">
-          <el-input v-model="str" @focus="keyState = true" />
-          <!-- 边框1-6 -->
-          <div id="fixedBorder1" class="fixedBorder" />
-          <div id="fixedBorder2" class="fixedBorder" />
-          <div id="fixedBorder3" class="fixedBorder" />
-          <div id="fixedBorder4" class="fixedBorder" />
-          <div id="fixedBorder5" class="fixedBorder" />
-          <div id="fixedBorder6" class="fixedBorder" />
-        </div>
+    <el-row :gutter="0" style="margin-top:10%;margin-left:-3%;border-radius: 4px!important;" border="true">
+      <el-col :span="3" :offset="2" style="text-align:center">
+        <el-input v-model="carNumber.carNumber1" class="inputClass" @focus="keyState = true" />
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-input v-model="carNumber.carNumber2" @focus="keyState = true" />
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-input v-model="carNumber.carNumber3" @focus="keyState = true" />
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-input v-model="carNumber.carNumber4" @focus="keyState = true" />
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-input v-model="carNumber.carNumber5" @focus="keyState = true" />
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-input v-model="carNumber.carNumber6" @focus="keyState = true" />
+      </el-col>
+      <el-col :span="3" :offset="0">
+        <el-input v-model="carNumber.carNumber7" @focus="keyState = true" />
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -35,6 +44,15 @@ export default {
   },
   data() {
     return {
+      carNumber: {
+        carNumber1: '',
+        carNumber2: '',
+        carNumber3: '',
+        carNumber4: '',
+        carNumber5: '',
+        carNumber6: '',
+        carNumber7: ''
+      },
       keyState: false,
       str: ''
     }
@@ -97,17 +115,16 @@ export default {
       this.keyState = false
     },
     getKey(val) {
-      console.log(val)
       if (this.str.length >= 7 && val !== 'delete') {
         return false
       }
       if (val === 'delete') {
         this.str = this.str.slice(0, this.str.length - 1)
         // this.carNumber['carNumber' + this.str.length + 1] = ''
-        // this.$set(this.carNumber, 'carNumber' + this.str.length, '')
-        // val = ''
+        this.$set(this.carNumber, 'carNumber' + this.str.length, '')
       } else {
         this.str += val
+        this.carNumber['carNumber' + this.str.length] = val
       }
     },
     confirm(e) {
@@ -116,38 +133,12 @@ export default {
   }
 }
 </script>
-<style css>
+<style scoped>
 .advwrap {
   height: 200px;
 }
-#home_input {
-  position: relative;
+.el-input__inner{
+    padding-left: 100px!important;
 }
-#home_input .el-input__inner{
-  /* padding-left: 0!important; */
-    letter-spacing: 2.53em!important;
-}
-#home_input .fixedBorder {
-  width: 0.08rem;
-  height: 2.2rem;
-  background-color: #dcdfe6;
-  position: absolute;
-  top: 0%;
-  left: 12vw;
-}
-#home_input #fixedBorder2 {
-  left: 24vw;
-}
-#home_input #fixedBorder3 {
-  left: 36vw;
-}
-#home_input #fixedBorder4 {
-  left: 48vw;
-}
-#home_input #fixedBorder5 {
-  left: 60vw;
-}
-#home_input #fixedBorder6 {
-  left: 72vw;
-}
+
 </style>
