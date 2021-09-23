@@ -7,7 +7,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            固定车用户
+            总车位
           </div>
           <count-to :start-val="0" :end-val="val[0]" :duration="2600" class="card-panel-num" />
         </div>
@@ -20,7 +20,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            当前车位
+            空闲车位
           </div>
           <count-to :start-val="0" :end-val="val[1]" :duration="3000" class="card-panel-num" />
         </div>
@@ -33,7 +33,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            总交易额
+            总收益
           </div>
           <count-to :start-val="0" :end-val="val[2]" :duration="3200" class="card-panel-num" />
         </div>
@@ -46,7 +46,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">
-            当日交易额
+            今日收益
           </div>
           <count-to :start-val="0" :end-val="val[3]" :duration="3600" class="card-panel-num" />
         </div>

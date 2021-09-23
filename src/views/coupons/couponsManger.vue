@@ -313,7 +313,9 @@ export default {
         roleCode: undefined,
         status: undefined,
         name: undefined,
-        parkId: ''
+        parkId: '',
+        category: '',
+        isActive: ''
       },
       // 表单数据
       form: {},
@@ -354,7 +356,6 @@ export default {
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {
-        console.log(res)
         this.CarList = res.data
         this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
       }).catch(err => {
@@ -377,19 +378,14 @@ export default {
       ).then((res) => {
         this.couponsTableList = res.data.list
         this.total = res.data.total
-        console.log(this.total)
         this.loading = false // 关闭遮罩
       })
     },
     // 监听 switch 闸口状态的改变
     async gateStateChanged(val, row) {
-      console.log(val)
-      console.log(row)
       this.switchData.id = row.id
       this.switchData.isActive = val
-      console.log(this.switchData)
       await openCoupons(this.switchData).then((res) => {
-        console.log(res)
         if (res.code === 200) {
           this.msgSuccess('操作成功')
           this.getCouponsList() // 列表重新查询
@@ -405,7 +401,6 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      console.log(this.roleId)
       if (this.roleId === '4') {
         this.queryParams.parkId = this.CarList[0].id
       }
@@ -456,7 +451,7 @@ export default {
     // 执行删除
     handleDeletes(row) {
       const userIds = row.id || this.ids
-      this.$confirm('此操作将永久删除该用户数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该优惠券, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -482,7 +477,6 @@ export default {
     // 保存
     handleSubmit() {
       this.$refs['form'].validate((valid) => {
-        console.log(this.form)
         if (valid) {
           // 做添加
           this.loading = true

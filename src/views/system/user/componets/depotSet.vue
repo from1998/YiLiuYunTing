@@ -532,7 +532,9 @@ export default {
   methods: {
     async init() {
       this.loading = true // 打开遮罩
-      await getParkOperationByMid(this.form.managerid).then(res => {
+      await getParkOperationByMid({
+        managerid: this.form.managerid
+      }).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data

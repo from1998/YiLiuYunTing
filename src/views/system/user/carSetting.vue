@@ -70,7 +70,9 @@ export default {
   created() {
     this.activeName = window.sessionStorage.getItem('activeName') || 'depotInfo'
     const managerid = this.$route.params && this.$route.params.id // 路由传参
-    getDepotById(managerid).then(res => {
+    getDepotById({
+      managerid: managerid
+    }).then(res => {
       if (res.data !== null) {
         this.parkid = res.data.id
         // console.log(this.parkid)

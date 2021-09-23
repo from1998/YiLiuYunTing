@@ -350,7 +350,9 @@ export default {
       this.reset()
       // 根据id查询保安信息
       this.loading = true
-      getBaoAnById(id).then(res => {
+      getBaoAnById({
+        id: id
+      }).then(res => {
         this.form = res.data
         this.loading = false
       })

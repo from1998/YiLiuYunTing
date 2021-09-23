@@ -1,10 +1,11 @@
 import request from '@/utils/request'
 // --------------------------------------车场信息
 // 查询车场信息
-export function getDepotById(id) {
+export function getDepotById(data) {
   return request({
-    url: '/ylyt/park/getParkByMid/' + id,
-    method: 'get'
+    url: '/ylyt/park/getParkByMid',
+    method: 'get',
+    params: data
   })
 }
 
@@ -27,10 +28,11 @@ export function updateDepotInfo(data) {
 }
 // --------------------------------------车场配置
 // 查询车场配置
-export function getParkOperationByMid(id) {
+export function getParkOperationByMid(data) {
   return request({
-    url: '/ylyt/parkOperation/getParkOperationByMid/' + id,
-    method: 'get'
+    url: '/ylyt/parkOperation/getParkOperationByMid',
+    method: 'get',
+    params: data
   })
 }
 
@@ -71,10 +73,11 @@ export function updateParkfee(data) {
 }
 
 // 查询收费规则
-export function getParkfeeByMid(id) {
+export function getParkfeeByMid(data) {
   return request({
-    url: '/ylyt/parkFee/getParkfeeByMid/' + id,
-    method: 'get'
+    url: '/ylyt/parkFee/getParkfeeByMid',
+    method: 'get',
+    params: data
   })
 }
 // -------------------------------------岗亭
@@ -89,10 +92,11 @@ export function getWorkStationByMid(query) {
 }
 
 // 根据ID查询岗亭信息
-export function getWorkStationById(id) {
+export function getWorkStationById(data) {
   return request({
-    url: '/ylyt/workStation/getWorkStationById/' + id,
-    method: 'get'
+    url: '/ylyt/workStation/getWorkStationById',
+    method: 'get',
+    params: data
   })
 }
 
@@ -140,10 +144,11 @@ export function getLaneByMid(query) {
   })
 }
 // 根据ID查询车道信息
-export function getLaneById(id) {
+export function getLaneById(data) {
   return request({
-    url: '/ylyt/lane/getLaneById/' + id,
-    method: 'get'
+    url: '/ylyt/lane/getLaneById',
+    method: 'get',
+    params: data
   })
 }
 
@@ -183,10 +188,11 @@ export function getBaoAnList(query) {
   })
 }
 // 根据ID查询保安
-export function getBaoAnById(id) {
+export function getBaoAnById(data) {
   return request({
-    url: '/ylyt/baoAn/getBaoAnById/' + id,
-    method: 'get'
+    url: '/ylyt/baoAn/getBaoAnById/',
+    method: 'get',
+    params: data
   })
 }
 
@@ -261,10 +267,11 @@ export function getSiteListByPage(query) {
 }
 
 // 根据ID查询车位
-export function getSiteById(id) {
+export function getSiteById(data) {
   return request({
-    url: '/ylyt/carSite/getSiteById/' + id,
-    method: 'get'
+    url: '/ylyt/carSite/getSiteById/',
+    method: 'get',
+    params: data
   })
 }
 

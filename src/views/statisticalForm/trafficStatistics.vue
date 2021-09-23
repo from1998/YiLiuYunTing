@@ -1,41 +1,49 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="0">
-      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
-        <span>多威尔车场</span>
-      </el-col>
-    </el-row>
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
         <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
           <span>车流曲线图</span>
         </el-col>
-        <el-col :span="4" :offset="12" :gutter="0">
-          <el-date-picker
-            v-model="trafficMonth"
-            type="month"
-            placeholder="请选择您要查看的月份"
-            style="margin-left:40px"
-          />
-        </el-col>
-        <el-col :span="4" :offset="0">
-          <el-form ref="carForm" :model="parkForm" label-width="0" :disabled="flag">
-            <el-form-item label="" prop="id">
-              <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+        <el-col :span="18" :offset="0">
+          <el-form ref="form" :model="form" :inline="true" label-width="58px">
+            <el-form-item
+              label="车场"
+              prop="parkid"
+            >
+              <el-select
+                v-cloak
+                v-model="form.parkid"
+                placeholder="请选择车场"
+                size="small"
+              >
                 <el-option
-                  v-for="item in parkCategory"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="Number(item.dictValue)"
+                  v-for="(item, index) in CarList"
+                  :key="index"
+                  :label="item.name"
+                  :value="Number(item.id)"
                 />
               </el-select>
             </el-form-item>
+            <el-form-item label="日期" prop="created">
+              <el-date-picker
+                v-model="form.created"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                type="month"
+                placeholder="选择月"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+              <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            </el-form-item>
           </el-form>
+          <!-- 查询条件结束 -->
         </el-col>
       </el-row>
     </el-header>
     <div class="lineStack">
-      <lineStack />
+      <lineStack ref="linestack" :list-data="listData2" :leave-map="hang" :leave-data="zhi" :enter-map="enterData" :park-name="park" />
     </div>
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
@@ -51,10 +59,10 @@
     </el-header>
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="trafficTableList" stripe>
-      <el-table-column label="日期" align="center" prop="carnumber" />
-      <el-table-column label="进场车次" align="center" prop="entered" />
-      <el-table-column label="出场车次" align="center" prop="elaneName" />
-      <el-table-column label="总计" align="center" prop="llaneName" />
+      <el-table-column label="车牌号" align="center" prop="carnumber" />
+      <el-table-column label="进场时间" align="center" prop="entered" />
+      <el-table-column label="出场时间" align="center" prop="leaved" />
+      <el-table-column label="车场名称" align="center" prop="parkName" />
     </el-table>
 
     <!-- 分页控件 -->
@@ -72,8 +80,9 @@
 </template>
 <script>
 // 引入api
-import { getRecordList } from '@/api/monitoringCenter/accessRecord'
+import { getRecordList, getCarOrder } from '@/api/monitoringCenter/accessRecord'
 import lineStack from '@/views/statisticalForm/lineStack.vue'
+import { listAll } from '@/api/coupons/couponsManger'
 
 export default {
   components: {
@@ -82,13 +91,6 @@ export default {
   // 定义页面数据
   data() {
     return {
-      parkForm: {
-        // 车场id
-        id: ''
-      },
-      flag: false,
-      // 车场类型
-      parkCategory: [],
       // 所属月份
       trafficMonth: '',
       // 是否启用遮罩层
@@ -101,17 +103,76 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        carnumber: undefined
-      }
+        created: '',
+        parkId: ''
+      },
+      id: '',
+      listData2: [],
+      hang: [],
+      zhi: [], // 离场车辆
+      enterData: [], // 进场车辆
+      form: {
+        page: 1,
+        size: 10,
+        created: '',
+        parkid: ''
+      },
+      CarList: '',
+      roleId: '',
+      park: ['进场车辆', '出场车辆']
     }
   },
   // 勾子
   created() {
     // 查询收费列表数据
     this.getTrafficList()
+    this.id = this.getRoleID()
+    // this.id = this.getID()
+    this.getList()
+    // this.timeDefault()
+    this.getCarList()
+    this.roleId = this.getRoleID()
   },
   // 方法
   methods: {
+    // 获取车厂信息
+    getCarList() {
+      listAll().then(res => {
+        this.CarList = res.data
+        this.form.parkId = this.roleId === '1' ? '' : res.data[0].id
+        console.log(this.CarList)
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    // 根据用户ID查询车场信息
+    async getList(e) {
+      await getCarOrder(this.form).then(res => {
+        this.listData2 = res.data
+        this.getleaveMap()
+      })
+    },
+    getTimeList(e) {
+      this.hang = []
+      this.zhi = []
+      this.enterData = []
+      this.listData2 = []
+      this.getList(e)
+      this.getTrafficList()
+    },
+    // handlelines() {
+    //   this.$refs.linestack.setOptions()
+    // },
+    getleaveMap() {
+      for (var p in this.listData2.leaveMap) {
+        this.hang.push(p)
+        this.zhi.push(this.listData2.leaveMap[p])
+      }
+      for (var e in this.listData2.enterMap) {
+        this.enterData.push(this.listData2.enterMap[e])
+      }
+      this.$refs.linestack.renderChart()
+    },
     // 导出车流报表表格
     handleExport() {
       console.log('success')
@@ -119,7 +180,9 @@ export default {
     // 查询表格数据
     getTrafficList() {
       this.loading = true // 打开遮罩
-      getRecordList(this.queryParams).then(res => {
+      this.queryParams.times = this.form.trafficMonth
+      getRecordList(this.form).then(res => {
+        console.log(res)
         this.trafficTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
@@ -127,11 +190,12 @@ export default {
     },
     // 条件查询
     handleQuery() {
-      this.getTrafficList()
+      this.getTimeList()
+      // this.getTrafficList()
     },
     // 重置查询条件
     resetQuery() {
-      this.resetForm('queryForm')
+      this.resetForm('form')
       this.dateRangeIn = []
       this.dateRangeOut = []
       this.getTrafficList()

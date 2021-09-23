@@ -9,10 +9,11 @@ export function listCouponsForPage(query) {
   })
 }
 // 查询一个
-export function getCouponsById(id) {
+export function getCouponsById(data) {
   return request({
-    url: '/ylyt/merchant/selectCoupons/' + id,
-    method: 'get'
+    url: '/ylyt/merchant/selectCoupons',
+    method: 'get',
+    params: data
   })
 }
 // 添加

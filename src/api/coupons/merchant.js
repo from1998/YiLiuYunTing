@@ -32,10 +32,11 @@ export function deleteMerchantCoupons(id) {
   })
 }
 // 查询一个
-export function getMerchantCouponsById(id) {
+export function getMerchantCouponsById(data) {
   return request({
-    url: '/ylyt/merchant/selectMerchantCoupons/' + id,
-    method: 'get'
+    url: '/ylyt/merchant/selectMerchantCoupons',
+    method: 'get',
+    params: data
   })
 }
 // 发放优惠券
@@ -47,16 +48,18 @@ export function getMerchantCoupons(query) {
   })
 }
 // 根据车场ID查询商家
-export function selectMerchantByParkId(id) {
+export function selectMerchantByParkId(data) {
   return request({
-    url: '/ylyt/merchant/selectMerchantByParkId/' + id,
-    method: 'get'
+    url: '/ylyt/merchant/selectMerchantByParkId',
+    method: 'get',
+    params: data
   })
 }
 // 根据车场ID查询优惠券
-export function selectCouponsByParkId(id) {
+export function selectCouponsByParkId(data) {
   return request({
-    url: '/ylyt/merchant/selectCouponsByParkId/' + id,
-    method: 'get'
+    url: '/ylyt/merchant/selectCouponsByParkId',
+    method: 'get',
+    params: data
   })
 }
