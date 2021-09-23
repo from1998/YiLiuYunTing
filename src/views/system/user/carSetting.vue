@@ -1,25 +1,25 @@
 <template>
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="车场信息" name="depotInfo">
+      <el-tab-pane label="车场信息" name="depotInfo" lazy>
         <depot-info :park="parkid" />
       </el-tab-pane>
-      <el-tab-pane label="车场配置" name="depotSet">
+      <el-tab-pane label="车场配置" name="depotSet" lazy>
         <depot-set />
       </el-tab-pane>
-      <el-tab-pane label="收费规则" name="feeRule">
+      <el-tab-pane label="收费规则" name="feeRule" lazy>
         <fee-rule />
       </el-tab-pane>
-      <el-tab-pane label="岗亭设置" name="watchhouseSet">
+      <el-tab-pane label="岗亭设置" name="watchhouseSet" lazy>
         <watchhouse-set />
       </el-tab-pane>
-      <el-tab-pane label="车道设置" name="laneSet">
+      <el-tab-pane label="车道设置" name="laneSet" lazy>
         <lane-set />
       </el-tab-pane>
-      <el-tab-pane label="保安管理" name="secManger">
+      <el-tab-pane label="保安管理" name="secManger" lazy>
         <sec-manger />
       </el-tab-pane>
-      <el-tab-pane label="车位管理" name="portManger">
+      <el-tab-pane label="车位管理" name="portManger" lazy>
         <port-manger />
       </el-tab-pane>
     </el-tabs>
@@ -61,6 +61,7 @@ export default {
         bottom: '50px',
         width: '40px',
         height: '40px',
+        className: '车场信息',
         'border-radius': '4px',
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
