@@ -5,22 +5,22 @@
         <depot-info :park="parkid" />
       </el-tab-pane>
       <el-tab-pane label="车场配置" name="depotSet">
-        <depot-set />
+        <depot-set v-if="activeName==='depotSet'" />
       </el-tab-pane>
       <el-tab-pane label="收费规则" name="feeRule">
-        <fee-rule />
+        <fee-rule v-if="activeName==='feeRule'" />
       </el-tab-pane>
       <el-tab-pane label="岗亭设置" name="watchhouseSet">
-        <watchhouse-set />
+        <watchhouse-set v-if="activeName==='watchhouseSet'" />
       </el-tab-pane>
       <el-tab-pane label="车道设置" name="laneSet">
-        <lane-set />
+        <lane-set v-if="activeName==='laneSet'" />
       </el-tab-pane>
       <el-tab-pane label="保安管理" name="secManger">
-        <sec-manger />
+        <sec-manger v-if="activeName==='secManger'" />
       </el-tab-pane>
       <el-tab-pane label="车位管理" name="portManger">
-        <port-manger />
+        <port-manger v-if="activeName==='portManger'" />
       </el-tab-pane>
     </el-tabs>
     <el-tooltip placement="top" content="返回顶部">

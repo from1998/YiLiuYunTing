@@ -23,20 +23,22 @@
     </el-row>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
-    <keyword :is-show="keyState" @exit="exit" @inputchange="getKey" @ok="confirm" />
+    <div>
+      <keyboard />
+    </div>
   </div>
 </template>
 <script>
-import keyword from '@/components/CarNumber/keyword'
+import keyboard from '@/components/CarNumber/keyboard'
 
 export default {
   components: {
-    keyword
+    keyboard
   },
   data() {
     return {
-      keyState: false,
-      str: ''
+      show: true,
+      keyState: false
     }
   },
   watch: {
