@@ -216,7 +216,7 @@
             </el-radio>
           </el-radio-group>
         </el-form-item>
-        <div v-show="form.lineCount !== ''" :gutter="0">
+        <div v-show="form.haveScreen === 1" :gutter="0">
           <!-- 广告一 -->
           <el-form-item label="广告一">
             <el-input v-model="form.ggone" placeholder="请输入广告一" clearable size="small" />
@@ -283,7 +283,15 @@
 </template>
 <script>
 // 引入api
-import { getLaneByMid, getLaneById, addLane, updateLane, deleteLaneById, getQrcodeDoMain } from '@/api/system/carSetting'
+import {
+  getLaneByMid,
+  getLaneById,
+  addLane,
+  updateLane,
+  deleteLaneById,
+  getQrcodeDoMain,
+  getWorkStationByMid
+} from '@/api/system/carSetting'
 import QRCode from 'qrcode'
 import validate from '@/utils/validate'
 
@@ -425,6 +433,7 @@ export default {
       // this.options.sn = this.encode64(val)
       this.options.sn = val
     })
+    this.getWatchhouseList()
   },
   // 方法
   methods: {
@@ -433,6 +442,17 @@ export default {
       if (cellValue !== null) {
         return this.selectDictLabel(this.options.status, cellValue.toString())
       }
+    },
+    // 查询岗亭
+    getWatchhouseList() {
+      this.loading = true // 打开遮罩
+      getWorkStationByMid(this.queryParams).then(res => {
+        this.options.watchhouseName = res.data.list
+        this.total = res.data.total
+        // 调用岗亭数据传递函数
+        // this.handle()
+        this.loading = false// 关闭遮罩
+      })
     },
     // 翻译车道类型
     typeFormatter(row) {
@@ -501,7 +521,9 @@ export default {
       this.reset()
       // 根据id查询车道信息
       this.loading = true
-      getLaneById(id).then(res => {
+      getLaneById({
+        id: id
+      }).then(res => {
         this.form = res.data
         this.loading = false
       }).catch(() => {

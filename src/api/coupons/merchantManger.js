@@ -39,10 +39,11 @@ export function deleteMerchantId(id) {
   })
 }
 // 查询一个
-export function getMerchantById(id) {
+export function getMerchantById(data) {
   return request({
-    url: '/ylyt/merchant/selectMerchant/' + id,
-    method: 'get'
+    url: '/ylyt/merchant/selectMerchant/',
+    method: 'get',
+    params: data
   })
 }
 // 修改

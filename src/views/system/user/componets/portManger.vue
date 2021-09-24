@@ -13,7 +13,7 @@
       <!-- 查询条件开始 -->
       <el-col :span="17" :offset="1">
         <el-form ref="queryForm" :model="queryParams" :inline="true">
-          <el-form-item label="层号">
+          <el-form-item label="层号" prop="tierNumber">
             <el-select v-model="queryParams.tierNumber" placeholder="请选择车位层号" size="small" clearable>
               <el-option
                 v-for="item in options.tierNumber"
@@ -23,7 +23,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="区域号">
+          <el-form-item label="区域号" prop="areaNumber">
             <el-select v-model="queryParams.areaNumber" placeholder="请选择车位区域号" size="small" clearable>
               <el-option
                 v-for="item in options.areaNumber"
@@ -245,7 +245,9 @@ export default {
       this.reset()
       // 根据id查询岗亭信息
       this.loading = true
-      getSiteById(id).then(res => {
+      getSiteById({
+        id: id
+      }).then(res => {
         this.form = res.data
         this.loading = false
       })

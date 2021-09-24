@@ -334,7 +334,9 @@ export default {
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
-      getMerchantById(row.id).then(res => {
+      getMerchantById({
+        id: row.id
+      }).then(res => {
         this.form = res.data
         this.loading = false
       })
