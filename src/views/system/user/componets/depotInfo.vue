@@ -230,6 +230,9 @@
             end-placeholder="结束时间"
             placeholder="选择时间范围"
             value-format="HH-mm-ss"
+            :picker-options="{
+              selectableRange: dataRange
+            }"
             @change="timeChange(convert.businessHours)"
           />
         </el-form-item>
@@ -260,6 +263,7 @@ export default {
   name: 'DepotInfo',
   data() {
     return {
+      dataRange: ['00:00:00 - 23:59:59', '00:00:00 - 23:59:59'],
       // 验证规则
       validate,
       rules: {

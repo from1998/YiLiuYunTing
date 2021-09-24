@@ -112,6 +112,7 @@
                         end-placeholder="结束时间"
                         placeholder="选择时间范围"
                         value-format="HH-mm-ss"
+                        @input="$forceUpdate()"
                         @change="timeChange(scope.row,scope.row.timeDur)"
                       />
                     </template>

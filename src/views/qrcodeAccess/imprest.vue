@@ -7,70 +7,27 @@
     <el-row :gutter="0" style="margin-top:5%">
       <el-col :span="16" :offset="2">请输入车牌号进行缴费查询</el-col>
     </el-row>
-    <el-row :gutter="0" style="margin-top:10%;margin-left:-3%;border-radius: 4px!important;" border="true">
-      <el-col :span="3" :offset="2" style="text-align:center">
-        <el-input v-model="carNumber.carNumber1" class="inputClass" @focus="keyState = true" />
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-input v-model="carNumber.carNumber2" @focus="keyState = true" />
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-input v-model="carNumber.carNumber3" @focus="keyState = true" />
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-input v-model="carNumber.carNumber4" @focus="keyState = true" />
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-input v-model="carNumber.carNumber5" @focus="keyState = true" />
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-input v-model="carNumber.carNumber6" @focus="keyState = true" />
-      </el-col>
-      <el-col :span="3" :offset="0">
-        <el-input v-model="carNumber.carNumber7" @focus="keyState = true" />
-      </el-col>
-    </el-row>
+    <div>
+      <keyboard />
+    </div>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
-    <keyword :is-show="keyState" @exit="exit" @inputchange="getKey" @ok="confirm" />
   </div>
 </template>
 <script>
-import keyword from '@/components/CarNumber/keyword'
+import keyboard from '@/components/CarNumber/keyboard'
 
 export default {
   components: {
-    keyword
+    keyboard
   },
   data() {
     return {
-      carNumber: {
-        carNumber1: '',
-        carNumber2: '',
-        carNumber3: '',
-        carNumber4: '',
-        carNumber5: '',
-        carNumber6: '',
-        carNumber7: ''
-      },
-      keyState: false,
-      str: ''
-    }
-  },
-  watch: {
-    carNumber: {
-      handler(val) {
-        console.log(val)
-        // console.log(this.resdata)
-        if (val !== this.resdata) {
-          this.SubmitTitle = '提交'
-        }
-      },
-      deep: true
+      show: true,
+      keyState: false
     }
   },
   mounted() {
-    // http://anbo-test.anbokeji.net/engine/init
     this.loadScript('http://sdk-test.anbokeji.net/adv/index.js', () => {
       const container = document.getElementById('app-container')
       const st = document.querySelector('#anbo-ad-st')
@@ -115,30 +72,23 @@ export default {
       this.keyState = false
     },
     getKey(val) {
-      if (this.str.length >= 7 && val !== 'delete') {
+      if (this.str.length >= 8 && val !== 'delete') {
         return false
       }
       if (val === 'delete') {
         this.str = this.str.slice(0, this.str.length - 1)
-        // this.carNumber['carNumber' + this.str.length + 1] = ''
-        this.$set(this.carNumber, 'carNumber' + this.str.length, '')
       } else {
         this.str += val
-        this.carNumber['carNumber' + this.str.length] = val
       }
     },
-    confirm(e) {
+    confirm() {
       this.keyState = false
     }
   }
 }
 </script>
-<style scoped>
+<style css>
 .advwrap {
   height: 200px;
 }
-.el-input__inner{
-    padding-left: 100px!important;
-}
-
 </style>

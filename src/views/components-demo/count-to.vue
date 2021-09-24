@@ -60,7 +60,7 @@ export default {
   data() {
     return {
       setStartVal: 0,
-      setEndVal: 2017,
+      setEndVal: 0,
       setDuration: 4000,
       setDecimals: 0,
       setSeparator: ',',

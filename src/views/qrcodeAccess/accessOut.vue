@@ -1,60 +1,75 @@
 <template>
-  <div id="app-container">
-    <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">多威尔车场</el-header>
-    <el-row :gutter="0" style="font-size:1.4rem">
-      <el-col :span="12" :offset="2">输入车牌号码:</el-col>
+  <div id="app-container" style="padding:20px 0 0 0">
+    <div class="payCard">
+      <el-row :gutter="0" style="height:30px;margin-top:3%;">
+        <el-col :span="20" :offset="2">{{ carNumber }}</el-col>
+      </el-row>
+      <el-row :gutter="0" style="height:25px;font-size:14px;">
+        <el-col :span="20" :offset="2">一流云停</el-col>
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px">
+        <el-col :span="6" :offset="2">入场时间</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 16:21</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">结束时间</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 19:59</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">停车时长</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">0小时1分</el-col>
+        <el-col :span="2" :offset="0" />
+        <div id="lineDowm" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">总金额</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">优惠类型</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">应交金额</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">5.89</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+    </div>
+    <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
+      <el-col :span="22" :offset="2">温馨提示:
+      </el-col>
     </el-row>
-    <el-row :gutter="0" style="margin-top:5%">
-      <el-col :span="16" :offset="2">请输入车牌号进行缴费查询</el-col>
+    <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
+      <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
+      </el-col>
     </el-row>
-    <el-row :gutter="0" style="margin-top:10%;">
+    <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <div id="home_input">
-          <el-input v-model="str" @focus="keyState = true" />
-          <!-- 边框1-6 -->
-          <div id="fixedBorder1" class="fixedBorder" />
-          <div id="fixedBorder2" class="fixedBorder" />
-          <div id="fixedBorder3" class="fixedBorder" />
-          <div id="fixedBorder4" class="fixedBorder" />
-          <div id="fixedBorder5" class="fixedBorder" />
-          <div id="fixedBorder6" class="fixedBorder" />
-        </div>
+        <el-button type="primary" round style="width:100%">支付</el-button>
+      </el-col>
+    </el-row>
+    <el-row :gutter="0" style="font-size:14px;margin-top:5%">
+      <el-col :span="20" :offset="2">
+        <el-button type="warning" round style="width:100%">刷新</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
-    <div>
-      <keyboard />
-    </div>
   </div>
 </template>
 <script>
-import keyboard from '@/components/CarNumber/keyboard'
 
 export default {
-  components: {
-    keyboard
-  },
   data() {
     return {
-      show: true,
-      keyState: false
-    }
-  },
-  watch: {
-    carNumber: {
-      handler(val) {
-        console.log(val)
-        // console.log(this.resdata)
-        if (val !== this.resdata) {
-          this.SubmitTitle = '提交'
-        }
-      },
-      deep: true
+      carNumber: '临NF00365'
     }
   },
   mounted() {
-    // http://anbo-test.anbokeji.net/engine/init
     this.loadScript('http://sdk-test.anbokeji.net/adv/index.js', () => {
       const container = document.getElementById('app-container')
       const st = document.querySelector('#anbo-ad-st')
@@ -94,26 +109,6 @@ export default {
         }
       }
       head.insertBefore(script, head.firstChild)
-    },
-    exit() {
-      this.keyState = false
-    },
-    getKey(val) {
-      console.log(val)
-      if (this.str.length >= 7 && val !== 'delete') {
-        return false
-      }
-      if (val === 'delete') {
-        this.str = this.str.slice(0, this.str.length - 1)
-        // this.carNumber['carNumber' + this.str.length + 1] = ''
-        // this.$set(this.carNumber, 'carNumber' + this.str.length, '')
-        // val = ''
-      } else {
-        this.str += val
-      }
-    },
-    confirm(e) {
-      this.keyState = false
     }
   }
 }
@@ -122,34 +117,16 @@ export default {
 .advwrap {
   height: 200px;
 }
-#home_input {
-  position: relative;
+#lineDowm {
+width: 83%;
+margin: 6% auto 0;
+height: 1px;
+background-color: #dcdfe6;
 }
-#home_input .el-input__inner{
-  /* padding-left: 0!important; */
-    letter-spacing: 2.53em!important;
-}
-#home_input .fixedBorder {
-  width: 0.08rem;
-  height: 2.2rem;
-  background-color: #dcdfe6;
-  position: absolute;
-  top: 0%;
-  left: 12vw;
-}
-#home_input #fixedBorder2 {
-  left: 24vw;
-}
-#home_input #fixedBorder3 {
-  left: 36vw;
-}
-#home_input #fixedBorder4 {
-  left: 48vw;
-}
-#home_input #fixedBorder5 {
-  left: 60vw;
-}
-#home_input #fixedBorder6 {
-  left: 72vw;
+.payCard {
+  background-color: #f8f8f8;
+  width: 90%;
+  margin: auto;
+  padding: 10px 0;
 }
 </style>

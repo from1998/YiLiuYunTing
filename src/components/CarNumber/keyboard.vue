@@ -1,7 +1,6 @@
 <template>
   <div class="license-plate noselect">
     <div class="cph-box">
-      <div class="numtitle">请输入车牌号</div>
       <div class="cph-wrap cph-wrap-shadow">
         <span
           v-for="(item, index) in shadow"
@@ -226,7 +225,7 @@ export default {
   padding: 10px;
   .cph-wrap {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     font-size: 18px;
     line-height: 40px;
     min-height: 40px;
@@ -380,20 +379,11 @@ export default {
 
 .cph-box {
   position: relative;
-  margin: 65px auto;
+  margin: 0 auto;
+  padding: 0 15px;
   background-color: #fff;
   border-radius: 5px;
   overflow: hidden;
-
-  .numtitle {
-    font-size: 18px;
-    color: #222222;
-    text-align: center;
-    line-height: 50px;
-    border-top-right-radius: 5px;
-    border-top-left-radius: 5px;
-    font-weight: normal;
-  }
 }
 
 span.hide {
