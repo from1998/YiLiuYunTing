@@ -438,7 +438,7 @@ export default {
     },
     // 翻译状态
     stateFormatter(row) {
-      return this.selectDictLabel(this.stateOptions, row.state.toString())
+      return this.selectDictLabel(this.stateOptions, row.state)
     },
     // 翻译角色
     roleFormatter(row) {
