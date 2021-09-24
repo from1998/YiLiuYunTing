@@ -328,7 +328,8 @@ export default {
       // 当前选中的用户
       currentUserId: undefined,
       // 添加车场选中的用户
-      currentParkUserId: undefined
+      currentParkUserId: undefined,
+      roleId: ''
     }
   },
   // 勾子

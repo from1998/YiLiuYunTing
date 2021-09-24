@@ -60,8 +60,8 @@ export default {
   data() {
     return {
       setStartVal: 0,
-      setEndVal: 2017,
-      setDuration: 4000,
+      setEndVal: 0,
+      setDuration: 0,
       setDecimals: 0,
       setSeparator: ',',
       setSuffix: ' rmb',
