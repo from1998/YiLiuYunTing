@@ -127,10 +127,11 @@ export function deleteWorkStationById(id) {
 }
 
 // 根据岗亭名称查询岗亭设置
-export function getWorkStationLikeName(name) {
+export function getWorkStationLikeName(data) {
   return request({
-    url: '/ylyt/workStation/getWorkStationLikeName/' + name,
-    method: 'get'
+    url: '/ylyt/workStation/getWorkStationLikeName',
+    method: 'get',
+    params: data
   })
 }
 // -------------------------------------车道

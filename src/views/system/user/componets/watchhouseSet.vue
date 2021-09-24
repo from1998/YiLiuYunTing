@@ -76,7 +76,7 @@
 </template>
 <script>
 // 引入api
-import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, getWorkStationLikeName } from '@/api/system/carSetting'
+import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById } from '@/api/system/carSetting'
 import validate from '@/utils/validate'
 
 export default {
@@ -152,7 +152,14 @@ export default {
     },
     // 查询
     handleQuery() {
-      getWorkStationLikeName()
+      // getWorkStationLikeName(this.queryParams).then(res => {
+      //   this.watchhouseList = res.data.list
+      //   this.total = res.data.total
+      //   // 调用岗亭数据传递函数
+      //   this.handle()
+      //   this.loading = false// 关闭遮罩
+      // })
+      this.getWatchhouseList()
     },
     // 重置查询
     resetQuery() {
@@ -191,7 +198,9 @@ export default {
       this.reset()
       // 根据id查询岗亭信息
       this.loading = true
-      getWorkStationById(id).then(res => {
+      getWorkStationById({
+        id: id
+      }).then(res => {
         this.form = res.data
         this.loading = false
       })

@@ -411,6 +411,8 @@ export default {
           // this.SubmitTitle = '已提交'
           this.handleRegion(this.addressOptions)
           this.handletime()
+          this.form.commissioncharge = this.form.commissioncharge * 1000
+          this.form.parkfeecharge = this.form.parkfeecharge * 10
         }
         this.loading = false // 关闭遮罩
       })

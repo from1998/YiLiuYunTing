@@ -139,7 +139,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.form.parkId = this.roleId === '1' ? '' : res.data[0].id
+        this.form.parkid = this.roleId === '1' ? '' : res.data[0].id
         console.log(this.CarList)
       }).catch(err => {
         console.log(err)

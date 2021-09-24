@@ -442,7 +442,9 @@ export default {
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
-      getCouponsById(row.id).then((res) => {
+      getCouponsById({
+        id: row.id
+      }).then((res) => {
         this.form = res.data
         this.loading = false
       })

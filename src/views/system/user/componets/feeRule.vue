@@ -101,19 +101,41 @@
                 >
                   <el-table-column
                     label="时间范围"
-                    width="372"
+                    width="300"
                   >
                     <template slot-scope="scope">
+                      <!--                      <el-time-picker-->
+                      <!--                        v-model="scope.row.timeDur"-->
+                      <!--                        is-range-->
+                      <!--                        range-separator="至"-->
+                      <!--                        start-placeholder="开始时间"-->
+                      <!--                        end-placeholder="结束时间"-->
+                      <!--                        placeholder="选择时间范围"-->
+                      <!--                        value-format="HH-mm-ss"-->
+                      <!--                        @change="timeChange(scope.row,scope.row.timeDur)"-->
+                      <!--                      />-->
+                      <!--                      <el-date-picker-->
+                      <!--                        v-model="scope.row.timeDur"-->
+                      <!--                        type="datetimerange"-->
+                      <!--                        align="right"-->
+                      <!--                        start-placeholder="开始日期"-->
+                      <!--                        end-placeholder="结束日期"-->
+                      <!--                        @change="timeChange(scope.row,scope.row.timeDur)">-->
+                      <!--                      </el-date-picker>-->
                       <el-time-picker
-                        v-model="scope.row.timeDur"
-                        is-range
-                        range-separator="至"
-                        start-placeholder="开始时间"
-                        end-placeholder="结束时间"
-                        placeholder="选择时间范围"
-                        value-format="HH-mm-ss"
-                        @input="$forceUpdate()"
-                        @change="timeChange(scope.row,scope.row.timeDur)"
+                        v-model="scope.row.start"
+                        size="mini"
+                        style="width: 120px"
+                        value-format="HH:mm:ss"
+                        placeholder="起始时间"
+                      />&nbsp;至
+                      <!--                      <text>至</text>-->
+                      <el-time-picker
+                        v-model="scope.row.end"
+                        size="mini"
+                        style="width: 120px"
+                        value-format="HH:mm:ss"
+                        placeholder="结束时间"
                       />
                     </template>
                   </el-table-column>
@@ -332,13 +354,14 @@ export default {
             })
           } else {
             this.loading = true // 打开遮罩
-            updateParkfee(this.form).then(() => {
-              this.msgSuccess('修改成功')
-              this.init()
-              this.loading = false // 关闭遮罩
-            }).catch(() => {
-              this.msgError('修改失败')
-              this.loading = false // 关闭遮罩
+            updateParkfee(this.form).then(res => {
+              if (res.code === 200) {
+                this.msgSuccess('修改成功')
+                this.init()
+                this.loading = false // 关闭遮罩
+              } else {
+                this.loading = false // 关闭遮罩
+              }
             })
           }
         }

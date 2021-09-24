@@ -135,7 +135,7 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="700px"
+      width="600px"
       center
       append-to-body
     >
@@ -193,16 +193,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="商家优惠券名称" prop="name">
-          <el-input v-model="form.name" placeholder="商家优惠券名称" clearable size="small" />
+          <el-input v-model="form.name" placeholder="商家优惠券名称" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="总数" prop="total">
-          <el-input v-model="form.total" placeholder="发放总数" clearable size="small" />
+          <el-input v-model="form.total" placeholder="发放总数" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="剩余" prop="residue">
-          <el-input v-model="form.residue" placeholder="剩余数量" clearable size="small" />
+          <el-input v-model="form.residue" placeholder="剩余数量" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="优惠力度" prop="discount">
-          <el-input v-model="form.discount" placeholder="优惠力度 时间劵：单位为分钟 代金劵：单位是元 折扣劵：小数例如9折为0.9" clearable size="small" />
+          <el-input v-model="form.discount" placeholder="优惠力度 时间劵：单位为分钟 代金劵：单位是元 折扣劵：小数例如9折为0.9" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="是否立即生效" prop="isEffectiveNow">
           <el-select
@@ -348,7 +348,9 @@ export default {
         // expireTime:''
 
       },
-      grantForm: {}, // 发放表单
+      grantForm: {
+        carNumber: ''
+      }, // 发放表单
       // 是否打开分配权限的弹出层
       selectMenuOpen: false,
       // 菜单树的数据
@@ -469,8 +471,11 @@ export default {
     },
     // 发放按钮
     grant(row) {
+      // console.log(this.grantForm.carNumber)
       this.grantShow = true
-      getMerchantCouponsById(row.id).then(res => {
+      getMerchantCouponsById({
+        id: row.id
+      }).then(res => {
         this.grantForm = res.data
       })
     },
@@ -497,13 +502,17 @@ export default {
       if (e) {
         this.form.parkId = e
       }
-      selectCouponsByParkId(this.form.parkId).then(res => {
+      selectCouponsByParkId({
+        id: this.form.parkId
+      }).then(res => {
         console.log(res)
         this.listCoupons = res.data.data
       }).catch(err => {
         console.log(err)
       })
-      selectMerchantByParkId(this.form.parkId).then(res => {
+      selectMerchantByParkId({
+        id: this.form.parkId
+      }).then(res => {
         this.shopList = res.data
       }).catch(err => {
         console.log(err)
@@ -588,7 +597,9 @@ export default {
       this.reset()
       // 根据dictId查询一个字典信息
       this.loading = true
-      getMerchantCouponsById(row.id).then(res => {
+      getMerchantCouponsById({
+        id: row.id
+      }).then(res => {
         this.form = res.data
         const arr = this.shopList.filter((item) => {
           return this.form.merchantId === item.id
