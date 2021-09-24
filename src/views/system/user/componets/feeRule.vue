@@ -322,16 +322,13 @@ export default {
           if (this.resdata === null) {
             this.loading = true // 打开遮罩
             addParkfee(this.form).then(res => {
-              if (res.data.code === 200) {
+              if (res.code === 200) {
                 this.msgSuccess('添加成功')
                 this.init()
                 this.loading = false // 关闭遮罩
               } else {
                 this.loading = false // 关闭遮罩
               }
-            }).catch(() => {
-              this.msgError('添加失败')
-              this.loading = false // 关闭遮罩
             })
           } else {
             this.loading = true // 打开遮罩

@@ -3,7 +3,7 @@
     <!-- 标题 -->
     <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
       车场信息
-      <span>{{ 'SN:'+ form.sn }}</span>
+      <span v-if="form.sn">{{ 'SN:'+ form.sn }}</span>
       <!-- <el-button type="primary" icon="el-icon-success" size="mini" @clicl="handelCopy"></el-button> -->
     </el-header>
     <!-- 主体 -->

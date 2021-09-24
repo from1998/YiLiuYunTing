@@ -197,7 +197,7 @@ export default {
             .then(() => {
               // 带查询参数的编程式导航，query是一个对象，是查询
               // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              if (this.getRoleID() === '1' || this.getRoleID() === '4') {
+              if (this.getRoleID() === '1' || this.getRoleID() === '3' || this.getRoleID() === '4') {
                 this.$router.push('/dashboard')
               } else if (this.getRoleID() === '6') {
                 this.$router.push('/monitoringCenter/quickMonitoring')
