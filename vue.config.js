@@ -48,7 +48,7 @@ module.exports = {
     // 跨域代理配置
     proxy: {
       [process.env.VUE_APP_BASE_API]: {
-        target: 'http://192.168.1.66:8089/',
+        target: 'http://192.168.1.5:8089/',
         changeOrigin: true,
         pathRewrite: {
           ['^' + process.env.VUE_APP_BASE_API ]: ''
