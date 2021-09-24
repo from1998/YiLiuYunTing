@@ -76,7 +76,7 @@
 </template>
 <script>
 // 引入api
-import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById, getWorkStationLikeName } from '@/api/system/carSetting'
+import { deleteWorkStationById, updateWorkStation, addWorkStation, getWorkStationByMid, getWorkStationById } from '@/api/system/carSetting'
 import validate from '@/utils/validate'
 
 export default {
@@ -152,7 +152,7 @@ export default {
     },
     // 查询
     handleQuery() {
-      getWorkStationLikeName()
+      this.getWatchhouseList()
     },
     // 重置查询
     resetQuery() {

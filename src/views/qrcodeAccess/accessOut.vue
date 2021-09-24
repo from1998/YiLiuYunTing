@@ -62,15 +62,27 @@
   </div>
 </template>
 <script>
+// import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
 
 export default {
   data() {
     return {
-      carNumber: '临NF00365'
+      loading: false,
+      parkId: '',
+      carNumber: '临NF00365',
+      queryParams: {
+        sn: '2021092410020961589649605'
+      }
     }
   },
+  created() {
+    // 取路由路径上的参数
+    // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
+    // 查询进场数据
+    this.getData()
+  },
   mounted() {
-    this.loadScript('http://sdk-test.anbokeji.net/adv/index.js', () => {
+    this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
       const container = document.getElementById('app-container')
       const st = document.querySelector('#anbo-ad-st')
       if (st) {
@@ -79,17 +91,24 @@ export default {
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId: 3,parkId: "1631003190101",host:""})'
+      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.parkId + '",host:""})'
       container.append(script)
-
       document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-      window.advShow = function(res) {
-        console.log('============ree', res)
+      window.advShow = function() {
       }
     })
   },
   methods: {
-
+    // 查询进场数据
+    getData() {
+      this.loading = true // 打开遮罩
+      this.parkId = '340100202107124653'
+      // getLeaveData(this.queryParams).then(res => {
+      //   this.carNumber = res.data.carNumber
+      // this.parkId = res.data.parkId
+      // })
+      this.loading = false// 关闭遮罩
+    },
     loadScript(xyUrl, callback) {
       var head = document.getElementsByTagName('head')[0]
       var script = document.createElement('script')
@@ -116,6 +135,9 @@ export default {
 <style css>
 .advwrap {
   height: 200px;
+  margin: auto;
+    margin-top: 50px;
+  width: 90%;
 }
 #lineDowm {
 width: 83%;

@@ -119,7 +119,7 @@
         label-width="150px"
       >
         <el-form-item label="车牌号" prop="carNumber">
-          <el-input v-model="grantForm.carNumber" placeholder="车牌号" clearable size="small" />
+          <el-input v-model="grantForm.carNumber" placeholder="" size="normal" clearable />
         </el-form-item>
         <!--      <el-form-item label="优惠券唯一识别码" prop="sn">-->
         <!--        <el-input v-model="grantForm.sn" placeholder="优惠券唯一识别码" clearable size="small" />-->
@@ -346,9 +346,10 @@ export default {
         status: '1',
         days: ''
         // expireTime:''
-
       },
-      grantForm: {}, // 发放表单
+      grantForm: {
+        carNumber: ''
+      }, // 发放表单
       // 是否打开分配权限的弹出层
       selectMenuOpen: false,
       // 菜单树的数据
@@ -470,9 +471,6 @@ export default {
     // 发放按钮
     grant(row) {
       this.grantShow = true
-      getMerchantCouponsById(row.id).then(res => {
-        this.grantForm = res.data
-      })
     },
     // 翻译类型 优惠卷类型
     // carTypeFormatter(row) {
