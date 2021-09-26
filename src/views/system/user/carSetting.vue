@@ -10,6 +10,9 @@
       <el-tab-pane label="收费规则" name="feeRule" lazy>
         <fee-rule />
       </el-tab-pane>
+      <el-tab-pane label="新能源收费规则" name="energyRule" lazy>
+        <energy-rule />
+      </el-tab-pane>
       <el-tab-pane label="岗亭设置" name="watchhouseSet" lazy>
         <watchhouse-set />
       </el-tab-pane>
@@ -38,6 +41,7 @@ import portManger from './componets/portManger'
 import secManger from './componets/secManger'
 import watchhouseSet from './componets/watchhouseSet'
 import BackToTop from '@/components/BackToTop'
+import energyRule from '@/views/system/user/componets/energyRule'
 
 // import { getDepotById } from '@/api/system/carSetting'
 
@@ -50,7 +54,8 @@ export default {
     portManger,
     secManger,
     watchhouseSet,
-    BackToTop
+    BackToTop,
+    energyRule
   },
   data() {
     return {

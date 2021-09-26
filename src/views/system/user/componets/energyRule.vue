@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="container" height="36px" style="padding:15px 10px 45px;font-weight:700">
-      收费规则
+      新能源收费规则
     </el-header>
     <el-container class="container">
       <el-form ref="freeRuleForm" :model="form" label-width="180px" style="width:860px" :rules="rules" :disabled="flag">
@@ -226,12 +226,11 @@
 
 </template>
 <script>
-
-import { getParkfeeByMid, addParkfee, updateParkfee } from '@/api/system/carSetting'
+import { getEnergyParkfeeByMid, addEnergyParkfee, updateEnergyParkfee, getDepotById } from '@/api/system/carSetting'
 import validate from '@/utils/validate'
 
 export default {
-  name: 'FeeRule',
+  name: 'EneryRule',
   data() {
     return {
       flag: false,
@@ -260,6 +259,7 @@ export default {
         ymoney: '',
         overunit: '',
         overmoney: '',
+        parkid: '',
         // 默认常规计费
         splittype: 1,
         splittimejsonDto: [],
@@ -291,8 +291,16 @@ export default {
     this.getDataByType('FeeSplitTypeDic').then(res => {
       this.options.sectionChargeType = res.data
     })
+    this.getparkId()
   },
   methods: {
+    async getparkId() {
+      await getDepotById({
+        managerid: this.form.managerid
+      }).then(res => {
+        this.form.parkid = res.data.id
+      })
+    },
     async init(id) {
       if (id === undefined) {
         id = this.getID()
@@ -305,7 +313,7 @@ export default {
         }
       }
       this.loading = true // 打开遮罩
-      await getParkfeeByMid({
+      await getEnergyParkfeeByMid({
         managerid: id
       }).then(res => {
         this.resdata = res.data
@@ -343,7 +351,7 @@ export default {
           }
           if (this.resdata === null) {
             this.loading = true // 打开遮罩
-            addParkfee(this.form).then(res => {
+            addEnergyParkfee(this.form).then(res => {
               if (res.code === 200) {
                 this.msgSuccess('添加成功')
                 this.init()
@@ -354,7 +362,7 @@ export default {
             })
           } else {
             this.loading = true // 打开遮罩
-            updateParkfee(this.form).then(res => {
+            updateEnergyParkfee(this.form).then(res => {
               if (res.code === 200) {
                 this.msgSuccess('修改成功')
                 this.init()
@@ -450,25 +458,25 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.container {
+  .container {
     display: -webkit-box;
-     -webkit-box-pack:center;
-}
-.footer {
+    -webkit-box-pack:center;
+  }
+  .footer {
     margin-left: 50%;
     transform: translateX(-50%);
-}
-.el-table__header {
-  tr {
-    height: 25px;
-    th {
-      padding: 0!important;
-      text-align: center;
+  }
+  .el-table__header {
+    tr {
+      height: 25px;
+      th {
+        padding: 0!important;
+        text-align: center;
+      }
     }
   }
-}
-.el-table td {
-  text-align: center;
-}
+  .el-table td {
+    text-align: center;
+  }
 </style>
 

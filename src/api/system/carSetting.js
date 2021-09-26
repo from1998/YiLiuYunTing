@@ -80,6 +80,33 @@ export function getParkfeeByMid(data) {
     params: data
   })
 }
+// --------------------------------------- 新能源收费规则
+// 添加收费规则
+export function addEnergyParkfee(data) {
+  return request({
+    url: '/ylyt/parkFee/addEnergyParkfee',
+    method: 'post',
+    data
+  })
+}
+
+// 修改收费规则
+export function updateEnergyParkfee(data) {
+  return request({
+    url: '/ylyt/parkFee/updateEnergyParkfee',
+    method: 'put',
+    data
+  })
+}
+
+// 查询收费规则
+export function getEnergyParkfeeByMid(data) {
+  return request({
+    url: '/ylyt/parkFee/getEnergyParkfeeByMid',
+    method: 'get',
+    params: data
+  })
+}
 // -------------------------------------岗亭
 
 // 查询岗亭设置列表

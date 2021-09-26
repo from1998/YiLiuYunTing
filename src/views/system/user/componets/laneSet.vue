@@ -194,7 +194,7 @@
           </el-radio-group>
         </el-form-item>
         <!-- 屏幕行数 -->
-        <el-form-item v-show="form.haveScreen === 1" label="屏幕行数" prop="lineCount">
+        <el-form-item v-show="form.haveScreen === 1" label="屏幕行数">
           <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small" clearable style="width:330px">
             <el-option
               v-for="item in options.screenLines"
@@ -456,15 +456,21 @@ export default {
     },
     // 翻译车道类型
     typeFormatter(row) {
-      return this.selectDictLabel(this.options.laneCategory, row.type.toString())
+      if (row.type) {
+        return this.selectDictLabel(this.options.laneCategory, row.type.toString())
+      }
     },
     // 翻译相机品牌
     cameraBrandTypeFormatter(row) {
-      return this.selectDictLabel(this.options.cameraBrandType, row.cameraBrandType.toString())
+      if (row.cameraBrandType !== null) {
+        return this.selectDictLabel(this.options.cameraBrandType, row.cameraBrandType.toString())
+      }
     },
     // 翻译控制卡类型
     controllerCardFormatter(row) {
-      return this.selectDictLabel(this.options.controllerCard, row.controllerCard.toString())
+      if (row.controllerCard !== null) {
+        return this.selectDictLabel(this.options.controllerCard, row.controllerCard.toString())
+      }
     },
     // 查询表格数据
     getlaneList() {

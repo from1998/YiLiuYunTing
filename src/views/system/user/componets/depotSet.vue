@@ -141,7 +141,7 @@
           </el-col>
         </el-row>
         <!-- 过期车辆进出场 -->
-        <el-row>
+        <el-row v-show="false">
           <el-col :span="12">
             <el-form-item label="过期车辆进场" prop="overduecarin">
               <el-select v-model="form.overduecarin" placeholder="请选择类型">
@@ -354,7 +354,7 @@
           </el-radio-group>
         </el-form-item> -->
         <!-- 是否开启多位多车及其规则 -->
-        <el-row>
+        <el-row v-show="false">
           <el-col :span="12">
             <el-form-item label="是否开启多位多车" prop="fixedcarmoresitemorecar">
               <el-radio-group v-model="form.fixedcarmoresitemorecar">
