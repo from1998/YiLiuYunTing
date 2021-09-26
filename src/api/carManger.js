@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 // --------------------------------------车辆管理
+
+// 查询车道列表
+export function getLaneList(query) {
+  return request({
+    url: '/ylyt/car_register/list',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询车位列表
 export function getPortList(query) {
   return request({

@@ -1,15 +1,13 @@
 <template>
   <div id="app-container">
-    <el-header style="margin:10% 0 0 0;height:45px;font-size:1.2rem">
-      <el-row :gutter="0">
-        <el-col :span="12" :offset="1">无牌车</el-col>
-      </el-row>
-    </el-header>
+    <el-row :gutter="0" style="height:45px;margin-top:10%;font-size:1.2rem">
+      <el-col :span="20" :offset="2">无牌车</el-col>
+    </el-row>
     <el-row :gutter="0">
       <el-col :span="12" :offset="2">临时车牌号码:</el-col>
     </el-row>
-    <el-row :gutter="0" style="margin-top:30px">
-      <el-col v-for="(item,index) in carNumber.split('')" :key="index" :span="2" :offset="index===0?5:0">
+    <el-row :gutter="0" style="margin:30px 0 0 4%">
+      <el-col v-for="(item,index) in carNumber.split('')" :key="index" :span="3" :offset="index===0?1:0">
         <div class="carNumberWrap">
           <span>
             {{ item }}
@@ -119,6 +117,8 @@ export default {
   width: 90%;
 }
 .carNumberWrap {
+  height:5vh;
+  line-height: 5vh;
   border: 1px solid #dcdfe6;
   text-align:center;
 }
