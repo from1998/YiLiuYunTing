@@ -107,19 +107,20 @@
     <!-- 分页控件结束 -->
     <!--  发放  -->
     <el-dialog
-      width="700px"
+      width="450px"
       center
       append-to-body
+      title="发放优惠券"
       :visible.sync="grantShow"
     >
       <el-form
         ref="grantForm"
-        :rules="grantRules"
         :model="grantForm"
-        label-width="150px"
+        label-width="70px"
+        :rules="rules"
       >
         <el-form-item label="车牌号" prop="carNumber">
-          <el-input v-model="grantForm.carNumber" placeholder="" size="normal" clearable />
+          <el-input v-model="grantForm.carNumber" placeholder="请输入发放对象的车牌号" size="normal" clearable />
         </el-form-item>
         <!--      <el-form-item label="优惠券唯一识别码" prop="sn">-->
         <!--        <el-input v-model="grantForm.sn" placeholder="优惠券唯一识别码" clearable size="small" />-->
@@ -207,7 +208,7 @@
         <el-form-item label="是否立即生效" prop="isEffectiveNow">
           <el-select
             v-model="form.isEffectiveNow"
-            placeholder="请选择"
+            placeholder="请选择是否立即生效"
             clearable
             size="small"
             style="width:330px"
@@ -227,14 +228,15 @@
             type="date"
             clearable
             size="small"
-            placeholder="生效时间"
+            placeholder="请选择生效时间"
+            align="center"
           />
           <!--          <el-input v-if="isShow" v-model="form.effectiveTime" placeholder="生效时间" clearable size="small" />-->
         </el-form-item>
         <el-form-item label="是否按天有效" prop="isExpireDay">
           <el-select
             v-model="form.isExpireDay"
-            placeholder="请选择"
+            placeholder="请选择是否按天有效"
             clearable
             size="small"
             style="width:330px"
@@ -250,8 +252,7 @@
             v-if="form.isExpireDay === 0"
             v-model="form.expireTime"
             value-format="yyyy-MM-dd HH:mm:ss"
-            placeholder="失效时间"
-            style="width:157px"
+            placeholder="请选择失效时间"
             type="date"
           />
           <el-input v-if="form.isExpireDay=== 1" v-model="form.days" placeholder="有效期(天)" size="small" style="width: 330px" />
@@ -301,10 +302,27 @@
 <script>
 import { listMerchantForPage, addMerchant, getMerchantCouponsById, updateMerchantCoupons, deleteMerchantCoupons, getMerchantCoupons, selectMerchantByParkId, selectCouponsByParkId } from '@/api/coupons/merchant'
 import { listAll } from '@/api/coupons/couponsManger'
+import validate from '@/utils/validate'
+
 export default {
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        residue: validate.notEmpty,
+        payType: validate.notEmpty,
+        name: validate.notEmpty,
+        discount: validate.notEmpty,
+        isEffectiveNow: validate.notEmpty,
+        total: validate.notEmpty,
+        parkId: validate.notEmpty,
+        category: validate.notEmpty,
+        couponsId: validate.notEmpty,
+        merchantId: validate.notEmpty,
+        carNumber: validate.notEmpty
+      },
       carTableList: [],
       // 是否启用遮罩层
       loading: false,
@@ -364,46 +382,8 @@ export default {
       isShow: false, // 是否立即生效
       isShow1: false, // 是否按天有效
       dayType: undefined,
-      rules: {
-        category: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        couponsId: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        merchantId: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        parkId: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        name: [
-          { required: true, message: '请输入商家优惠券名称', trigger: 'blur' }
-        ],
-        total: [
-          { required: true, message: '请输入发放总数', trigger: 'blur' }
-        ],
-        discount: [
-          { required: true, message: '请输入优惠力度', trigger: 'blur' }
-        ],
-        isEffectiveNow: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        isExpireDay: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        payType: [
-          { required: true, message: '请选择', trigger: 'blur' }
-        ],
-        residue: [
-          { required: true, message: '请输入剩余数量', trigger: 'blur' }
-        ]
-      },
       listCoupons: [],
       grantShow: false,
-      grantRules: {
-        carNumber: { required: true, message: '请输入车牌号', trigger: 'blur' }
-      },
       CarList: [],
       stateOptions: [],
       parkId: ''

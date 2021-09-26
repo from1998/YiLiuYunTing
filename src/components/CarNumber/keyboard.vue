@@ -141,12 +141,12 @@ export default {
   },
   methods: {
     confirmBtnFn() {
-      this.$emit('confirmBtnFn', this.cph.join(''))
+      this.$emit('confirmBtn', this.cph.join(''))
     },
     clickBoard(e) {
       if (e.target.tagName.toLowerCase() === 'span') {
         if (e.target.className.indexOf('k') === -1 && this.clickIndex < 8) {
-          this.cph[this.clickIndex] = e.target.textContent
+          this.cph[this.clickIndex] = e.target.textContent.trim()
           this.newCph = this.cph
           this.clickIndex += 1
           if (this.clickIndex > 7) this.clickIndex = 7

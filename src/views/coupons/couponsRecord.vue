@@ -7,7 +7,7 @@
         <!--        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>-->
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="20" :offset="0">
+      <el-col :span="18" :offset="6">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
           <el-form-item
             label="车场"

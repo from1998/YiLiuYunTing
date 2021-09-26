@@ -11,7 +11,7 @@
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="18" :offset="1">
+      <el-col :span="19" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="车道名称" prop="name">
             <el-input
@@ -147,7 +147,7 @@
               v-for="item in options.watchhouseName"
               :key="item.id"
               :label="item.name"
-              :value="Number(item.id)"
+              :value="item.id"
             />
           </el-select>
         </el-form-item>
@@ -219,19 +219,19 @@
         <div v-show="form.haveScreen === 1" :gutter="0">
           <!-- 广告一 -->
           <el-form-item label="广告一">
-            <el-input v-model="form.ggone" placeholder="请输入广告一" clearable size="small" />
+            <el-input v-model="form.ggOne" placeholder="请输入广告一" clearable size="small" />
           </el-form-item>
           <!-- 广告二 -->
           <el-form-item label="广告二">
-            <el-input v-model="form.ggtwo" placeholder="请输入广告二" clearable size="small" />
+            <el-input v-model="form.ggTwo" placeholder="请输入广告二" clearable size="small" />
           </el-form-item>
           <!-- 广告三 -->
           <el-form-item v-show="form.lineCount === 4" label="广告三">
-            <el-input v-model="form.ggthree" placeholder="请输入广告三" clearable size="small" />
+            <el-input v-model="form.ggThree" placeholder="请输入广告三" clearable size="small" />
           </el-form-item>
           <!-- 广告四 -->
           <el-form-item v-show="form.lineCount === 4" label="广告四">
-            <el-input v-model="form.ggfour" placeholder="请输入广告四" clearable size="small" />
+            <el-input v-model="form.ggFour" placeholder="请输入广告四" clearable size="small" />
           </el-form-item>
         </div>
 
@@ -289,8 +289,7 @@ import {
   addLane,
   updateLane,
   deleteLaneById,
-  getQrcodeDoMain,
-  getWorkStationByMid
+  getQrcodeDoMain
 } from '@/api/system/carSetting'
 import QRCode from 'qrcode'
 import validate from '@/utils/validate'
@@ -358,7 +357,7 @@ export default {
         name: '',
         workstationId: '',
         type: '',
-        managerid: ''
+        managerId: ''
       },
       // 表单数据
       form: {
@@ -373,7 +372,12 @@ export default {
         lineCount: '',
         isOnLine: '',
         remainder: '',
-        managerid: undefined
+        managerId: undefined,
+        ggOne: '一流云停',
+        ggTwo: '与你同行',
+        ggThree: '与你同行',
+        ggFour: '与你同行'
+
         // gateState: undefined
       },
       // 遍历数据
@@ -421,19 +425,15 @@ export default {
       this.options.status = res.data
     })
     // 取路由路径上的参数
-    this.queryParams.managerid = this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
+    this.queryParams.managerId = this.manageridBak = this.form.managerId = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getlaneList()
   },
   async mounted() {
-    await this.bus.$on('watchHouse', val => {
-      this.options.watchhouseName = val
-    })
     await this.bus.$on('postSN', val => {
       // this.options.sn = this.encode64(val)
       this.options.sn = val
     })
-    this.getWatchhouseList()
   },
   // 方法
   methods: {
@@ -442,17 +442,6 @@ export default {
       if (cellValue !== null) {
         return this.selectDictLabel(this.options.status, cellValue.toString())
       }
-    },
-    // 查询岗亭
-    getWatchhouseList() {
-      this.loading = true // 打开遮罩
-      getWorkStationByMid(this.queryParams).then(res => {
-        this.options.watchhouseName = res.data.list
-        this.total = res.data.total
-        // 调用岗亭数据传递函数
-        // this.handle()
-        this.loading = false// 关闭遮罩
-      })
     },
     // 翻译车道类型
     typeFormatter(row) {
@@ -476,7 +465,8 @@ export default {
     getlaneList() {
       this.loading = true // 打开遮罩
       getLaneByMid(this.queryParams).then(res => {
-        this.laneList = res.data.list
+        this.laneList = res.data.lane.list
+        this.options.watchhouseName = res.data.workStation
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       }).catch(() => {
@@ -490,7 +480,7 @@ export default {
     // 重置查询
     resetQuery() {
       this.resetForm('queryForm')
-      this.queryParams.managerid = this.manageridBak
+      this.queryParams.managerId = this.manageridBak
       this.getlaneList()
     },
     // 数据表格的多选择框选择时触发
@@ -545,7 +535,7 @@ export default {
         type: 'warning'
       }).then(() => {
         deleteLaneById(id).then(res => {
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getlaneList()// 全查询
         })
       }).catch(() => {
@@ -723,8 +713,8 @@ export default {
           // 做添加
           this.loading = true
           if (this.form.id === undefined) {
-            addLane(this.form).then(() => {
-              this.msgSuccess('保存成功')
+            addLane(this.form).then((res) => {
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getlaneList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -733,7 +723,7 @@ export default {
             })
           } else { // 做修改
             updateLane(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getlaneList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -753,7 +743,7 @@ export default {
     reset() {
       this.resetForm('form')
       this.form = this.formBak
-      this.form.managerid = this.manageridBak
+      this.form.managerId = this.manageridBak
     }
   }
 }

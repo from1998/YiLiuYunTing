@@ -8,8 +8,8 @@
         <!-- 车牌类型 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item v-show="false" label="车牌类型" prop="numbertype">
-              <el-select v-model="form.numbertype" placeholder="请选择车牌类型" style="width:566px" disabled>
+            <el-form-item v-show="false" label="车牌类型" prop="numberType">
+              <el-select v-model="form.numberType" placeholder="请选择车牌类型" style="width:566px" disabled>
                 <el-option
                   v-for="item in options.carNumberCategory"
                   :key="item.dictValue"
@@ -23,16 +23,16 @@
         <!-- 单次停车免费时长(分钟) 及单日封顶价格(元) -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="单次停车免费时长(分钟)" prop="freeperiod">
+            <el-form-item label="单次停车免费时长(分钟)" prop="freePeriod">
               <el-tooltip class="item" effect="dark" content="请输入单次停车免费时长(分钟)" placement="right">
-                <el-input-number v-model="form.freeperiod" :precision="0" :step="1" />
+                <el-input-number v-model="form.freePeriod" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="单日封顶价格(元)" prop="daypriceup">
+            <el-form-item label="单日封顶价格(元)" prop="dayPriceUp">
               <el-tooltip class="item" effect="dark" content="请输入单日封顶价格(元)" placement="right">
-                <el-input-number v-model="form.daypriceup" :precision="2" :step="1" />
+                <el-input-number v-model="form.dayPriceUp" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -57,16 +57,16 @@
         <!-- 续费时长及单价 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="续费时长(分钟)" prop="overunit">
+            <el-form-item label="续费时长(分钟)" prop="overUnit">
               <el-tooltip class="item" effect="dark" content="请输入续费时长(分钟)" placement="right">
-                <el-input-number v-model="form.overunit" :precision="0" :step="1" />
+                <el-input-number v-model="form.overUnit" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="续费单价(元/分钟)" prop="overmoney">
+            <el-form-item label="续费单价(元/分钟)" prop="overMoney">
               <el-tooltip class="item" effect="dark" content="请输入续费单价(元/分钟)" placement="right">
-                <el-input-number v-model="form.overmoney" :precision="2" :step="1" />
+                <el-input-number v-model="form.overMoney" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -74,8 +74,8 @@
         <!-- 分段收费类型 -->
         <el-row>
           <el-col :span="24">
-            <el-form-item label="收费类型" prop="splittype">
-              <el-radio-group v-model="form.splittype">
+            <el-form-item label="收费类型" prop="splitType">
+              <el-radio-group v-model="form.splitType">
                 <el-radio
                   v-for="item in options.sectionChargeType"
                   :key="item.dictValue"
@@ -88,11 +88,11 @@
           </el-col>
         </el-row>
         <!-- 计费时间段 -->
-        <el-row v-if="form.splittype !==1 ">
+        <el-row v-if="form.splitType !==1 ">
           <el-col :span="24">
             <el-form-item label="计费时间段">
               <!-- 分段计费 -->
-              <el-row v-if="form.splittype ===3 ">
+              <el-row v-if="form.splitType ===3 ">
                 <el-table
                   :data="form.commonCountFee"
                   border
@@ -167,7 +167,7 @@
                 </el-tooltip>
               </el-row>
               <!-- 叠加计费 -->
-              <el-row v-if="form.splittype ===2 ">
+              <el-row v-if="form.splitType ===2 ">
                 <el-table
                   :data="form.splittimejsonDto"
                   border
@@ -238,30 +238,30 @@ export default {
       // 验证规则
       validate,
       rules: {
-        numbertype: validate.notEmpty,
-        daypriceup: validate.notEmpty,
-        freeperiod: validate.notEmpty,
+        numberType: validate.notEmpty,
+        dayPriceUp: validate.notEmpty,
+        freePeriod: validate.notEmpty,
         yduration: validate.notEmpty,
         ymoney: validate.notEmpty,
-        overunit: validate.notEmpty,
-        overmoney: validate.notEmpty,
-        splittype: validate.notEmpty
+        overUnit: validate.notEmpty,
+        overMoney: validate.notEmpty,
+        splitType: validate.notEmpty
       },
       limitNumber: '24',
       // formBak: {},
       form: {
         roleId: '',
         // 用户id
-        managerid: '',
-        numbertype: 0,
-        daypriceup: '',
-        freeperiod: '',
+        managerId: '',
+        numberType: 0,
+        dayPriceUp: '',
+        freePeriod: '',
         yduration: '',
         ymoney: '',
-        overunit: '',
-        overmoney: '',
+        overUnit: '',
+        overMoney: '',
         // 默认常规计费
-        splittype: 1,
+        splitType: 1,
         splittimejsonDto: [],
         // 分段计费
         commonCountFee: [
@@ -280,9 +280,9 @@ export default {
     }
   },
   created() {
-    this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
+    this.form.managerId = this.$route.params && this.$route.params.id // 路由传参
     // this.formBak = this.form
-    this.init(this.form.managerid)
+    this.init(this.form.managerId)
     // 获取收费规则车辆类型字典数据
     this.getDataByType('FeeNumberTypeDic').then(res => {
       this.options.carNumberCategory = res.data
@@ -306,17 +306,17 @@ export default {
       }
       this.loading = true // 打开遮罩
       await getParkfeeByMid({
-        managerid: id
+        managerId: id
       }).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
           // 常规
-          if (res.data.splittype === 1) {
+          if (res.data.splitType === 1) {
             this.form.splittimejsonDto = []
             this.form.commonCountFee = []
             // 分段
-          } else if (res.data.splittype === 3) {
+          } else if (res.data.splitType === 3) {
             if (res.data.splittimejsonDto !== null) {
               this.handletime()
             } else {
@@ -334,7 +334,7 @@ export default {
       this.$refs['freeRuleForm'].validate((valid) => {
         if (valid) {
           // 如果是分段计费
-          if (this.form.splittype === 3) {
+          if (this.form.splitType === 3) {
             this.form.splittimejsonDto = this.form.commonCountFee
             // delete this.form.commonCountFee
             // this.form.splittimejsonDto.forEach(ele => {
@@ -345,8 +345,8 @@ export default {
             this.loading = true // 打开遮罩
             addParkfee(this.form).then(res => {
               if (res.code === 200) {
-                this.msgSuccess('添加成功')
-                this.init()
+                this.msgSuccess(res.msg)
+                this.init(this.form.managerId)
                 this.loading = false // 关闭遮罩
               } else {
                 this.loading = false // 关闭遮罩
@@ -356,8 +356,8 @@ export default {
             this.loading = true // 打开遮罩
             updateParkfee(this.form).then(res => {
               if (res.code === 200) {
-                this.msgSuccess('修改成功')
-                this.init()
+                this.msgSuccess(res.msg)
+                this.init(this.form.managerId)
                 this.loading = false // 关闭遮罩
               } else {
                 this.loading = false // 关闭遮罩
@@ -424,17 +424,15 @@ export default {
     },
     clear() {
       var data = {
-        // 用户id
-        managerid: '',
-        numbertype: 0,
-        daypriceup: '',
-        freeperiod: '',
+        numberType: 0,
+        dayPriceUp: '',
+        freePeriod: '',
         yduration: '',
         ymoney: '',
-        overunit: '',
-        overmoney: '',
+        overUnit: '',
+        overMoney: '',
         // 默认常规计费
-        splittype: 1,
+        splitType: 1,
         splittimejsonDto: [],
         // 分段计费
         commonCountFee: [
@@ -444,7 +442,7 @@ export default {
           }
         ]
       }
-      this.form = data
+      this.form = Object.assign(this.form, data)
     }
   }
 }

@@ -4,41 +4,29 @@
       <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
         <span>多威尔车场</span>
       </el-col>
-      <el-col :span="6" :offset="3">
-        <el-form ref="carForm" :model="parkForm" label-width="180px" :disabled="flag" style="margin-left:10px">
-          <el-form-item label="" prop="id">
-            <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+    </el-row>
+    <el-row :gutter="0" style="margin-top:20px">
+      <el-col :span="18" :offset="6">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+          <el-form-item
+            label="车场"
+            prop="parkId"
+          >
+            <el-select
+              v-cloak
+              v-model="queryParams.parkCategory"
+              placeholder="请选择车场"
+              size="small"
+            >
               <el-option
                 v-for="item in options.parkCategory"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="Number(item.dictValue)"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
-        </el-form>
-      </el-col>
-    </el-row>
-
-    <!-- 表格工具按钮开始 -->
-    <el-row>
-      <el-col :span="10">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-        <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
-        <el-button type="success" size="mini" @click="handleImport">
-          <svg-icon icon-class="import" />
-          导入车辆
-        </el-button>
-        <el-button type="warning" size="mini" @click="handleExport">
-          导出车辆
-          <svg-icon icon-class="export" />
-        </el-button>
-      </el-col>
-      <el-col :span="14" :offset="0">
-        <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="车牌号" prop="carNumber">
             <el-input
               v-model="queryParams.carNumber"
@@ -72,6 +60,23 @@
           </el-form-item>
         </el-form>
         <!-- 查询条件结束 -->
+      </el-col>
+    </el-row>
+    <!-- 表格工具按钮开始 -->
+    <el-row style="margin-bottom:20px">
+      <el-col :span="10">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
+        <el-button type="success" size="mini" @click="handleImport">
+          <svg-icon icon-class="import" />
+          导入车辆
+        </el-button>
+        <el-button type="warning" size="mini" @click="handleExport">
+          导出车辆
+          <svg-icon icon-class="export" />
+        </el-button>
       </el-col>
     </el-row>
 
@@ -176,6 +181,24 @@
       append-to-body
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item
+          label="车场"
+          prop="parkId"
+        >
+          <el-select
+            v-cloak
+            v-model="form.parkCategory"
+            placeholder="请选择车场"
+            size="small"
+          >
+            <el-option
+              v-for="item in options.parkCategory"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="车牌号" prop="carNumber">
           <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
         </el-form-item>
@@ -407,7 +430,7 @@
 <script>
 // 引入api
 import { getLaneList, getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
-import { getSiteByMid } from '@/api/system/carSetting'
+import { getAllPark, getSiteByMid } from '@/api/system/carSetting'
 
 import validate from '@/utils/validate.js'
 
@@ -415,6 +438,7 @@ export default {
   // 定义页面数据
   data() {
     return {
+      CarList: [],
       parkForm: {
         // 车场id
         id: ''
@@ -507,6 +531,10 @@ export default {
     // 获取车道列表数据
     getLaneList().then(res => {
       // this.options.depotCategoryOptions = res.data
+    })
+    // 获取车场列表数据
+    getAllPark().then(res => {
+      this.options.parkCategory = res.data
     })
     this.managerid = this.getID()
     // 查询车位列表数据

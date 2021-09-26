@@ -154,7 +154,7 @@ export default {
         tierNumber: undefined,
         areaNumber: undefined,
         number: undefined,
-        managerid: undefined
+        managerId: undefined
       },
       // 表单数据
       form: {
@@ -180,7 +180,7 @@ export default {
       this.options.areaNumber = res.data
     })
     // 取路由路径上的参数
-    this.queryParams.managerid = this.manageridBak = this.form.parentId = this.$route.params && this.$route.params.id // 路由传参
+    this.queryParams.managerId = this.manageridBak = this.form.parentId = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getPortList()
   },
@@ -210,7 +210,7 @@ export default {
     // 重置查询
     resetQuery() {
       this.resetForm('queryForm')
-      this.queryParams.managerid = this.manageridBak
+      this.queryParams.managerId = this.manageridBak
       this.getPortList()
     },
     // 数据表格的多选择框选择时触发
@@ -311,7 +311,7 @@ export default {
         tierNumber: '',
         areaNumber: '',
         number: '',
-        managerid: this.manageridBak
+        managerId: this.manageridBak
 
       }
     }

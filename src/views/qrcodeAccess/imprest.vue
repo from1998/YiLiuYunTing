@@ -8,7 +8,7 @@
       <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
     </el-row>
     <div>
-      <keyboard @confirmBtnFn="postCarNumber($event)" />
+      <keyboard @confirmBtn="postCarNumber($event)" />
     </div>
     <el-row :gutter="0" style="color:#ccc">
       <div id="lineDowm" />

@@ -18,7 +18,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="简称">
-              <el-input v-model="form.shortname" />
+              <el-input v-model="form.shortName" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -44,8 +44,8 @@
           </el-col>
         </el-row>
         <!-- 车场类型 -->
-        <el-form-item label="类型" prop="lottype">
-          <el-select v-cloak v-model="form.lottype" placeholder="请选择车场类型">
+        <el-form-item label="类型" prop="lotType">
+          <el-select v-cloak v-model="form.lotType" placeholder="请选择车场类型">
             <el-option
               v-for="item in categoryOptions"
               :key="item.dictValue"
@@ -61,8 +61,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="支付逗留时长" placeholder="请输入支付逗留时长" prop="payduration">
-              <el-input v-model="form.payduration" />
+            <el-form-item label="支付逗留时长" placeholder="请输入支付逗留时长" prop="payDuration">
+              <el-input v-model="form.payDuration" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -87,16 +87,16 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="空闲车位数" prop="emptynum">
-              <el-input v-model="form.emptynum" />
+            <el-form-item label="空闲车位数" prop="emptyNum">
+              <el-input v-model="form.emptyNum" />
             </el-form-item>
           </el-col>
         </el-row>
         <!-- 连接方式与展示车位 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="连接方式" prop="linktype">
-              <el-radio-group v-model="form.linktype">
+            <el-form-item label="连接方式" prop="linkType">
+              <el-radio-group v-model="form.linkType">
                 <el-radio
                   v-for="item in linkTypeOptions"
                   :key="item.dictValue"
@@ -108,8 +108,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="是否展示车位" prop="isshowsite">
-              <el-radio-group v-model="form.isshowsite">
+            <el-form-item label="是否展示车位" prop="isShowSite">
+              <el-radio-group v-model="form.isShowSite">
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
@@ -140,16 +140,16 @@
         <!-- 手续费及停车费分成 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手续费(千分比)" prop="commissioncharge">
+            <el-form-item label="手续费(千分比)" prop="commissionCharge">
               <el-tooltip class="item" effect="dark" content="请输入手续费(千分比)" placement="right">
-                <el-input-number v-model="form.commissioncharge" :precision="0" :step="1" />
+                <el-input-number v-model="form.commissionCharge" :precision="0" :step="1" />
               </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="停车费分成比(0-10)" prop="parkfeecharge">
+            <el-form-item label="停车费分成比(0-10)" prop="parkFeeCharge">
               <el-tooltip class="item" effect="dark" content="请输入停车费分成(占比)" placement="right">
-                <el-input-number v-model="form.parkfeecharge" :precision="0" :step="1" :max="10" :min="0" />
+                <el-input-number v-model="form.parkFeeCharge" :precision="0" :step="1" :max="10" :min="0" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -157,8 +157,8 @@
         <!-- 是否有充电桩 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否有充电桩" prop="chargingpile">
-              <el-radio-group v-model="form.chargingpile">
+            <el-form-item label="是否有充电桩" prop="chargingPile">
+              <el-radio-group v-model="form.chargingPile">
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
@@ -188,8 +188,8 @@
         <!-- 上传监管平台与上传平台 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否上传监管平台" prop="isuploaddata">
-              <el-radio-group v-model="form.isuploaddata">
+            <el-form-item label="是否上传监管平台" prop="isUploadData">
+              <el-radio-group v-model="form.isUploadData">
                 <el-radio
                   v-for="item in stateOptions"
                   :key="item.dictValue"
@@ -202,10 +202,10 @@
           </el-col>
         </el-row>
         <!-- 平台及识别码 -->
-        <el-row v-if="form.isuploaddata === 1">
+        <el-row v-if="form.isUploadData === 1">
           <el-col :span="12">
-            <el-form-item label="平台" prop="uploadplatform">
-              <el-select v-model="form.uploadplatform" placeholder="请选择平台">
+            <el-form-item label="平台" prop="uploadPlatform">
+              <el-select v-model="form.uploadPlatform" placeholder="请选择平台">
                 <el-option
                   v-for="item in monitorPlatformOptions"
                   :key="item.dictValue"
@@ -216,8 +216,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="平台识别码" prop="uploadplatformsn">
-              <el-input v-model="form.uploadplatformsn" />
+            <el-form-item label="平台识别码" prop="uploadPlatformSn">
+              <el-input v-model="form.uploadPlatformSn" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -269,22 +269,23 @@ export default {
       rules: {
         mobile: validate.phone,
         name: validate.notEmpty,
-        shortname: validate.notEmpty,
+        shortName: validate.notEmpty,
+        region: validate.notEmpty,
         address: validate.notEmpty,
-        lottype: validate.notEmpty,
-        payduration: validate.notEmpty,
+        lotType: validate.notEmpty,
+        payDuration: validate.notEmpty,
         total: validate.notEmpty,
-        emptynum: validate.notEmpty,
-        linktype: validate.notEmpty,
-        isshowsite: validate.notEmpty,
+        emptyNum: validate.notEmpty,
+        linkType: validate.notEmpty,
+        isShowSite: validate.notEmpty,
         charge: validate.notEmpty,
-        commissioncharge: validate.notEmpty,
-        parkfeecharge: validate.notEmpty,
-        chargingpile: validate.notEmpty,
+        commissionCharge: validate.notEmpty,
+        parkFeeCharge: validate.notEmpty,
+        chargingPile: validate.notEmpty,
         state: validate.notEmpty,
-        isuploaddata: validate.notEmpty,
-        uploadplatform: validate.notEmpty,
-        uploadplatformsn: validate.notEmpty
+        isUploadData: validate.notEmpty,
+        uploadPlatform: validate.notEmpty,
+        uploadPlatformSn: validate.notEmpty
       },
       // 是否启用遮罩层
       loading: false,
@@ -309,53 +310,53 @@ export default {
       },
       form: {
         // 用户id
-        managerid: '',
+        managerId: '',
         // 车场名称
         name: '',
         // 车场简称
-        shortname: '',
+        shortName: '',
         // 地区 省市区
-        provincename: '',
-        cityname: '',
-        areaname: '',
+        provinceName: '',
+        cityName: '',
+        areaName: '',
         // 详细地址
         address: '',
         // 车场类型
-        lottype: '',
+        lotType: '',
         // 车场电话
         mobile: '',
         // 支付后逗留时长
-        payduration: '',
+        payDuration: '',
         // 经纬度
         longitude: '',
         latitude: '',
         // 总车位数
         total: '',
         // 空闲车位数
-        emptynum: '',
+        emptyNum: '',
         // 是否展示车位
-        isshowsite: 1,
+        isShowSite: 1,
         // 连接方式
-        linktype: 2,
+        linkType: 2,
         // 是否收费
         charge: 1,
         // 手续费
-        commissioncharge: null,
+        commissionCharge: null,
         // 停车费
-        parkfeecharge: null,
+        parkFeeCharge: null,
         // 是否有充电桩
-        chargingpile: 1,
+        chargingPile: 1,
         // 是否可用
         state: 1,
         // 是否上传监管平台
-        isuploaddata: 1,
+        isUploadData: 1,
         // 上传的监管平台
-        uploadplatform: '',
+        uploadPlatform: '',
         // 监管平台标识码
-        uploadplatformsn: '',
+        uploadPlatformSn: '',
         // 营业时间
-        starthours: '08-00-00',
-        endhours: '19-00-00'
+        startHours: '08-00-00',
+        endHours: '19-00-00'
       },
       addressOptions: area
     }
@@ -375,7 +376,7 @@ export default {
   // },
   created() {
     // 取路由路径上的参数
-    this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
+    this.form.managerId = this.$route.params && this.$route.params.id // 路由传参
     // 根据字典类型ID查询字典的dictType
     this.init()
     // 获取是否字典数据
@@ -402,7 +403,7 @@ export default {
     async init() {
       this.loading = true // 打开遮罩
       await getDepotById({
-        managerid: this.form.managerid
+        managerId: this.form.managerId
       }).then(res => {
         this.resdata = res.data
         if (res.data !== null) {
@@ -411,8 +412,8 @@ export default {
           // this.SubmitTitle = '已提交'
           this.handleRegion(this.addressOptions)
           this.handletime()
-          this.form.commissioncharge = this.form.commissioncharge * 1000
-          this.form.parkfeecharge = this.form.parkfeecharge * 10
+          this.form.commissionCharge = this.form.commissionCharge * 1000
+          this.form.parkFeeCharge = this.form.parkFeeCharge * 10
         }
         this.loading = false // 关闭遮罩
       })
@@ -423,21 +424,19 @@ export default {
           if (this.resdata === null) {
             this.loading = true // 打开遮罩
             addDepotInfo(this.form).then(res => {
-              this.msgSuccess('添加成功')
+              this.msgSuccess(res.msg)
               this.init()
               this.loading = false // 关闭遮罩
             }).catch(() => {
-              this.msgError('添加失败')
               this.loading = false // 关闭遮罩
             })
           } else {
             this.loading = true // 打开遮罩
-            updateDepotInfo(this.form).then(() => {
-              this.msgSuccess('修改成功')
+            updateDepotInfo(this.form).then((res) => {
+              this.msgSuccess(res.msg)
               this.init()
               this.loading = false // 关闭遮罩
             }).catch(() => {
-              this.msgError('修改失败')
               this.loading = false // 关闭遮罩
             })
           }
@@ -459,7 +458,7 @@ export default {
       })
     },
     handleRegion(opt) {
-      this.convert.region = [this.form.provincename, this.form.cityname, this.form.areaname]
+      this.convert.region = [this.form.provinceName, this.form.cityName, this.form.areaName]
       this.convert.region = this.convert.region.map(function(value) {
         for (var itm of opt) {
           if (itm.label === value) {
@@ -480,69 +479,69 @@ export default {
         }
         return null
       })
-      this.form.provincename = vals[0]
-      this.form.cityname = vals[1]
-      this.form.areaname = vals[2]
+      this.form.provinceName = vals[0]
+      this.form.cityName = vals[1]
+      this.form.areaName = vals[2]
     },
     handletime() {
-      this.convert.businessHours = [this.form.starthours, this.form.endhours]
+      this.convert.businessHours = [this.form.startHours, this.form.endHours]
     },
     timeChange(val) {
-      this.form.starthours = val[0]
-      this.form.endhours = val[1]
+      this.form.startHours = val[0]
+      this.form.endHours = val[1]
     },
     clear() {
       var data = {
         // 用户id
-        managerid: '',
+        managerId: '',
         // 车场名称
         name: '',
         // 车场简称
-        shortname: '',
+        shortName: '',
         // 地区 省市区
-        provincename: '',
-        cityname: '',
-        areaname: '',
+        provinceName: '',
+        cityName: '',
+        areaName: '',
         // 详细地址
         address: '',
         // 车场类型
-        lottype: '',
+        lotType: '',
         // 车场电话
         mobile: '',
         // 支付后逗留时长
-        payduration: '',
+        payDuration: '',
         // 经纬度
         longitude: '',
         latitude: '',
         // 总车位数
         total: '',
         // 空闲车位数
-        emptynum: '',
+        emptyNum: '',
         // 是否展示车位
-        isshowsite: 1,
+        isShowSite: 1,
         // 连接方式
-        linktype: 2,
+        linkType: 2,
         // 是否收费
         charge: 1,
         // 手续费
-        commissioncharge: null,
+        commissionCharge: null,
         // 停车费
-        parkfeecharge: null,
+        parkFeeCharge: null,
         // 是否有充电桩
-        chargingpile: 1,
+        chargingPile: 1,
         // 是否可用
         state: 1,
         // 是否上传监管平台
-        isuploaddata: 1,
+        isUploadData: 1,
         // 上传的监管平台
-        uploadplatform: '',
+        uploadPlatform: '',
         // 监管平台标识码
-        uploadplatformsn: '',
+        uploadPlatformSn: '',
         // 营业时间
-        starthours: '08-00-00',
-        endhours: '19-00-00'
+        startHours: '00-00-00',
+        endHours: '23-59-59'
       }
-      this.form = data
+      this.form = Object.assign(this.form, data)
     }
   }
 }

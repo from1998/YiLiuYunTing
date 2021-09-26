@@ -2,11 +2,11 @@
   <div class="app-container">
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
-        <el-col :span="4" :offset="0" :gutter="0" style="margin-top:7px">
+        <el-col :span="2" :offset="1" :gutter="0" style="margin-top:7px">
           <span>车流曲线图</span>
         </el-col>
-        <el-col :span="18" :offset="0">
-          <el-form ref="form" :model="form" :inline="true" label-width="58px">
+        <el-col :span="11" :offset="10">
+          <el-form ref="form" :model="form" :inline="true" label-width="44px">
             <el-form-item
               label="车场"
               prop="parkid"
@@ -30,7 +30,7 @@
                 v-model="form.created"
                 value-format="yyyy-MM-dd HH:mm:ss"
                 type="month"
-                placeholder="选择月"
+                placeholder="请选择月份"
               />
             </el-form-item>
             <el-form-item>

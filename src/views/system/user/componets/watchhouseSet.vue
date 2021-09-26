@@ -5,12 +5,12 @@
     </el-header>
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="8">
+      <el-col :span="6">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
-      <el-col :span="9" :offset="7">
+      <el-col :span="16" :offset="2">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="岗亭名称" prop="name">
@@ -22,6 +22,23 @@
               style="width:240px"
             />
           </el-form-item>
+          <el-form-item label="进出车辆类型" prop="carType" label-width="96px">
+            <el-select
+              v-model="queryParams.carType"
+              multiple
+              collapse-tags
+              style="width:240px"
+              placeholder="请选择进出车辆类型"
+              clearable
+            >
+              <el-option
+                v-for="item in carTypeOptions"
+                :key="item.value"
+                :label="item.name"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -32,10 +49,11 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="watchhouseList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗亭ID" align="center" prop="id" />
+      <el-table-column label="岗亭ID" align="center" prop="id" width="50" />
       <el-table-column label="车场名称" align="center" prop="parkName" />
       <el-table-column label="岗亭名称" align="center" prop="name" />
-      <el-table-column label="操作" align="center" width="280">
+      <el-table-column label="进出车辆类型" align="center" prop="carTypeName" width="620" />
+      <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
@@ -58,13 +76,30 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="490px"
       center
       append-to-body
     >
-      <el-form ref="form" :model="form" :rules="rules">
+      <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="岗亭名称" prop="name">
           <el-input v-model="form.name" placeholder="请输入岗亭名称" clearable size="small" />
+        </el-form-item>
+        <el-form-item label="进出车辆类型" prop="carType">
+          <el-select
+            v-model="form.carType"
+            multiple
+            collapse-tags
+            style="width:330px"
+            placeholder="请选择进出车辆类型"
+            clearable
+          >
+            <el-option
+              v-for="item in carTypeOptions"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -87,7 +122,8 @@ export default {
       // 验证规则
       validate,
       rules: {
-        name: validate.notEmpty
+        name: validate.notEmpty,
+        carType: validate.notEmpty
       },
       // 用户id备份
       manageridBak: '',
@@ -112,43 +148,33 @@ export default {
         page: 1,
         size: 10,
         name: '',
-        managerid: ''
+        carType: [],
+        managerId: ''
       },
       // 表单数据
       form: {
-        managerid: ''
-      }
+        managerId: ''
+      },
+      carTypeOptions: []
     }
   },
   // 勾子
   created() {
     // 取路由路径上的参数
-    this.queryParams.managerid = this.manageridBak = this.form.managerid = this.$route.params && this.$route.params.id // 路由传参
+    this.queryParams.managerId = this.manageridBak = this.form.managerId = this.$route.params && this.$route.params.id // 路由传参
     // 查询表格数据
     this.getWatchhouseList()
   },
   // 方法
   methods: {
-    // 传递岗亭数据给车道设置
-    handle() {
-      // 2、传递数据方，通过一个事件触发bus.$emit(方法名，传递的数据)   触发兄弟组件的事件
-      const watchHouse = this.watchhouseList.map(val => {
-        return {
-          id: val.id,
-          name: val.name
-        }
-      })
-      this.bus.$emit('watchHouse', watchHouse)
-    },
     getWatchhouseList() {
       this.loading = true // 打开遮罩
       getWorkStationByMid(this.queryParams).then(res => {
-        this.watchhouseList = res.data.list
+        this.watchhouseList = res.data.workStation.list
+        this.carTypeOptions = res.data.carType
         this.total = res.data.total
-        // 调用岗亭数据传递函数
-        this.handle()
-        this.loading = false// 关闭遮罩
       })
+      this.loading = false// 关闭遮罩
     },
     // 查询
     handleQuery() {
@@ -202,8 +228,18 @@ export default {
         id: id
       }).then(res => {
         this.form = res.data
+        this.handleCheckedStr(res.data.carType)
         this.loading = false
       })
+    },
+    // 转换数组
+    handleCheckedStr(str) {
+      var arr = str.split(',')
+      var arrNumber = []
+      arr.forEach(val => {
+        arrNumber.push(Number(val))
+      })
+      this.form.carType = arrNumber
     },
     // 执行删除
     handleDelete(row) {
@@ -231,11 +267,13 @@ export default {
     handleSubmit() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
+          this.form.carType = this.form.carType.join()
+          console.log(this.form)
           // 做添加
           this.loading = true
           if (this.form.id === undefined) {
             addWorkStation(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getWatchhouseList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -243,8 +281,8 @@ export default {
               this.loading = false
             })
           } else { // 做修改
-            updateWorkStation(this.form).then(() => {
-              this.msgSuccess('修改成功')
+            updateWorkStation(this.form).then((res) => {
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getWatchhouseList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -265,7 +303,8 @@ export default {
       this.resetForm('form')
       this.form = {
         name: undefined,
-        managerid: this.manageridBak
+        carType: [],
+        managerId: this.manageridBak
       }
     }
   }

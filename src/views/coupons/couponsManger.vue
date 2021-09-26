@@ -19,19 +19,18 @@
       </el-col>
       <!-- 查询条件开始 -->
       <el-col
-        :span="18"
-        :offset="0"
+        :span="17"
+        :offset="1"
       >
         <el-form
           ref="queryForm"
           :model="queryParams"
           :inline="true"
-          label-width="58px"
+          label-width="45px"
         >
           <el-form-item
             label="车场"
             prop="parkId"
-            label-width="70px"
           >
             <el-select
               v-cloak
@@ -63,7 +62,6 @@
           <el-form-item
             label="类型"
             prop="category"
-            label-width="70px"
           >
             <el-select
               v-cloak
@@ -88,7 +86,7 @@
               v-cloak
               v-model="queryParams.isActive"
               style="width:180px"
-              placeholder="请选择优惠券是否开放"
+              placeholder="请选择是否开放"
             >
               <el-option
                 v-for="item in statusOptions"

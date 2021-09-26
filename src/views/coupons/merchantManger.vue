@@ -127,7 +127,7 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item
-          v-if="roleId === '1' && title === '添加商家信息' "
+          v-if="roleId === '1' && title === '添加商家' "
           label="车场"
           prop="parentId"
           label-width="70px"
@@ -148,16 +148,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="商户号" prop="username">
-          <el-input v-model="form.username" placeholder="商家账号" clearable size="small" />
+          <el-input v-model="form.username" placeholder="请输入商家账号" clearable size="small" />
         </el-form-item>
         <el-form-item label="联系人" prop="realName">
-          <el-input v-model="form.realName" placeholder="商家联系人" clearable size="small" />
+          <el-input v-model="form.realName" placeholder="请输入商家联系人" clearable size="small" />
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="form.mobile" placeholder="商家联系人手机号" clearable size="small" />
+          <el-input v-model="form.mobile" placeholder="请输入商家手机号" clearable size="small" />
         </el-form-item>
         <el-form-item label="地址" prop="email">
-          <el-input v-model="form.email" placeholder="商家地址" clearable size="small" />
+          <el-input v-model="form.email" placeholder="请输入商家地址" clearable size="small" />
         </el-form-item>
 
       </el-form>
@@ -178,6 +178,15 @@ export default {
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        parentId: validate.notEmpty,
+        email: validate.notEmpty,
+        realName: validate.notEmpty,
+        username: validate.notEmpty,
+        mobile: validate.phone
+      },
       carTableList: [],
       // 是否启用遮罩层
       loading: false,
@@ -222,23 +231,6 @@ export default {
       // 当前选中持角色ID
       currentRoleId: undefined,
       CarList: [],
-      // 验证规则
-      validate,
-      rules: {
-        username: [
-          { required: true, message: '请输入账号', trigger: 'blur' }
-        ],
-        realName: [
-          { required: true, message: '请输入商家联系人', trigger: 'blur' }
-        ],
-        mobile: validate.phone,
-        email: [
-          { required: true, message: '请输入地址', trigger: 'blur' }
-        ],
-        parentId: [
-          { required: true, message: '请选择车厂', trigger: 'blur' }
-        ]
-      },
       roleId: ''
     }
   },
@@ -323,11 +315,11 @@ export default {
     handleAdd() {
       this.open = true
       this.reset()
-      this.title = '添加商家信息'
+      this.title = '添加商家'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改商家信息'
+      this.title = '修改商家'
       // const roleId = row.roleId || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
