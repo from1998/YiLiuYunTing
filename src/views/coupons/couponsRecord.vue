@@ -68,8 +68,8 @@
     <el-table v-loading="loading" border :data="carTableList" stripe>
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="所属商户" align="center" prop="merchantIdString" />
-      <el-table-column label="所属优惠券" align="center" prop="category" :formatter="carTypeFormatter" />
-      <el-table-column label="优惠类型" align="center" prop="couponsIdString" />
+      <el-table-column label="所属优惠券" align="center" prop="couponsIdString" />
+      <el-table-column label="优惠类型" align="center" prop="category" :formatter="carTypeFormatter" />
       <el-table-column label="是否使用" align="center" prop="isUsed" :formatter="statusFormatter" />
       <el-table-column label="使用车牌" align="center" prop="carNumber" />
       <el-table-column label="使用时间" align="center" prop="used" />
@@ -229,7 +229,7 @@ export default {
     },
     // 翻译类型
     carTypeFormatter(row) {
-      return this.selectDictLabel(this.stateOptions, row.category.toString())
+      return this.selectDictLabel(this.stateOptions, row.category)
     },
     // 条件查询
     handleQuery() {

@@ -240,7 +240,7 @@ export default {
   .cph-wrap-shadow {
     background-color: #fff;
     z-index: 0;
-    margin: 30px 10px;
+    margin: 30px 10px 10px;
   }
 
   .cph-wrap-shadow span {

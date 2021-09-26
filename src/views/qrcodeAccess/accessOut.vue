@@ -1,5 +1,5 @@
 <template>
-  <div id="app-container" style="padding:20px 0 0 0">
+  <div id="app-container" style="padding:30px 0 0 0">
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">{{ carNumber }}</el-col>
@@ -35,7 +35,7 @@
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">应交金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">5.89</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥5.89</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
     </div>

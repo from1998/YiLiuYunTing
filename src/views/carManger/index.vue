@@ -185,6 +185,22 @@
         <el-form-item label="手机号" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
         </el-form-item>
+        <el-form-item label="所属车道" prop="belongsLane">
+          <el-select
+            v-model="form.belongsLane"
+            multiple
+            collapse-tags
+            style="width:370px"
+            placeholder="请选择所属车道"
+          >
+            <el-option
+              v-for="item in options.lanes"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item label="车辆地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入车辆地址" clearable size="small" />
         </el-form-item>
@@ -194,7 +210,7 @@
             placeholder="请选择车辆类型"
             clearable
             size="small"
-            style="width:365px"
+            style="width:370px"
           >
             <el-option
               v-for="item in options.carCategoryOptions"
@@ -210,7 +226,7 @@
             placeholder="请选择车位类型"
             clearable
             size="small"
-            style="width:365px"
+            style="width:370px"
           >
             <el-option
               v-for="item in options.depotCategoryOptions"
@@ -226,7 +242,7 @@
             placeholder="请选择时长类型"
             clearable
             size="small"
-            style="width:365px"
+            style="width:370px"
           >
             <el-option
               v-for="item in options.timeCategoryOptions"
@@ -259,7 +275,7 @@
           </el-col>
         </el-row>
         <el-form-item label="层号" prop="tierNumber">
-          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" @change="handleNumberFocus">
+          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:370px" @change="handleNumberFocus">
             <el-option
               v-for="item in options.tierNumber"
               :key="item.dictValue"
@@ -269,7 +285,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区域号" prop="areaNumber">
-          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" @change="handleNumberFocus">
+          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:370px" @change="handleNumberFocus">
             <el-option
               v-for="item in options.areaNumber"
               :key="item.dictValue"
@@ -279,7 +295,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="编号" prop="number">
-          <el-select v-model="form.number" placeholder="请选择车位编号" size="small" style="width:350px">
+          <el-select v-model="form.number" placeholder="请选择车位编号" size="small" style="width:370px">
             <el-option
               v-for="item in options.number"
               :key="item.id"
@@ -390,7 +406,7 @@
 </template>
 <script>
 // 引入api
-import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
+import { getLaneList, getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
 import { getSiteByMid } from '@/api/system/carSetting'
 
 import validate from '@/utils/validate.js'
@@ -416,48 +432,6 @@ export default {
         effectiveTime: validate.notEmpty,
         amount: validate.notEmpty,
         expireTime: validate.notEmpty
-      },
-      // 日期快捷选择
-      pickerOptions: {
-        shortcuts: [{
-          text: '一周',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '一个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '三个月',
-          onClick(picker) {
-            const end = new Date()
-            const start = new Date()
-            end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '半年',
-          onClick(picker) {
-            const end = this.moment()
-            const start = this.moment().subtract(-6, 'month')
-            picker.$emit('pick', [start, end])
-          }
-        }, {
-          text: '一年',
-          onClick(picker) {
-            const end = this.moment()
-            const start = this.moment().subtract(-12, 'month')
-            picker.$emit('pick', [start, end])
-          }
-        }]
       },
       // 是否启用遮罩层
       loading: false,
@@ -490,7 +464,8 @@ export default {
         tierNumber: [],
         number: [],
         // 车场类型
-        parkCategory: []
+        parkCategory: [],
+        lanes: []
       },
       // 查询参数
       queryParams: {
@@ -528,6 +503,10 @@ export default {
     // 获取车位类型数据
     getPortType().then(res => {
       this.options.depotCategoryOptions = res.data
+    })
+    // 获取车道列表数据
+    getLaneList().then(res => {
+      // this.options.depotCategoryOptions = res.data
     })
     this.managerid = this.getID()
     // 查询车位列表数据
