@@ -10,7 +10,7 @@
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item
-            v-show="getUserInfo().role === '1' || getUserInfo().role=== '3'"
+            v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
             label="车场"
             prop="parkId"
             label-width="40px"
@@ -107,7 +107,7 @@
         <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
         <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
         <el-upload
-          v-show="getUserInfo().role === '4'"
+          v-show="getUserInfo().role === 4"
           style="width:8.2%;display:inline-block;margin-left:0.5%"
           :action="uploadPath"
           accept="xlsx"
@@ -232,7 +232,7 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item
-          v-show="getUserInfo().role === '1' || getUserInfo().role === '3'"
+          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
           label="车场"
           prop="parkId"
         >
@@ -456,7 +456,7 @@
           </el-form-item>
         </div>
         <el-form-item label="续费金额" prop="amount">
-          <el-tooltip class="item" effect="dark" content="请输入续费金额" placement="right">
+          <el-tooltip class="item" effect="dark" content="请输入续费金额" placement="bottom">
             <el-input-number v-model="renewform.amount" :precision="2" :step="1" clearable size="small" :min="0" style="width:350px" />
           </el-tooltip>
         </el-form-item>
@@ -601,7 +601,6 @@ export default {
     this.uploadPath = process.env.VUE_APP_BASE_API + '/ylyt/car_register/upload'
     // 设置请求头加入token 避免请求认证的问题
     this.headers = { 'token': getToken() }
-    console.log(this.getUserInfo())
   },
   // mounted() {
 
@@ -616,7 +615,6 @@ export default {
       this.getList()
     },
     handleLaneName(val) {
-      console.log(val)
       this.laneName = val
     },
     // 鼠标移入事件
@@ -639,7 +637,6 @@ export default {
         this.loading = false// 关闭遮罩
         // }
       })
-      console.log(this.carTableList)
     },
     // 选择框值改变事件
     handleNumberFocus() {
@@ -721,7 +718,6 @@ export default {
     },
     // 根据id查询车辆信息
     getInfoById(id, form) {
-      debugger
       this.loading = true
       const query = { 'id': id }
       if (id !== this.ids) {
@@ -829,6 +825,7 @@ export default {
               this.renewform.amount = ''
             })
           }
+          this.loading = false
           this.RenewOpen = false// 关闭弹出层
         }
       })

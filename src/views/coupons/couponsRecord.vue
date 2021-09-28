@@ -209,7 +209,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
+        this.queryParams.parkId = this.roleId === 1 ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -240,10 +240,10 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      if (this.roleId === '4') {
+      if (this.roleId === 4) {
         this.queryParams.parkId = this.CarList[0].id
       }
-      if (this.roleId === '1') {
+      if (this.roleId === 1) {
         this.queryParams.parkId = ''
       }
       this.dateRange = []

@@ -577,7 +577,7 @@ export default {
         // await this.encode64(this.options.sn)
         // await this.encode64(row.id)
         this.creatCodeUrl = res.data + '/third/no_plate_enter_' + this.options.sn + '_' + row.id
-        console.log(this.creatCodeUrl)
+        // console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
       }).catch(() => {
         this.msgError('二维码获取失败')

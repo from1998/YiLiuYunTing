@@ -52,7 +52,7 @@
           <span>收费报表</span>
         </el-col>
         <el-col :span="2" :offset="18" :gutter="0">
-          <el-button type="success" size="mini" style="margin-left:56px" @click="handleExport">
+          <el-button type="success" size="mini" style="margin-left:56px">
             导出表格
           </el-button>
         </el-col>
@@ -136,20 +136,13 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        console.log(this.form.parkid)
-        this.form.parkid = this.roleId === '1' ? '' : res.data[0].id
-        console.log(this.CarList)
-      }).catch(err => {
-        console.log(err)
+        this.form.parkid = this.roleId === 1 ? '' : res.data[0].id
       })
     },
     getOrdersList() {
       getOrders(this.form).then(res => {
-        console.log(res)
         this.listData2 = res.data
         this.getleaveMap()
-      }).catch(err => {
-        console.log(err)
       })
     },
     getleaveMap() {
@@ -164,10 +157,6 @@ export default {
         this.zfbMap.push(this.listData2.zfbMap[item]) // 支付宝 值
       }
       this.$refs.linestack.renderChart()
-    },
-    //   导出收费报表表格
-    handleExport() {
-      console.log('success')
     },
     // 查询表格数据
     getFeeList() {

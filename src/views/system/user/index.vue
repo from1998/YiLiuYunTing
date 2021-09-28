@@ -382,7 +382,6 @@ export default {
         chr1 = chr2 = chr3 = ''
         enc1 = enc2 = enc3 = enc4 = ''
       } while (i < input.length)
-      console.log(output)
     },
     // 解决页面v-for中修改item属性值后页面页面值不改变的问题
     change() {

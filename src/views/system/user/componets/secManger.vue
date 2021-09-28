@@ -434,7 +434,6 @@ export default {
       // 根据id查询岗亭信息
       this.loading = true
       getLaneListByMid(id).then(res => {
-        console.log(res.data.otherList)
         this.otherlaneList = res.data.otherList
         this.duelaneList = res.data.rtnLaneList
         this.loading = false

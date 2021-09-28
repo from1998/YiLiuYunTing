@@ -232,7 +232,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="title === '添加优惠券信息' && roleId === '1' "
+          v-if="title === '添加优惠券信息' && roleId === 1 "
           label="车场"
           prop="parkId"
           label-width="70px"
@@ -355,7 +355,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
+        this.queryParams.parkId = this.roleId === 1 ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -399,10 +399,10 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      if (this.roleId === '4') {
+      if (this.roleId === 4) {
         this.queryParams.parkId = this.CarList[0].id
       }
-      if (this.roleId === '1') {
+      if (this.roleId === 1) {
         this.queryParams.parkId = ''
       }
       this.dateRange = []
@@ -483,11 +483,11 @@ export default {
           if (this.form.id === undefined) {
             addCoupons(this.form).then((res) => {
               if (res.code === 200) {
-                this.msgSuccess('保存成功')
+                this.msgSuccess(res.msg)
                 this.open = false // 关闭弹出层
-                this.resetQuery()
+                this.getCouponsList() // 列表重新查询
               } else {
-                this.msgSuccess('保存失败')
+                this.msgError(res.msg)
               }
             })
           } else {
@@ -499,11 +499,13 @@ export default {
               name: this.form.name
             })
               .then((res) => {
-                console.log(res)
-                this.msgSuccess('修改成功')
-                this.loading = false
-                this.getCouponsList() // 列表重新查询
-                this.open = false // 关闭弹出层
+                if (res.code === 200) {
+                  this.msgSuccess(res.msg)
+                  this.open = false // 关闭弹出层
+                  this.getCouponsList() // 列表重新查询
+                } else {
+                  this.msgError(res.msg)
+                }
               })
               .catch(() => {
                 this.loading = false

@@ -268,7 +268,6 @@ export default {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.form.carType = this.form.carType.join()
-          console.log(this.form)
           // 做添加
           this.loading = true
           if (this.form.id === undefined) {

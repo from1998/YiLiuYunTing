@@ -142,7 +142,7 @@
     >
       <el-form ref="form" :model="form" label-width="110px" :rules="rules">
         <el-form-item
-          v-if="roleId === '1' && title === '添加商家优惠券' "
+          v-if="roleId === 1 && title === '添加商家优惠券' "
           label="车场"
           prop="parkId"
         >
@@ -407,7 +407,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].id
+        this.queryParams.parkId = this.roleId === 1 ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -420,7 +420,6 @@ export default {
             sn: this.grantForm.sn,
             carNumber: this.grantForm.carNumber
           }).then(res => {
-            console.log(res)
             this.msgSuccess('操作成功')
             this.grantShow = false
             this.getMerchantCouponsList()
@@ -470,7 +469,6 @@ export default {
       selectCouponsByParkId({
         id: this.form.parkId
       }).then(res => {
-        console.log(res)
         this.listCoupons = res.data.data
       }).catch(err => {
         console.log(err)
@@ -493,7 +491,6 @@ export default {
       this.loading = true // 打开遮罩
       listMerchantForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.carTableList = res.data.list
-        // this.queryParams.parkId = this.roleId === '1' ? '' : res.data[0].name
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
@@ -509,10 +506,10 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      if (this.roleId === '4') {
+      if (this.roleId === 4) {
         this.queryParams.parkId = this.CarList[0].id
       }
-      if (this.roleId === '1') {
+      if (this.roleId === 1) {
         this.queryParams.parkId = ''
       }
       this.dateRange = []
@@ -546,7 +543,7 @@ export default {
       this.open = true
       this.reset()
       this.title = '添加商家优惠券'
-      if (this.roleId === '4') {
+      if (this.roleId === 4) {
         this.parkId = this.queryParams.parkId
         this.getShopName(this.parkId)
       }
@@ -599,7 +596,6 @@ export default {
           // 做添加
           this.loading = true
           if (this.form.id === undefined) {
-            console.log(this.shopList)
             const arr = this.shopList.filter((item) => {
               return this.form.merchantId === item.realName
             })
@@ -622,7 +618,6 @@ export default {
             const arr = this.shopList.filter((item) => {
               return this.form.merchantId === item.realName
             })
-            console.log(arr)
             this.form.merchantId = arr[0].id
             updateMerchantCoupons(this.form).then(res => {
               this.msgSuccess('修改成功')

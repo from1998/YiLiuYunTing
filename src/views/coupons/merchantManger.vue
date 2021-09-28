@@ -127,7 +127,7 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item
-          v-if="roleId === '1' && title === '添加商家' "
+          v-if="roleId === 1 && title === '添加商家' "
           label="车场"
           prop="parentId"
           label-width="70px"
@@ -255,7 +255,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.queryParams.parentId = this.roleId === '1' ? '' : res.data[0].id
+        this.queryParams.parentId = this.roleId === 1 ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -280,10 +280,10 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      if (this.roleId === '4') {
+      if (this.roleId === 4) {
         this.queryParams.parentId = this.CarList[0].id
       }
-      if (this.roleId === '1') {
+      if (this.roleId === 1) {
         this.queryParams.parentId = ''
       }
       this.dateRange = []
@@ -335,7 +335,6 @@ export default {
     },
     // 执行删除
     handleDelete(row) {
-      console.log(row)
       const roleIds = row.id || this.ids
       this.$confirm('此操作将永久删除该角色数据, 是否继续?', '提示', {
         confirmButtonText: '确定',

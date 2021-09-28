@@ -79,15 +79,11 @@ export default {
   methods: {
     // 真实数据
     getData() {
-      // jsonp('url',function(){})
       jsonp('https://interface.sina.cn/news/wap/fymap2020_data.d.json?_=1580892522427', (err, data) => {
-        // console.log(data.data.list)
-        // data.data.list    map()
         if (err) {
           return
         }
         var lists = data.data.list.map(item => { return { name: item.name, value: item.value } })
-        // console.log(lists)
         option.series[0].data = lists
         // 使用刚指定的配置项和数据显示图表。
         this.myChart.setOption(option)

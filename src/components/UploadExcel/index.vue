@@ -77,7 +77,6 @@ export default {
     // 设置请求头加入token 避免请求认证的问题
     this.headers = { 'token': getToken() }
     // this.handHeld = await window.sessionStorage.getItem(JSON.parse(this.title))
-    console.log(this.title)
   },
   methods: {
     // 放大预览图片

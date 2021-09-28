@@ -297,11 +297,9 @@ export default {
       if (id === undefined) {
         id = this.getUserInfo().id
         this.roleId = this.getUserInfo().role
-        console.log(this.roleId)
-        // b保安的roleID是6
-        if (this.roleId === '6') {
+        // 保安的roleID是6
+        if (this.roleId === 6) {
           this.flag = true
-          console.log(this.flag)
         }
       }
       this.loading = true // 打开遮罩

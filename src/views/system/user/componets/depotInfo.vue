@@ -482,7 +482,6 @@ export default {
       this.convert.businessHours = [this.form.startHours, this.form.endHours]
     },
     timeChange(val) {
-      console.log(val)
       this.form.startHours = val[0]
       this.form.endHours = val[1]
     },

@@ -139,8 +139,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.form.parkid = this.roleId === '1' ? '' : res.data[0].id
-        console.log(this.CarList)
+        this.form.parkid = this.roleId === 1 ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })
@@ -182,7 +181,6 @@ export default {
       this.loading = true // 打开遮罩
       this.queryParams.times = this.form.trafficMonth
       getRecordList(this.form).then(res => {
-        console.log(res)
         this.trafficTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
