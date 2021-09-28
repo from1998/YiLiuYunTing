@@ -197,13 +197,13 @@ export default {
             .then(() => {
               // 带查询参数的编程式导航，query是一个对象，是查询
               // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              if (this.getRoleID() === '1' || this.getRoleID() === '3' || this.getRoleID() === '4') {
+              if (this.getUserInfo().role === '1' || this.getUserInfo().role === '3' || this.getUserInfo().role === '4') {
                 this.$router.push('/dashboard')
-              } else if (this.getRoleID() === '6') {
+              } else if (this.getUserInfo().role === '6') {
                 this.$router.push('/monitoringCenter/quickMonitoring')
               }
               // 强制刷新
-              // this.$router.go(0)
+              this.$router.go(0)
               this.loading = false
             })
             .catch(() => {
@@ -242,8 +242,11 @@ $cursor: #fff;
   }
 }
 .verifyCode {
+#verifyCodeImage {
+  width: 100%;
+}
   background-color: #fff!important;
-  padding: 8px 30px;
+  padding: 0.3vw 0.8vw;
 }
 /* reset element-ui css */
 .login-container {

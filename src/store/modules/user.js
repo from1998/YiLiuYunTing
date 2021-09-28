@@ -1,5 +1,5 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, removeMenu, removeID, setID, setUserName, removeUserName, setRoleID, removeRoleID } from '@/utils/auth'
+import { getToken, setToken, removeToken, removeMenu, setUserInfo, removeUserInfo } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
@@ -38,12 +38,11 @@ const actions = {
     const { username, password, verifyCode, uuid } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password, code: verifyCode, verifyCodeId: uuid }).then(response => {
+        console.log(response)
         const { token, user } = response
         commit('SET_TOKEN', token)
         setToken(token)
-        setID(user.id)
-        setRoleID(user.role)
-        setUserName(user.realName)
+        setUserInfo(user)
         resolve()
       }).catch(error => {
         reject(error)
@@ -56,16 +55,13 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         const { username, picture, roles, permissions } = response
-
         if (!username) {
           reject('用户未登陆,请登陆.')
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])
           removeToken()
+          removeUserInfo()
           removeMenu()
-          removeID()
-          removeUserName()
-          removeRoleID()
           resetRouter()// 重置路由
           resolve()
         }
@@ -88,10 +84,8 @@ const actions = {
         commit('SET_ROLES', [])
         commit('SET_PERMISSIONS', [])
         removeToken()
+        removeUserInfo()
         removeMenu()
-        removeID()
-        removeUserName()
-        removeRoleID()
         resetRouter()// 重置路由
         dispatch('tagsView/delAllViews', null, { root: true })
         resolve()

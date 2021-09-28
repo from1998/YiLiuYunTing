@@ -2,22 +2,26 @@
   <div class="app-container">
     <el-row :gutter="0">
       <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
-        <span>多威尔车场</span>
+        <span>{{ laneName }}</span>
       </el-col>
     </el-row>
     <el-row :gutter="0" style="margin-top:20px">
-      <el-col :span="18" :offset="6">
+      <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item
+            v-show="getUserInfo().role === '1' || getUserInfo().role=== '3'"
             label="车场"
             prop="parkId"
+            label-width="40px"
           >
             <el-select
               v-cloak
-              v-model="queryParams.parkCategory"
+              v-model="queryParams.parkId"
               placeholder="请选择车场"
               size="small"
+              style="width:180px"
+              @change="handleLaneName()"
             >
               <el-option
                 v-for="item in options.parkCategory"
@@ -33,26 +37,58 @@
               placeholder="请输入车牌号"
               clearable
               size="small"
-              style="width:180px"
+              style="width:160px"
             />
           </el-form-item>
-          <el-form-item label="车主姓名" prop="userName" label-width="68px">
+          <el-form-item label="姓名" prop="userName" label-width="45px">
             <el-input
               v-model="queryParams.userName"
-              placeholder="请输入车主姓名"
+              placeholder="请输入姓名"
               clearable
               size="small"
-              style="width:150px"
+              style="width:160px"
             />
           </el-form-item>
-          <el-form-item label="车主手机号" prop="mobile" label-width="85px">
+          <el-form-item label="手机号" prop="mobile">
             <el-input
               v-model="queryParams.mobile"
               placeholder="请输入车主手机号"
               clearable
               size="small"
-              style="width:200px"
+              style="width:180px"
             />
+          </el-form-item>
+          <el-form-item label="车位类型" prop="registerType" label-width="70px">
+            <el-select
+              v-model="queryParams.registerType"
+              placeholder="请选择车位类型"
+              clearable
+              size="small"
+              style="width:180px"
+            >
+              <el-option
+                v-for="item in options.depotCategoryOptions"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="是否在租" prop="registerType" label-width="70px">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择是否在租"
+              clearable
+              size="small"
+              style="width:180px"
+            >
+              <el-option
+                v-for="item in options.status"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -64,15 +100,29 @@
     </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row style="margin-bottom:20px">
-      <el-col :span="10">
+      <el-col :span="18">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
         <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
-        <el-button type="success" size="mini" @click="handleImport">
-          <svg-icon icon-class="import" />
-          导入车辆
-        </el-button>
+        <el-upload
+          v-show="getUserInfo().role === '4'"
+          style="width:8.2%;display:inline-block;margin-left:0.5%"
+          :action="uploadPath"
+          accept="xlsx"
+          :limit="3"
+          :file-list="fileList"
+          :headers="headers"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :show-file-list="false"
+        >
+          <el-button type="success" size="mini">
+            <svg-icon icon-class="import" />
+            导入车辆
+          </el-button>
+        </el-upload>
         <el-button type="warning" size="mini" @click="handleExport">
           导出车辆
           <svg-icon icon-class="export" />
@@ -96,7 +146,7 @@
           <el-button v-show="scope.row.status===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">不在租</el-button>
         </template>
       </el-table-column>
-      <el-table-column label="租车时间段" align="center" prop="workTimeDur" width="392">
+      <el-table-column label="首次续租时间" align="center" prop="workTimeDur" width="392">
         <template slot-scope="scope">
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
             <template>
@@ -124,7 +174,7 @@
                         {{ scope.row.expireTime }}
                       </el-col>
                     </el-row>
-                    <el-row :gutter="0">
+                    <el-row v-show="scope.row.effectiveTime===null && scope.row.effectiveTime===null" :gutter="0">
                       <el-col :span="24" :offset="0">
                         <span>当前时间未在租</span>
                       </el-col>
@@ -147,10 +197,10 @@
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="text" icon="el-icon-coin" size="mini" @click="handleRenew(scope.row)">
+          <el-button v-show="scope.row.registerType===3" type="text" icon="el-icon-coin" size="mini" @click="handleRenew(scope.row)">
             <span>续费</span>
           </el-button>
-          <router-link :to="'/carManger/index/renewHistory/' + scope.row.id" class="link-type">
+          <router-link v-show="scope.row.registerType===3" :to="'/carManger/index/renewHistory/' + scope.row.id" class="link-type">
             <el-button type="text" size="mini" icon="el-icon-tickets">
               <span>续费历史</span>
             </el-button>
@@ -182,14 +232,18 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item
+          v-show="getUserInfo().role === '1' || getUserInfo().role === '3'"
           label="车场"
           prop="parkId"
         >
           <el-select
             v-cloak
-            v-model="form.parkCategory"
+            v-model="form.parkId"
             placeholder="请选择车场"
             size="small"
+            style="width:370px"
+            clearable
+            @change="handleNumberFocus"
           >
             <el-option
               v-for="item in options.parkCategory"
@@ -207,22 +261,6 @@
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
           <el-input v-model="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="所属车道" prop="belongsLane">
-          <el-select
-            v-model="form.belongsLane"
-            multiple
-            collapse-tags
-            style="width:370px"
-            placeholder="请选择所属车道"
-          >
-            <el-option
-              v-for="item in options.lanes"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-            />
-          </el-select>
         </el-form-item>
         <el-form-item label="车辆地址" prop="address">
           <el-input v-model="form.address" placeholder="请输入车辆地址" clearable size="small" />
@@ -298,7 +336,7 @@
           </el-col>
         </el-row>
         <el-form-item label="层号" prop="tierNumber">
-          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:370px" @change="handleNumberFocus">
+          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:370px" clearable @change="handleNumberFocus">
             <el-option
               v-for="item in options.tierNumber"
               :key="item.dictValue"
@@ -308,7 +346,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="区域号" prop="areaNumber">
-          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:370px" @change="handleNumberFocus">
+          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:370px" clearable @change="handleNumberFocus">
             <el-option
               v-for="item in options.areaNumber"
               :key="item.dictValue"
@@ -318,14 +356,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="编号" prop="number">
-          <el-select v-model="form.number" placeholder="请选择车位编号" size="small" style="width:370px">
-            <el-option
-              v-for="item in options.number"
-              :key="item.id"
-              :label="item.number"
-              :value="item.number"
-            />
-          </el-select>
+          <el-tooltip class="item" effect="dark" content="请先选择层号、区域号,再选择该字段" placement="bottom">
+            <el-select v-model="form.number" placeholder="请选择车位编号" size="small" style="width:370px">
+              <el-option
+                v-for="item in options.number"
+                :key="item.id"
+                :label="item.number"
+                :value="item.number"
+              />
+            </el-select>
+          </el-tooltip>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
@@ -346,13 +386,15 @@
       append-to-body
     >
       <el-form ref="renewForm" :model="renewform" :rules="rules" label-width="100px">
-        <el-form-item label="车牌号" prop="carNumber">
-          <el-input v-model="renewform.carNumber" placeholder="请输入车牌号" clearable size="small" :disabled="true" />
-        </el-form-item>
-        <el-form-item label="车主姓名" prop="userName">
-          <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
-        </el-form-item>
-        <el-form-item v-if="renewform.registerType===3" label="续租时间段" prop="notEmpty">
+        <div v-show="showotherFlag">
+          <el-form-item label="车牌号">
+            <el-input v-model="renewform.carNumber" placeholder="请输入车牌号" clearable size="small" :disabled="true" />
+          </el-form-item>
+          <el-form-item label="车主姓名" prop="userName">
+            <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
+          </el-form-item>
+        </div>
+        <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租时间段" prop="notEmpty">
           <el-row :gutter="0">
             <el-col :span="11" :offset="0">
               <el-form-item prop="effectiveTime" label="" label-width="0">
@@ -381,36 +423,38 @@
             </el-col>
           </el-row>
         </el-form-item>
-        <el-form-item label="层号" prop="tierNumber">
-          <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" disabled>
-            <el-option
-              v-for="item in options.tierNumber"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="区域号" prop="areaNumber">
-          <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" disabled>
-            <el-option
-              v-for="item in options.areaNumber"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="编号" prop="number">
-          <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px" disabled>
-            <el-option
-              v-for="item in options.number"
-              :key="item.id"
-              :label="item.number"
-              :value="item.number"
-            />
-          </el-select>
-        </el-form-item>
+        <div v-show="showotherFlag">
+          <el-form-item label="层号" prop="tierNumber">
+            <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" disabled>
+              <el-option
+                v-for="item in options.tierNumber"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="区域号" prop="areaNumber">
+            <el-select v-model="renewform.areaNumber" placeholder="请选择车位区域号" size="small" style="width:350px" disabled>
+              <el-option
+                v-for="item in options.areaNumber"
+                :key="item.dictValue"
+                :label="item.dictLabel"
+                :value="Number(item.dictValue)"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="编号" prop="number">
+            <el-select v-model="renewform.number" placeholder="请选择车位编号" size="small" style="width:350px" disabled>
+              <el-option
+                v-for="item in options.number"
+                :key="item.id"
+                :label="item.number"
+                :value="item.number"
+              />
+            </el-select>
+          </el-form-item>
+        </div>
         <el-form-item label="续费金额" prop="amount">
           <el-tooltip class="item" effect="dark" content="请输入续费金额" placement="right">
             <el-input-number v-model="renewform.amount" :precision="2" :step="1" clearable size="small" :min="0" style="width:350px" />
@@ -429,8 +473,9 @@
 </template>
 <script>
 // 引入api
-import { getLaneList, getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
+import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, doManyRenew, downloadRegisterCar, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
 import { getAllPark, getSiteByMid } from '@/api/system/carSetting'
+import { getToken } from '@/utils/auth'
 
 import validate from '@/utils/validate.js'
 
@@ -438,13 +483,16 @@ export default {
   // 定义页面数据
   data() {
     return {
+      laneName: '',
       CarList: [],
       parkForm: {
         // 车场id
         id: ''
       },
       flag: false,
-      managerid: '',
+      // 默认显示其它非批量时用到的字段
+      showotherFlag: true,
+      managerId: '',
       // 验证规则
       validate,
       rules: {
@@ -489,7 +537,7 @@ export default {
         number: [],
         // 车场类型
         parkCategory: [],
-        lanes: []
+        status: []
       },
       // 查询参数
       queryParams: {
@@ -497,17 +545,31 @@ export default {
         size: 10,
         carName: undefined,
         userName: undefined,
+        status: undefined,
+        registerType: undefined,
         mobile: undefined
       },
       // 表单数据
-      form: {},
+      form: {
+        number: ''
+      },
       renewform: {
         registerId: ''
-      }
+      },
+      // 声明上传路径
+      uploadPath: undefined,
+      // 上传文件列表
+      fileList: [],
+      // 头
+      headers: undefined
     }
   },
   // 勾子
   created() {
+    // 获取是否字典
+    this.getDataByType('yesOrNo').then(res => {
+      this.options.status = res.data
+    })
     // 获取车辆类型字典数据
     this.getDataByType('CarTypeDic').then(res => {
       this.options.carCategoryOptions = res.data
@@ -528,22 +590,35 @@ export default {
     getPortType().then(res => {
       this.options.depotCategoryOptions = res.data
     })
-    // 获取车道列表数据
-    getLaneList().then(res => {
-      // this.options.depotCategoryOptions = res.data
-    })
     // 获取车场列表数据
     getAllPark().then(res => {
       this.options.parkCategory = res.data
     })
-    this.managerid = this.getID()
+    this.managerId = this.getUserInfo().id
     // 查询车位列表数据
     this.getList()
+    // 拼接上传路径
+    this.uploadPath = process.env.VUE_APP_BASE_API + '/ylyt/car_register/upload'
+    // 设置请求头加入token 避免请求认证的问题
+    this.headers = { 'token': getToken() }
+    console.log(this.getUserInfo())
   },
   // mounted() {
 
   // },
   methods: {
+    handleSuccess(res) {
+      this.msgSuccess(res.msg)
+      this.getList()
+    },
+    handleError(res) {
+      this.msgErroe(res.msg)
+      this.getList()
+    },
+    handleLaneName(val) {
+      console.log(val)
+      this.laneName = val
+    },
     // 鼠标移入事件
     handleMouseEnter(id) {
     // 查询续费历史记录列表数据三条
@@ -568,14 +643,14 @@ export default {
     },
     // 选择框值改变事件
     handleNumberFocus() {
+      this.form.number = undefined
       this.options.number = []
       const query = {
-        managerid: this.managerid,
+        parkId: this.form.parkId,
         tierNumber: this.form.tierNumber,
         areaNumber: this.form.areaNumber
       }
-      console.log(query)
-      if ((query.tierNumber !== null && query.tierNumber !== undefined) && (query.areaNumber !== null && query.areaNumber !== undefined)) {
+      if ((query.tierNumber !== null && query.tierNumber !== '' && query.tierNumber !== undefined) && (query.areaNumber !== null && query.areaNumber !== '' && query.areaNumber !== undefined)) {
         getSiteByMid(query).then((res) => {
           res.data.map(val => {
             this.options.number.push({
@@ -646,12 +721,18 @@ export default {
     },
     // 根据id查询车辆信息
     getInfoById(id, form) {
+      debugger
       this.loading = true
       const query = { 'id': id }
-      getPortById(query).then(res => {
-        this[form] = res.data
-        this.loading = false
-      })
+      if (id !== this.ids) {
+        getPortById(query).then(res => {
+          this[form] = res.data
+          this[form].effectiveTime = ''
+          this[form].expireTime = ''
+          this[form].remark = ''
+          this.loading = false
+        })
+      }
     },
     // 执行删除
     handleDelete(row) {
@@ -663,7 +744,7 @@ export default {
       }).then(() => {
         this.loading = true
         deletePort(portIds).then(res => {
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getList()
           this.loading = false
         })
@@ -679,7 +760,7 @@ export default {
           this.loading = true
           if (this.form.id === undefined || this.form.id === null || this.form.id === '') { // 做添加
             addPort(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -688,7 +769,7 @@ export default {
             })
           } else { // 做修改
             updatePort(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -713,24 +794,42 @@ export default {
     // 打开续费弹出层
     handleRenew(row) {
       this.RenewOpen = true
-      const portIds = row.id || this.ids
       this.reset()
+      const portIds = row.id || this.ids
       this.getInfoById(portIds, 'renewform')
+      if (row === undefined) {
+        this.showotherFlag = false
+      }
     },
     // 续费确定操作
     handleRenewSubmit() {
-      this.renewform.registerId = this.renewform.id
       this.$refs['renewForm'].validate((valid) => {
         if (valid) {
           this.loading = true
-          doRenew(this.renewform).then(res => {
-            this.msgSuccess('续费成功')
-            this.loading = false
-            this.getList()// 列表重新查询
-            this.RenewOpen = false// 关闭弹出层
-          }).catch(() => {
-            this.loading = false
-          })
+          if (this.renewform.id) {
+            this.renewform.registerId = this.renewform.id
+            doRenew(this.renewform).then(res => {
+              this.msgSuccess(res.msg)
+              this.loading = false
+              this.getList()// 列表重新查询
+              this.renewform.effectiveTime = ''
+              this.renewform.expireTime = ''
+              this.renewform.remark = ''
+              this.renewform.amount = ''
+            })
+          } else {
+            this.renewform.carRegisterId = this.ids.toString()
+            doManyRenew(this.renewform).then(res => {
+              this.msgSuccess(res.msg)
+              this.loading = false
+              this.getList()// 列表重新查询
+              this.renewform.effectiveTime = ''
+              this.renewform.expireTime = ''
+              this.renewform.remark = ''
+              this.renewform.amount = ''
+            })
+          }
+          this.RenewOpen = false// 关闭弹出层
         }
       })
     },
@@ -739,22 +838,45 @@ export default {
       this.RenewOpen = false
     },
     // 模板下载
-    handleDownload() {
+    async handleDownload() {
       this.loading = true
-      exportRegisterCar(this.renewform).then(res => {
-        this.loading = false
-      }).catch(() => {
-        this.msgError('模板下载失败')
-        this.loading = false
+      downloadRegisterCar().then(res => {
+        const fileName = '固定车模板.xls'
+        if ('download' in document.createElement('a')) { // 非IE下载
+          const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }
       })
-    },
-    // 导入车辆
-    handleImport() {
-      console.log('导入成功')
+      this.loading = false
     },
     // 导出车辆
     handleExport() {
-      console.log('导出成功')
+      this.loading = true
+      var query = this.queryParams
+      delete query.page
+      delete query.size
+      exportRegisterCar(query).then(res => {
+        const fileName = '固定车详情及缴费记录.xls'
+        if ('download' in document.createElement('a')) { // 非IE下载
+          const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }
+      })
+      this.loading = false
     }
   }
 }

@@ -230,9 +230,6 @@
             end-placeholder="结束时间"
             placeholder="选择时间范围"
             value-format="HH-mm-ss"
-            :picker-options="{
-              selectableRange: dataRange
-            }"
             @change="timeChange(convert.businessHours)"
           />
         </el-form-item>
@@ -263,7 +260,6 @@ export default {
   name: 'DepotInfo',
   data() {
     return {
-      dataRange: ['00:00:00 - 23:59:59', '00:00:00 - 23:59:59'],
       // 验证规则
       validate,
       rules: {
@@ -306,7 +302,7 @@ export default {
         // 待转换的车场地区数组
         region: [],
         // 待转换的营业时间,默认朝8晚7
-        businessHours: [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
+        businessHours: [new Date(0, 0, 0, 0, 0), new Date(0, 0, 0, 23, 0)]
       },
       form: {
         // 用户id
@@ -355,8 +351,8 @@ export default {
         // 监管平台标识码
         uploadPlatformSn: '',
         // 营业时间
-        startHours: '08-00-00',
-        endHours: '19-00-00'
+        startHours: '00-00-00',
+        endHours: '23-59-59'
       },
       addressOptions: area
     }
@@ -451,7 +447,6 @@ export default {
       }).then(() => {
         this.clear()
         this.convert.region = []
-        this.convert.businessHours = [new Date(0, 0, 0, 8, 0), new Date(0, 0, 0, 19, 0)]
         this.msgSuccess('重置成功')
       }).catch(() => {
         this.msgError('重置已取消')
@@ -487,6 +482,7 @@ export default {
       this.convert.businessHours = [this.form.startHours, this.form.endHours]
     },
     timeChange(val) {
+      console.log(val)
       this.form.startHours = val[0]
       this.form.endHours = val[1]
     },
@@ -542,6 +538,7 @@ export default {
         endHours: '23-59-59'
       }
       this.form = Object.assign(this.form, data)
+      this.convert.businessHours = ['00-00-00', '23-59-59']
     }
   }
 }

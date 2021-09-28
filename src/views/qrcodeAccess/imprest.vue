@@ -15,7 +15,7 @@
       <el-col :span="2" :offset="2">
         <svg-icon icon-class="historyRecord" />
       </el-col>
-      <el-col :span="10" :offset="0">
+      <el-col :span="10" :offset="0" @click="handleInput(historyRecord)">
         <span style="letter-spacing:0.5em">{{ historyRecord }}</span>
       </el-col>
       <el-col :span="3" :offset="7">
@@ -95,6 +95,9 @@ export default {
     })
   },
   methods: {
+    handleInput() {
+
+    },
     postCarNumber(val) {
       console.log(val)
     },

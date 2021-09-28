@@ -127,7 +127,7 @@ export default {
     // 查询收费列表数据
     this.getFeeList()
     this.getOrdersList()
-    this.roleId = this.getRoleID()
+    this.roleId = this.getUserInfo().role
     this.getCarList()
   },
   // 方法

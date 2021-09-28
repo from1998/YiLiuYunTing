@@ -4,7 +4,7 @@ import request from '@/utils/request'
 // 查询车道列表
 export function getLaneList(query) {
   return request({
-    url: '/ylyt/car_register/list',
+    url: '/ylyt/lane/getLaneByParkId',
     method: 'get',
     params: query
   })
@@ -71,6 +71,15 @@ export function doRenew(data) {
   })
 }
 
+// 批量续费
+export function doManyRenew(data) {
+  return request({
+    url: '/ylyt/car_register/register_record/renewList',
+    method: 'post',
+    data
+  })
+}
+
 // 根据车位id分页查询车位续费历史信息
 export function getPortRenewHistory(query) {
   return request({
@@ -80,11 +89,31 @@ export function getPortRenewHistory(query) {
   })
 }
 
-// 模板导出
-export function exportRegisterCar() {
+// 模板下载
+export function downloadRegisterCar() {
   return request({
     url: '/ylyt/car_register/export',
-    method: 'get'
+    method: 'get',
+    responseType: 'blob'
+  })
+}
+
+// 批量导出固定车信息
+export function exportRegisterCar(query) {
+  return request({
+    url: '/ylyt/car_register/exportCarRegister',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+
+// 批量上传固定车信息
+export function uploadRegisterCar(data) {
+  return request({
+    url: '/ylyt/car_register/upload',
+    method: 'post',
+    data
   })
 }
 
@@ -96,11 +125,11 @@ export function delRenewHistory(id) {
   })
 }
 
-// 根据id删除续费历史
-export function getRenewHistory(query) {
+// 根据id修改续费历史
+export function editRenewHistory(data) {
   return request({
-    url: '/ylyt/car_register/register_record/byid',
-    method: 'get',
-    params: query
+    url: '/ylyt/car_register/register_record/edit',
+    method: 'put',
+    data
   })
 }

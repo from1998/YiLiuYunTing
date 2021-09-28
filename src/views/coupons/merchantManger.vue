@@ -247,7 +247,7 @@ export default {
     // 查询表格数据
     this.getRoleList()
     this.getCarList()
-    this.roleId = this.getRoleID()
+    this.roleId = this.getUserInfo().role
   },
   // 方法
   methods: {

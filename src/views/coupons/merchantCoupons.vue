@@ -136,11 +136,11 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="600px"
+      width="500px"
       center
       append-to-body
     >
-      <el-form ref="form" :model="form" label-width="150px" :rules="rules">
+      <el-form ref="form" :model="form" label-width="110px" :rules="rules">
         <el-form-item
           v-if="roleId === '1' && title === '添加商家优惠券' "
           label="车场"
@@ -164,7 +164,7 @@
         <el-form-item label="所属优惠劵" prop="couponsId">
           <el-select
             v-model="form.couponsId"
-            placeholder="请选择"
+            placeholder="请选择所属优惠劵"
             clearable
             size="small"
             style="width:330px"
@@ -178,22 +178,24 @@
           </el-select>
         </el-form-item>
         <el-form-item label="所属商家" prop="merchantId">
-          <el-select
-            v-model="form.merchantId"
-            placeholder="请先选择车场"
-            clearable
-            size="small"
-            style="width:330px"
-          >
-            <el-option
-              v-for="d in shopList"
-              :key="d.dictValue"
-              :label="d.dictLabel"
-              :value="String(d.realName)"
-            />
-          </el-select>
+          <el-tooltip class="item" effect="dark" content="请先选择车场再选择该字段" placement="bottom">
+            <el-select
+              v-model="form.merchantId"
+              placeholder="请选择所属商家"
+              clearable
+              size="small"
+              style="width:330px"
+            >
+              <el-option
+                v-for="d in shopList"
+                :key="d.dictValue"
+                :label="d.dictLabel"
+                :value="String(d.realName)"
+              />
+            </el-select>
+          </el-tooltip>
         </el-form-item>
-        <el-form-item label="商家优惠券名称" prop="name">
+        <el-form-item label="优惠券名称" prop="name">
           <el-input v-model="form.name" placeholder="商家优惠券名称" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="总数" prop="total">
@@ -203,7 +205,9 @@
           <el-input v-model="form.residue" placeholder="剩余数量" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="优惠力度" prop="discount">
-          <el-input v-model="form.discount" placeholder="优惠力度 时间劵：单位为分钟 代金劵：单位是元 折扣劵：小数例如9折为0.9" clearable size="small" style="width: 330px" />
+          <el-tooltip class="item" effect="dark" content="时间劵：单位为分钟;  代金劵：单位是元;  折扣劵：小数,例如9折为0.9" placement="bottom">
+            <el-input v-model="form.discount" placeholder="请输入优惠力度" clearable size="small" style="width: 330px" />
+          </el-tooltip>
         </el-form-item>
         <el-form-item label="是否立即生效" prop="isEffectiveNow">
           <el-select
@@ -231,7 +235,6 @@
             placeholder="请选择生效时间"
             align="center"
           />
-          <!--          <el-input v-if="isShow" v-model="form.effectiveTime" placeholder="生效时间" clearable size="small" />-->
         </el-form-item>
         <el-form-item label="是否按天有效" prop="isExpireDay">
           <el-select
@@ -257,28 +260,11 @@
           />
           <el-input v-if="form.isExpireDay=== 1" v-model="form.days" placeholder="有效期(天)" size="small" style="width: 330px" />
         </el-form-item>
-        <!--        <el-form-item prop="expireTime" label-width="0" v-if="form.isExpireDay === 0">-->
-        <!--          <el-date-picker-->
-        <!--            v-model="form.expireTime"-->
-        <!--            value-format="yyyy-MM-dd"-->
-        <!--            placeholder="失效时间"-->
-        <!--            style="width:157px"-->
-        <!--            type="date"-->
-
-        <!--          />-->
-        <!--        </el-form-item>-->
-        <!--        <el-form-item label="有效期" prop="days" v-if="form.isExpireDay=== 1">-->
-        <!--        <el-input  v-model="form.days" placeholder="有效期(天)" size="small" />-->
-        <!--        </el-form-item>-->
-
-        <!--        <el-form-item prop="days" label="有效期"  v-if="dayType == 1">-->
-        <!--          <el-input v-model="form.days" placeholder="有效期(天)" size="mini" />-->
-        <!--        </el-form-item>-->
         <el-form-item label="付款方式" prop="payType">
           <el-select
             v-model="form.payType"
 
-            placeholder="请选择"
+            placeholder="请选择付款方式"
             clearable
             size="small"
             style="width:330px"
@@ -411,8 +397,8 @@ export default {
     // 查询表格数据
     this.getMerchantCouponsList()
     // this.getShopName()
-    this.roleId = this.getRoleID()
-    this.id = this.getID()
+    this.roleId = this.getUserInfo().role
+    this.id = this.getUserInfo().id
     this.getCarList()
   },
   // 方法

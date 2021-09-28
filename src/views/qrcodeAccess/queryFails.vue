@@ -1,52 +1,43 @@
 <template>
   <div id="app-container" style="padding:30px 0 0 0">
     <div class="payCard">
-      <el-row :gutter="0" style="height:30px;margin-top:3%;">
-        <el-col :span="20" :offset="2">{{ carNumber }}</el-col>
+      <el-row :gutter="0" style="height:30px;margin-top:3%;text-align:center">
+        <el-col :span="20" :offset="2">车牌号:{{ carNumber }}</el-col>
       </el-row>
-      <el-row :gutter="0" style="font-size:14px">
-        <el-col :span="6" :offset="2">入场时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 16:21</el-col>
-        <el-col :span="2" :offset="0" />
+      <el-row :gutter="0" style="font-size:14px;">
+        <el-col :span="20" :offset="2">
+          【徽昌苑北门商业街停车场】:暂无此车辆信息
+        </el-col>
       </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">结束时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 19:59</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">停车时长</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">0小时1分</el-col>
-        <el-col :span="2" :offset="0" />
-        <div id="lineDowm" />
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%;">
+        <el-col :span="20" :offset="2">
+          如果是 <span style="color:red">无牌车</span> 请到出口处扫码支付
+        </el-col>
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">总金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
-        <el-col :span="2" :offset="0" />
+        <el-col :span="20" :offset="2">
+          如在场请咨询管理人员。
+        </el-col>
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">优惠类型</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
-        <el-col :span="2" :offset="0" />
+        <el-col :span="20" :offset="2">
+          给您带来的不便,敬请谅解。
+        </el-col>
       </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">应交金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥5.89</el-col>
-        <el-col :span="2" :offset="0" />
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%;">
+        <el-col :span="22" :offset="2">
+          <span>如有疑问请拨打客服电话:</span>
+          <a href="tel:0551—65521987">0551—65521987</a>
+        </el-col>
       </el-row>
     </div>
-    <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
-      <el-col :span="22" :offset="2">温馨提示:
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
-      <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
-      </el-col>
-    </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%">返回</el-button>
+        <router-link to="/qrcodeAccess/imprest" class="link-type">
+          <el-button type="primary" round style="width:100%">
+            <span>返回</span>
+          </el-button>
+        </router-link>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -128,7 +119,7 @@ export default {
 .advwrap {
   height: 200px;
   margin: auto;
-    margin-top: 50px;
+    margin-top: 30px;
   width: 90%;
 }
 #lineDowm {

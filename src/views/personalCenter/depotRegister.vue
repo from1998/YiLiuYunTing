@@ -135,7 +135,7 @@ export default {
   methods: {
     async init() {
       this.loading = true // 打开遮罩
-      this.id = await this.getID()
+      this.id = await this.getUserInfo().id
       await getDepotRegister(this.id).then(res => {
         this.resdata = res.data
         if (res.data !== null) {

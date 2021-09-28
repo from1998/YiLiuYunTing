@@ -69,7 +69,7 @@ export default {
     ])
   },
   async created() {
-    this.username = await this.getUserName()
+    this.username = await this.getUserInfo().realName
   },
   methods: {
     toggleSideBar() {

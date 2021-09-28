@@ -126,12 +126,12 @@ export default {
   created() {
     // 查询收费列表数据
     this.getTrafficList()
-    this.id = this.getRoleID()
-    // this.id = this.getID()
+    this.id = this.getUserInfo().role
+    // this.id = this.getUserInfo().id
     this.getList()
     // this.timeDefault()
     this.getCarList()
-    this.roleId = this.getRoleID()
+    this.roleId = this.getUserInfo().role
   },
   // 方法
   methods: {

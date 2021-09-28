@@ -347,7 +347,7 @@ export default {
     // 查询表格数据
     this.getCouponsList()
     // 角色权限
-    this.roleId = this.getRoleID()
+    this.roleId = this.getUserInfo().role
   },
   // 方法
   methods: {

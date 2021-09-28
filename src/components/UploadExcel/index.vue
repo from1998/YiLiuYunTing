@@ -1,138 +1,143 @@
 <template>
   <div>
-    <input ref="excel-upload-input" class="excel-upload-input" type="file" accept=".xlsx, .xls" @change="handleClick">
-    <div class="drop" @drop="handleDrop" @dragover="handleDragover" @dragenter="handleDragover">
-      Drop excel file here or
-      <el-button :loading="loading" style="margin-left:16px;" size="mini" type="primary" @click="handleUpload">
-        Browse
-      </el-button>
-    </div>
+    <el-tooltip class="item" effect="dark" content="文件大小不得超过2MB。" placement="bottom">
+      <el-upload
+        :class="{hide:hideUpload}"
+        :file-list="handHeld"
+        :action="uploadPath"
+        :data="{sonmerno:sonmerno}"
+        accept="xlsx,xls"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :on-progress="handleProgress"
+        :limit="limitCount"
+        :headers="headers"
+        :before-upload="handleBeforeUpload"
+        list-type="picture-card"
+      >
+        <i slot="default" class="el-icon-plus" />
+        <div slot="file" slot-scope="{file}">
+          <img
+            class="el-upload-list__item-thumbnail"
+            :src="file.url"
+            alt=""
+          >
+          <span class="el-upload-list__item-actions">
+            <span
+              @click="handlePictureCardPreview(file)"
+            >
+              <i class="el-icon-zoom-in" />
+            </span>
+            <span
+              @click="handleDownload(file)"
+            >
+              <i class="el-icon-download" />
+            </span>
+            <span
+              @click="handleRemove(file)"
+            >
+              <i class="el-icon-delete" />
+            </span>
+          </span>
+        </div>
+      </el-upload>
+    </el-tooltip>
   </div>
 </template>
-
 <script>
-import XLSX from 'xlsx'
+import { getToken } from '@/utils/auth'
 
 export default {
+  name: 'UploadImg',
   props: {
-    beforeUpload: Function, // eslint-disable-line
-    onSuccess: Function// eslint-disable-line
+    title: {
+      type: String,
+      default: null
+    }
   },
   data() {
     return {
-      loading: false,
-      excelData: {
-        header: null,
-        results: null
-      }
+      sonmerno: '',
+      dialogImageUrl: '',
+      // 文件列表
+      handHeld: [],
+      limitCount: 1,
+      uploadImgVisible: false,
+      // 为隐藏上传图片按钮设置的类的激活状态
+      hideUpload: false,
+      // 声明上传路径
+      uploadPath: undefined,
+      // 头
+      headers: undefined
     }
   },
+  async created() {
+    // 文件上传的路径
+    this.uploadPath = process.env.VUE_APP_BASE_API + '/ylyt/personal/uploadFile'
+    // 设置请求头加入token 避免请求认证的问题
+    this.headers = { 'token': getToken() }
+    // this.handHeld = await window.sessionStorage.getItem(JSON.parse(this.title))
+    console.log(this.title)
+  },
   methods: {
-    generateData({ header, results }) {
-      this.excelData.header = header
-      this.excelData.results = results
-      this.onSuccess && this.onSuccess(this.excelData)
+    // 放大预览图片
+    handlePictureCardPreview(file) {
+      this.uploadImgVisible = true
+      this.dialogImageUrl = file.url
     },
-    handleDrop(e) {
-      e.stopPropagation()
-      e.preventDefault()
-      if (this.loading) return
-      const files = e.dataTransfer.files
-      if (files.length !== 1) {
-        this.$message.error('Only support uploading one file!')
-        return
-      }
-      const rawFile = files[0] // only use files[0]
-
-      if (!this.isExcel(rawFile)) {
-        this.$message.error('Only supports upload .xlsx, .xls, .csv suffix files')
-        return false
-      }
-      this.upload(rawFile)
-      e.stopPropagation()
-      e.preventDefault()
+    // 上传图片前
+    async handleBeforeUpload() {
+      this.sonmerno = await window.sessionStorage.getItem('sonmerno')
     },
-    handleDragover(e) {
-      e.stopPropagation()
-      e.preventDefault()
-      e.dataTransfer.dropEffect = 'copy'
-    },
-    handleUpload() {
-      this.$refs['excel-upload-input'].click()
-    },
-    handleClick(e) {
-      const files = e.target.files
-      const rawFile = files[0] // only use files[0]
-      if (!rawFile) return
-      this.upload(rawFile)
-    },
-    upload(rawFile) {
-      this.$refs['excel-upload-input'].value = null // fix can't select the same excel
-
-      if (!this.beforeUpload) {
-        this.readerData(rawFile)
-        return
-      }
-      const before = this.beforeUpload(rawFile)
-      if (before) {
-        this.readerData(rawFile)
+    // 上传图片成功
+    handleSuccess(res, file, fileList) {
+      if (res.data === 200) {
+        this.handHeld = fileList
+        this.hideUpload = fileList.length >= this.limitCount
+        this.msgSuccess(res.msg)
+        this.$emit('imgagePush', res.data)
+        const arr = [{ name: res.data.filename, url: res.data.src }]
+        window.sessionStorage.setItem(res.data.sqImageId, JSON.stringify(arr))
+      } else {
+        this.handHeld = []
+        this.hideUpload = false
+        this.msgError('上传失败')
       }
     },
-    readerData(rawFile) {
-      this.loading = true
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = e => {
-          const data = e.target.result
-          const workbook = XLSX.read(data, { type: 'array' })
-          const firstSheetName = workbook.SheetNames[0]
-          const worksheet = workbook.Sheets[firstSheetName]
-          const header = this.getHeaderRow(worksheet)
-          const results = XLSX.utils.sheet_to_json(worksheet)
-          this.generateData({ header, results })
-          this.loading = false
-          resolve()
-        }
-        reader.readAsArrayBuffer(rawFile)
-      })
+    // 上传图片失败
+    handleError(res, file, fileList) {
+      this.handHeld = []
+      this.hideUpload = false
+      this.msgError('上传失败')
     },
-    getHeaderRow(sheet) {
-      const headers = []
-      const range = XLSX.utils.decode_range(sheet['!ref'])
-      let C
-      const R = range.s.r
-      /* start in the first row */
-      for (C = range.s.c; C <= range.e.c; ++C) { /* walk every column in the range */
-        const cell = sheet[XLSX.utils.encode_cell({ c: C, r: R })]
-        /* find the cell in the first row */
-        let hdr = 'UNKNOWN ' + C // <-- replace with your desired default
-        if (cell && cell.t) hdr = XLSX.utils.format_cell(cell)
-        headers.push(hdr)
-      }
-      return headers
+    // 上传图片时
+    handleProgress() {
+      this.hideUpload = true
     },
-    isExcel(file) {
-      return /\.(xlsx|xls|csv)$/.test(file.name)
+    // 删除上传的图片
+    handleRemove(file, fileList) {
+      this.handHeld = fileList
+      this.hideUpload = false
+    },
+    // 图片下载
+    handleDownload(file) {
+      var a = document.createElement('a')
+      var event = new MouseEvent('click')
+      a.download = file.name
+      a.href = file.url
+      a.dispatchEvent(event)
     }
   }
 }
 </script>
-
-<style scoped>
-.excel-upload-input{
-  display: none;
-  z-index: -9999;
+<style lang="scss">
+.hide .el-upload--picture-card {
+    display: none;
 }
-.drop{
-  border: 2px dashed #bbb;
-  width: 600px;
-  height: 160px;
-  line-height: 160px;
-  margin: 0 auto;
-  font-size: 24px;
-  border-radius: 5px;
-  text-align: center;
-  color: #bbb;
-  position: relative;
+.el-upload--picture-card,.el-upload-list__item is-ready {
+    width: 90px!important;
+    height: 90px!important;
+    cursor: pointer;
+    line-height: 92px!important;
 }
 </style>

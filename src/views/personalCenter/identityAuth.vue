@@ -466,7 +466,7 @@ export default {
     },
     async init() {
       this.loading = true // 打开遮罩
-      this.id = await this.getID()
+      this.id = await this.getUserInfo().id
       await getDepotRegister(this.id).then(res => {
         this.resData = res.data
         if (res.code === 200 && res.data !== null) {

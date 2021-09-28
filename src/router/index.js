@@ -67,6 +67,15 @@ export const constantRoutes = [{
     title: '预付款',
     icon: 'money'
   }
+},
+{
+  path: '/qrcodeAccess/queryFails',
+  component: () =>
+            import ('@/views/qrcodeAccess/queryFails'),
+  meta: {
+    title: '查询失败',
+    icon: 'el-icon-close'
+  }
 }
 ]
 export const asyncRoutes = [{

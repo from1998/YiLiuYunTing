@@ -295,8 +295,8 @@ export default {
   methods: {
     async init(id) {
       if (id === undefined) {
-        id = this.getID()
-        this.roleId = this.getRoleID()
+        id = this.getUserInfo().id
+        this.roleId = this.getUserInfo().role
         console.log(this.roleId)
         // b保安的roleID是6
         if (this.roleId === '6') {
