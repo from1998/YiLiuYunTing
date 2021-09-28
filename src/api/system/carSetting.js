@@ -9,14 +9,6 @@ export function getDepotById(data) {
   })
 }
 
-// 查询车场列表
-export function getAllPark() {
-  return request({
-    url: '/ylyt/park/allPark',
-    method: 'get'
-  })
-}
-
 // 添加车场信息
 export function addDepotInfo(data) {
   return request({

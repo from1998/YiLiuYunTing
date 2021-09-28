@@ -8,15 +8,15 @@
       <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
     </el-row>
     <div>
-      <keyboard @confirmBtn="postCarNumber($event)" />
+      <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
     </div>
     <el-row :gutter="0" style="color:#ccc">
       <div id="lineDowm" />
       <el-col :span="2" :offset="2">
         <svg-icon icon-class="historyRecord" />
       </el-col>
-      <el-col :span="10" :offset="0" @click="handleInput(historyRecord)">
-        <span style="letter-spacing:0.5em">{{ historyRecord }}</span>
+      <el-col :span="10" :offset="0">
+        <span style="letter-spacing:0.5em" @click="handleInput(historyRecord)">{{ historyRecord }}</span>
       </el-col>
       <el-col :span="3" :offset="7">
         <svg-icon icon-class="Close" @click="delHistoryopen=true" />
@@ -24,7 +24,7 @@
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%">查询</el-button>
+        <el-button type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -95,8 +95,11 @@ export default {
     })
   },
   methods: {
-    handleInput() {
-
+    handleQuery() {
+      this.$refs.keyBoard.confirmBtnFn()
+    },
+    handleInput(val) {
+      this.$refs.keyBoard.sonFun(val)
     },
     postCarNumber(val) {
       console.log(val)

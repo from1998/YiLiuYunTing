@@ -21,7 +21,7 @@
               placeholder="请选择车场"
               size="small"
               style="width:180px"
-              @change="handleLaneName()"
+              @change="handleLaneName"
             >
               <el-option
                 v-for="item in options.parkCategory"
@@ -474,7 +474,8 @@
 <script>
 // 引入api
 import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, doManyRenew, downloadRegisterCar, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
-import { getAllPark, getSiteByMid } from '@/api/system/carSetting'
+import { getSiteByMid } from '@/api/system/carSetting'
+import { listAll } from '@/api/coupons/couponsManger'
 import { getToken } from '@/utils/auth'
 
 import validate from '@/utils/validate.js'
@@ -485,10 +486,7 @@ export default {
     return {
       laneName: '',
       CarList: [],
-      parkForm: {
-        // 车场id
-        id: ''
-      },
+      parkId: '',
       flag: false,
       // 默认显示其它非批量时用到的字段
       showotherFlag: true,
@@ -591,8 +589,9 @@ export default {
       this.options.depotCategoryOptions = res.data
     })
     // 获取车场列表数据
-    getAllPark().then(res => {
+    listAll().then(res => {
       this.options.parkCategory = res.data
+      this.parkId = res.data[0].id
     })
     this.managerId = this.getUserInfo().id
     // 查询车位列表数据
@@ -615,7 +614,11 @@ export default {
       this.getList()
     },
     handleLaneName(val) {
-      this.laneName = val
+      for (const key in this.options.parkCategory) {
+        if (this.options.parkCategory[key].id === val) {
+          this.laneName = this.options.parkCategory[key].name
+        }
+      }
     },
     // 鼠标移入事件
     handleMouseEnter(id) {
@@ -643,7 +646,7 @@ export default {
       this.form.number = undefined
       this.options.number = []
       const query = {
-        parkId: this.form.parkId,
+        parkId: this.form.parkId || this.parkId,
         tierNumber: this.form.tierNumber,
         areaNumber: this.form.areaNumber
       }

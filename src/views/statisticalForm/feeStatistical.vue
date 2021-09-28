@@ -70,9 +70,9 @@
     <!-- 分页控件 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.page"
+      :current-page="form.page"
       :page-sizes="[5, 10, 20, 30]"
-      :page-size="queryParams.size"
+      :page-size="form.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -102,11 +102,6 @@ export default {
       // 收费列表数据
       feeTableList: [],
       // 查询参数
-      queryParams: {
-        page: 1,
-        size: 10,
-        carnumber: undefined
-      },
       form: {
         page: 1,
         size: 10,
@@ -192,13 +187,13 @@ export default {
     },
     // 分页size变化时触发
     handleSizeChange(val) {
-      this.queryParams.size = val
+      this.form.size = val
       // 重新查询
       this.getFeeList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.page = val
+      this.form.page = val
       // 重新查询
       this.getFeeList()
     }

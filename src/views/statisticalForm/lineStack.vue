@@ -11,7 +11,7 @@ export default {
   name: 'LineStack',
   props: {
     listData: {
-      type: Array,
+      type: Object,
       default: null
     },
     leaveMap: {
@@ -118,6 +118,7 @@ export default {
     this.parkChart = echarts.init(document.getElementById('park'))
     // 使用刚指定的配置项和数据显示图表。
     this.renderChart()
+    console.log(this.listData)
   },
   methods: {
     setOptions({ legendData, xAxisData, seriesData } = {}) {

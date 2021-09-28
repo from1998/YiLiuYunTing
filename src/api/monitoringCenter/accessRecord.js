@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询
 export function getRecordList(query) {
   return request({
-    url: '/ylyt/park/getCarOrderList',
+    url: '/park/record/list',
     method: 'get',
     params: query
   })

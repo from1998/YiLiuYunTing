@@ -61,7 +61,9 @@
               @touchstart="touchstart"
               @touchend="touchend"
             >{{ item }}</span>
-            <span class="k-del" @touchstart="touchstart" @touchend="touchend">删</span>
+            <span class="k-del" @touchstart="touchstart" @touchend="touchend">
+              <svg-icon icon-class="backSpace" style="transform: scale(1.8, 1.8);" />
+            </span>
           </div>
         </div>
         <!--=====   英文数字  =====-->
@@ -87,14 +89,18 @@
             >{{ item }}</span>
           </div>
           <div class="keyboard">
-            <span class="k-done k-done2" @touchstart="touchstart" @touchend="touchend">完成</span>
+            <span v-show="cph.length === 7" class="k-done k-done2" @touchstart="touchstart" @touchend="touchend">
+              <svg-icon icon-class="search" style="transform: scale(1.8, 1.8);" />
+            </span>
             <span
               v-for="(item, index) in letters.slice(19)"
               :key="index"
               @touchstart="touchstart"
               @touchend="touchend"
             >{{ item }}</span>
-            <span class="k-del" @touchstart="touchstart" @touchend="touchend">删</span>
+            <span class="k-del" @touchstart="touchstart" @touchend="touchend">
+              <svg-icon icon-class="backSpace" style="transform: scale(1.8, 1.8);" />
+            </span>
           </div>
         </div>
       </div>
@@ -140,6 +146,9 @@ export default {
     }
   },
   methods: {
+    sonFun(carNumber) {
+      this.newCph = this.cph = carNumber.split('')
+    },
     confirmBtnFn() {
       this.$emit('confirmBtn', this.cph.join(''))
     },
@@ -216,7 +225,7 @@ export default {
 
   .confirmBtn {
     flex: 1;
-    background: #FF2343;
+    background: #FD0001;
     color: #fff;
   }
 }
@@ -337,12 +346,12 @@ export default {
       position: absolute;
       right: 2px;
       display: block;
-
+      background-color: #F56C6C;
     }
 
     .k-del img {
       display: block;
-      margin: 9px auto;
+      margin: 0 auto;
     }
 
     .k-done {

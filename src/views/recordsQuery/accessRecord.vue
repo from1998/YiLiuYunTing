@@ -126,7 +126,7 @@
       <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" width="80" />
       <el-table-column label="进场检查情况" align="center">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
+          <el-popover v-show="scope.row.echeckmark !== null" trigger="hover" placement="top">
             <p>进场检查情况: {{ scope.row.echeckmark }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="small">{{ scope.row.echeckmark }}</el-tag>
@@ -136,7 +136,7 @@
       </el-table-column>
       <el-table-column label="出场检查情况" align="center" prop="lcheckmark">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
+          <el-popover v-show="scope.row.lcheckmark !== null" trigger="hover" placement="top">
             <p>出场检查情况: {{ scope.row.lcheckmark }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag size="small">{{ scope.row.lcheckmark }}</el-tag>

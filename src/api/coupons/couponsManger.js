@@ -55,10 +55,9 @@ export function deleteCouponsId(id) {
   })
 }
 // 查询车厂
-export function listAll(query) {
+export function listAll() {
   return request({
     url: '/ylyt/park/listAll',
-    method: 'get',
-    params: query
+    method: 'get'
   })
 }

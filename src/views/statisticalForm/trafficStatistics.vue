@@ -68,9 +68,9 @@
     <!-- 分页控件 -->
     <el-pagination
       v-show="total>0"
-      :current-page="queryParams.page"
+      :current-page="form.page"
       :page-sizes="[5, 10, 20, 30]"
-      :page-size="queryParams.size"
+      :page-size="form.size"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total"
       @size-change="handleSizeChange"
@@ -100,12 +100,6 @@ export default {
       // 收费列表数据
       trafficTableList: [],
       // 查询参数
-      queryParams: {
-        page: 1,
-        size: 10,
-        created: '',
-        parkId: ''
-      },
       id: '',
       listData2: [],
       hang: [],
@@ -179,7 +173,7 @@ export default {
     // 查询表格数据
     getTrafficList() {
       this.loading = true // 打开遮罩
-      this.queryParams.times = this.form.trafficMonth
+      this.form.times = this.form.trafficMonth
       getRecordList(this.form).then(res => {
         this.trafficTableList = res.data.list
         this.total = res.data.total
@@ -200,13 +194,13 @@ export default {
     },
     // 分页size变化时触发
     handleSizeChange(val) {
-      this.queryParams.size = val
+      this.form.size = val
       // 重新查询
       this.getTrafficList()
     },
     // 点击上一页  下一页，跳转到哪一页面时触发
     handleCurrentChange(val) {
-      this.queryParams.page = val
+      this.form.page = val
       // 重新查询
       this.getTrafficList()
     }
