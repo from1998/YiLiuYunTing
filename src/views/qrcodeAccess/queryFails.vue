@@ -1,4 +1,5 @@
 <template>
+  <!-- 该页面是用户预付款查询失败页面，计划将优惠券领取成功页面与之合并在该页面 -->
   <div id="app-container" style="padding:30px 0 0 0">
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;text-align:center">

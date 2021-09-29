@@ -9,11 +9,11 @@
           <el-form ref="form" :model="form" :inline="true" label-width="44px">
             <el-form-item
               label="车场"
-              prop="parkid"
+              prop="parkId"
             >
               <el-select
                 v-cloak
-                v-model="form.parkid"
+                v-model="form.parkId"
                 placeholder="请选择车场"
                 size="small"
               >
@@ -109,7 +109,7 @@ export default {
         page: 1,
         size: 10,
         created: '',
-        parkid: ''
+        parkId: ''
       },
       CarList: '',
       roleId: '',
@@ -133,7 +133,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.form.parkid = this.roleId === 1 ? '' : res.data[0].id
+        this.form.parkId = this.roleId === 1 ? '' : res.data[0].id
       }).catch(err => {
         console.log(err)
       })

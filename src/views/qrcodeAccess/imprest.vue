@@ -1,5 +1,6 @@
 <template>
   <div id="app-container">
+    <!-- 计划将优惠券领取页面与之合并 -->
     <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">多威尔车场</el-header>
     <el-row :gutter="0" style="font-size:1.4rem">
       <el-col :span="12" :offset="2">输入车牌号码:</el-col>

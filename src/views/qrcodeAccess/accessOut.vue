@@ -1,4 +1,5 @@
 <template>
+  <!-- 该页面既是出场支付页面也是用户预付款查询成功页面 -->
   <div id="app-container" style="padding:30px 0 0 0">
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">

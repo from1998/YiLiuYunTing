@@ -9,11 +9,11 @@
           <el-form ref="form" :model="form" :inline="true" label-width="44px">
             <el-form-item
               label="车场"
-              prop="parkid"
+              prop="parkId"
             >
               <el-select
                 v-cloak
-                v-model="form.parkid"
+                v-model="form.parkId"
                 placeholder="请选择车场"
                 size="small"
               >
@@ -82,7 +82,7 @@
 </template>
 <script>
 // 引入api
-import { getRecordList, getOrders } from '@/api/monitoringCenter/accessRecord'
+import { getOrderList, getOrders } from '@/api/monitoringCenter/accessRecord'
 import lineStack from '@/views/statisticalForm/lineStack.vue'
 import { listAll } from '@/api/coupons/couponsManger'
 
@@ -106,7 +106,7 @@ export default {
         page: 1,
         size: 10,
         created: '',
-        parkid: ''
+        parkId: ''
       },
       time: [],
       gfMap: [],
@@ -131,7 +131,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.form.parkid = this.roleId === 1 ? '' : res.data[0].id
+        this.form.parkId = this.roleId === 1 ? '' : res.data[0].id
       })
     },
     getOrdersList() {
@@ -156,7 +156,7 @@ export default {
     // 查询表格数据
     getFeeList() {
       this.loading = true // 打开遮罩
-      getRecordList(this.form).then(res => {
+      getOrderList(this.form).then(res => {
         this.feeTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩

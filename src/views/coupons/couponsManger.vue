@@ -200,7 +200,8 @@
       <el-form
         ref="form"
         :model="form"
-        label-width="80px"
+        label-width="65px"
+        :rules="rules"
       >
         <el-form-item
           label="名称"
@@ -215,7 +216,7 @@
             />
           </el-row>
         </el-form-item>
-        <el-form-item label="优惠劵">
+        <el-form-item label="优惠劵" prop="category">
           <el-select
             v-model="form.category"
             style="width:100%"
@@ -278,10 +279,17 @@ import {
   deleteCouponsId,
   listAll
 } from '@/api/coupons/couponsManger'
+import validate from '@/utils/validate.js'
 export default {
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        category: validate.notEmpty,
+        name: validate.notEmpty
+      },
       carTableList: [],
       // 是否启用遮罩层
       loading: false,

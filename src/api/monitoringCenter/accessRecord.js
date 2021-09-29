@@ -9,6 +9,14 @@ export function getRecordList(query) {
   })
 }
 
+export function getOrderList(query) {
+  return request({
+    url: '/ylyt/park/getOrdersList',
+    method: 'get',
+    params: query
+  })
+}
+
 // 清理离场车辆信息
 export function cleanLeaveRecord() {
   return request({

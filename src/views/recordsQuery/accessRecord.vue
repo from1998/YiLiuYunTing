@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="0">
       <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
-        <span>多威尔车场</span>
+        <span>{{ laneName }}</span>
       </el-col>
     </el-row>
     <!-- 表格工具按钮开始 -->
@@ -27,14 +27,25 @@
         </el-form>
       </el-col>
       <el-col :span="6" :offset="10">
-        <el-form ref="carForm" :model="parkForm" label-width="180px" :disabled="flag">
-          <el-form-item label="" prop="id">
-            <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
+        <el-form :model="queryParams" label-width="180px" :disabled="flag">
+          <el-form-item
+            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+            label="车场"
+            prop="parkId"
+          >
+            <el-select
+              v-cloak
+              v-model="queryParams.parkId"
+              placeholder="请选择您要查看的车场"
+              size="small"
+              clearable
+              @change="handleParkFocus"
+            >
               <el-option
                 v-for="item in parkCategory"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="Number(item.dictValue)"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
               />
             </el-select>
           </el-form-item>
@@ -236,15 +247,13 @@
 <script>
 // 引入api
 import { getRecordList, cleanLeaveRecord, cleanEnterRecord } from '@/api/monitoringCenter/accessRecord'
+import { listAll } from '@/api/coupons/couponsManger'
 
 export default {
   // 定义页面数据
   data() {
     return {
-      parkForm: {
-        // 车场id
-        id: ''
-      },
+      laneName: '',
       flag: false,
       src: 'https://cube.elemecdn.com/6/94/4d3ea53c084bad6931a56d5158a48jpeg.jpeg',
       accessInSrc: '',
@@ -286,7 +295,9 @@ export default {
         enterStart: undefined,
         enterEnd: undefined,
         leaveStart: undefined,
-        leaveEnd: undefined
+        leaveEnd: undefined,
+        // 车场id
+        parkId: ''
       },
       // 表单校验
       // 是否打开分配权限的弹出层
@@ -312,11 +323,24 @@ export default {
     this.getDataByType('CarRecordStatusDic').then(res => {
       this.recordOptions = res.data
     })
+    // 获取车场列表数据
+    listAll().then(res => {
+      this.parkCategory = res.data
+      this.queryParams.parkId = this.getUserInfo().role === 1 ? '' : res.data[0].id
+    })
     // 查询表格数据
     this.getAccessList()
   },
   // 方法
   methods: {
+    handleParkFocus(val) {
+      this.getAccessList()
+      for (const key in this.parkCategory) {
+        if (this.parkCategory[key].id === val) {
+          this.laneName = this.parkCategory[key].name
+        }
+      }
+    },
     // 清理异常车辆
     handleLeave() {
       this.loading = true // 打开遮罩

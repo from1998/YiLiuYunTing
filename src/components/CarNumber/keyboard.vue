@@ -21,7 +21,7 @@
               v-for="(item,index) in specials"
               :key="index"
               class="specials"
-              :class="{'kspecials': activeIndex < 6}"
+              :class="{'kspecials': activeIndex < 7}"
             >{{ item }}</span>
           </div>
           <div class="close">
@@ -89,8 +89,10 @@
             >{{ item }}</span>
           </div>
           <div class="keyboard">
-            <span v-show="cph.length === 7" class="k-done k-done2" @touchstart="touchstart" @touchend="touchend">
-              <svg-icon icon-class="search" style="transform: scale(1.8, 1.8);" />
+            <span class="k-done k-done2" @touchstart="touchstart" @touchend="touchend">
+              <!-- <svg-icon icon-class="search" style="transform: scale(1.5, 1.5);" /> -->
+              <!-- <i class="el-icon-search" /> -->
+              完成
             </span>
             <span
               v-for="(item, index) in letters.slice(19)"
@@ -129,7 +131,7 @@ export default {
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
         'Z', 'X', 'C', 'V', 'B', 'N', 'M'
       ],
-      specials: ['领', '警', '港', '澳', '学', '挂'],
+      specials: ['新', '领', '警', '港', '澳', '学', '挂'],
       cph: [],
       newCph: [],
       shadow: new Array(8),
@@ -153,13 +155,13 @@ export default {
       this.$emit('confirmBtn', this.cph.join(''))
     },
     clickBoard(e) {
-      if (e.target.tagName.toLowerCase() === 'span') {
-        if (e.target.className.indexOf('k') === -1 && this.clickIndex < 8) {
+      if (e.target.tagName.toLowerCase() === 'span' || e.target.tagName.toLowerCase() === 'svg' || e.target.tagName.toLowerCase() === 'use') {
+        if ((!e.target.className && e.target.className.indexOf('k') === -1 && this.clickIndex < 8) || e.target.className === 'specials') {
           this.cph[this.clickIndex] = e.target.textContent.trim()
           this.newCph = this.cph
           this.clickIndex += 1
           if (this.clickIndex > 7) this.clickIndex = 7
-        } else if (e.target.className === 'k-del') {
+        } else if (e.target.className === 'k-del' || e.target.tagName.toLowerCase() === 'svg' || e.target.tagName.toLowerCase() === 'use') {
           this.newCph[this.clickIndex] = ''
           this.cph = this.newCph
           this.clickIndex -= 1
@@ -225,7 +227,7 @@ export default {
 
   .confirmBtn {
     flex: 1;
-    background: #FD0001;
+    background: #FF2343;
     color: #fff;
   }
 }
@@ -344,6 +346,7 @@ export default {
     .k-del {
       width: 40px;
       position: absolute;
+      z-index: 999;
       right: 2px;
       display: block;
       background-color: #F56C6C;
