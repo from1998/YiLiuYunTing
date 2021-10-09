@@ -82,7 +82,7 @@
 </template>
 <script>
 // 引入api
-import { getRecordList, getCarOrder } from '@/api/monitoringCenter/accessRecord'
+import { getRecordList, getCarOrder, exportTrafficStatistics } from '@/api/monitoringCenter/accessRecord'
 import lineStack from '@/views/statisticalForm/lineStack.vue'
 import { listAll } from '@/api/coupons/couponsManger'
 
@@ -183,7 +183,25 @@ export default {
     },
     // 导出车流报表表格
     handleExport() {
-      console.log('success')
+      this.loading = true
+      var query = this.form
+      delete query.page
+      delete query.size
+      exportTrafficStatistics(query).then(res => {
+        const fileName = '车流统计报表.xls'
+        if ('download' in document.createElement('a')) { // 非IE下载
+          const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }
+      })
+      this.loading = false
     },
     // 查询表格数据
     getTrafficList() {

@@ -48,3 +48,24 @@ export function getOrders(data) {
     params: data
   })
 }
+
+// 批量导出车流报表
+export function exportTrafficStatistics(query) {
+  return request({
+    url: '/park/record/exportCarRecord',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+
+// 批量导出收费报表
+export function exportFeeStatistical(query) {
+  return request({
+    url: '/order/exportOrder',
+    method: 'get',
+    params: query,
+    responseType: 'blob'
+  })
+}
+

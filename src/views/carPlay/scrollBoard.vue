@@ -9,87 +9,86 @@
     <dv-decoration-7 class="dv-decoration-7"><span>订单监控</span></dv-decoration-7>
     <dv-border-box-3 style="height: 45%;overflow: hidden;">
       <div class="scroll-board-order">
-        <dv-scroll-board style="color: aqua;" :config="orderConfig" />
+        <dv-scroll-board style="color: aqua;" :config="orderConfig" @mouseover="hoverScrollBoard" />
       </div>
     </dv-border-box-3>
   </div>
 </template>
 
 <script>
+import { getRecordList } from '@/api/monitoringCenter/accessRecord'
+import { getOrderList } from '@/api/recordsQuery/orderRecord'
+
 export default {
   name: 'ScrollBoard',
   data() {
     return {
-      resData: [],
+      accessData: [],
+      orderData: [],
       inOut: [],
       order: [],
-      inOutConfig: {
-        header: ['车厂', '车牌', '进场时间', '进场口'],
-        data: [],
-        columnWidth: [130, 130, 180, 130],
-        align: ['center'],
-        rowNum: 3,
-        headerBGC: '#1981f6',
-        headerHeight: 35,
-        oddRowBGC: 'rgba(0, 44, 81, 0.8)',
-        evenRowBGC: 'rgba(10, 29, 50, 0.8)'
-      },
-      orderConfig: {
-        header: ['车厂', '车牌', '出场时间', '出场口', '费用'],
-        data: [],
-        columnWidth: [100, 100, 160, 100, 80],
-        align: ['center'],
-        rowNum: 3,
-        headerBGC: '#1981f6',
-        headerHeight: 35,
-        oddRowBGC: 'rgba(0, 44, 81, 0.8)',
-        evenRowBGC: 'rgba(10, 29, 50, 0.8)'
-      }
+      inOutConfig: {},
+      orderConfig: {}
     }
   },
   created() {
     this.getData()
   },
   methods: {
-    getData() {
-      this.resData = [{
-        // 是否进场
-        isin: true,
-        stationName: '一流云停',
-        carNumber: '皖A12345',
-        time: '2019-07-01 19:25:00',
-        accessName: '东门入口',
-        // 进场车辆费用为null
-        fee: null
-      },
-      {
-        // 出场
-        isin: false,
-        stationName: '多威尔',
-        carNumber: '皖A33345',
-        time: '2019-07-01 19:25:00',
-        accessName: '西门出口',
-        // 出场费用
-        fee: 20.00
-      },
-      {
-        isin: true,
-        stationName: '东方商城',
-        carNumber: '皖A12345',
-        time: '2019-07-01 19:25:00',
-        accessName: '南门入口',
-        fee: null
-      }
-      ]
-      this.resData.map(item => {
-        if (!item.isin) {
-          this.order.push([item.stationName, item.carNumber, item.time, item.accessName, item.fee])
-        } else {
-          this.inOut.push([item.stationName, item.carNumber, item.time, item.accessName])
-        }
+    // 查询表格数据
+    async getData() {
+      this.loading = true // 打开遮罩
+      await getRecordList().then(res => {
+        this.accessData = res.data.list
+        this.loading = false// 关闭遮罩
       })
-      this.inOutConfig.data = this.inOut
-      this.orderConfig.data = this.order
+      await getOrderList().then(res => {
+        this.orderData = res.data.list
+        this.loading = false// 关闭遮罩
+      })
+      this.accessData.map(item => {
+        this.inOut.push([item.parkName, item.carnumber, item.entered, item.leaved])
+      })
+      this.orderData.map(item => {
+        switch (item.platform) {
+          case 1:
+            item.platform = '官方'
+            break
+          case 2:
+            item.platform = '支付宝'
+            break
+          case 3:
+            item.platform = '微信'
+            break
+        }
+        this.order.push([item.parkName, item.carNumber, item.created, item.platform, '￥' + item.amount.toFixed(2)])
+      })
+      this.inOutConfig = {
+        header: ['车场', '车牌', '进场时间', '出场时间'],
+        data: this.inOut,
+        columnWidth: [130, 110, 160, 160],
+        align: ['center'],
+        rowNum: 3,
+        headerBGC: '#1981f6',
+        headerHeight: 35,
+        oddRowBGC: 'rgba(0, 44, 81, 0.8)',
+        evenRowBGC: 'rgba(10, 29, 50, 0.8)'
+      }
+      this.orderConfig = {
+        header: ['车场', '车牌', '出场时间', '支付平台', '费用'],
+        data: this.order,
+        columnWidth: [110, 110, 160],
+        align: ['center'],
+        rowNum: 3,
+        headerBGC: '#1981f6',
+        headerHeight: 35,
+        oddRowBGC: 'rgba(0, 44, 81, 0.8)',
+        evenRowBGC: 'rgba(10, 29, 50, 0.8)'
+      }
+    },
+    // 悬浮查看完整数据
+    hoverScrollBoard(val) {
+      console.log(val.row)
     }
   }
 }

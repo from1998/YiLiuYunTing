@@ -56,7 +56,7 @@
           <span>收费报表</span>
         </el-col>
         <el-col :span="2" :offset="18" :gutter="0">
-          <el-button type="success" size="mini" style="margin-left:56px">
+          <el-button type="success" size="mini" style="margin-left:56px" @click="handleExport">
             导出表格
           </el-button>
         </el-col>
@@ -86,7 +86,7 @@
 </template>
 <script>
 // 引入api
-import { getOrderList, getOrders } from '@/api/monitoringCenter/accessRecord'
+import { getOrderList, getOrders, exportFeeStatistical } from '@/api/monitoringCenter/accessRecord'
 import lineStack from '@/views/statisticalForm/lineStack.vue'
 import { listAll } from '@/api/coupons/couponsManger'
 
@@ -191,8 +191,6 @@ export default {
     // 条件查询
     handleQuery() {
       this.getTimeList()
-      // this.getOrdersList()
-      // this.getFeeList()
     },
     // 重置查询条件
     resetQuery() {
@@ -212,6 +210,28 @@ export default {
       this.form.page = val
       // 重新查询
       this.getFeeList()
+    },
+    // 导出收费报表表格
+    handleExport() {
+      this.loading = true
+      var query = this.form
+      delete query.page
+      delete query.size
+      exportFeeStatistical(query).then(res => {
+        const fileName = '收费统计报表.xls'
+        if ('download' in document.createElement('a')) { // 非IE下载
+          const blob = new Blob([res], { type: 'application/vnd.ms-excel' })
+          const elink = document.createElement('a')
+          elink.download = fileName
+          elink.style.display = 'none'
+          elink.href = URL.createObjectURL(blob)
+          document.body.appendChild(elink)
+          elink.click()
+          URL.revokeObjectURL(elink.href) // 释放URL 对象
+          document.body.removeChild(elink)
+        }
+      })
+      this.loading = false
     }
   }
 }
