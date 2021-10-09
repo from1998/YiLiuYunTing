@@ -2,29 +2,16 @@
   <div class="app-container">
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
+        <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding:5px 0 15px 0">
+          <span>{{ laneName }}</span>
+        </el-col>
+      </el-row>
+      <el-row :gutter="0">
         <el-col :span="2" :offset="1" :gutter="0" style="margin-top:7px">
           <span>收费曲线图</span>
         </el-col>
         <el-col :span="11" :offset="10">
           <el-form ref="form" :model="form" :inline="true" label-width="44px">
-            <el-form-item
-              label="车场"
-              prop="parkId"
-            >
-              <el-select
-                v-cloak
-                v-model="form.parkId"
-                placeholder="请选择车场"
-                size="small"
-              >
-                <el-option
-                  v-for="(item, index) in CarList"
-                  :key="index"
-                  :label="item.name"
-                  :value="Number(item.id)"
-                />
-              </el-select>
-            </el-form-item>
             <el-form-item label="日期" prop="created">
               <el-date-picker
                 v-model="form.created"
@@ -37,6 +24,23 @@
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
+            <el-select
+              v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+              v-cloak
+              v-model="form.parkId"
+              placeholder="请选择您要查看的车场"
+              size="small"
+              clearable
+              style="padding-left:55px"
+              @change="handleParkFocus"
+            >
+              <el-option
+                v-for="(item, index) in CarList"
+                :key="index"
+                :label="item.name"
+                :value="Number(item.id)"
+              />
+            </el-select>
           </el-form>
           <!-- 查询条件结束 -->
         </el-col>
@@ -60,10 +64,10 @@
     </el-header>
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="feeTableList" stripe>
-      <el-table-column label="日期" align="center" prop="carnumber" />
-      <el-table-column label="微信" align="center" prop="entered" />
-      <el-table-column label="支付宝" align="center" prop="elaneName" />
-      <el-table-column label="官方" align="center" prop="leaved" />
+      <el-table-column label="日期" align="center" prop="created" />
+      <el-table-column label="微信" align="center" prop="wx" />
+      <el-table-column label="支付宝" align="center" prop="zfb" />
+      <el-table-column label="官方" align="center" prop="gf" />
       <el-table-column label="车场名称" align="center" prop="parkName" />
     </el-table>
 
@@ -93,6 +97,7 @@ export default {
   // 定义页面数据
   data() {
     return {
+      laneName: '',
       // 所属月份
       feeMonth: '',
       // 是否启用遮罩层
@@ -127,6 +132,18 @@ export default {
   },
   // 方法
   methods: {
+    handleParkFocus(val) {
+      if (val === '') {
+        this.laneName = ''
+      } else {
+        this.getTimeList()
+        for (const key in this.CarList) {
+          if (this.CarList[key].id === val) {
+            this.laneName = this.CarList[key].name
+          }
+        }
+      }
+    },
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {
@@ -182,7 +199,6 @@ export default {
       this.resetForm('form')
       this.dateRangeIn = []
       this.dateRangeOut = []
-      this.getFeeList()
       this.getTimeList()
     },
     // 分页size变化时触发

@@ -5,39 +5,68 @@
         <span>{{ laneName }}</span>
       </el-col>
     </el-row>
+    <!-- 表格工具按钮开始 -->
+    <el-row style="margin-bottom:20px">
+      <el-col :span="10">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+        <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
+        <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
+        <el-upload
+          v-show="getUserInfo().role === 4"
+          style="width:8.2%;display:inline-block;margin-left:0.5%"
+          :action="uploadPath"
+          accept="xlsx"
+          :limit="3"
+          :file-list="fileList"
+          :headers="headers"
+          :on-success="handleSuccess"
+          :on-error="handleError"
+          :show-file-list="false"
+        >
+          <el-button type="success" size="mini">
+            <svg-icon icon-class="import" />
+            导入车辆
+          </el-button>
+        </el-upload>
+        <el-button type="warning" size="mini" @click="handleExport">
+          导出车辆
+          <svg-icon icon-class="export" />
+        </el-button>
+      </el-col>
+      <el-col :span="4" :offset="10" style="padding-left:55px">
+        <el-select
+          v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
+          v-cloak
+          v-model="queryParams.parkId"
+          placeholder="请选择您要查看的车场"
+          size="small"
+          style="width:220px"
+          clearable
+          @change="handleLaneName"
+        >
+          <el-option
+            v-for="item in options.parkCategory"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+            @change="handleParkFocus"
+          />
+        </el-select>
+      </el-col>
+    </el-row>
     <el-row :gutter="0" style="margin-top:20px">
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item
-            v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
-            label="车场"
-            prop="parkId"
-            label-width="40px"
-          >
-            <el-select
-              v-cloak
-              v-model="queryParams.parkId"
-              placeholder="请选择车场"
-              size="small"
-              style="width:180px"
-              @change="handleLaneName"
-            >
-              <el-option
-                v-for="item in options.parkCategory"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item label="车牌号" prop="carNumber">
             <el-input
               v-model="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
-              style="width:160px"
+              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="姓名" prop="userName" label-width="45px">
@@ -46,7 +75,7 @@
               placeholder="请输入姓名"
               clearable
               size="small"
-              style="width:160px"
+              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
@@ -96,37 +125,6 @@
           </el-form-item>
         </el-form>
         <!-- 查询条件结束 -->
-      </el-col>
-    </el-row>
-    <!-- 表格工具按钮开始 -->
-    <el-row style="margin-bottom:20px">
-      <el-col :span="18">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-        <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
-        <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
-        <el-upload
-          v-show="getUserInfo().role === 4"
-          style="width:8.2%;display:inline-block;margin-left:0.5%"
-          :action="uploadPath"
-          accept="xlsx"
-          :limit="3"
-          :file-list="fileList"
-          :headers="headers"
-          :on-success="handleSuccess"
-          :on-error="handleError"
-          :show-file-list="false"
-        >
-          <el-button type="success" size="mini">
-            <svg-icon icon-class="import" />
-            导入车辆
-          </el-button>
-        </el-upload>
-        <el-button type="warning" size="mini" @click="handleExport">
-          导出车辆
-          <svg-icon icon-class="export" />
-        </el-button>
       </el-col>
     </el-row>
 
@@ -318,7 +316,7 @@
             <el-form-item label="开始时间" prop="startSplit">
               <el-time-picker
                 v-model="form.startSplit"
-                value-format="HH-mm-ss"
+                value-format="HH:mm:ss"
                 placeholder="开始时间"
                 style="width:140px"
               />
@@ -328,7 +326,7 @@
             <el-form-item label="结束时间" prop="endSplit">
               <el-time-picker
                 v-model="form.endSplit"
-                value-format="HH-mm-ss"
+                value-format="HH:mm:ss"
                 placeholder="结束时间"
                 style="width:140px"
               />
@@ -605,6 +603,9 @@ export default {
 
   // },
   methods: {
+    handleParkFocus() {
+      this.getList()
+    },
     handleSuccess(res) {
       this.msgSuccess(res.msg)
       this.getList()
@@ -614,9 +615,14 @@ export default {
       this.getList()
     },
     handleLaneName(val) {
-      for (const key in this.options.parkCategory) {
-        if (this.options.parkCategory[key].id === val) {
-          this.laneName = this.options.parkCategory[key].name
+      if (val === '') {
+        this.laneName = ''
+      } else {
+        this.getList()
+        for (const key in this.options.parkCategory) {
+          if (this.options.parkCategory[key].id === val) {
+            this.laneName = this.options.parkCategory[key].name
+          }
         }
       }
     },

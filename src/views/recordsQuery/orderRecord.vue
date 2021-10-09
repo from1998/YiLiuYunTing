@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-row :gutter="0">
       <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding:5px 0 15px 0">
-        <span>多威尔车场</span>
+        <span>{{ laneName }}</span>
       </el-col>
     </el-row>
     <!-- 表格工具按钮开始 -->
@@ -54,19 +54,24 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
-      <el-col :span="6" :offset="0">
-        <el-form ref="carForm" :model="parkForm" label-width="180px" :disabled="flag" style="margin-left:10px">
-          <el-form-item label="" prop="id">
-            <el-select v-model="parkForm.id" placeholder="请选择您要查看的车场">
-              <el-option
-                v-for="item in options.parkCategory"
-                :key="item.dictValue"
-                :label="item.dictLabel"
-                :value="Number(item.dictValue)"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
+      <el-col :span="4" :offset="2">
+        <el-select
+          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+          v-cloak
+          v-model="queryParams.parkId"
+          placeholder="请选择您要查看的车场"
+          size="small"
+          clearable
+          style="padding-left:70px"
+          @change="handleParkFocus"
+        >
+          <el-option
+            v-for="item in parkCategory"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-col>
     </el-row>
 
@@ -100,11 +105,13 @@
 <script>
 // 引入api
 import { getOrderList, getOrderDict } from '@/api/recordsQuery/orderRecord'
+import { listAll } from '@/api/coupons/couponsManger'
 
 export default {
   // 定义页面数据
   data() {
     return {
+      laneName: '',
       parkForm: {
         // 车场id
         id: ''
@@ -138,17 +145,19 @@ export default {
         carNumber: undefined,
         sn: undefined,
         pay: undefined,
-        state: undefined
+        state: undefined,
+        // 车场id
+        parkId: ''
       },
+      // 车场类型
+      parkCategory: [],
       options: {
         // 订单状态
         ordersState: [],
         // 支付平台
         payChannel: [],
         // 支付类目
-        orderSkuType: [],
-        // 车场类型
-        parkCategory: []
+        orderSkuType: []
       }
     }
   },
@@ -156,11 +165,28 @@ export default {
   created() {
     // 获取数据词典
     this.getOrderDic()
+    // 获取车场列表数据
+    listAll().then(res => {
+      this.parkCategory = res.data
+      this.queryParams.parkId = this.getUserInfo().role === 1 ? '' : res.data[0].id
+    })
     // 查询表格数据
     this.getOrderTable()
   },
   // 方法
   methods: {
+    handleParkFocus(val) {
+      if (val === '') {
+        this.laneName = ''
+      } else {
+        this.getOrderTable()
+        for (const key in this.parkCategory) {
+          if (this.parkCategory[key].id === val) {
+            this.laneName = this.parkCategory[key].name
+          }
+        }
+      }
+    },
     // 翻译订单状态
     ordersStateFormatter(row) {
       return this.formatterDict(this.options.ordersState, row.state.toString())
@@ -189,7 +215,7 @@ export default {
       this.loading = true // 打开遮罩
       getOrderDict().then(res => {
         this.options.ordersState = res.data.OrdersStateDic
-        this.options.payChannel = res.data.PayChannelDic
+        this.options.payChannel = res.data.PlatformDic
         this.options.payType = res.data.PayTypeDic
         this.options.orderSkuType = res.data.OrderSkuTypeDic
         this.loading = false// 关闭遮罩

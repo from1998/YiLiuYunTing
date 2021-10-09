@@ -26,30 +26,23 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :span="6" :offset="10">
-        <el-form :model="queryParams" label-width="180px" :disabled="flag">
-          <el-form-item
-            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-            label="车场"
-            prop="parkId"
-          >
-            <el-select
-              v-cloak
-              v-model="queryParams.parkId"
-              placeholder="请选择您要查看的车场"
-              size="small"
-              clearable
-              @change="handleParkFocus"
-            >
-              <el-option
-                v-for="item in parkCategory"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
-        </el-form>
+      <el-col :span="4" :offset="12" style="padding-left:60px">
+        <el-select
+          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+          v-cloak
+          v-model="queryParams.parkId"
+          placeholder="请选择您要查看的车场"
+          size="small"
+          clearable
+          @change="handleParkFocus"
+        >
+          <el-option
+            v-for="item in parkCategory"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          />
+        </el-select>
       </el-col>
     </el-row>
     <el-row :gutter="0">
@@ -334,10 +327,14 @@ export default {
   // 方法
   methods: {
     handleParkFocus(val) {
-      this.getAccessList()
-      for (const key in this.parkCategory) {
-        if (this.parkCategory[key].id === val) {
-          this.laneName = this.parkCategory[key].name
+      if (val === '') {
+        this.laneName = ''
+      } else {
+        this.getAccessList()
+        for (const key in this.parkCategory) {
+          if (this.parkCategory[key].id === val) {
+            this.laneName = this.parkCategory[key].name
+          }
         }
       }
     },

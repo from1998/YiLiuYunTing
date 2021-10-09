@@ -157,10 +157,6 @@ export default {
             saveAsImage: {
               show: true,
               title: '保存为图片'
-            },
-            dataView: {
-              show: true,
-              title: '切换到数据视图'
             }
           }
         },

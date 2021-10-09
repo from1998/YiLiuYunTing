@@ -64,8 +64,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="续费单价(元/分钟)" prop="overMoney">
-              <el-tooltip class="item" effect="dark" content="请输入续费单价(元/分钟)" placement="right">
+            <el-form-item label="续费单价(元/小时)" prop="overMoney">
+              <el-tooltip class="item" effect="dark" content="请输入续费单价(元/小时)" placement="right">
                 <el-input-number v-model="form.overMoney" :precision="2" :step="1" />
               </el-tooltip>
             </el-form-item>
@@ -102,6 +102,7 @@
                   <el-table-column
                     label="时间范围"
                     width="300"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <!--                      <el-time-picker-->
@@ -142,6 +143,7 @@
                   <el-table-column
                     label="收费金额(元)"
                     width="222"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <el-input-number v-model="scope.row.amount" :precision="2" :step="1" />
@@ -149,6 +151,7 @@
                   </el-table-column>
                   <el-table-column
                     label="操作"
+                    align="center"
                   >
                     <template slot-scope="scope" style="text-align:center">
                       <el-button
@@ -177,6 +180,7 @@
                   <el-table-column
                     label="时长(分钟)"
                     width="222"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <el-input-number v-model="scope.row.duration" :precision="0" :step="1" />
@@ -185,6 +189,7 @@
                   <el-table-column
                     label="收费金额(元)"
                     width="222"
+                    align="center"
                   >
                     <template slot-scope="scope">
                       <el-input-number v-model="scope.row.amount" :precision="2" :step="1" />
@@ -192,6 +197,7 @@
                   </el-table-column>
                   <el-table-column
                     label="操作"
+                    align="center"
                   >
                     <template slot-scope="scope" style="text-align:center">
                       <el-button
@@ -266,7 +272,13 @@ export default {
         // 分段计费
         commonCountFee: [
           {
-            timeDur: [],
+            start: '',
+            end: '',
+            amount: ''
+          },
+          {
+            start: '',
+            end: '',
             amount: ''
           }
         ]
@@ -394,7 +406,8 @@ export default {
       if (array.length + 1 <= Number(this.limitNumber)) {
         if (array === this.form.commonCountFee) {
           array.push({
-            timeDur: [],
+            start: '',
+            end: '',
             amount: ''
           })
         } else {
@@ -412,22 +425,23 @@ export default {
     },
     // 处理请求到的分段计费
     handletime() {
-      this.form.commonCountFee = this.form.splittimejsonDto.map(val => {
-        return {
-          amount: val.amount,
-          // 回显的值需要保留，以待再次提交
-          start: val.start,
-          end: val.end,
-          timeDur: [val.start, val.end]
-        }
-      })
+      this.form.commonCountFee = this.form.splittimejsonDto
+      // .map(val => {
+      //   return {
+      //     amount: val.amount,
+      //     // 回显的值需要保留，以待再次提交
+      //     start: val.start,
+      //     end: val.end,
+      //     timeDur: [val.start, val.end]
+      //   }
+      // })
       this.form.splittimejsonDto = []
     },
     // 处理待发送的时间
-    timeChange(row, val) {
-      row.start = val[0]
-      row.end = val[1]
-    },
+    // timeChange(row, val) {
+    //   row.start = val[0]
+    //   row.end = val[1]
+    // },
     clear() {
       var data = {
         // 用户id
@@ -444,7 +458,13 @@ export default {
         // 分段计费
         commonCountFee: [
           {
-            timeDur: [],
+            start: '',
+            end: '',
+            amount: ''
+          },
+          {
+            start: '',
+            end: '',
             amount: ''
           }
         ]

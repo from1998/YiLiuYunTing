@@ -258,16 +258,6 @@ export const asyncRoutes = [{
     }
   },
   {
-    path: 'fixedCarInspection',
-    component: () =>
-                    import ('@/views/monitoringCenter/fixedCarInspection'),
-    name: '/monitoringCenter/fixedCarInspection',
-    meta: {
-      title: '固定车查看',
-      icon: 'car'
-    }
-  },
-  {
     path: 'accessRecord',
     component: () =>
                     import ('@/views/monitoringCenter/accessRecord'),
@@ -275,16 +265,6 @@ export const asyncRoutes = [{
     meta: {
       title: '进出记录',
       icon: 'access'
-    }
-  },
-  {
-    path: 'deviceStates',
-    component: () =>
-                    import ('@/views/monitoringCenter/deviceStates'),
-    name: '/monitoringCenter/deviceStates',
-    meta: {
-      title: '设备状态',
-      icon: 'equipment'
     }
   }
   ]
