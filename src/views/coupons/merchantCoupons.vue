@@ -1,32 +1,19 @@
 <template>
   <div class="app-container">
-    <el-row>
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>{{ laneName }}</span>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top:20px">
       <!-- 表格工具按钮开始 -->
-      <el-col :span="6">
+      <el-col :span="4">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加商家优惠券</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="18" :offset="0">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item
-            label="车场"
-            prop="parkId"
-          >
-            <el-select
-              v-cloak
-              v-model="queryParams.parkId"
-              placeholder="请选择车场"
-              size="small"
-            >
-              <el-option
-                v-for="(item, index) in CarList"
-                :key="index"
-                :label="item.name"
-                :value="Number(item.id)"
-              />
-            </el-select>
-          </el-form-item>
+      <el-col :span="14" :offset="0" style="margin-left:-50px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="48px">
           <el-form-item label="名称" prop="name">
             <el-input
               v-model="queryParams.name"
@@ -35,7 +22,7 @@
               style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="类型" prop="category" label-width="70px">
+          <el-form-item label="类型" prop="category">
             <el-select v-cloak v-model="queryParams.category" clearable style="width:180px" placeholder="请选择优惠券类型" size="small">
               <el-option
                 v-for="item in stateOptions"
@@ -62,6 +49,25 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
+      <el-col :span="3" :offset="3">
+        <el-select
+          v-cloak
+          v-model="queryParams.parkId"
+          placeholder="请选择车场"
+          size="small"
+          style="width:220px;margin-left:38px"
+          clearable
+          @change="handleLaneName"
+        >
+          <el-option
+            v-for="(item, index) in CarList"
+            :key="index"
+            :label="item.name"
+            :value="Number(item.id)"
+          />
+        </el-select>
+      </el-col>
+
     </el-row>
 
     <!-- 数据表格开始 -->
@@ -372,7 +378,8 @@ export default {
       grantShow: false,
       CarList: [],
       stateOptions: [],
-      parkId: ''
+      parkId: '',
+      laneName: ''
     }
   },
   // 勾子
@@ -403,6 +410,19 @@ export default {
   },
   // 方法
   methods: {
+    handleLaneName(val) {
+      if (val === '') {
+        this.laneName = ''
+        this.getMerchantCouponsList()
+      } else {
+        this.getMerchantCouponsList()
+        for (const key in this.CarList) {
+          if (this.CarList[key].id === val) {
+            this.laneName = this.CarList[key].name
+          }
+        }
+      }
+    },
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {

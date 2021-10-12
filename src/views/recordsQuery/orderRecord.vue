@@ -178,6 +178,7 @@ export default {
     handleParkFocus(val) {
       if (val === '') {
         this.laneName = ''
+        this.getOrderTable()
       } else {
         this.getOrderTable()
         for (const key in this.parkCategory) {

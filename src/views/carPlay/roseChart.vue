@@ -13,7 +13,7 @@
             <span class="svg-container">
               <svg-icon icon-class="money-bag" />
             </span>
-            <span>支付总金额</span><sub class="sub">(万元)</sub>
+            <span>支付总金额</span><sub class="sub">(元)</sub>
           </div>
         </dv-border-box-8>
       </div>
@@ -24,7 +24,7 @@
             <span class="svg-container">
               <svg-icon icon-class="money" />
             </span>
-            <span>当日支付金额</span><sub class="sub">(万元)</sub>
+            <span>当日支付金额</span><sub class="sub">(元)</sub>
           </div>
         </dv-border-box-8>
       </div>
@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { getMoneyData } from '@/api/carPlay/roseChart'
+
 export default {
   name: 'RoseChart',
   data() {
@@ -41,54 +43,54 @@ export default {
       resData: {}
     }
   },
-  created() {
-    this.getData()
-  },
   mounted() {
-    const { createData } = this
-
-    createData()
-
-    setInterval(createData, 3000)
+    this.getData()
+    this.timer = setInterval(() => {
+      this.getData()
+    }, 5000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
-    createData() {
-      this.option = {
-        series: [
-          {
-            type: 'pie',
-            radius: '50%',
-            roseSort: false,
-            data: this.resData.seriesData,
-            insideLabel: {
-              show: false
-            },
-            outsideLabel: {
-              formatter: '{name} {percent}%',
-              labelLineEndLength: 20,
-              style: {
-                fill: 'aqua'
-              },
-              labelLineStyle: {
-                stroke: 'aqua'
-              }
-            },
-            roseType: true
-          }
-        ],
-        color: ['#06AD56', '#1777FF', '#E7370C']
-      }
-    },
     getData() {
-      this.resData = {
-        seriesData: [
-          { name: '微信', value: 42 },
-          { name: '支付宝', value: 30 },
-          { name: '官方', value: 28 }
-        ],
-        totalPaid: 430,
-        todayPaid: 180
-      }
+      this.loading = true // 打开遮罩
+      getMoneyData().then(res => {
+        this.resData = {
+          seriesData: [
+            { name: '微信', value: Number(res.data.wx.substr(0, res.data.wx.length - 1)) },
+            { name: '支付宝', value: Number(res.data.zfb.substr(0, res.data.zfb.length - 1)) },
+            { name: '官方', value: Number(res.data.gf.substr(0, res.data.gf.length - 1)) }
+          ],
+          totalPaid: res.data.totalPaid,
+          todayPaid: res.data.todayPaid
+        }
+        this.option = {
+          series: [
+            {
+              type: 'pie',
+              radius: '50%',
+              roseSort: false,
+              data: this.resData.seriesData,
+              insideLabel: {
+                show: false
+              },
+              outsideLabel: {
+                formatter: '{name} {percent}%',
+                labelLineEndLength: 20,
+                style: {
+                  fill: 'aqua'
+                },
+                labelLineStyle: {
+                  stroke: 'aqua'
+                }
+              },
+              roseType: true
+            }
+          ],
+          color: ['#06AD56', '#1777FF', '#E7370C']
+        }
+      })
     }
   }
 }

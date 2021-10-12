@@ -617,6 +617,7 @@ export default {
     handleLaneName(val) {
       if (val === '') {
         this.laneName = ''
+        this.getList()
       } else {
         this.getList()
         for (const key in this.options.parkCategory) {

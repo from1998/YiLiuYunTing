@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { getLineData } from '@/api/carPlay/lineStack'
 import echarts from 'echarts' // 引入echarts
 
 export default {
@@ -25,49 +26,6 @@ export default {
       resData: {}
     }
   },
-  created() {
-    this.resData = {
-      park: {
-        //   legendData可以不用传回
-        legendData: ['进场车辆', '出场车辆'],
-        xAxisData: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-        seriesData: [
-          {
-            name: '进场车辆',
-            data: [120, 132, 101, 134, 90, 230, 210],
-            color: '#FF0000'
-          },
-          {
-            name: '出场车辆',
-            data: [220, 182, 191, 234, 290, 330, 310],
-            color: '#00FF00'
-          }
-        ]
-      },
-      order: {
-        //   legendData可以不用传回
-        legendData: ['官方', '微信', '支付宝'],
-        xAxisData: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
-        seriesData: [
-          {
-            name: '官方',
-            data: [120, 132, 101, 134, 90, 230, 210],
-            color: '#FF0000'
-          },
-          {
-            name: '微信',
-            data: [220, 182, 191, 234, 290, 330, 310],
-            color: '#00FF00'
-          },
-          {
-            name: '支付宝',
-            data: [326, 178, 255, 109, 183, 226, 499],
-            color: '#FFFFFF'
-          }
-        ]
-      }
-    }
-  },
   mounted() {
     // 基于准备好的dom，初始化echarts实例
     this.parkChart = echarts.init(document.getElementById('park'))
@@ -76,9 +34,27 @@ export default {
     this.renderChart()
   },
   methods: {
+    // 处理接收到的数据
+    processData(data) {
+      const xAxis = []
+      for (const key in data) {
+        const obj = data[key]
+        const arr = []
+        for (const key in obj) {
+          arr.push(obj[key].toString())
+          if (xAxis.indexOf(key) === -1) {
+            xAxis.push(key)
+          }
+        }
+        data[key] = arr
+      }
+      data['xAxis'] = xAxis
+      return data
+    },
     setOptions({ legendData, xAxisData, seriesData } = {}) {
-      seriesData = seriesData.map((item) => {
-        return {
+      const arr = []
+      seriesData.map((item) => {
+        arr.push({
           name: item.name,
           type: 'line',
           itemStyle: {
@@ -94,8 +70,9 @@ export default {
             ]
           },
           data: item.data
-        }
+        })
       })
+      seriesData = arr
       return {
         textStyle: {
           color: 'aqua'
@@ -103,7 +80,7 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        color: ['#FF0000', '#00FF00', '#FFFFFF'],
+        color: ['#Fa3534', '#2979ff', '#FFFAFA'],
         legend: {
           top: '3%',
           right: '4%',
@@ -130,8 +107,51 @@ export default {
       }
     },
     renderChart() {
-      this.parkChart.setOption(this.setOptions(this.resData.park))
-      this.orderChart.setOption(this.setOptions(this.resData.order))
+      getLineData().then(res => {
+        const parkData = this.processData(res.data.park)
+        const orderData = this.processData(res.data.order)
+        this.resData = {
+          park: {
+            legendData: ['进场车辆', '出场车辆'],
+            xAxisData: parkData.xAxis,
+            seriesData: [
+              {
+                name: '进场车辆',
+                data: parkData.enterMap,
+                color: '#Fa3534'
+              },
+              {
+                name: '出场车辆',
+                data: parkData.leaveMap,
+                color: '#2979ff'
+              }
+            ]
+          },
+          order: {
+            legendData: ['官方', '微信', '支付宝'],
+            xAxisData: orderData.xAxis,
+            seriesData: [
+              {
+                name: '官方',
+                data: orderData.gfMap,
+                color: '#Fa3534'
+              },
+              {
+                name: '微信',
+                data: orderData.wxMap,
+                color: '#2979ff'
+              },
+              {
+                name: '支付宝',
+                data: orderData.zfbMap,
+                color: '#FFFAFA'
+              }
+            ]
+          }
+        }
+        this.parkChart.setOption(this.setOptions(this.resData.park))
+        this.orderChart.setOption(this.setOptions(this.resData.order))
+      })
     }
   }
 }

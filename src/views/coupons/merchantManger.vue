@@ -1,34 +1,19 @@
 <template>
   <div class="app-container">
-    <el-row>
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>{{ laneName }}</span>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top:20px">
       <!-- 表格工具按钮开始 -->
-      <el-col :span="6">
+      <el-col :span="3">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加商家</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="18" :offset="0">
+      <el-col :span="14" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item
-            label="车场"
-            prop="parentId"
-            label-width="70px"
-          >
-            <el-select
-              v-cloak
-              v-model="queryParams.parentId"
-              style="width:180px"
-              placeholder="请选择车场"
-              size="small"
-            >
-              <el-option
-                v-for="(item, index) in CarList"
-                :key="index"
-                :label="item.name"
-                :value="Number(item.id)"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item label="商户号" prop="username">
             <el-input
               v-model="queryParams.username"
@@ -83,6 +68,25 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
+      <el-col :span="4" :offset="3">
+        <el-select
+          v-cloak
+          v-model="queryParams.parentId"
+          placeholder="请选择车场"
+          size="small"
+          style="width:220px;margin-left:58px"
+          clearable
+          @change="handleLaneName"
+        >
+          <el-option
+            v-for="(item, index) in CarList"
+            :key="index"
+            :label="item.name"
+            :value="Number(item.id)"
+          />
+        </el-select>
+      </el-col>
+
     </el-row>
 
     <!-- 数据表格开始 -->
@@ -231,7 +235,8 @@ export default {
       // 当前选中持角色ID
       currentRoleId: undefined,
       CarList: [],
-      roleId: ''
+      roleId: '',
+      laneName: ''
     }
   },
   // 勾子
@@ -246,11 +251,25 @@ export default {
     })
     // 查询表格数据
     this.getRoleList()
+    // 获取车厂数据
     this.getCarList()
     this.roleId = this.getUserInfo().role
   },
   // 方法
   methods: {
+    handleLaneName(val) {
+      if (val === '') {
+        this.laneName = ''
+        this.getRoleList()
+      } else {
+        this.getRoleList()
+        for (const key in this.CarList) {
+          if (this.CarList[key].id === val) {
+            this.laneName = this.CarList[key].name
+          }
+        }
+      }
+    },
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {

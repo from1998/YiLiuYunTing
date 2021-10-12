@@ -329,6 +329,7 @@ export default {
     handleParkFocus(val) {
       if (val === '') {
         this.laneName = ''
+        this.getAccessList()
       } else {
         this.getAccessList()
         for (const key in this.parkCategory) {

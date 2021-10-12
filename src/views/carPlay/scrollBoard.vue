@@ -9,7 +9,7 @@
     <dv-decoration-7 class="dv-decoration-7"><span>订单监控</span></dv-decoration-7>
     <dv-border-box-3 style="height: 45%;overflow: hidden;">
       <div class="scroll-board-order">
-        <dv-scroll-board style="color: aqua;" :config="orderConfig" @mouseover="hoverScrollBoard" />
+        <dv-scroll-board style="color: aqua;" :config="orderConfig" />
       </div>
     </dv-border-box-3>
   </div>
@@ -85,10 +85,6 @@ export default {
         oddRowBGC: 'rgba(0, 44, 81, 0.8)',
         evenRowBGC: 'rgba(10, 29, 50, 0.8)'
       }
-    },
-    // 悬浮查看完整数据
-    hoverScrollBoard(val) {
-      console.log(val.row)
     }
   }
 }

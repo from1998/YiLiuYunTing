@@ -1,32 +1,14 @@
 <template>
   <div class="app-container">
-    <el-row>
-      <!-- 表格工具按钮开始 -->
-      <el-col :span="6">
-        <!--        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加优惠券</el-button>-->
-        <!--        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>-->
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>{{ laneName }}</span>
       </el-col>
+    </el-row>
+    <el-row style="margin-top:20px">
       <!-- 查询条件开始 -->
-      <el-col :span="18" :offset="6">
+      <el-col :span="16" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
-          <el-form-item
-            label="车场"
-            prop="parkId"
-          >
-            <el-select
-              v-cloak
-              v-model="queryParams.parkId"
-              placeholder="请选择车场"
-              size="small"
-            >
-              <el-option
-                v-for="(item, index) in CarList"
-                :key="index"
-                :label="item.name"
-                :value="Number(item.id)"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item label="所属商户" prop="merchantId">
             <el-input
               v-model="queryParams.merchantId"
@@ -61,6 +43,25 @@
           </el-form-item>
         </el-form>
         <!-- 查询条件结束 -->
+      </el-col>
+      <!-- 表格工具按钮开始 -->
+      <el-col :span="4" :offset="4" style="padding-left:90px">
+        <el-select
+          v-cloak
+          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+          v-model="queryParams.parkId"
+          placeholder="请选择您要查看的车场"
+          size="small"
+          clearable
+          @change="handleParkFocus"
+        >
+          <el-option
+            v-for="(item, index) in CarList"
+            :key="index"
+            :label="item.name"
+            :value="Number(item.id)"
+          />
+        </el-select>
       </el-col>
     </el-row>
 
@@ -135,6 +136,7 @@ export default {
   // 定义页面数据
   data() {
     return {
+      laneName: '',
       carTableList: [],
       // 是否启用遮罩层
       loading: false,
@@ -205,6 +207,19 @@ export default {
   },
   // 方法
   methods: {
+    handleParkFocus(val) {
+      if (val === '') {
+        this.laneName = ''
+        this.getRoleList()
+      } else {
+        this.getRoleList()
+        for (const key in this.CarList) {
+          if (this.CarList[key].id === val) {
+            this.laneName = this.CarList[key].name
+          }
+        }
+      }
+    },
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {

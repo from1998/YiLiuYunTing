@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { getNumber } from '@/api/carPlay/digitalFlop'
+
 export default {
   name: 'DigitalFlop',
   data() {
@@ -34,119 +36,123 @@ export default {
     this.getData()
   },
   mounted() {
-    const { createData } = this
-
-    createData()
-
-    setInterval(createData, 30000)
+    this.timer = setInterval(() => {
+      this.getData()
+    }, 5000)
+  },
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
-    createData() {
-      this.digitalFlopData = [
-        {
-          title: '今日收益',
-          number: {
-            number: [this.resData.todayFee],
-            content: '￥',
-            textAlign: 'right',
-            style: {
-              fill: '#f2ce20',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '元'
-        },
-        {
-          title: '车场总量',
-          number: {
-            number: [this.resData.totalStation],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#3366FF',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '个'
-        },
-        {
-          title: '设备总量',
-          number: {
-            number: [this.resData.equipment],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#CC00FF',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '台'
-        },
-        {
-          title: '今日进场',
-          number: {
-            number: [this.resData.todayIn],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#f46827',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '辆'
-        },
-        {
-          title: '今日出场',
-          number: {
-            number: [this.resData.todayOut],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#f46827',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '辆'
-        },
-        {
-          title: '进场总量',
-          number: {
-            number: [this.resData.totalIn],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#00CC66',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '辆'
-        },
-        {
-          title: '出场总量',
-          number: {
-            number: [this.resData.totalOut],
-            content: '{nt}',
-            textAlign: 'right',
-            style: {
-              fill: '#00CC66',
-              fontWeight: 'bold'
-            }
-          },
-          unit: '辆'
-        }
-
-      ]
-    },
     getData() {
-      this.resData = {
-        totalStation: 510,
-        equipment: 600,
-        todayIn: 480,
-        todayOut: 556,
-        totalIn: 280,
-        totalOut: 360,
-        todayFee: 360
-      }
+      this.loading = true // 打开遮罩
+      getNumber().then(res => {
+        const data = res.data
+        this.resData = {
+          todayFee: data[0],
+          totalStation: data[1],
+          equipment: data[2],
+          todayIn: data[3],
+          todayOut: data[4],
+          totalIn: data[5],
+          totalOut: data[6]
+        }
+        this.digitalFlopData = [
+          {
+            title: '今日收益',
+            number: {
+              number: [this.resData.todayFee],
+              content: '￥',
+              textAlign: 'right',
+              style: {
+                fill: '#f2ce20',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '元'
+          },
+          {
+            title: '车场总量',
+            number: {
+              number: [this.resData.totalStation],
+              content: '{nt}',
+              textAlign: 'right',
+              style: {
+                fill: '#3366FF',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '个'
+          },
+          {
+            title: '设备总量',
+            number: {
+              number: [this.resData.equipment],
+              content: '{nt}',
+              textAlign: 'right',
+              style: {
+                fill: '#CC00FF',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '台'
+          },
+          {
+            title: '今日进场',
+            number: {
+              number: [this.resData.todayIn],
+              content: '{nt}',
+              textAlign: 'right',
+              style: {
+                fill: '#f46827',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '辆'
+          },
+          {
+            title: '今日出场',
+            number: {
+              number: [this.resData.todayOut],
+              content: '{nt}',
+              textAlign: 'right',
+              style: {
+                fill: '#f46827',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '辆'
+          },
+          {
+            title: '进场总量',
+            number: {
+              number: [this.resData.totalIn],
+              content: '{nt}',
+              textAlign: 'right',
+              style: {
+                fill: '#00CC66',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '辆'
+          },
+          {
+            title: '出场总量',
+            number: {
+              number: [this.resData.totalOut],
+              content: '{nt}',
+              textAlign: 'right',
+              style: {
+                fill: '#00CC66',
+                fontWeight: 'bold'
+              }
+            },
+            unit: '辆'
+          }
+
+        ]
+        this.loading = false// 关闭遮罩
+      })
     }
   }
 }

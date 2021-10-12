@@ -3,7 +3,7 @@
     <dv-border-box-9 class="dv-border-box-9">
       <div class="GMV">
         <dv-decoration-7 class="GMVtitle">
-          <span>总交易额<sub class="sub">(单位:万元)</sub></span>
+          <span>总交易额<sub class="sub">(单位:元)</sub></span>
         </dv-decoration-7>
         <div class="GMVdata">
           <span class="svg-container">
@@ -29,11 +29,8 @@
 
 <script>
 import echarts from 'echarts' // 引入echarts
+import { getRankingData } from '@/api/carPlay/rightChart'
 
-var data = []
-for (let i = 0; i < 5; ++i) {
-  data.push(Math.round(Math.random() * 200))
-}
 const colorArray = [{
   top: '#ffa800', // 黄
   bottom: 'rgba(11,42,84,.3)'
@@ -53,109 +50,14 @@ const colorArray = [{
   bottom: 'rgba(11,42,84,.3)'
 }
 ]
-const option = {
-  tooltip: {
-    show: true,
-    formatter: '停车场：{b}<br />收费金额：￥{c} 元'
-  },
-  grid: {
-    left: '3%',
-    right: '10%',
-    top: '10%',
-    bottom: '1%',
-    containLabel: true
-  },
-  xAxis: {
-    type: 'value',
-    show: false,
-    max: 'dataMax'
-  },
-  yAxis: [{
-    type: 'category',
-    data: ['一流云停', '多威尔停车场', '南湖春城', '芜湖医苑', '东方商城'],
-    inverse: true,
-    animationDuration: 300,
-    animationDurationUpdate: 300,
-    axisLine: {
-      show: false,
-      lineStyle: {
-        color: 'aqua'
-      }
-    },
-    axisTick: {
-      show: false
-    }
-  }],
-  animationDuration: 0,
-  animationDurationUpdate: 3000,
-  animationEasing: 'linear',
-  animationEasingUpdate: 'linear',
-  series: [
-    {
-      realtimeSort: true,
-      type: 'bar',
-      data: data,
-      barCategoryGap: '30%',
-      // 颜色
-      itemStyle: {
-        normal: {
-          label: {
-            show: true,
-            position: 'right',
-            color: 'aqua',
-            valueAnimation: true
-          },
-          // 提供的工具函数生成渐变颜色
-          color: function(params) {
-            const num = colorArray.length
-            return {
-              type: 'linear',
-              colorStops: [{
-                offset: 0,
-                color: colorArray[params.dataIndex % num].bottom
-              }, {
-                offset: 1,
-                color: colorArray[params.dataIndex % num].top
-              }, {
-                offset: 0,
-                color: colorArray[params.dataIndex % num].bottom
-              }, {
-                offset: 1,
-                color: colorArray[params.dataIndex % num].top
-              }, {
-                offset: 0,
-                color: colorArray[params.dataIndex % num].bottom
-              }, {
-                offset: 1,
-                color: colorArray[params.dataIndex % num].top
-              }, {
-                offset: 0,
-                color: colorArray[params.dataIndex % num].bottom
-              }, {
-                offset: 1,
-                color: colorArray[params.dataIndex % num].top
-              }, {
-                offset: 0,
-                color: colorArray[params.dataIndex % num].bottom
-              }, {
-                offset: 1,
-                color: colorArray[params.dataIndex % num].top
-              }]
-            }
-          },
-          barBorderRadius: 70
-        }
-      }
-    }
-  ]
-}
 
 export default {
   name: 'RightChart',
   data() {
     return {
       myChart: '',
-      GMV: undefined
+      GMV: '',
+      option: {}
     }
   },
   computed: {
@@ -169,30 +71,129 @@ export default {
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart-container'))
     // 使用刚指定的配置项和数据显示图表。
-    setInterval(() => {
+    this.renderChart()
+    this.timer = setInterval(() => {
       this.renderChart()
-    }, 0)
-    setInterval(() => {
-      this.renderChart()
-    }, 3000)
+    }, 5000)
   },
-  created() {
-    this.getGmv()
+  beforeDestroy() {
+    clearInterval(this.timer)
   },
   methods: {
-    getGmv() {
-      this.GMV = 123456
+    // 处理接收到的数据
+    processData(data) {
+      const name = []
+      const fee = []
+      for (const key in data) {
+        name.push(key)
+        fee.push(data[key].toFixed(2))
+      }
+      data['name'] = name
+      data['fee'] = fee
+      return data
     },
     renderChart() {
-      var data = option.series[0].data
-      for (var i = 0; i < data.length; ++i) {
-        if (Math.random() > 0.9) {
-          data[i] += Math.round(Math.random() * 2000)
-        } else {
-          data[i] += Math.round(Math.random() * 200)
+      getRankingData().then(res => {
+        this.GMV = res.data.total
+        const data = this.processData(res.data.five)
+        this.option = {
+          tooltip: {
+            show: true,
+            formatter: '停车场：{b}<br />收费金额：￥{c} 元'
+          },
+          grid: {
+            left: '3%',
+            right: '10%',
+            top: '10%',
+            bottom: '1%',
+            containLabel: true
+          },
+          xAxis: {
+            type: 'value',
+            show: false,
+            max: 'dataMax'
+          },
+          yAxis: [{
+            type: 'category',
+            data: data.name,
+            inverse: true,
+            animationDuration: 300,
+            animationDurationUpdate: 300,
+            axisLine: {
+              show: false,
+              lineStyle: {
+                color: 'aqua'
+              }
+            },
+            axisTick: {
+              show: false
+            }
+          }],
+          animationDuration: 0,
+          animationDurationUpdate: 3000,
+          animationEasing: 'linear',
+          animationEasingUpdate: 'linear',
+          series: [
+            {
+              realtimeSort: true,
+              type: 'bar',
+              data: data.fee,
+              barCategoryGap: '30%',
+              // 颜色
+              itemStyle: {
+                normal: {
+                  label: {
+                    show: true,
+                    position: 'right',
+                    color: 'aqua',
+                    valueAnimation: true
+                  },
+                  // 提供的工具函数生成渐变颜色
+                  color: function(params) {
+                    const num = colorArray.length
+                    return {
+                      type: 'linear',
+                      colorStops: [{
+                        offset: 0,
+                        color: colorArray[params.dataIndex % num].bottom
+                      }, {
+                        offset: 1,
+                        color: colorArray[params.dataIndex % num].top
+                      }, {
+                        offset: 0,
+                        color: colorArray[params.dataIndex % num].bottom
+                      }, {
+                        offset: 1,
+                        color: colorArray[params.dataIndex % num].top
+                      }, {
+                        offset: 0,
+                        color: colorArray[params.dataIndex % num].bottom
+                      }, {
+                        offset: 1,
+                        color: colorArray[params.dataIndex % num].top
+                      }, {
+                        offset: 0,
+                        color: colorArray[params.dataIndex % num].bottom
+                      }, {
+                        offset: 1,
+                        color: colorArray[params.dataIndex % num].top
+                      }, {
+                        offset: 0,
+                        color: colorArray[params.dataIndex % num].bottom
+                      }, {
+                        offset: 1,
+                        color: colorArray[params.dataIndex % num].top
+                      }]
+                    }
+                  },
+                  barBorderRadius: 70
+                }
+              }
+            }
+          ]
         }
-      }
-      this.myChart.setOption(option)
+        this.myChart.setOption(this.option)
+      })
     }
   }
 }

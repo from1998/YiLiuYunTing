@@ -29,7 +29,7 @@ const option = {
         show: true,
         color: 'aqua'
       },
-      zoom: 1.25, // 当前视角的缩放比例。
+      zoom: 1.26, // 当前视角的缩放比例。
       itemStyle: { // 地图区域的多边形 图形样式。
         borderColor: 'blue'
       },
@@ -47,6 +47,9 @@ const option = {
   visualMap: { // 视觉地图
     type: 'piecewise', // 分段型
     show: true,
+    textStyle: {
+      color: 'aqua'
+    },
     pieces: [
       { min: 10000 }, // 不指定 max，表示 max 为无限大（Infinity）。
       { min: 1000, max: 9999 },

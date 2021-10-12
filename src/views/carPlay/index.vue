@@ -28,7 +28,7 @@
               </div>
             </div>
             <div class="right-bottom">
-              <line-stack />
+              <lineStack ref="stack" :order-data="orderData" :park-data="parkData" />
             </div>
           </div>
         </div></dv-border-box-1>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-
+// import { getLineData } from '@/api/carPlay/lineStack'
 // 导入顶部标题栏样式
 import topHeader from './topHeader'
 // 导入数字化展板(方格)
@@ -67,9 +67,43 @@ export default {
     // cards
   },
   data() {
-    return {}
+    return {
+      orderData: {},
+      parkData: {}
+    }
   },
-  methods: {}
+  created() {
+    // this.getData()
+  },
+  methods: {
+    // 处理接收到的数据
+    processData(data) {
+      const xAxis = []
+      for (const key in data) {
+        const obj = data[key]
+        const arr = []
+        for (const key in obj) {
+          arr.push(obj[key].toString())
+          if (xAxis.indexOf(key) === -1) {
+            xAxis.push(key)
+          }
+        }
+        data[key] = arr
+      }
+      data['xAxis'] = xAxis
+      return data
+    }
+    // getData() {
+    //   this.loading = true // 打开遮罩
+    //   getLineData().then(res => {
+    //     this.parkData = this.processData(res.data.park)
+    //     this.orderData = this.processData(res.data.order)
+    //     console.log(this.parkData)
+    //     this.$refs.stack.renderChart()
+    //     this.loading = false// 关闭遮罩
+    //   })
+    // }
+  }
 }
 </script>
 

@@ -266,6 +266,16 @@ export const asyncRoutes = [{
       title: '进出记录',
       icon: 'access'
     }
+  },
+  {
+    path: 'deviceStates',
+    component: () =>
+                    import ('@/views/monitoringCenter/deviceStates'),
+    name: '/monitoringCenter/deviceStates',
+    meta: {
+      title: '设备状态',
+      icon: 'equipment'
+    }
   }
   ]
 },

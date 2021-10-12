@@ -1,8 +1,13 @@
 <template>
   <div class="app-container">
-    <el-row>
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>{{ laneName }}</span>
+      </el-col>
+    </el-row>
+    <el-row style="margin-top:20px">
       <!-- 表格工具按钮开始 -->
-      <el-col :span="6">
+      <el-col :span="3">
         <el-button
           type="primary"
           icon="el-icon-plus"
@@ -19,8 +24,8 @@
       </el-col>
       <!-- 查询条件开始 -->
       <el-col
-        :span="17"
-        :offset="1"
+        :span="14"
+        :offset="0"
       >
         <el-form
           ref="queryForm"
@@ -28,25 +33,6 @@
           :inline="true"
           label-width="45px"
         >
-          <el-form-item
-            label="车场"
-            prop="parkId"
-          >
-            <el-select
-              v-cloak
-              v-model="queryParams.parkId"
-              style="width:180px"
-              placeholder="请选择车场"
-              size="small"
-            >
-              <el-option
-                v-for="(item, index) in CarList"
-                :key="index"
-                :label="item.name"
-                :value="Number(item.id)"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item
             label="名称"
             prop="name"
@@ -113,6 +99,25 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
+      <el-col :span="4" :offset="3">
+        <el-select
+          v-cloak
+          v-model="queryParams.parkId"
+          placeholder="请选择车场"
+          size="small"
+          style="width:220px;margin-left:55px"
+          clearable
+          @change="handleLaneName"
+        >
+          <el-option
+            v-for="(item, index) in CarList"
+            :key="index"
+            :label="item.name"
+            :value="Number(item.id)"
+          />
+        </el-select>
+      </el-col>
+
     </el-row>
 
     <!-- 数据表格开始 -->
@@ -338,7 +343,8 @@ export default {
         isActive: ''
       },
       roleId: '',
-      CarList: []
+      CarList: [],
+      laneName: ''
     }
   },
   // 勾子
@@ -359,6 +365,19 @@ export default {
   },
   // 方法
   methods: {
+    handleLaneName(val) {
+      if (val === '') {
+        this.laneName = ''
+        this.getCouponsList()
+      } else {
+        this.getCouponsList()
+        for (const key in this.CarList) {
+          if (this.CarList[key].id === val) {
+            this.laneName = this.CarList[key].name
+          }
+        }
+      }
+    },
     // 获取车厂信息
     getCarList() {
       listAll().then(res => {
