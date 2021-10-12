@@ -2,9 +2,12 @@
   <el-container>
     <!-- 标题 -->
     <el-header class="container" height="36px" style="padding:15px 0 45px;font-weight:700">
-      车场信息
-      <span v-if="form.sn">{{ 'SN:'+ form.sn }}</span>
-      <!-- <el-button type="primary" icon="el-icon-success" size="mini" @clicl="handelCopy"></el-button> -->
+      <el-tooltip effect="dark" content="点击右侧SN值即可复制车场SN。" placement="bottom">
+        <span>车场信息</span>
+      </el-tooltip>
+      <el-button v-if="form.sn" v-clipboard:copy="form.sn" v-clipboard:success="clipboardSuccess" type="text" icon="el-icon-success" size="mini">
+        {{ 'SN:'+ form.sn }}
+      </el-button>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
@@ -256,8 +259,13 @@ import area from '@/assets/json/citys.json'
 
 import validate from '@/utils/validate'
 
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+
 export default {
   name: 'DepotInfo',
+  directives: {
+    clipboard
+  },
   data() {
     return {
       // 验证规则
@@ -357,19 +365,6 @@ export default {
       addressOptions: area
     }
   },
-  // watch: {
-  //   form: {
-  //     handler(val) {
-  //       // debugger
-  //       console.log(val)
-  //       // console.log(this.resdata)
-  //       if (val !== this.resdata) {
-  //         this.SubmitTitle = '提交'
-  //       }
-  //     },
-  //     deep: true
-  //   }
-  // },
   created() {
     // 取路由路径上的参数
     this.form.managerId = this.$route.params && this.$route.params.id // 路由传参
@@ -393,8 +388,9 @@ export default {
     })
   },
   methods: {
-    handelCopy() {
-      document.execCommand(this.form.sn)
+    // 复制SN值成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！SN值已复制到剪贴板。')
     },
     async init() {
       this.loading = true // 打开遮罩
