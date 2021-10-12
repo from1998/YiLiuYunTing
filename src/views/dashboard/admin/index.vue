@@ -52,8 +52,6 @@
 
 <script>
 import { getPanelGroup } from '@/api/dashboard'
-
-// import GithubCorner from '@/components/GithubCorner'
 // 顶部四个方框视图
 import PanelGroup from './components/PanelGroup'
 // 折线统计图
