@@ -109,7 +109,21 @@ export const asyncRoutes = [{
     name: '/carManger/index',
     component: () =>
                 import ('@/views/carManger/index'),
-    meta: { title: '固定车', icon: 'car', noCache: true }
+    meta: { title: '固定车', icon: 'car' }
+  }]
+},
+{
+  path: '/updatePWD',
+  component: Layout,
+  redirect: '/updatePWD/index',
+  name: '/updatePWD',
+  hidden: true,
+  children: [{
+    path: 'index',
+    name: '/updatePWD/index',
+    component: () =>
+                import ('@/views/updatePWD/index'),
+    meta: { title: '更改密码' }
   }]
 },
 {

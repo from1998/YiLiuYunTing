@@ -292,6 +292,7 @@ import {
   getQrcodeDoMain
 } from '@/api/system/carSetting'
 import QRCode from 'qrcode'
+import { prod_url } from '../../../../../proxyConfig/pro.env'
 import validate from '@/utils/validate'
 
 export default {
@@ -429,12 +430,6 @@ export default {
     // 查询表格数据
     this.getlaneList()
   },
-  async mounted() {
-    await this.bus.$on('postSN', val => {
-      // this.options.sn = this.encode64(val)
-      this.options.sn = val
-    })
-  },
   // 方法
   methods: {
     // 翻译是否状态
@@ -468,6 +463,7 @@ export default {
         this.laneList = res.data.lane.list
         this.options.watchhouseName = res.data.workStation
         this.total = res.data.total
+        // this.options.sn =
         this.loading = false// 关闭遮罩
       }).catch(() => {
         this.loading = false// 关闭遮罩
@@ -574,9 +570,9 @@ export default {
       // const id = this.encode64(row.id.toString())
       this.qrcodeDialogVisible = true
       await getQrcodeDoMain().then(async res => {
-        // await this.encode64(this.options.sn)
+        // await this.encode64(row.parkSn)
         // await this.encode64(row.id)
-        this.creatCodeUrl = res.data + '/third/no_plate_enter_' + this.options.sn + '_' + row.id
+        this.creatCodeUrl = res.data + prod_url + '/third/no_plate_enter_' + row.parkSn + '_' + row.id
         // console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
       }).catch(() => {

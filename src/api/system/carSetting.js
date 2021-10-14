@@ -270,7 +270,7 @@ export function baoAnSetting(data) {
 // getQrcodeDoMain
 export function getQrcodeDoMain() {
   return request({
-    url: '/getQrcodeDoMain',
+    url: '/third/getQrcodeDoMain',
     method: 'get'
   })
 }
