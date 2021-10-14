@@ -64,6 +64,9 @@
 </template>
 <script>
 // import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
+// import load from '@/components/Tinymce/dynamicLoadScript
+
+// const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
 
 export default {
   data() {
