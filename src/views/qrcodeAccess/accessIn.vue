@@ -34,7 +34,7 @@
   </div>
 </template>
 <script>
-// import { getEnterData } from '@/api/qrcodeAccess/accessIn'
+import { getEnterData } from '@/api/qrcodeAccess/accessIn'
 
 export default {
 
@@ -53,6 +53,8 @@ export default {
   created() {
     // 取路由路径上的参数
     // this.queryParams.cameraId = this.encode64(this.$route.params && this.$route.params.cameraId) // 路由传参
+    this.queryParams.cameraId = this.$route.params && this.$route.params.cameraId// 路由传参
+    this.queryParams.sn = this.$route.params && this.$route.params.sn // 路由传参
     // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
     // 查询进场数据
     this.getData()
@@ -79,11 +81,11 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       this.parkId = '340100202107124653'
-      // getEnterData(this.queryParams).then(res => {
-      //   this.carNumber = res.data.carNumber
-      // this.parkId = res.data.parkId
-      // this.message = res.data.message
-      // })
+      getEnterData(this.queryParams).then(res => {
+        this.carNumber = res.data.carNumber
+        this.parkId = res.data.parkId
+        this.message = res.data.message
+      })
       this.loading = false// 关闭遮罩
     },
     loadScript(xyUrl, callback) {

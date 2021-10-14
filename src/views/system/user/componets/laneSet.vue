@@ -88,7 +88,7 @@
             v-if="scope.row.type===1"
             type="text"
             size="mini"
-            @click="handleAccess(scope.row)"
+            @click="handleAccess(scope.row,'in')"
           >
             <svg-icon icon-class="qrcode" />
             无牌进场二维码
@@ -97,7 +97,7 @@
             v-if="scope.row.type===2"
             type="text"
             size="mini"
-            @click="handleAccess(scope.row)"
+            @click="handleAccess(scope.row,'out')"
           >
             <svg-icon icon-class="pay" />
             出场支付二维码
@@ -249,7 +249,7 @@
     <canvas v-show="false" id="laneCanvas" />
     <!-- 二维码弹出层 -->
     <el-dialog
-      title="无牌车进场请扫码"
+      :title="qrcodeTitle"
       :visible.sync="qrcodeDialogVisible"
       width="770px"
       center
@@ -302,6 +302,7 @@ export default {
     return {
       // 图片下载地址
       src: '',
+      qrcodeTitle: '',
       qrcodeBg: '', // 二维码背景图
       // 二维码是否弹出
       qrcodeDialogVisible: false,
@@ -561,7 +562,7 @@ export default {
       this.emergencyOpen = true
     },
     // 点击查看二维码
-    async handleAccess(row) {
+    async handleAccess(row, type) {
       if (row.type === 1) {
         this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
       } else {
@@ -572,7 +573,13 @@ export default {
       await getQrcodeDoMain().then(async res => {
         // await this.encode64(row.parkSn)
         // await this.encode64(row.id)
-        this.creatCodeUrl = res.data + prod_url + '/third/no_plate_enter_' + row.parkSn + '_' + row.id
+        if (type === 'in') {
+          this.qrcodeTitle = '无牌车进场请扫码'
+          this.creatCodeUrl = res.data + prod_url + '/third/no_plate_enter_' + row.parkSn + '_' + row.id
+        } else {
+          this.qrcodeTitle = '出场支付请扫码'
+          this.creatCodeUrl = res.data + prod_url + '/third/leave_code_' + row.parkSn + '_' + row.id
+        }
         // console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
       }).catch(() => {

@@ -129,8 +129,8 @@ export default {
     return {
       image_verify_code: '',
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
         verifyCode: '',
         uuid: ''
       },
