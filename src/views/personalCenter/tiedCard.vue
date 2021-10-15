@@ -196,11 +196,8 @@ export default {
           bindCard(this.form).then(res => {
             this.msgSuccess(res.msg)
             this.init()
-            this.loading = false // 关闭遮罩
-          }).catch((res) => {
-            this.msgError(res.msg)
-            this.loading = false // 关闭遮罩
           })
+          this.loading = false // 关闭遮罩
         }
       })
     },

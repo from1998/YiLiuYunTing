@@ -111,11 +111,8 @@ export default {
           autoWithdraw(this.form).then(res => {
             this.msgSuccess(res.msg)
             this.init()
-            this.loading = false // 关闭遮罩
-          }).catch((res) => {
-            this.msgError(res.msg)
-            this.loading = false // 关闭遮罩
           })
+          this.loading = false // 关闭遮罩
         }
       })
     },
@@ -123,8 +120,6 @@ export default {
       autoWithdrawSms(this.form.id).then(res => {
         this.msgSuccess(res.msg)
         this.form.seqno = res.data
-      }).catch((res) => {
-        this.msgError(res.msg)
       })
       const TIME_COUNT = 60
       if (!this.timer) {

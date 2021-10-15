@@ -344,7 +344,7 @@ export default {
       this.loading = true // 打开遮罩
       cleanLeaveRecord().then(res => {
         if (res.code === 200) {
-          this.msgSuccess('清理离场车辆成功')
+          this.msgSuccess(res.msg)
           this.getAccessList()
         }
       })

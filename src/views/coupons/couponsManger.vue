@@ -412,10 +412,10 @@ export default {
       this.switchData.isActive = val
       await openCoupons(this.switchData).then((res) => {
         if (res.code === 200) {
-          this.msgSuccess('操作成功')
+          this.msgSuccess(res.msg)
           this.getCouponsList() // 列表重新查询
         } else {
-          this.msgSuccess('操作失败')
+          this.msgError(res.msg)
         }
       })
     },
@@ -488,13 +488,10 @@ export default {
           deleteCouponsId(userIds)
             .then((res) => {
               this.loading = false
-              this.msgSuccess('删除成功')
+              this.msgSuccess(res.msg)
               this.getCouponsList() // 全查询
             })
-            .catch(() => {
-              this.msgError('删除失败')
-              this.loading = false
-            })
+          this.loading = false
         })
         .catch(() => {
           this.msgError('删除已取消')

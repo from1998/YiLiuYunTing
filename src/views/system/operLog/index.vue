@@ -268,7 +268,7 @@ export default {
         this.loading = true
         deleteOperLogByIds(operIds).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getOperLogList()// 全查询
         })
       }).catch(() => {
@@ -286,7 +286,7 @@ export default {
         this.loading = true
         clearAllOperLog().then(res => {
           this.loading = false
-          this.msgSuccess('清空成功')
+          this.msgSuccess(res.msg)
           this.getOperLogList()// 全查询
         })
       }).catch(() => {

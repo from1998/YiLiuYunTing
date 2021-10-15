@@ -249,14 +249,12 @@ export default {
         type: 'warning'
       }).then(() => {
         this.loading = true
-        deleteWorkStationById(userIds).then(() => {
+        deleteWorkStationById(userIds).then((res) => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getWatchhouseList()// 全查询
-        }).catch(() => {
-          this.msgError('删除失败')
-          this.loading = false
         })
+        this.loading = false
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false

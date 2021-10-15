@@ -338,13 +338,10 @@ export default {
       }).then(() => {
         this.loading = true
         deleteNoticeByIds(noticeIds).then(res => {
-          this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getNoticeList()// 全查询
-        }).catch(() => {
-          this.msgError('删除失败')
-          this.loading = false
         })
+        this.loading = false
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false
@@ -358,7 +355,7 @@ export default {
           this.loading = true
           if (this.form.noticeId === undefined) {
             addNotice(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getNoticeList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -367,7 +364,7 @@ export default {
             })
           } else { // 做修改
             updateNotice(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getNoticeList()// 列表重新查询
               this.open = false// 关闭弹出层

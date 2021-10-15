@@ -263,7 +263,7 @@ export default {
         this.loading = true
         deleteSiteByList(id).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getPortList()// 重新查询
         })
       }).catch(() => {
@@ -278,8 +278,8 @@ export default {
           // 做添加
           this.loading = true
           if (this.form.id === undefined) {
-            addCarSite(this.form).then(() => {
-              this.msgSuccess('保存成功')
+            addCarSite(this.form).then((res) => {
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getPortList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -287,8 +287,8 @@ export default {
               this.loading = false
             })
           } else { // 做修改
-            updateSite(this.form).then(() => {
-              this.msgSuccess('修改成功')
+            updateSite(this.form).then((res) => {
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getPortList()// 列表重新查询
               this.open = false// 关闭弹出层

@@ -308,7 +308,7 @@ export default {
         this.loading = true
         deleteRoleByIds(roleIds).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getRoleList()// 全查询
         })
       }).catch(() => {
@@ -324,7 +324,7 @@ export default {
           this.loading = true
           if (this.form.roleId === undefined) {
             addRole(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getRoleList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -333,7 +333,7 @@ export default {
             })
           } else { // 做修改
             updateRole(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getRoleList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -385,9 +385,7 @@ export default {
       const finalKey = halfCheckKeys.concat(checkedKeys)
       // console.log(finalKey)
       saveRoleMenu(this.currentRoleId, finalKey).then(res => {
-        this.msgSuccess('分配成功')
-      }).catch(() => {
-        this.msgSuccess('分配失败')
+        this.msgSuccess(res.msg)
       })
       this.selectMenuOpen = false
     },

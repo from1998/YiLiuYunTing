@@ -270,7 +270,7 @@ export default {
         this.loading = true
         deleteDictTypeByIds(dictIds).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getDictTypeList()// 全查询
         })
       }).catch(() => {
@@ -286,7 +286,7 @@ export default {
           this.loading = true
           if (this.form.dictId === undefined) {
             addDictType(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getDictTypeList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -295,7 +295,7 @@ export default {
             })
           } else { // 做修改
             updateDictType(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getDictTypeList()// 列表重新查询
               this.open = false// 关闭弹出层

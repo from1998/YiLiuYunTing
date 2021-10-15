@@ -271,22 +271,20 @@ export default {
           this.loading = true
           if (this.form.menuId === undefined) {
             addMenu(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getMenuList()// 列表重新查询
               this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
             })
+            this.loading = false
           } else { // 做修改
             updateMenu(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getMenuList()// 列表重新查询
               this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
             })
+            this.loading = false
           }
         }
       })
@@ -317,11 +315,10 @@ export default {
         this.loading = true
         deleteMenuById(menuId).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getMenuList()// 全查询
-        }).catch(() => {
-          this.loading = false
         })
+        this.loading = false
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false

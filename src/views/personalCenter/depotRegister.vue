@@ -171,22 +171,17 @@ export default {
       this.$refs['registerForm'].validate((valid) => {
         if (valid) {
           this.loading = true // 打开遮罩
-          addDepotRegister(this.form).then(() => {
-            this.msgSuccess('注册成功')
+          addDepotRegister(this.form).then((res) => {
+            this.msgSuccess(res.msg)
             this.init()
-            this.loading = false // 关闭遮罩
-          }).catch(() => {
-            this.msgError('注册失败')
-            this.loading = false // 关闭遮罩
           })
+          this.loading = false // 关闭遮罩
         }
       })
     },
     getVerificationCode() {
       registerSmsCode(this.form).then(res => {
         this.msgSuccess(res.msg)
-      }).catch(() => {
-        this.msgError('获取验证码失败')
       })
       const TIME_COUNT = 60
       if (!this.timer) {

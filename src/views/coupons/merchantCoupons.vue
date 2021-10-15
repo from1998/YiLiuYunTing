@@ -440,11 +440,9 @@ export default {
             sn: this.grantForm.sn,
             carNumber: this.grantForm.carNumber
           }).then(res => {
-            this.msgSuccess('操作成功')
+            this.msgSuccess(res.msg)
             this.grantShow = false
             this.getMerchantCouponsList()
-          }).catch(err => {
-            console.log(err)
           })
         }
       })
@@ -601,7 +599,7 @@ export default {
         this.loading = true
         deleteMerchantCoupons(roleIds).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getMerchantCouponsList()// 全查询
         })
       }).catch(() => {
@@ -627,7 +625,7 @@ export default {
               this.form.expireTime = ''
             }
             addMerchant(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.resetQuery()
               this.open = false// 关闭弹出层
@@ -640,7 +638,7 @@ export default {
             })
             this.form.merchantId = arr[0].id
             updateMerchantCoupons(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getMerchantCouponsList()// 列表重新查询
               this.open = false// 关闭弹出层

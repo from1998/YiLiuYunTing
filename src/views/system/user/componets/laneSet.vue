@@ -300,6 +300,7 @@ export default {
   // 定义页面数据
   data() {
     return {
+      id: '',
       // 图片下载地址
       src: '',
       qrcodeTitle: '',
@@ -552,7 +553,7 @@ export default {
     // },
     // 确认二维码应急联系方式
     async handleEmergencyConfirm() {
-      window.sessionStorage.setItem('emergencyPhone', this.emergencyPhone)
+      window.localStorage.setItem(this.id, this.emergencyPhone)
       await this.createText(this.emergencyPhone)
       await this.drawqrCodeImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg, this.laneImg)
       this.emergencyOpen = false
@@ -563,6 +564,7 @@ export default {
     },
     // 点击查看二维码
     async handleAccess(row, type) {
+      this.id = row.id
       if (row.type === 1) {
         this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
       } else {
@@ -582,10 +584,8 @@ export default {
         }
         // console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
-      }).catch(() => {
-        this.msgError('二维码获取失败')
       })
-      this.emergencyPhone = await window.sessionStorage.getItem('emergencyPhone')
+      this.emergencyPhone = await window.localStorage.getItem(row.id)
       await this.createQrcode(this.creatCodeUrl)
       await this.createText(this.emergencyPhone)
       await this.createLane(row.name)

@@ -520,7 +520,7 @@ export default {
         this.loading = true
         deleteRoleByIds(roleIds).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getRoleList()// 全查询
         })
       }).catch(() => {
@@ -536,7 +536,7 @@ export default {
           this.loading = true
           if (this.form.roleId === undefined) {
             addRole(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getRoleList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -545,7 +545,7 @@ export default {
             })
           } else { // 做修改
             updateRole(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getRoleList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -572,40 +572,6 @@ export default {
         power: null
       }
     }
-    // 打开分配权限和菜单的弹出层
-    // handleSelectMenu(row) {
-    //   this.currentAccountId = row.roleId || this.ids[0]
-    //   this.title = '分配权限和菜单'
-    //   this.selectMenuOpen = true
-    //   // 查询所有可用的菜单
-    //   selectMenuTree().then(res => {
-    //     this.menuOptions = this.handleTree(res.data, 'menuId')
-    //   })
-    //   // 根据角色ID查询当前角色拥有的哪些菜单权限
-    //   getMenuIdsByRoleId(this.currentAccountId).then(res => {
-    //     this.$refs.menu.setCheckedKeys(res.data)
-    //   })
-    // },
-    // 保存角色和菜单权限的关系
-    // handleSelectMenuSubmit() {
-    //   // 获取选中的keys
-    //   const checkedKeys = this.$refs.menu.getCheckedKeys()
-    //   // 获取半选的keys
-    //   const halfCheckKeys = this.$refs.menu.getHalfCheckedKeys()
-    //   // 组合成最后的keys
-    //   const finalKey = halfCheckKeys.concat(checkedKeys)
-    //   console.log(finalKey)
-    //   saveRoleMenu(this.currentAccountId, finalKey).then(res => {
-    //     this.msgSuccess('分配成功')
-    //   }).catch(() => {
-    //     this.msgSuccess('分配失败')
-    //   })
-    // },
-    // // 关闭分配权限和菜单的弹出层
-    // cancelSelectMenu() {
-    //   this.selectMenuOpen = false
-    //   this.menuOptions = []
-    // }
   }
 }
 </script>

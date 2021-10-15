@@ -293,7 +293,7 @@ export default {
         this.loading = true
         deleteDictDataByIds(dictCodes).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getDictDataList()// 全查询
         })
       }).catch(() => {
@@ -309,7 +309,7 @@ export default {
           this.loading = true
           if (this.form.dictCode === undefined) {
             addDictData(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -318,7 +318,7 @@ export default {
             })
           } else { // 做修改
             updateDictData(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.loading = false
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层

@@ -281,17 +281,14 @@ export default {
       this.loading = true // 打开遮罩
       baoAnSetting(form).then(res => {
         if (res.code === 200) {
-          this.msgSuccess('设置成功')
+          this.msgSuccess(res.msg)
           this.getlaneLists(form.mangerId)
           this.loading = false // 关闭遮罩
         } else {
-          this.msgError('设置失败')
-          this.loading = false // 关闭遮罩
+          this.msgError(res.msg)
         }
-      }).catch(() => {
-        this.msgError('设置失败')
-        this.loading = false // 关闭遮罩
       })
+      this.loading = false // 关闭遮罩
     },
     // 查询列表数据
     getSecurityList() {
@@ -368,7 +365,7 @@ export default {
         this.loading = true
         deleteBaoAn(id).then(res => {
           this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getSecurityList()// 全查询
         })
       }).catch(() => {
@@ -384,22 +381,18 @@ export default {
           this.loading = true
           if (this.form.id === undefined) {
             addBaoAn(this.form).then(res => {
-              this.msgSuccess('保存成功')
-              this.loading = false
+              this.msgSuccess(res.msg)
               this.getSecurityList()// 列表重新查询
               this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
             })
+            this.loading = false
           } else { // 做修改、
             updateBaoAn(this.form).then(res => {
-              this.msgSuccess('修改成功')
-              this.loading = false
+              this.msgSuccess(res.msg)
               this.getSecurityList()// 列表重新查询
               this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
             })
+            this.loading = false
           }
         }
       })

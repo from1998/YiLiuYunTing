@@ -208,11 +208,9 @@ export default {
         this.loading = true // 开启遮罩
         openLane(id).then(res => {
           if (res.code === 200) {
-            this.msgSuccess('开闸成功')
+            this.msgSuccess(res.msg)
           }
           this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('开闸失败')
         })
       }).catch(() => {
         this.msgError('开闸已取消')
@@ -228,11 +226,9 @@ export default {
         this.loading = true // 开启遮罩
         closeLane(id).then(res => {
           if (res.code === 200) {
-            this.msgSuccess('关闸成功')
+            this.msgSuccess(res.msg)
           }
           this.loading = false // 关闭遮罩
-        }).catch(() => {
-          this.msgError('关闸失败')
         })
       }).catch(() => {
         this.msgError('关闸已取消')
@@ -253,11 +249,9 @@ export default {
           }
           confirmFreeLeave(query).then(res => {
             if (res.code === 200) {
-              this.msgSuccess('免费放行成功')
+              this.msgSuccess(res.msg)
             }
             this.loading = false // 关闭遮罩
-          }).catch(() => {
-            this.msgError('免费放行失败')
           })
         } else if (type === 'fee') {
           query = {
@@ -266,11 +260,9 @@ export default {
           }
           confirmFeeLeave(query).then(res => {
             if (res.code === 200) {
-              this.msgSuccess('收费放行成功')
+              this.msgSuccess(res.msg)
             }
             this.loading = false // 关闭遮罩
-          }).catch(() => {
-            this.msgError('收费放行失败')
           })
         }
       }).catch(() => {
