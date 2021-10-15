@@ -507,7 +507,7 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改车道'
-      const id = row.id || this.ids
+      const id = row.id || this.ids[0]
       // console.log(id)
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true

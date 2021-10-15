@@ -79,8 +79,8 @@ export default {
   methods: {
     // 查询进场数据
     getData() {
+      this.msgSuccess(this.queryParams)
       this.loading = true // 打开遮罩
-      this.parkId = '340100202107124653'
       getEnterData(this.queryParams).then(res => {
         this.carNumber = res.data.carNumber
         this.parkId = res.data.parkId

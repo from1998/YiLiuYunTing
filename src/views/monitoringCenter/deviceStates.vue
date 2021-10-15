@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <!-- 标题 -->
-    <el-header class="container" height="40px" style="padding:25px 0 70px;font-size:30px;font-weight:700;text-align:center;background-color: #fff;">
+    <el-header class="container" height="40px" style="padding:25px 0 45px;font-size:30px;font-weight:700;text-align:center;background-color: #fff;">
       <el-row>
         <el-col :span="4" :offset="10">
           设备状态

@@ -80,6 +80,7 @@
             <el-form-item label="纬度">
               <el-input v-model="form.latitude" />
             </el-form-item>
+            <el-link href="https://api.map.baidu.com/lbsapi/getpoint/index.html" target="_blank" class="coord" type="primary" icon="el-icon-thumb">拾取坐标</el-link>
           </el-col>
         </el-row>
         <!-- 总车位数与空闲车位数 -->
@@ -552,5 +553,10 @@ export default {
   [v-cloak]{
     /* 元素隐藏    */
     display: none;
+  }
+  .coord {
+    position: absolute;
+    top: 18.1%;
+    left: 4%;
   }
 </style>

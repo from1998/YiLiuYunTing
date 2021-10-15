@@ -24,33 +24,49 @@
         <el-col :span="2" :offset="0" />
         <div id="lineDowm" />
       </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">总金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
-        <el-col :span="2" :offset="0" />
+      <div>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">总金额</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">优惠类型</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">应交金额</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥5.89</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+      </div>
+      <div>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">已付费用</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right;color:green;font-size:1.2rem">￥5.89</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">支付时间</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 21:59</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+      </div>
+    </div>
+    <div>
+      <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
+        <el-col :span="22" :offset="2">温馨提示:
+        </el-col>
       </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">优惠类型</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">应交金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥5.89</el-col>
-        <el-col :span="2" :offset="0" />
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
+        <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
+        </el-col>
       </el-row>
     </div>
-    <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
-      <el-col :span="22" :offset="2">温馨提示:
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
-      <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
-      </el-col>
-    </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%">支付</el-button>
+        <el-button type="primary" round style="width:100%" @click="awakeWXPay">支付</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
@@ -64,9 +80,9 @@
 </template>
 <script>
 // import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
-// import load from '@/components/Tinymce/dynamicLoadScript
+import load from '@/components/Tinymce/dynamicLoadScript'
 
-// const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
+const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
 
 export default {
   data() {
@@ -74,6 +90,8 @@ export default {
       loading: false,
       parkId: '',
       carNumber: '临NF00365',
+      currentDate: '',
+      loadDate: '',
       queryParams: {
         sn: '2021092410020961589649605'
       }
@@ -86,6 +104,7 @@ export default {
     this.getData()
   },
   mounted() {
+    this.init()
     this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
       const container = document.getElementById('app-container')
       const st = document.querySelector('#anbo-ad-st')
@@ -103,6 +122,70 @@ export default {
     })
   },
   methods: {
+    init() {
+      load(tinymceCDN, () => {
+        this.loadDate = new Date()
+        // eslint-disable-next-line no-unused-vars
+        function ready(callback) {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', function() {
+                callback && callback()
+              }, false)
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', function() {
+                callback && callback()
+              })
+              document.attachEvent('onWeixinJSBridgeReady', function() {
+                callback && callback()
+              })
+            }
+          } else {
+            callback && callback()
+          }
+        }
+      })
+    },
+    // awakeWXPay() {
+    //   this.currentDate = new Date();
+    //             const duration = this.currentDate.getTime() - this.loadDate.getTime();
+    //             if (( duration / 1000 ) > 120) {
+    //                 this.msgError("超过有效时间,请刷新后支付");
+    //             } else {
+    //                             WeixinJSBridge.invoke(
+    //                                     'getBrandWCPayRequest', d.payParams,
+    //                                     function(res){
+    //                                         if(res.err_msg == "get_brand_wcpay_request:ok"){
+    //                                             location.href = '<%=request.getContextPath()%>/pay_success_${park.id}.html?orderSn=' + d.orderSn;
+    //                                         } else if(res.err_msg == "get_brand_wcpay_request:cancel"){
+    //                                             $.ajax({
+    //                                                 type: "POST",
+    //                                                 url: "<%=request.getContextPath()%>/order_cancel.html",
+    //                                                 data: {parkId: ${park.id}, orderSn: d.orderSn},
+    //                                                 success: function (res) {
+
+    //                                                 }
+    //                                             });
+    //                                             console.log("取消")
+    //                                         } else if(res.err_msg == "get_brand_wcpay_request:fail"){
+    //                                             $.ajax({
+    //                                                 type: "POST",
+    //                                                 url: "<%=request.getContextPath()%>/order_fail.html",
+    //                                                 data: {parkId: ${park.id}, orderSn: d.orderSn},
+    //                                                 success: function (res) {
+
+    //                                                 }
+    //                                             });
+    //                                             alert("支付失败, 请联系管理员")
+    //                                         }
+    //                                     });
+    //                         } else {
+    //                             alert(d.message);
+    //                         }
+    //                     },
+    //                 });
+    //             }
+    // },
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩

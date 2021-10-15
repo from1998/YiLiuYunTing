@@ -240,7 +240,7 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改车位'
-      const id = row.id || this.ids
+      const id = row.id || this.ids[0]
       this.open = true
       this.reset()
       // 根据id查询岗亭信息

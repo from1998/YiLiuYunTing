@@ -25,8 +25,6 @@
           <el-form-item label="进出车辆类型" prop="carType" label-width="96px">
             <el-select
               v-model="queryParams.carType"
-              multiple
-              collapse-tags
               style="width:240px"
               placeholder="请选择进出车辆类型"
               clearable
@@ -148,7 +146,7 @@ export default {
         page: 1,
         size: 10,
         name: '',
-        carType: [],
+        carType: undefined,
         managerId: ''
       },
       // 表单数据
@@ -169,6 +167,7 @@ export default {
   methods: {
     getWatchhouseList() {
       this.loading = true // 打开遮罩
+      // this.handleCheckedStr(this.queryParams.carType, 'queryParams')
       getWorkStationByMid(this.queryParams).then(res => {
         this.watchhouseList = res.data.workStation.list
         this.carTypeOptions = res.data.carType
@@ -219,7 +218,7 @@ export default {
     // 打开修改的弹出层
     handleUpdate(row) {
       this.title = '修改岗亭'
-      const id = row.id || this.ids
+      const id = row.id || this.ids[0]
       this.open = true
       this.reset()
       // 根据id查询岗亭信息
@@ -228,18 +227,18 @@ export default {
         id: id
       }).then(res => {
         this.form = res.data
-        this.handleCheckedStr(res.data.carType)
+        this.handleCheckedStr(res.data.carType, 'form')
         this.loading = false
       })
     },
     // 转换数组
-    handleCheckedStr(str) {
+    handleCheckedStr(str, obj) {
       var arr = str.split(',')
       var arrNumber = []
       arr.forEach(val => {
         arrNumber.push(Number(val))
       })
-      this.form.carType = arrNumber
+      this[obj].carType = arrNumber
     },
     // 执行删除
     handleDelete(row) {

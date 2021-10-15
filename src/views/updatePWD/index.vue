@@ -1,17 +1,19 @@
 <template>
   <el-container>
-    <el-header class="container" height="56px" style="padding:15px 0 45px;font-weight:700">
+    <el-header class="container" height="56px" style="padding:25px 0 45px;font-weight:700">
       更改密码
     </el-header>
     <el-form ref="form" :model="form" label-width="80px" style="width:500px;margin:0 auto" :rules="rules">
       <el-form-item label="当前密码" prop="password">
-        <el-input v-model="form.password" placeholder="请输入当前密码" show-password />
+        <el-input v-model="form.password" placeholder="请输入当前密码" auto-complete="new-password" />
       </el-form-item>
-      <el-form-item label="新密码" prop="newPassword">
-        <el-input v-model="form.newPassword" placeholder="请设置新密码" show-password auto-complete="new-password" />
-      </el-form-item>
+      <el-tooltip class="item" effect="dark" content="密码长度介于8-16位之间。" placement="right">
+        <el-form-item label="新密码" prop="newPassword">
+          <el-input v-model="form.newPassword" placeholder="请设置新密码" auto-complete="new-password" minlength="8" maxlength="16" />
+        </el-form-item>
+      </el-tooltip>
       <el-form-item label="确认密码" prop="newPassword2">
-        <el-input v-model="form.newPassword2" placeholder="请确认新密码" show-password />
+        <el-input v-model="form.newPassword2" placeholder="请确认新密码" auto-complete="new-password" minlength="8" maxlength="16" />
       </el-form-item>
       <el-form-item style="margin:0 90px">
         <el-button type="primary" @click="onSubmit">保存</el-button>

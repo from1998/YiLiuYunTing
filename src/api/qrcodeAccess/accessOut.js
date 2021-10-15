@@ -9,3 +9,11 @@ export function getLeaveData(query) {
   })
 }
 
+// 创建订单
+export function createOrder(data) {
+  return request({
+    url: '/third/create_order',
+    method: 'post',
+    data
+  })
+}
