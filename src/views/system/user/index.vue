@@ -94,10 +94,6 @@
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <!--          <el-button v-show="scope.row.role!==1 && scope.row.role!==6 && scope.row.role!==null" type="text" size="mini" @click="handleShareBenefit(scope.row)">-->
-          <!--            <svg-icon icon-class="money" />-->
-          <!--            分润设置-->
-          <!--          </el-button>-->
           <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
             <el-button type="text" size="mini">
               <svg-icon icon-class="car" />
@@ -169,6 +165,7 @@
                 clearable
                 size="small"
                 style="width:240px"
+                @change="change()"
               >
                 <el-option
                   v-for="(item, index) in roleOptions"
@@ -345,10 +342,6 @@ export default {
     selectAllRole().then(res => {
       this.roleOptions = res.data
     })
-    // 查询所有用户信息
-    selectNeedSchedulingUsers().then(res => {
-      this.userOptions = res.data
-    })
     // 查询表格数据
     this.getUserList()
   },
@@ -386,6 +379,11 @@ export default {
     // 解决页面v-for中修改item属性值后页面页面值不改变的问题
     change() {
       this.$forceUpdate()
+      // 查询所有用户信息
+      selectNeedSchedulingUsers().then(res => {
+        this.userOptions = res.data
+        console.log(this.userOptions)
+      })
     },
     // 查询表格数据
     getUserList() {
@@ -554,13 +552,6 @@ export default {
       }).catch(function() {
         tx.msgError('重置已取消')
       })
-    },
-    // 打开分润设置
-    handleShareBenefit(row) {
-      console.log(row.role)
-      this.reset()
-      this.shareBenefitOpen = true
-      this.benefitForm.name = row.username
     }
   }
 }
