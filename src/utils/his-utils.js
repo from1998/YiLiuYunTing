@@ -128,6 +128,11 @@ export function handleTree(data, id, parentId, children, rootId) {
 }
 
 export function Utils() {
-  const str = new Date().toLocaleString()
-  return str.substring(0, str.length - 3)
+  const dt = new Date()
+  const y = dt.getFullYear()
+  const m = dt.getMonth() + 1
+  const d = dt.getDate()
+  const w = dt.getDay()
+  const weeks = ['天', '一', '二', '三', '四', '五', '六']
+  return `${y} 年 ${m.toString().padStart(2, '0')} 月 ${d.toString().padStart(2, '0')} 日 星期${weeks[w]}`
 }
