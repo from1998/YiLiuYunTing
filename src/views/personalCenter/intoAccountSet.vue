@@ -96,7 +96,7 @@ export default {
       this.loading = true // 打开遮罩
       this.form.id = await this.getUserInfo().id
       await getDepotRegister(this.form.id).then(res => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.form.legalpersonphone = res.data.legalpersonphone
           this.cardBindState = res.data.isbind
           this.isautowithdraw = res.data.isautowithdraw

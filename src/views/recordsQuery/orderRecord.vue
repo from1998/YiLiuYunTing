@@ -190,15 +190,21 @@ export default {
     },
     // 翻译订单状态
     ordersStateFormatter(row) {
-      return this.formatterDict(this.options.ordersState, row.state.toString())
+      if (row.state) {
+        return this.formatterDict(this.options.ordersState, row.state.toString())
+      }
     },
     // 翻译支付类目
     paytypeFormatter(row) {
-      return this.formatterDict(this.options.orderSkuType, row.paytype.toString())
+      if (row.paytype) {
+        return this.formatterDict(this.options.orderSkuType, row.paytype.toString())
+      }
     },
     // 翻译支付平台
     platformFormatter(row) {
-      return this.formatterDict(this.options.payChannel, row.platform.toString())
+      if (row.platform) {
+        return this.formatterDict(this.options.payChannel, row.platform.toString())
+      }
     },
     // 翻译类型
     formatterDict(datas, value) {

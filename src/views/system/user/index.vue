@@ -488,13 +488,10 @@ export default {
       }).then(() => {
         this.loading = true
         deleteUserByIds(userIds).then(res => {
-          this.loading = false
-          this.msgSuccess('删除成功')
+          this.msgSuccess(res.msg)
           this.getUserList()// 全查询
-        }).catch(() => {
-          this.msgError('删除失败')
-          this.loading = false
         })
+        this.loading = false
       }).catch(() => {
         this.msgError('删除已取消')
         this.loading = false
@@ -508,22 +505,17 @@ export default {
           this.loading = true
           if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
             addUser(this.form).then(res => {
-              this.msgSuccess('保存成功')
+              this.msgSuccess(res.msg)
               this.getUserList()// 列表重新查询
               this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
-              this.msgError('保存失败')
             })
           } else { // 做修改
             updateUser(this.form).then(res => {
-              this.msgSuccess('修改成功')
+              this.msgSuccess(res.msg)
               this.getUserList()// 列表重新查询
               this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
-              this.msgSuccess('修改失败')
             })
+            this.loading = false
           }
         }
       })

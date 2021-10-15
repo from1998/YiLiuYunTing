@@ -173,7 +173,7 @@ export default {
       this.loading = true // 打开遮罩
       this.form.id = await this.getUserInfo().id
       await getDepotRegister(this.form.id).then(res => {
-        if (res.code === 200) {
+        if (res.code === 200 && res.data !== null) {
           this.form = res.data
           this.cardBindState = res.data.isbind
           this.registerstatus = res.data.registerstatus

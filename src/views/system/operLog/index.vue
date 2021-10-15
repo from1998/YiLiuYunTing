@@ -216,7 +216,6 @@ export default {
     // 查询操作日志
     getOperLogList() {
       this.loading = true
-      console.log(this.dateRange)
       listForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.operLogTableList = res.data.list
         this.total = res.data.total
