@@ -582,6 +582,7 @@ export default {
           this.qrcodeTitle = '出场支付请扫码'
           this.creatCodeUrl = res.data + prod_url + '/third/leave_code_' + row.parkSn + '_' + row.id
         }
+        this.msgSuccess(this.creatCodeUrl)
         // console.log(this.creatCodeUrl)
         // this.msgSuccess(this.creatCodeUrl)
       })

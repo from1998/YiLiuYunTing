@@ -6,6 +6,14 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <div class="right-menu-item">
+          <span>{{ Utils() }}</span>
+        </div>
+
+        <div class="right-menu-item">
+          <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
+        </div>
+
         <search id="header-search" class="right-menu-item" />
 
         <error-log class="errLog-container right-menu-item hover-effect" />
@@ -36,7 +44,22 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-
+    <el-dialog
+      title="便签"
+      width="400px"
+      :visible.sync="dialogVisible"
+      append-to-body
+      @closed="saveNotes"
+    >
+      <el-input
+        v-model="notes"
+        type="textarea"
+        :rows="7"
+        placeholder="便签中的内容会存储在本地。
+即便您关闭浏览器，下次打开时，依然会读取到上一次的记录。
+这是一个小巧实用的本地备忘录。"
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -60,7 +83,9 @@ export default {
   },
   data() {
     return {
-      username: ''
+      username: '',
+      dialogVisible: false,
+      notes: localStorage.getItem('notes')
     }
   },
   computed: {
@@ -74,6 +99,12 @@ export default {
     this.username = await this.getUserInfo().realName
   },
   methods: {
+    noteOpen() {
+      this.dialogVisible = true
+    },
+    saveNotes() {
+      localStorage.setItem('notes', this.notes)
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

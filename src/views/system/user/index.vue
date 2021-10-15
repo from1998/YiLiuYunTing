@@ -168,7 +168,7 @@
                 @change="change()"
               >
                 <el-option
-                  v-for="(item, index) in roleOptions"
+                  v-for="(item, index) in roleOptionsDue"
                   :key="index"
                   :label="item.roleName"
                   :value="item.roleId"
@@ -183,7 +183,7 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="选择父级账号">
+            <el-form-item v-if="form.role === 4" label="选择父级账号">
               <el-select
                 v-model="form.parentId"
                 placeholder="父级账号"
@@ -293,6 +293,7 @@ export default {
       shareBenefitOpen: false,
       // 角色数据字典
       roleOptions: [],
+      roleOptionsDue: [],
       // 用户信息
       userOptions: [],
       // 状态数据字典
@@ -341,6 +342,11 @@ export default {
     // })
     selectAllRole().then(res => {
       this.roleOptions = res.data
+      res.data.map(item => {
+        if (item.roleId === 1 || item.roleId === 3 || item.roleId === 4) {
+          this.roleOptionsDue.push(item)
+        }
+      })
     })
     // 查询表格数据
     this.getUserList()
