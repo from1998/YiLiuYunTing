@@ -2,10 +2,10 @@
   <div class="app-container">
     <!-- 查询条件开始 -->
     <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="用户姓名" prop="username">
+      <el-form-item label="登录名称" prop="username">
         <el-input
           v-model="queryParams.username"
-          placeholder="请输入用户姓名"
+          placeholder="请输入登录名称"
           clearable
           size="small"
           style="width:240px"
