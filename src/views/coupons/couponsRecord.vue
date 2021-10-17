@@ -7,7 +7,7 @@
     </el-row>
     <el-row style="margin-top:20px">
       <!-- 查询条件开始 -->
-      <el-col :span="16" :offset="0">
+      <el-col :span="20" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
           <el-form-item label="所属商户" prop="merchantIdString">
             <el-input
@@ -40,12 +40,13 @@
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            <el-button type="danger" icon="el-icon-close" size="mini" @click="handleError">清理过期未使用优惠券</el-button>
           </el-form-item>
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
       <!-- 表格工具按钮开始 -->
-      <el-col :span="4" :offset="4" style="padding-left:90px">
+      <el-col :span="4" :offset="0" style="padding-left:90px">
         <el-select
           v-cloak
           v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
@@ -130,7 +131,7 @@
 <script>
 // 引入api
 // import { listRoleForPage } from '@/api/system/role'
-import { getListCouponsRecord } from '@/api/coupons/record'
+import { getListCouponsRecord, cleanErrorRecord } from '@/api/coupons/record'
 import { listAll } from '@/api/coupons/couponsManger'
 export default {
   // 定义页面数据
@@ -207,6 +208,17 @@ export default {
   },
   // 方法
   methods: {
+    // 清理过期未使用优惠券
+    handleError() {
+      this.loading = true // 打开遮罩
+      cleanErrorRecord(this.queryParams.parkId).then(res => {
+        if (res.code === 200) {
+          this.msgSuccess(res.msg)
+          this.getAccessList()
+        }
+      })
+      this.loading = false// 关闭遮罩
+    },
     handleParkFocus(val) {
       if (val === '') {
         this.laneName = ''

@@ -357,6 +357,7 @@ export default {
       // console.log(finalKey)
       saveRoleMenu(this.currentRoleId, finalKey).then(res => {
         this.msgSuccess(res.msg)
+        this.$router.go(0)
       })
       this.selectMenuOpen = false
     },

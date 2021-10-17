@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -13,7 +13,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="car" class-name="card-panel-icon" />
@@ -26,7 +26,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money-bag" class-name="card-panel-icon" />
@@ -39,7 +39,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money" class-name="card-panel-icon" />
@@ -52,32 +52,34 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="ai-profit" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            总分润
+    <div v-if="getUserInfo().role === 1 || getUserInfo().role=== 3">
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-message">
+            <svg-icon icon-class="ai-profit" class-name="card-panel-icon" />
           </div>
-          <count-to :start-val="0" :end-val="val[4]" :duration="3600" class="card-panel-num" />
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
-      <div class="card-panel">
-        <div class="card-panel-icon-wrapper icon-message">
-          <svg-icon icon-class="money_pay_fill" class-name="card-panel-icon" />
-        </div>
-        <div class="card-panel-description">
-          <div class="card-panel-text">
-            当日分润
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              总分润
+            </div>
+            <count-to :start-val="0" :end-val="val[4]" :duration="3600" class="card-panel-num" />
           </div>
-          <count-to :start-val="0" :end-val="val[5]" :duration="3600" class="card-panel-num" />
         </div>
-      </div>
-    </el-col>
+      </el-col>
+      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+        <div class="card-panel">
+          <div class="card-panel-icon-wrapper icon-message">
+            <svg-icon icon-class="money_pay_fill" class-name="card-panel-icon" />
+          </div>
+          <div class="card-panel-description">
+            <div class="card-panel-text">
+              当日分润
+            </div>
+            <count-to :start-val="0" :end-val="val[5]" :duration="3600" class="card-panel-num" />
+          </div>
+        </div>
+      </el-col>
+    </div>
   </el-row>
 </template>
 
@@ -132,7 +134,7 @@ export default {
     background: #fff;
     box-shadow: 4px 4px 40px rgba(0, 0, 0, .05);
     border-color: rgba(0, 0, 0, .05);
-
+    cursor: default;
     &:hover {
       .card-panel-icon-wrapper {
         color: #fff;

@@ -94,9 +94,17 @@
       <el-table-column label="付款方式" align="center" prop="payTypeString" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
-          <el-button v-if="getUserInfo().role !== 7" type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="success" icon="el-icon-edit" size="mini" @click="grant(scope.row)">发放</el-button>
-          <el-button v-if="getUserInfo().role !== 7" type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="handlePreview(scope.row)"
+          >
+            <svg-icon icon-class="qrcode" />
+            查看二维码
+          </el-button>
+          <el-button v-if="getUserInfo().role !== 7" type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="text" icon="el-icon-edit" size="mini" @click="grant(scope.row)">发放</el-button>
+          <el-button v-if="getUserInfo().role !== 7" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -291,17 +299,39 @@
         <el-button @click="cancel">取 消</el-button>
       </span>
     </el-dialog>
+    <!-- 二维码弹出层 -->
+    <el-dialog
+      title="优惠券二维码"
+      :visible.sync="qrcodeDialogVisible"
+      width="300px"
+      center
+    >
+      <!-- 二维码 -->
+      <canvas v-show="true" id="canvas" />
+      <span slot="footer" class="dialog-footer">
+        <el-button :loading="loading" type="primary" icon="el-icon-download" @click="handleDownload">下载</el-button>
+        <el-button type="danger" icon="el-icon-close" @click="qrcodeDialogVisible = false">关闭</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { listMerchantForPage, addMerchant, getMerchantCouponsById, updateMerchantCoupons, deleteMerchantCoupons, getMerchantCoupons, selectMerchantByParkId, selectCouponsByParkId } from '@/api/coupons/merchant'
 import { listAll } from '@/api/coupons/couponsManger'
 import validate from '@/utils/validate'
-
+import { getQrcodeDoMain } from '@/api/system/carSetting'
+import { prod_url } from '../../../proxyConfig/pro.env'
+import QRCode from 'qrcode'
 export default {
   // 定义页面数据
   data() {
     return {
+      // 图片下载地址
+      src: '',
+      // 二维码是否弹出
+      qrcodeDialogVisible: false,
+      // 生成二维码的url
+      creatCodeUrl: '',
       // 验证规则
       validate,
       rules: {
@@ -408,6 +438,31 @@ export default {
   },
   // 方法
   methods: {
+    // 生成二维码
+    createQrcode(text) {
+      const canvas = document.getElementById('canvas')
+      QRCode.toCanvas(canvas, text, {
+        margin: 12
+      })
+      this.src = canvas.toDataURL('image/png', 1)
+    },
+    async handlePreview(row) {
+      this.qrcodeDialogVisible = true
+      await getQrcodeDoMain().then(async res => {
+        this.creatCodeUrl = res.data + prod_url + '/third/coupons_code_' + row.parkSn + '_' + row.sn
+      })
+      this.createQrcode(this.creatCodeUrl)
+    },
+    // 二维码下载
+    handleDownload() {
+      this.loading = true
+      var a = document.createElement('a')
+      var event = new MouseEvent('click')
+      a.download = '优惠券二维码'
+      a.href = this.src
+      a.dispatchEvent(event)
+      this.loading = false
+    },
     handleLaneName(val) {
       if (val === '') {
         this.laneName = ''

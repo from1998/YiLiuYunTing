@@ -44,7 +44,7 @@
     <!-- 查询条件结束 -->
 
     <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
+    <el-row v-if="getUserInfo().role === 1 || getUserInfo().role=== 3" :gutter="10" style="margin-bottom: 8px;">
       <el-col :span="1.5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
       </el-col>
@@ -54,7 +54,6 @@
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
-
       <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleResetPwd">重置密码</el-button>
       </el-col>
@@ -63,7 +62,7 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="userTableList" stripe @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column v-if="getUserInfo().role === 1 || getUserInfo().role=== 3" type="selection" width="55" align="center" />
       <!-- <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
@@ -92,8 +91,10 @@
       <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="180" />
       <el-table-column label="操作" align="center" width="300">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <span v-if="getUserInfo().role === 1 || getUserInfo().role=== 3">
+            <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+            <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          </span>
           <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
             <el-button type="text" size="mini">
               <svg-icon icon-class="car" />

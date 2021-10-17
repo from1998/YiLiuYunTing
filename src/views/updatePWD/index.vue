@@ -9,11 +9,11 @@
       </el-form-item>
       <el-tooltip class="item" effect="dark" content="密码长度介于8-16位之间。" placement="right">
         <el-form-item label="新密码" prop="newPassword">
-          <el-input v-model="form.newPassword" placeholder="请设置新密码" auto-complete="new-password" minlength="8" maxlength="16" />
+          <el-input v-model="form.newPassword" placeholder="请设置新密码" show-password type="password" auto-complete="new-password" minlength="8" maxlength="16" />
         </el-form-item>
       </el-tooltip>
       <el-form-item label="确认密码" prop="newPassword2">
-        <el-input v-model="form.newPassword2" placeholder="请确认新密码" auto-complete="new-password" minlength="8" maxlength="16" />
+        <el-input v-model="form.newPassword2" placeholder="请确认新密码" show-password type="password" auto-complete="new-password" minlength="8" maxlength="16" />
       </el-form-item>
       <el-form-item style="margin:0 90px">
         <el-button type="primary" @click="onSubmit">保存</el-button>
