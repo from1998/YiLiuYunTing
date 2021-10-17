@@ -514,6 +514,7 @@ export default {
                 this.msgError(res.msg)
               }
             })
+            this.loading = false
           } else {
             this.form.category = this.form.category * 1
             // 做修改
@@ -531,9 +532,7 @@ export default {
                   this.msgError(res.msg)
                 }
               })
-              .catch(() => {
-                this.loading = false
-              })
+            this.loading = false
           }
         }
       })

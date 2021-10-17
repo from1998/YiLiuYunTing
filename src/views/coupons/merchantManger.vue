@@ -385,13 +385,14 @@ export default {
             })
           } else { // 做修改
             updateMerchant(this.form).then(res => {
-              this.msgSuccess(res.msg)
-              this.loading = false
-              this.getRoleList()// 列表重新查询
-              this.open = false// 关闭弹出层
-            }).catch(() => {
-              this.loading = false
+              if (res.code === 200) {
+                this.msgSuccess(res.msg)
+                this.loading = false
+                this.getRoleList()// 列表重新查询
+                this.open = false// 关闭弹出层
+              }
             })
+            this.loading = false
           }
         }
       })
