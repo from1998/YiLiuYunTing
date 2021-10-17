@@ -9,9 +9,9 @@
       <!-- 查询条件开始 -->
       <el-col :span="16" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
-          <el-form-item label="所属商户" prop="merchantId">
+          <el-form-item label="所属商户" prop="merchantIdString">
             <el-input
-              v-model="queryParams.merchantId"
+              v-model="queryParams.merchantIdString"
               placeholder="请输入所属商户"
               clearable
               size="small"
@@ -19,7 +19,7 @@
             />
           </el-form-item>
           <el-form-item label="优惠类型" prop="category" label-width="70px">
-            <el-select v-cloak v-model="queryParams.category" style="width:180px" placeholder="请选择优惠券类型">
+            <el-select v-cloak v-model="queryParams.category" style="width:180px" placeholder="请选择优惠券类型" clearable>
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"

@@ -221,8 +221,6 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('form')
-      this.dateRangeIn = []
-      this.dateRangeOut = []
       this.getTrafficList()
     },
     // 分页size变化时触发

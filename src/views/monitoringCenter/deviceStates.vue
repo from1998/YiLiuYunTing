@@ -13,7 +13,7 @@
       <!-- 查询条件开始 -->
       <el-col :span="7" :offset="17">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="是否在线" prop="type">
+          <el-form-item label="是否在线" prop="isOnLine">
             <el-select
               v-model="queryParams.isOnLine"
               placeholder="请选择是否在线"

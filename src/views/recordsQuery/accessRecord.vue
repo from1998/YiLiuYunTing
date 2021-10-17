@@ -404,6 +404,10 @@ export default {
       this.resetForm('queryForm')
       this.dateRangeIn = []
       this.dateRangeOut = []
+      this.queryParams.enterStart = undefined
+      this.queryParams.enterEnd = undefined
+      this.queryParams.leaveStart = undefined
+      this.queryParams.leaveEnd = undefined
       this.getAccessList()
     },
     // 分页size变化时触发

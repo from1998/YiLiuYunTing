@@ -157,7 +157,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
+          <el-col v-if="form.role === 1 ||form.role === 3 || form.role === 4 " :span="12">
             <el-form-item label="角色" prop="role">
               <el-select
                 v-model="form.role"

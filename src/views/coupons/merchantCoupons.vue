@@ -7,12 +7,12 @@
     </el-row>
     <el-row style="margin-top:20px">
       <!-- 表格工具按钮开始 -->
-      <el-col :span="4">
+      <el-col v-if="getUserInfo().role !== 7" :span="4" style="width:240px">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加商家优惠券</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="14" :offset="0" style="margin-left:-50px">
+      <el-col :span="14" :offset="0">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="48px">
           <el-form-item label="名称" prop="name">
             <el-input
@@ -20,6 +20,7 @@
               placeholder="请输入优惠券名称"
               size="small"
               style="width:180px"
+              clearable
             />
           </el-form-item>
           <el-form-item label="类型" prop="category">
@@ -92,9 +93,9 @@
       <el-table-column label="付款方式" align="center" prop="payTypeString" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button v-if="getUserInfo().role !== 7" type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="success" icon="el-icon-edit" size="mini" @click="grant(scope.row)">发放</el-button>
-          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-if="getUserInfo().role !== 7" type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -196,7 +197,7 @@
                 v-for="d in shopList"
                 :key="d.dictValue"
                 :label="d.dictLabel"
-                :value="String(d.realName)"
+                :value="String(d.username)"
               />
             </el-select>
           </el-tooltip>
@@ -342,15 +343,11 @@ export default {
       queryParams: {
         page: 1,
         size: 10,
-        roleName: undefined,
-        roleCode: undefined,
-        status: undefined,
         parkId: undefined,
         payType: undefined,
         category: undefined,
         name: undefined
       },
-      queryParams1: {},
       // 表单数据
       form: {
         status: '1',
@@ -584,7 +581,7 @@ export default {
         const arr = this.shopList.filter((item) => {
           return this.form.merchantId === item.id
         })
-        this.form.merchantId = arr[0].realName
+        this.form.merchantId = arr[0].username
         this.loading = false
       })
     },
@@ -615,7 +612,7 @@ export default {
           this.loading = true
           if (this.form.id === undefined) {
             const arr = this.shopList.filter((item) => {
-              return this.form.merchantId === item.realName
+              return this.form.merchantId === item.username
             })
             this.form.merchantId = arr[0].id
             // 是否按天有效
@@ -634,7 +631,7 @@ export default {
             })
           } else { // 做修改
             const arr = this.shopList.filter((item) => {
-              return this.form.merchantId === item.realName
+              return this.form.merchantId === item.username
             })
             this.form.merchantId = arr[0].id
             updateMerchantCoupons(this.form).then(res => {

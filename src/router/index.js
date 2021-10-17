@@ -44,6 +44,7 @@ export const constantRoutes = [
   },
   {
     path: '/qrcodeAccess/accessIn',
+    hidden: true,
     component: () =>
             import ('@/views/qrcodeAccess/accessIn'),
     meta: {
@@ -53,6 +54,7 @@ export const constantRoutes = [
   },
   {
     path: '/qrcodeAccess/accessOut',
+    hidden: true,
     component: () =>
             import ('@/views/qrcodeAccess/accessOut'),
     meta: {
@@ -62,6 +64,7 @@ export const constantRoutes = [
   },
   {
     path: '/qrcodeAccess/imprest',
+    hidden: true,
     component: () =>
             import ('@/views/qrcodeAccess/imprest'),
     meta: {
@@ -71,6 +74,7 @@ export const constantRoutes = [
   },
   {
     path: '/qrcodeAccess/queryFails',
+    hidden: true,
     component: () =>
             import ('@/views/qrcodeAccess/queryFails'),
     meta: {
