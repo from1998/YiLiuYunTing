@@ -33,22 +33,14 @@ export default {
     handleSetSize(size) {
       this.$ELEMENT.size = size
       this.$store.dispatch('app/setSize', size)
-      this.refreshView()
       this.$message({
-        message: '尺寸切换成功!',
-        type: 'success'
-      })
-    },
-    refreshView() {
-      // In order to make the cached page re-rendered
-      this.$store.dispatch('tagsView/delAllCachedViews', this.$route)
-
-      const { fullPath } = this.$route
-
-      this.$nextTick(() => {
-        this.$router.replace({
-          path: '/redirect' + fullPath
-        })
+        message: '尺寸切换成功! 正在重载页面。',
+        type: 'success',
+        center: true,
+        duration: '800',
+        onClose: () => {
+          this.$router.go(0)
+        }
       })
     }
   }

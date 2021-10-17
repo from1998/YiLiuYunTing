@@ -71,6 +71,7 @@
       <el-col :span="4" :offset="3">
         <el-select
           v-cloak
+          v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
           v-model="queryParams.parentId"
           placeholder="请选择车场"
           size="small"

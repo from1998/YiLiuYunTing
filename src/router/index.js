@@ -464,7 +464,8 @@ export const lastRoute = [{
 ]
 const createRouter = () => new Router({
   // 路由模式
-  mode: 'history', // require service support
+  mode: 'history',
+  // require service support
   scrollBehavior: () => ({ y: 0 }),
   // 初始化时将所有路由都加载上，否则会出现刷新页面404的情况
   routes: constantRoutes

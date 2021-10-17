@@ -18,6 +18,7 @@
                 value-format="yyyy-MM-dd HH:mm:ss"
                 type="month"
                 placeholder="请选择月份"
+                clearable
               />
             </el-form-item>
             <el-form-item>
@@ -26,10 +27,12 @@
             </el-form-item>
             <el-select
               v-cloak
+              v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
               v-model="form.parkId"
               placeholder="请选择车场"
               size="small"
               style="padding-left:55px"
+              clearable
               @change="handleParkFocus"
             >
               <el-option
@@ -221,7 +224,7 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('form')
-      this.getTrafficList()
+      this.getTimeList()
     },
     // 分页size变化时触发
     handleSizeChange(val) {

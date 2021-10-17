@@ -78,6 +78,13 @@ export default {
           boundaryGap: false,
           axisTick: {
             show: false
+          },
+          axisLabel: {
+            interval: 0,
+            rotate: 40,
+            formatter: function(value) {
+              return value.substring(5)
+            }
           }
         },
         grid: {
@@ -99,9 +106,6 @@ export default {
             show: false
           }
         },
-        // legend: {
-        //   data: ['expected', 'actual']
-        // },
         series: [{
           name: dataName,
           smooth: true,

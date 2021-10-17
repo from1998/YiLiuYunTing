@@ -53,6 +53,7 @@
       <el-col :span="3" :offset="3">
         <el-select
           v-cloak
+          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
           v-model="queryParams.parkId"
           placeholder="请选择车场"
           size="small"
@@ -314,7 +315,7 @@ export default {
         category: validate.notEmpty,
         couponsId: validate.notEmpty,
         merchantId: validate.notEmpty,
-        carNumber: validate.notEmpty
+        carNumber: validate.carNumber
       },
       carTableList: [],
       // 是否启用遮罩层

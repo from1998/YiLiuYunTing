@@ -11,15 +11,6 @@
           style="width:240px"
         />
       </el-form-item>
-      <el-form-item label="权限字符" prop="roleCode">
-        <el-input
-          v-model="queryParams.roleCode"
-          placeholder="请输入权限字符"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
       <el-form-item label="状态" prop="status">
         <el-select
           v-model="queryParams.status"
@@ -35,18 +26,6 @@
             :value="dict.dictValue"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width:240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholde="开始日期"
-          end-placeholde="结束日期"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -77,11 +56,8 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="角色ID" align="center" prop="roleId" />
       <el-table-column label="角色名称" align="center" prop="roleName" />
-      <el-table-column label="权限编码" align="center" prop="roleCode" />
-      <el-table-column label="显示顺序" align="center" prop="roleSort" />
       <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -116,7 +92,7 @@
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="form.roleName" placeholder="请输入角色名称" clearable size="small" />
         </el-form-item>
-        <el-form-item label="权限编码" prop="roleCode">
+        <el-form-item label="权限字符" prop="roleCode">
           <el-input v-model="form.roleCode" placeholder="请输入权限字符" clearable size="small" />
         </el-form-item>
         <el-form-item label="显示顺序" prop="roleSort">
@@ -201,7 +177,6 @@ export default {
         page: 1,
         size: 10,
         roleName: undefined,
-        roleCode: undefined,
         status: undefined
       },
       // 表单数据
@@ -212,9 +187,6 @@ export default {
       rules: {
         roleName: [
           { required: true, message: '角色名称不能为空', trigger: 'blur' }
-        ],
-        roleCode: [
-          { required: true, message: '权限编码不能为空', trigger: 'blur' }
         ]
       },
       // 是否打开分配权限的弹出层
@@ -355,7 +327,6 @@ export default {
       this.form = {
         roleId: undefined,
         roleName: undefined,
-        roleCode: undefined,
         roleSort: 0,
         remark: undefined,
         status: '0'

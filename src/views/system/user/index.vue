@@ -138,21 +138,13 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="状态" prop="state">
-              <el-select
-                v-model="form.state"
-                placeholder="状态"
-                clearable
-                size="small"
-                style="width:240px"
-              >
-                <el-option
-                  v-for="d in stateOptions"
-                  :key="d.dictValue"
-                  :label="d.dictLabel"
-                  :value="d.dictValue"
-                />
-              </el-select>
+            <el-form-item label="手机号" prop="mobile">
+              <el-input v-model="form.mobile" style="width:240px" placeholder="请输入手机号" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="邮箱" prop="email">
+              <el-input v-model="form.email" style="width:240px" placeholder="请输入用户邮箱" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -165,7 +157,6 @@
                 clearable
                 size="small"
                 style="width:240px"
-                @change="change()"
               >
                 <el-option
                   v-for="(item, index) in roleOptionsDue"
@@ -176,12 +167,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
-            <el-form-item label="手机号" prop="mobile">
-              <el-input v-model="form.mobile" style="width:240px" placeholder="请输入手机号" clearable size="small" />
-            </el-form-item></el-col>
-        </el-row>
-        <el-row>
           <el-col :span="12">
             <el-form-item v-if="form.role === 4" label="选择父级账号">
               <el-select
@@ -201,14 +186,27 @@
               </el-select>
             </el-form-item>
           </el-col>
-
-          <el-col :span="12">
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" style="width:240px" placeholder="请输入用户邮箱" clearable size="small" />
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="6">
+            <el-form-item label="状态" prop="state">
+              <el-select
+                v-model="form.state"
+                placeholder="状态"
+                clearable
+                size="small"
+                style="width:240px"
+              >
+                <el-option
+                  v-for="d in stateOptions"
+                  :key="d.dictValue"
+                  :label="d.dictLabel"
+                  :value="d.dictValue"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
-
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
@@ -216,45 +214,6 @@
       </span>
     </el-dialog>
     <!-- 添加修改弹出层结束 -->
-    <!-- 分润设置弹出层开始 -->
-    <el-dialog
-      title="分润设置"
-      :visible.sync="shareBenefitOpen"
-      width="500px"
-      center
-      append-to-body
-    >
-      <el-form ref="benefitForm" :model="benefitForm" label-width="120px">
-        <el-form-item label="分润对象">
-          <el-input v-model="benefitForm.name" clearable size="small" disabled />
-        </el-form-item>
-        <el-form-item label="分润类型">
-          <el-select
-            v-model="benefitForm.state"
-            placeholder="请选择分润类型"
-            clearable
-            size="small"
-            style="width:330px"
-          >
-            <el-option
-              v-for="d in stateOptions"
-              :key="d.dictValue"
-              :label="d.dictLabel"
-              :value="d.dictValue"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="分润比例(百分比)">
-          <el-input v-model="benefitForm.mobile" placeholder="请输入分润比例(百分比)" clearable size="small" />
-        </el-form-item>
-
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel('shareBenefitOpen')">取 消</el-button>
-      </span>
-    </el-dialog>
-    <!-- 分润设置弹出层结束 -->
   </div>
 </template>
 <script>
@@ -348,6 +307,11 @@ export default {
         }
       })
     })
+    // 查询所有用户信息
+    selectNeedSchedulingUsers().then(res => {
+      this.userOptions = res.data
+      console.log(this.userOptions)
+    })
     // 查询表格数据
     this.getUserList()
   },
@@ -385,11 +349,6 @@ export default {
     // 解决页面v-for中修改item属性值后页面页面值不改变的问题
     change() {
       this.$forceUpdate()
-      // 查询所有用户信息
-      selectNeedSchedulingUsers().then(res => {
-        this.userOptions = res.data
-        console.log(this.userOptions)
-      })
     },
     // 查询表格数据
     getUserList() {

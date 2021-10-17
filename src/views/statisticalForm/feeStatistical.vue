@@ -15,6 +15,7 @@
             <el-form-item label="日期" prop="created">
               <el-date-picker
                 v-model="form.created"
+                clearable
                 value-format="yyyy-MM-dd HH:mm:ss"
                 type="month"
                 placeholder="请选择月份"
@@ -195,8 +196,6 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('form')
-      this.dateRangeIn = []
-      this.dateRangeOut = []
       this.getTimeList()
     },
     // 分页size变化时触发

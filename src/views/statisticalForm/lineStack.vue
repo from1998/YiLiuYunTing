@@ -43,17 +43,17 @@ export default {
             {
               name: this.parkName[0],
               data: this.enterMap,
-              color: '#FF0000'
+              color: '#67C23A'
             },
             {
               name: this.parkName[1],
               data: this.leaveData,
-              color: '#00FF00'
+              color: '#Fa3534'
             },
             {
               name: this.parkName[2],
               data: this.zfbMap,
-              color: '#409eff'
+              color: '#2979ff'
             }
           ]
         }
@@ -109,7 +109,7 @@ export default {
           }
         },
 
-        color: ['#FF0000', '#00FF00', '#409eff'],
+        color: ['#67C23A', '#Fa3534', '#2979ff'],
         legend: {
           top: '3%',
           left: 'center',
