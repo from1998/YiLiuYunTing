@@ -41,62 +41,49 @@ export const constantRoutes = [
     component: () =>
             import ('@/views/error-page/401'),
     hidden: true
+  },
+  {
+    path: '/qrcodeAccess/accessIn',
+    component: () =>
+        import ('@/views/qrcodeAccess/accessIn'),
+    name: '/qrcodeAccess/accessIn',
+    meta: {
+      title: '扫码进场',
+      icon: 'el-icon-d-arrow-left'
+    }
+  },
+  {
+    path: '/qrcodeAccess/accessOut',
+    component: () =>
+        import ('@/views/qrcodeAccess/accessOut'),
+    name: '/qrcodeAccess/accessOut',
+    meta: {
+      title: '扫码出场',
+      icon: 'el-icon-d-arrow-right'
+    }
+  },
+  {
+    path: '/qrcodeAccess/imprest',
+    component: () =>
+        import ('@/views/qrcodeAccess/imprest'),
+    name: '/qrcodeAccess/imprest',
+    meta: {
+      title: '预付款',
+      icon: 'money'
+    }
+  },
+  {
+    path: '/qrcodeAccess/queryFails',
+    component: () =>
+        import ('@/views/qrcodeAccess/queryFails'),
+    name: '/qrcodeAccess/queryFails',
+    meta: {
+      title: '查询失败',
+      icon: 'el-icon-close'
+    }
   }
 ]
 export const asyncRoutes = [
-  {
-    path: '/qrcodeAccess',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true,
-    name: '/qrcodeAccess',
-    meta: {
-      title: '扫码',
-      icon: 'el-icon-tickets'
-    },
-    children: [
-      {
-        path: '/qrcodeAccess/accessIn',
-        component: () =>
-            import ('@/views/qrcodeAccess/accessIn'),
-        name: '/qrcodeAccess/accessIn',
-        meta: {
-          title: '扫码进场',
-          icon: 'el-icon-d-arrow-left'
-        }
-      },
-      {
-        path: '/qrcodeAccess/accessOut',
-        component: () =>
-            import ('@/views/qrcodeAccess/accessOut'),
-        name: '/qrcodeAccess/accessOut',
-        meta: {
-          title: '扫码出场',
-          icon: 'el-icon-d-arrow-right'
-        }
-      },
-      {
-        path: '/qrcodeAccess/imprest',
-        component: () =>
-            import ('@/views/qrcodeAccess/imprest'),
-        name: '/qrcodeAccess/imprest',
-        meta: {
-          title: '预付款',
-          icon: 'money'
-        }
-      },
-      {
-        path: '/qrcodeAccess/queryFails',
-        component: () =>
-            import ('@/views/qrcodeAccess/queryFails'),
-        name: '/qrcodeAccess/queryFails',
-        meta: {
-          title: '查询失败',
-          icon: 'el-icon-close'
-        }
-      }
-    ]
-  },
   {
     path: '/',
     component: Layout,
