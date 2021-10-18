@@ -90,7 +90,7 @@ export default {
     this.parkId = '340100202107124653'
     // 取路由路径上的参数
     this.queryParams.parkSn = this.$route.query && this.$route.query.parkSn// 路由传参
-    this.queryParams.couponsSn = this.$route.query && this.$route.query.sn // 路由传参
+    this.queryParams.couponsSn = this.$route.query && this.$route.query.couponsSn // 路由传参
     // 查询进场数据
     this.getData()
   },
