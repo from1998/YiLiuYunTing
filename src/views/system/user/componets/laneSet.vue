@@ -620,9 +620,6 @@ export default {
           this.qrcodeTitle = '预付款请扫码'
           this.creatCodeUrl = res.data + prod_url + '/third/index_' + row
         }
-        this.msgSuccess(this.creatCodeUrl)
-        // console.log(this.creatCodeUrl)
-        // this.msgSuccess(this.creatCodeUrl)
       })
       this.emergencyPhone = await window.localStorage.getItem(row.id)
       await this.createQrcode(this.creatCodeUrl)

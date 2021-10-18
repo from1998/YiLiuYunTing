@@ -87,7 +87,6 @@ export default {
   },
   methods: {
     handleClick(tab) {
-      // console.log(tab.paneName)
       window.sessionStorage.setItem('activeName', tab.paneName)
     }
 

@@ -5,8 +5,8 @@
       <el-tooltip effect="dark" content="点击右侧SN值即可复制车场SN。" placement="bottom">
         <span>车场信息</span>
       </el-tooltip>
-      <el-button v-if="form.sn" v-clipboard:copy="form.sn" v-clipboard:success="clipboardSuccess" type="text" icon="el-icon-success" size="mini">
-        {{ 'SN:'+ form.sn }}
+      <el-button v-if="form.sn" v-clipboard:copy="form.sn" v-clipboard:success="clipboardSuccess" type="text" icon="el-icon-success" size="mini" style="color:#67C23A">
+        {{ 'SN : '+ form.sn }}
       </el-button>
     </el-header>
     <!-- 主体 -->

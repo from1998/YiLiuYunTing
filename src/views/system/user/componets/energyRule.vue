@@ -310,7 +310,9 @@ export default {
       await getDepotById({
         managerId: this.form.managerId
       }).then(res => {
-        this.form.parkid = res.data.id
+        if (res.data && res.data.id) {
+          this.form.parkid = res.data.id
+        }
       })
     },
     async init(id) {
