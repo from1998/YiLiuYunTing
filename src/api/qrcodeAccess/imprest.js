@@ -4,7 +4,7 @@ import request from '@/utils/request'
 export function delCarNumberHistory(id) {
   return request({
     url: '/third/history_delete_' + id,
-    method: 'get'
+    method: 'delete'
   })
 }
 

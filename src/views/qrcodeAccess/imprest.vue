@@ -89,10 +89,8 @@ export default {
   created() {
     this.parkId = '340100202107124653'
     // 取路由路径上的参数
-    // this.queryParams.cameraId = this.encode64(this.$route.params && this.$route.params.cameraId) // 路由传参
     this.queryParams.parkSn = this.$route.query && this.$route.query.parkSn// 路由传参
     this.queryParams.couponsSn = this.$route.query && this.$route.query.sn // 路由传参
-    // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
     // 查询进场数据
     this.getData()
   },
@@ -120,6 +118,7 @@ export default {
       this.msgSuccess(this.queryParams)
       getCouponsDdata(this.queryParams).then(res => {
         this.msgSuccess(res.data)
+        this.parkId = res.data.parkId
       })
       this.loading = false// 关闭遮罩
     },
@@ -133,9 +132,9 @@ export default {
       console.log(val)
     },
     delHistory() {
-      delCarNumberHistory(this.queryParams).then(res => {
-        // this.carNumber = res.data.carNumber
-        // this.parkId = res.data.parkId
+      delCarNumberHistory(this.parkId).then(res => {
+        this.carNumber = res.data.carNumber
+        this.parkId = res.data.parkId
       })
     },
     loadScript(xyUrl, callback) {
