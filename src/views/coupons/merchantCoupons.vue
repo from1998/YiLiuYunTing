@@ -452,6 +452,8 @@ export default {
         this.creatCodeUrl = res.data + prod_url + '/third/coupons_code_' + row.parkSn + '_' + row.sn
       })
       this.createQrcode(this.creatCodeUrl)
+      this.msgSuccess(this.creatCodeUrl)
+      console.log(row.parkSn)
     },
     // 二维码下载
     handleDownload() {

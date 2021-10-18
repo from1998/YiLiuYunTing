@@ -2,11 +2,17 @@
   <div id="app-container">
     <!-- 计划将优惠券领取页面与之合并 -->
     <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">多威尔车场</el-header>
-    <el-row :gutter="0" style="font-size:1.4rem">
+    <!-- <el-row :gutter="0" style="font-size:1.4rem">
       <el-col :span="12" :offset="2">输入车牌号码:</el-col>
     </el-row>
     <el-row :gutter="0" style="margin-top:5%">
       <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
+    </el-row> -->
+    <el-row :gutter="0" style="font-size:1.4rem">
+      <el-col :span="12" :offset="2">全免费:</el-col>
+    </el-row>
+    <el-row :gutter="0" style="margin-top:5%">
+      <el-col :span="16" :offset="2">请输入车牌号领取优惠券:</el-col>
     </el-row>
     <div>
       <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
@@ -25,7 +31,8 @@
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
+        <!-- <el-button type="primary" round style="width:100%" @click="handleQuery">查询</el-button> -->
+        <el-button type="primary" round style="width:100%" @click="handleQuery">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -54,7 +61,7 @@
   </div>
 </template>
 <script>
-import { delCarNumberHistory } from '@/api/qrcodeAccess/imprest'
+import { delCarNumberHistory, getCouponsDdata } from '@/api/qrcodeAccess/imprest'
 
 import keyboard from '@/components/CarNumber/keyboard'
 
@@ -72,11 +79,22 @@ export default {
       // 最近历史记录车牌号
       historyRecord: '皖A88888',
       show: true,
-      keyState: false
+      keyState: false,
+      queryParams: {
+        parkSn: '',
+        couponsSn: ''
+      }
     }
   },
   created() {
     this.parkId = '340100202107124653'
+    // 取路由路径上的参数
+    // this.queryParams.cameraId = this.encode64(this.$route.params && this.$route.params.cameraId) // 路由传参
+    this.queryParams.parkSn = this.$route.query && this.$route.query.parkSn// 路由传参
+    this.queryParams.couponsSn = this.$route.query && this.$route.query.sn // 路由传参
+    // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
+    // 查询进场数据
+    this.getData()
   },
   mounted() {
     this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
@@ -96,6 +114,15 @@ export default {
     })
   },
   methods: {
+    // 查询进场数据
+    getData() {
+      this.loading = true // 打开遮罩
+      this.msgSuccess(this.queryParams)
+      getCouponsDdata(this.queryParams).then(res => {
+        this.msgSuccess(res.data)
+      })
+      this.loading = false// 关闭遮罩
+    },
     handleQuery() {
       this.$refs.keyBoard.confirmBtnFn()
     },
