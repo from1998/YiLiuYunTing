@@ -1,7 +1,15 @@
 <template>
   <div class="container">
     <el-header height="36px" style="padding:15px 0 45px;font-weight:700" align="center">
-      车道设置
+      <el-col :span="4" offset="10" style="text-align:center">
+        车道设置
+      </el-col>
+      <el-col :span="3" :offset="7">
+        <el-button type="success" size="mini" @click="handleAccess(sn,'pre')">
+          <svg-icon icon-class="qrcode" />
+          预付款二维码
+        </el-button>
+      </el-col>
     </el-header>
     <el-row>
       <!-- 表格工具按钮开始 -->
@@ -11,7 +19,7 @@
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="19" :offset="0">
+      <el-col :span="18" :offset="1">
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="车道名称" prop="name">
             <el-input
@@ -48,7 +56,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
       </el-col>
@@ -121,120 +129,145 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="660px"
       center
     >
-      <el-form ref="form" :model="form" label-width="120px" :rules="rules">
-        <!-- 车道名称 -->
-        <el-form-item label="车道名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入车道名称" clearable size="small" />
-        </el-form-item>
-        <!-- 车道类型 -->
-        <el-form-item label="车道类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择车道类型" size="small" clearable style="width:330px">
-            <el-option
-              v-for="item in options.laneCategory"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <!-- 所属岗亭 -->
-        <el-form-item label="所属岗亭">
-          <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small" clearable style="width:330px">
-            <el-option
-              v-for="item in options.watchhouseName"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <!-- 相机品牌 -->
-        <el-form-item label="相机品牌" prop="cameraBrandType">
-          <el-select v-model="form.cameraBrandType" placeholder="请选择相机品牌" size="small" clearable style="width:330px">
-            <el-option
-              v-for="item in options.cameraBrandType"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <!-- 相机识别码 -->
-        <el-form-item label="相机识别码" prop="cameraSn">
-          <el-input v-model="form.cameraSn" placeholder="请输入相机识别码" clearable size="small" />
-        </el-form-item>
-        <!-- 相机IP -->
-        <el-form-item label="相机IP" prop="cameraIp">
-          <el-input v-model="form.cameraIp" placeholder="请输入相机IP" clearable size="small" />
-        </el-form-item>
-        <!-- 控制卡类型 -->
-        <el-form-item label="控制卡类型" prop="controllerCard">
-          <el-select v-model="form.controllerCard" placeholder="请选择控制卡类型" size="small" clearable style="width:330px">
-            <el-option
-              v-for="item in options.controllerCard"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <!-- 是否有屏 -->
-        <el-form-item label="是否有屏" prop="haveScreen">
-          <el-radio-group v-model="form.haveScreen">
-            <el-radio
-              v-for="item in options.status"
-              :key="item.dictValue"
-              :label="Number(item.dictValue)"
-            >
-              {{ item.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <!-- 屏幕行数 -->
-        <el-form-item v-show="form.haveScreen === 1" label="屏幕行数">
-          <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small" clearable style="width:330px">
-            <el-option
-              v-for="item in options.screenLines"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <!-- 是否显示余位 -->
-        <el-form-item label="是否显示余位" prop="remainder">
-          <el-radio-group v-model="form.remainder">
-            <el-radio
-              v-for="item in options.status"
-              :key="item.dictValue"
-              :label="Number(item.dictValue)"
-            >
-              {{ item.dictLabel }}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <div v-show="form.haveScreen === 1" :gutter="0">
-          <!-- 广告一 -->
-          <el-form-item label="广告一">
-            <el-input v-model="form.ggOne" placeholder="请输入广告一" clearable size="small" />
-          </el-form-item>
-          <!-- 广告二 -->
-          <el-form-item label="广告二">
-            <el-input v-model="form.ggTwo" placeholder="请输入广告二" clearable size="small" />
-          </el-form-item>
-          <!-- 广告三 -->
-          <el-form-item v-show="form.lineCount === 4" label="广告三">
-            <el-input v-model="form.ggThree" placeholder="请输入广告三" clearable size="small" />
-          </el-form-item>
-          <!-- 广告四 -->
-          <el-form-item v-show="form.lineCount === 4" label="广告四">
-            <el-input v-model="form.ggFour" placeholder="请输入广告四" clearable size="small" />
-          </el-form-item>
-        </div>
+      <el-form ref="form" :model="form" label-width="110px" :rules="rules">
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <!-- 车道名称 -->
+            <el-form-item label="车道名称" prop="name">
+              <el-input v-model="form.name" placeholder="请输入车道名称" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <!-- 车道类型 -->
+            <el-form-item label="车道类型" prop="type">
+              <el-select v-model="form.type" placeholder="请选择车道类型" size="small" clearable>
+                <el-option
+                  v-for="item in options.laneCategory"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <!-- 所属岗亭 -->
+            <el-form-item label="所属岗亭">
+              <el-select v-model="form.workstationId" placeholder="请选择所属岗亭" size="small" clearable>
+                <el-option
+                  v-for="item in options.watchhouseName"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <!-- 相机品牌 -->
+            <el-form-item label="相机品牌" prop="cameraBrandType">
+              <el-select v-model="form.cameraBrandType" placeholder="请选择相机品牌" size="small" clearable>
+                <el-option
+                  v-for="item in options.cameraBrandType"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
+        <el-row>
+          <el-col :span="12" :offset="0">        <!-- 相机识别码 -->
+            <el-form-item label="相机识别码" prop="cameraSn">
+              <el-input v-model="form.cameraSn" placeholder="请输入相机识别码" clearable size="small" />
+            </el-form-item></el-col>
+          <el-col :span="12" :offset="0">        <!-- 相机IP -->
+            <el-form-item label="相机IP" prop="cameraIp">
+              <el-input v-model="form.cameraIp" placeholder="请输入相机IP" clearable size="small" />
+            </el-form-item></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="0">        <!-- 控制卡类型 -->
+            <el-form-item label="控制卡类型" prop="controllerCard">
+              <el-select v-model="form.controllerCard" placeholder="请选择控制卡类型" size="small" clearable>
+                <el-option
+                  v-for="item in options.controllerCard"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item></el-col>
+          <el-col :span="12" :offset="0">        <!-- 是否有屏 -->
+            <el-form-item label="是否有屏" prop="haveScreen">
+              <el-radio-group v-model="form.haveScreen">
+                <el-radio
+                  v-for="item in options.status"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item></el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="0">        <!-- 屏幕行数 -->
+            <el-form-item v-show="form.haveScreen === 1" label="屏幕行数">
+              <el-select v-model="form.lineCount" placeholder="请选择屏幕行数" size="small" clearable>
+                <el-option
+                  v-for="item in options.screenLines"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item></el-col>
+          <el-col :span="12" :offset="0">        <!-- 是否显示余位 -->
+            <el-form-item label="是否显示余位" prop="remainder">
+              <el-radio-group v-model="form.remainder">
+                <el-radio
+                  v-for="item in options.status"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item></el-col>
+        </el-row>
+
+        <div v-show="form.haveScreen === 1" :gutter="0">
+          <el-row>
+            <el-col :span="12" :offset="0">          <!-- 广告一 -->
+              <el-form-item label="广告一">
+                <el-input v-model="form.ggOne" placeholder="请输入广告一" clearable size="small" />
+              </el-form-item>
+            </el-col>
+            <el-col :span="12" :offset="0">          <!-- 广告二 -->
+              <el-form-item label="广告二">
+                <el-input v-model="form.ggTwo" placeholder="请输入广告二" clearable size="small" />
+              </el-form-item></el-col>
+          </el-row>
+
+          <el-row>
+            <el-col :span="12" :offset="0">          <!-- 广告三 -->
+              <el-form-item v-show="form.lineCount === 4" label="广告三">
+                <el-input v-model="form.ggThree" placeholder="请输入广告三" clearable size="small" />
+              </el-form-item></el-col>
+            <el-col :span="12" :offset="0">          <!-- 广告四 -->
+              <el-form-item v-show="form.lineCount === 4" label="广告四">
+                <el-input v-model="form.ggFour" placeholder="请输入广告四" clearable size="small" />
+              </el-form-item></el-col>
+          </el-row>
+        </div>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">确 定</el-button>
@@ -465,7 +498,7 @@ export default {
         this.laneList = res.data.lane.list
         this.options.watchhouseName = res.data.workStation
         this.total = res.data.total
-        // this.options.sn =
+        this.sn = res.data.sn
         this.loading = false// 关闭遮罩
       }).catch(() => {
         this.loading = false// 关闭遮罩
@@ -567,8 +600,10 @@ export default {
       this.id = row.id
       if (row.type === 1) {
         this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
-      } else {
+      } else if (row.type === 2) {
         this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
+      } else {
+        this.qrcodeBg = require('@/assets/images/prePayBg1.jpg')
       }
       // const id = this.encode64(row.id.toString())
       this.qrcodeDialogVisible = true
@@ -578,9 +613,12 @@ export default {
         if (type === 'in') {
           this.qrcodeTitle = '无牌车进场请扫码'
           this.creatCodeUrl = res.data + prod_url + '/third/no_plate_enter_' + row.parkSn + '_' + row.id
-        } else {
+        } else if (type === 'out') {
           this.qrcodeTitle = '出场支付请扫码'
           this.creatCodeUrl = res.data + prod_url + '/third/leave_code_' + row.parkSn + '_' + row.id
+        } else {
+          this.qrcodeTitle = '预付款请扫码'
+          this.creatCodeUrl = res.data + prod_url + '/third/index_' + row
         }
         this.msgSuccess(this.creatCodeUrl)
         // console.log(this.creatCodeUrl)
@@ -617,6 +655,9 @@ export default {
     },
     // 生成车道
     createLane(text) {
+      if (text === undefined) {
+        text = '预付款'
+      }
       const canvas = document.getElementById('laneCanvas')
       canvas.width = 500
       canvas.height = 150
@@ -683,10 +724,12 @@ export default {
       this.loading = true
       var a = document.createElement('a')
       var event = new MouseEvent('click')
-      if (this.qrcodeBg === require('@/assets/images/accessInBg1.jpg') || this.qrcodeBg === require('@/assets/images/accessInBg2.jpg')) {
+      if (this.qrcodeTitle === '无牌车进场请扫码') {
         a.download = '无牌车进场二维码'
-      } else {
+      } else if (this.qrcodeTitle === '出场支付请扫码') {
         a.download = '出场支付二维码'
+      } else {
+        a.download = '预付款二维码'
       }
       a.href = this.src
       a.dispatchEvent(event)
@@ -706,6 +749,12 @@ export default {
           break
         case require('@/assets/images/accessOutBg2.jpg'):
           this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
+          break
+        case require('@/assets/images/prePayBg1.jpg'):
+          this.qrcodeBg = require('@/assets/images/prePayBg2.jpg')
+          break
+        case require('@/assets/images/prePayBg2.jpg'):
+          this.qrcodeBg = require('@/assets/images/prePayBg1.jpg')
           break
       }
       this.drawqrCodeImage(this.qrcodeBg, this.qrcodeUrl, this.emergencyPhoneImg, this.laneImg)

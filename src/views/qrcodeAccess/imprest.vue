@@ -1,7 +1,7 @@
 <template>
   <div id="app-container">
     <!-- 计划将优惠券领取页面与之合并 -->
-    <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">多威尔车场</el-header>
+    <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">{{ parkName }}</el-header>
     <!-- <el-row :gutter="0" style="font-size:1.4rem">
       <el-col :span="12" :offset="2">输入车牌号码:</el-col>
     </el-row>
@@ -9,7 +9,7 @@
       <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
     </el-row> -->
     <el-row :gutter="0" style="font-size:1.4rem">
-      <el-col :span="12" :offset="2">全免费:</el-col>
+      <el-col :span="12" :offset="2">{{ merchantCouponsName }}:</el-col>
     </el-row>
     <el-row :gutter="0" style="margin-top:5%">
       <el-col :span="16" :offset="2">请输入车牌号领取优惠券:</el-col>
@@ -71,12 +71,15 @@ export default {
   },
   data() {
     return {
+      pay: '',
+      parkName: '',
+      merchantCouponsName: '',
       delHistoryopen: false,
       loading: false,
       parkId: '',
       mcId: '',
       // 要查询的车牌号
-      carNumber: '临NF00365',
+      carNumber: '',
       // 最近历史记录车牌号
       historyRecord: '皖A88888',
       show: true,
@@ -88,8 +91,8 @@ export default {
     }
   },
   created() {
-    this.parkId = '340100202107124653'
     // 取路由路径上的参数
+    this.pay = this.$route.query && this.$route.query.pay // 路由传参
     this.queryParams.parkSn = this.$route.query && this.$route.query.parkSn// 路由传参
     this.queryParams.couponsSn = this.$route.query && this.$route.query.couponsSn // 路由传参
     // 查询进场数据
@@ -118,9 +121,10 @@ export default {
       this.loading = true // 打开遮罩
       this.msgSuccess(this.queryParams)
       getCouponsDdata(this.queryParams).then(res => {
-        this.msgSuccess(res.data)
         this.parkId = res.data.park.id
         this.mcId = res.data.merchantCoupons.id
+        this.parkName = res.data.park.name
+        this.merchantCouponsName = res.data.merchantCoupons.name
       })
       this.loading = false// 关闭遮罩
     },
@@ -131,6 +135,10 @@ export default {
       this.$refs.keyBoard.sonFun(val)
     },
     handleSubmit() {
+      this.$refs.keyBoard.confirmBtnFn()
+    },
+    postCarNumber(val) {
+      this.carNumber = val
       this.loading = true // 打开遮罩
       getCoupons(this.parkId, this.mcId, { 'carNumber': this.carNumber }).then(res => {
         if (res.code === 200) {
@@ -139,13 +147,8 @@ export default {
       })
       this.loading = false// 关闭遮罩
     },
-    postCarNumber(val) {
-      console.log(val)
-    },
     delHistory() {
       delCarNumberHistory(this.parkId).then(res => {
-        // this.carNumber = res.data.carNumber
-        // this.parkId = res.data.park.id
         this.msgSuccess(res.data)
       })
     },
