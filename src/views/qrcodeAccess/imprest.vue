@@ -118,7 +118,7 @@ export default {
       this.msgSuccess(this.queryParams)
       getCouponsDdata(this.queryParams).then(res => {
         this.msgSuccess(res.data)
-        this.parkId = res.data.parkId
+        this.parkId = res.data.park.id
       })
       this.loading = false// 关闭遮罩
     },
@@ -133,8 +133,9 @@ export default {
     },
     delHistory() {
       delCarNumberHistory(this.parkId).then(res => {
-        this.carNumber = res.data.carNumber
-        this.parkId = res.data.parkId
+        // this.carNumber = res.data.carNumber
+        // this.parkId = res.data.park.id
+        this.msgSuccess(res.data)
       })
     },
     loadScript(xyUrl, callback) {
