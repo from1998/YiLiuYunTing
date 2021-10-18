@@ -597,13 +597,15 @@ export default {
     },
     // 点击查看二维码
     async handleAccess(row, type) {
-      this.id = row.id
-      if (row.type === 1) {
-        this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
-      } else if (row.type === 2) {
-        this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
-      } else {
+      if (typeof (row) === 'string') {
         this.qrcodeBg = require('@/assets/images/prePayBg1.jpg')
+      } else {
+        this.id = row.id
+        if (row.type === 1) {
+          this.qrcodeBg = require('@/assets/images/accessInBg1.jpg')
+        } else {
+          this.qrcodeBg = require('@/assets/images/accessOutBg1.jpg')
+        }
       }
       // const id = this.encode64(row.id.toString())
       this.qrcodeDialogVisible = true
