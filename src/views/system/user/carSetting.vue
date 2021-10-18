@@ -71,6 +71,7 @@ export default {
   },
   data() {
     return {
+      dialogVisible: false,
       flag: true,
       activeName: 'depotInfo',
       myBackToTopStyle: {
@@ -92,6 +93,7 @@ export default {
     }).then(res => {
       if (res.data === null) {
         this.flag = false
+        this.dialogVisible = true
       }
     })
   },

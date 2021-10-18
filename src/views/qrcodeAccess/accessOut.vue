@@ -79,7 +79,7 @@
   </div>
 </template>
 <script>
-// import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
+import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 
 const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
@@ -89,17 +89,17 @@ export default {
     return {
       loading: false,
       parkId: '',
-      carNumber: '临NF00365',
+      carNumber: '',
       currentDate: '',
       loadDate: '',
       queryParams: {
-        sn: '2021092410020961589649605'
+        sn: ''
       }
     }
   },
   created() {
     // 取路由路径上的参数
-    // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
+    this.queryParams.sn = this.$route.query && this.$route.query.sn // 路由传参
     // 查询进场数据
     this.getData()
   },
@@ -189,11 +189,10 @@ export default {
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      this.parkId = '340100202107124653'
-      // getLeaveData(this.queryParams).then(res => {
-      //   this.carNumber = res.data.carNumber
-      // this.parkId = res.data.parkId
-      // })
+      getLeaveData(this.queryParams).then(res => {
+        this.carNumber = res.data.carNumber
+        this.parkId = res.data.parkId
+      })
       this.loading = false// 关闭遮罩
     },
     loadScript(xyUrl, callback) {
