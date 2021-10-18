@@ -17,3 +17,12 @@ export function getCouponsDdata(query) {
   })
 }
 
+// 领取优惠券
+export function getCoupons(parkId, mcId, query) {
+  return request({
+    url: '/third/get_coupons_' + parkId + '_' + mcId,
+    method: 'get',
+    params: query
+  })
+}
+

@@ -32,7 +32,7 @@
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <!-- <el-button type="primary" round style="width:100%" @click="handleQuery">查询</el-button> -->
-        <el-button type="primary" round style="width:100%" @click="handleQuery">领取</el-button>
+        <el-button type="primary" round style="width:100%" @click="handleSubmit">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -61,7 +61,7 @@
   </div>
 </template>
 <script>
-import { delCarNumberHistory, getCouponsDdata } from '@/api/qrcodeAccess/imprest'
+import { delCarNumberHistory, getCouponsDdata, getCoupons } from '@/api/qrcodeAccess/imprest'
 
 import keyboard from '@/components/CarNumber/keyboard'
 
@@ -74,6 +74,7 @@ export default {
       delHistoryopen: false,
       loading: false,
       parkId: '',
+      mcId: '',
       // 要查询的车牌号
       carNumber: '临NF00365',
       // 最近历史记录车牌号
@@ -119,6 +120,7 @@ export default {
       getCouponsDdata(this.queryParams).then(res => {
         this.msgSuccess(res.data)
         this.parkId = res.data.park.id
+        this.mcId = res.data.merchantCoupons.id
       })
       this.loading = false// 关闭遮罩
     },
@@ -127,6 +129,15 @@ export default {
     },
     handleInput(val) {
       this.$refs.keyBoard.sonFun(val)
+    },
+    handleSubmit() {
+      this.loading = true // 打开遮罩
+      getCoupons(this.parkId, this.mcId, { 'carNumber': this.carNumber }).then(res => {
+        if (res.code === 200) {
+          this.msgSuccess(res.msg)
+        }
+      })
+      this.loading = false// 关闭遮罩
     },
     postCarNumber(val) {
       console.log(val)
