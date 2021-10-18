@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <el-header height="36px" style="padding:15px 0 45px;font-weight:700" align="center">
-      <el-col :span="4" offset="10" style="text-align:center">
+      <el-col :span="4" :offset="10" style="text-align:center">
         车道设置
       </el-col>
       <el-col :span="3" :offset="7">
@@ -620,6 +620,7 @@ export default {
           this.qrcodeTitle = '预付款请扫码'
           this.creatCodeUrl = res.data + prod_url + '/third/index_' + row
         }
+        this.msgSuccess(this.creatCodeUrl)
       })
       this.emergencyPhone = await window.localStorage.getItem(row.id)
       await this.createQrcode(this.creatCodeUrl)
