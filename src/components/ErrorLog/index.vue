@@ -12,7 +12,7 @@
         <el-button size="mini" type="primary" icon="el-icon-delete" @click="clearAll">清除所有记录</el-button>
       </div>
       <el-table :data="errorLogs" border>
-        <el-table-column label="Message">
+        <el-table-column label="信息">
           <template slot-scope="{row}">
             <div>
               <span class="message-title">错误提示:</span>
@@ -22,7 +22,7 @@
             </div>
             <br>
             <div>
-              <span class="message-title" style="padding-right: 10px;">错误信息: </span>
+              <span class="message-title" style="padding-right: 10px;">错误消息: </span>
               <el-tag type="warning">
                 {{ row.vm.$vnode.tag }} error in {{ row.info }}
               </el-tag>
@@ -36,7 +36,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="Stack">
+        <el-table-column label="堆栈">
           <template slot-scope="scope">
             {{ scope.row.err.stack }}
           </template>

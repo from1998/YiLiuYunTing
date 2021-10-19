@@ -9,10 +9,11 @@
         <div class="right-menu-item">
           <span>{{ Utils() }}</span>
         </div>
-
-        <div class="right-menu-item hover-effect">
-          <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
-        </div>
+        <el-tooltip content="便签" effect="dark" placement="bottom">
+          <div class="right-menu-item hover-effect">
+            <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
+          </div>
+        </el-tooltip>
 
         <!-- <search id="header-search" class="right-menu-item" /> -->
 
@@ -24,7 +25,9 @@
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <error-log class="errLog-container right-menu-item hover-effect" />
+        <el-tooltip content="错误日志" effect="dark" placement="bottom">
+          <error-log class="errLog-container right-menu-item hover-effect" />
+        </el-tooltip>
 
       </template>
 

@@ -85,6 +85,17 @@ export const constantRoutes = [
 ]
 export const asyncRoutes = [
   {
+    path: '/companyLink',
+    name: '/companyLink',
+    component: Layout,
+    children: [
+      {
+        path: 'http://www.ahdvl.com',
+        meta: { title: '公司官网', icon: 'link' }
+      }
+    ]
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
