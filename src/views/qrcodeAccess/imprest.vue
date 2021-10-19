@@ -10,7 +10,7 @@
         <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
       </el-row>
     </div>
-    <div v-if="pay">
+    <div v-if="!pay">
       <el-row :gutter="0" style="font-size:1.4rem">
         <el-col :span="12" :offset="2">{{ merchantCouponsName }}:</el-col>
       </el-row>
@@ -36,7 +36,7 @@
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <el-button v-if="pay" type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
-        <el-button v-if="pay" type="primary" round style="width:100%" @click="handleSubmit">领取</el-button>
+        <el-button v-if="!pay" type="primary" round style="width:100%" @click="handleSubmit">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -154,6 +154,7 @@ export default {
     postCarNumber(val) {
       this.carNumber = val
       this.loading = true // 打开遮罩
+      this.msgSuccess(typeof this.pay)
       if (this.pay) {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
           if (res.code === 200) {
@@ -171,7 +172,9 @@ export default {
     },
     delHistory() {
       delCarNumberHistory(this.parkId).then(res => {
-        this.msgSuccess(res.data)
+        if (res.code === 200) {
+          this.msgSuccess(res.msg)
+        }
       })
     },
     loadScript(xyUrl, callback) {
