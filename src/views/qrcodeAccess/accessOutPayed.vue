@@ -24,35 +24,26 @@
         <el-col :span="2" :offset="0" />
         <div id="lineDowm" />
       </el-row>
-      <div>
-        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">总金额</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
-          <el-col :span="2" :offset="0" />
-        </el-row>
-        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">优惠类型</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
-          <el-col :span="2" :offset="0" />
-        </el-row>
-        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">应交金额</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥5.89</el-col>
-          <el-col :span="2" :offset="0" />
-        </el-row>
-      </div>
-      <div>
-        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">已付费用</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right;color:green;font-size:1.2rem">￥5.89</el-col>
-          <el-col :span="2" :offset="0" />
-        </el-row>
-        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">支付时间</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 21:59</el-col>
-          <el-col :span="2" :offset="0" />
-        </el-row>
-      </div>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">总金额</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">优惠类型</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">已付费用</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right;color:green;font-size:1.2rem">￥5.89</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">支付时间</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 21:59</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
     </div>
     <div>
       <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
@@ -79,7 +70,7 @@
   </div>
 </template>
 <script>
-import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
+import { getNoPayData, getPayedData } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 
 const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
@@ -99,7 +90,8 @@ export default {
   },
   created() {
     // 取路由路径上的参数
-    this.queryParams.sn = this.$route.query && this.$route.query.sn // 路由传参
+    this.pay = this.$route.query && this.$route.query.isPay === 'true' // 路由传参
+
     // 查询进场数据
     this.getData()
   },
@@ -189,11 +181,19 @@ export default {
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      getLeaveData(this.queryParams).then(res => {
-        this.msgSuccess(res.data)
-        this.carNumber = res.data.carNumber
-        this.parkId = res.data.parkId
-      })
+      if (this.pay) {
+        getLeaveData(this.queryParams).then(res => {
+          this.parkId = res.data.park.id
+          this.historyRecord = res.data.carNumberList
+        })
+      } else {
+        getCouponsDdata(this.queryParams).then(res => {
+          this.parkId = res.data.park.id
+          this.mcId = res.data.merchantCoupons.id
+          this.parkName = res.data.park.name
+          this.merchantCouponsName = res.data.merchantCoupons.name
+        })
+      }
       this.loading = false// 关闭遮罩
     },
     loadScript(xyUrl, callback) {

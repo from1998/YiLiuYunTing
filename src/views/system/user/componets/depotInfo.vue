@@ -142,7 +142,7 @@
           </el-col>
         </el-row>
         <!-- 手续费及停车费分成 -->
-        <el-row>
+        <el-row v-if="getUserInfo().role === 1">
           <el-col :span="12">
             <el-form-item label="手续费(千分比)" prop="commissionCharge">
               <el-tooltip class="item" effect="dark" content="请输入手续费(千分比)" placement="right">

@@ -67,8 +67,7 @@
   </div>
 </template>
 <script>
-import { delCarNumberHistory, getCouponsDdata, getCoupons, getCarDetails } from '@/api/qrcodeAccess/imprest'
-import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
+import { delCarNumberHistory, getCouponsDdata, getCoupons, getCarDetails, getLeaveData } from '@/api/qrcodeAccess/imprest'
 
 import keyboard from '@/components/CarNumber/keyboard'
 
@@ -157,7 +156,15 @@ export default {
       if (this.pay) {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
           if (res.code === 200) {
-            this.$router.push(`/qrcodeAccess/queryFails?${res.data}parkName=${this.parkName}`)
+            if (res.data.car === 'false') {
+              this.$router.push(`/qrcodeAccess/queryFails?${res.data.url}parkName=${this.parkName}`)
+            } else {
+              if (res.data.isPayed === 'false') {
+                this.$router.push(`/qrcodeAccess/accessOutNoPay?${res.data.url}parkName=${this.parkName}`)
+              } else {
+                this.$router.push(`/qrcodeAccess/accessOutPayed?${res.data.url}parkName=${this.parkName}`)
+              }
+            }
           }
         })
       } else {

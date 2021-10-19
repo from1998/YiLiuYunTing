@@ -53,12 +53,22 @@ export const constantRoutes = [
     }
   },
   {
-    path: '/qrcodeAccess/accessOut',
+    path: '/qrcodeAccess/accessOutNoPay',
     component: () =>
-        import ('@/views/qrcodeAccess/accessOut'),
-    name: '/qrcodeAccess/accessOut',
+        import ('@/views/qrcodeAccess/accessOutNoPay'),
+    name: '/qrcodeAccess/accessOutNoPay',
     meta: {
-      title: '扫码出场',
+      title: '扫码出场（未支付）',
+      icon: 'el-icon-d-arrow-right'
+    }
+  },
+  {
+    path: '/qrcodeAccess/accessOutPayed',
+    component: () =>
+        import ('@/views/qrcodeAccess/accessOutPayed'),
+    name: '/qrcodeAccess/accessOutPayed',
+    meta: {
+      title: '扫码出场（已支付）',
       icon: 'el-icon-d-arrow-right'
     }
   },

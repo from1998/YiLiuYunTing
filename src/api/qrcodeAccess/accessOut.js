@@ -1,9 +1,18 @@
 import request from '@/utils/request'
 
-// 获取扫码出场数据
-export function getLeaveData(query) {
+// 查询未支付页面数据
+export function getNoPayData(query) {
   return request({
-    url: '/third/index_data',
+    url: '/third/query_not_pay_data',
+    method: 'get',
+    params: query
+  })
+}
+
+// 查询已支付页面数据
+export function getPayedData(query) {
+  return request({
+    url: '/third/query_has_pay_data',
     method: 'get',
     params: query
   })
@@ -17,3 +26,4 @@ export function createOrder(data) {
     data
   })
 }
+
