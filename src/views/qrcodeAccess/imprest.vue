@@ -158,7 +158,7 @@ export default {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
           if (res.code === 200) {
             this.msgSuccess(res.msg)
-            this.$router.replace(res.data)
+            this.$router.push(`/qrcodeAccess/queryFails?${res.data}`)
           }
         })
       } else {
