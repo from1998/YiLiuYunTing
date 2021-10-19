@@ -306,7 +306,7 @@
       center
       append-to-body
     >
-      <el-input v-model="emergencyPhone" clearable size="small" placeholder="请输入应急联系方式" />
+      <el-input v-model="emergencyPhone" clearable size="small" placeholder="请输入应急联系方式" @keyup.enter.native="handleEmergencyConfirm" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleEmergencyConfirm">确 定</el-button>
         <el-button @click="emergencyOpen = false">取 消</el-button>

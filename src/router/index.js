@@ -87,6 +87,7 @@ export const asyncRoutes = [
   {
     path: '/companyLink',
     name: '/companyLink',
+    redirect: 'http://www.ahdvl.com',
     component: Layout,
     children: [
       {

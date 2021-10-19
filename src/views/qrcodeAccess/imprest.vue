@@ -130,7 +130,6 @@ export default {
       if (this.pay) {
         getLeaveData(this.queryParams).then(res => {
           this.parkId = res.data.park.id
-          this.msgSuccess(this.parkId)
           this.historyRecord = res.data.carNumberList
         })
       } else {
@@ -155,11 +154,11 @@ export default {
     postCarNumber(val) {
       this.carNumber = val
       this.loading = true // 打开遮罩
-      this.msgSuccess(typeof this.pay)
       if (this.pay) {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
           if (res.code === 200) {
             this.msgSuccess(res.msg)
+            this.$router.replace(res.data)
           }
         })
       } else {
