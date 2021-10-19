@@ -93,7 +93,7 @@ export default {
     }).then(res => {
       if (res.data === null) {
         this.flag = false
-        this.dialogVisible = true
+        this.dialogVisible = false
       }
     })
   },

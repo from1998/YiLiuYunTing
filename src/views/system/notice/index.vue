@@ -188,7 +188,7 @@
       center
       append-to-body
     >
-      <MarkdownEditor ref="noticeContent" v-model="noticeContent" :aria-disabled="true" :options="{hideModeSwitch:true,previewStyle:'tab'}" />
+      <MarkdownEditor ref="noticeContent" v-model="noticeContent" />
     </el-dialog>
     <!-- 公告内容弹出层结束 -->
 

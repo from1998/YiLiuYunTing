@@ -80,7 +80,7 @@ export default {
         tooltip: {
           trigger: 'axis'
         },
-        color: ['#Fa3534', '#2979ff', '#FFFAFA'],
+        color: ['#67C23A', '#Fa3534', '#2979ff'],
         legend: {
           top: '3%',
           right: '4%',
@@ -118,12 +118,12 @@ export default {
               {
                 name: '进场车辆',
                 data: parkData.enterMap,
-                color: '#Fa3534'
+                color: '#67C23A'
               },
               {
                 name: '出场车辆',
                 data: parkData.leaveMap,
-                color: '#2979ff'
+                color: '#Fa3534'
               }
             ]
           },
@@ -134,17 +134,17 @@ export default {
               {
                 name: '官方',
                 data: orderData.gfMap,
-                color: '#Fa3534'
+                color: '#67C23A'
               },
               {
                 name: '微信',
                 data: orderData.wxMap,
-                color: '#2979ff'
+                color: '#Fa3534'
               },
               {
                 name: '支付宝',
                 data: orderData.zfbMap,
-                color: '#FFFAFA'
+                color: '#2979ff'
               }
             ]
           }

@@ -10,7 +10,7 @@
       <el-col :span="8" :offset="0">
         <el-form ref="cleanForm" :model="cleanForm" :inline="true">
           <el-form-item>
-            <el-button type="danger" icon="el-icon-close" size="mini" @click="handleLeave">清理离场车辆</el-button>
+            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleLeave">清理离场车辆</el-button>
           </el-form-item>
           <el-form-item label="" prop="days">
             <el-input
@@ -22,8 +22,13 @@
             />
           </el-form-item>
           <el-form-item>
-            <el-button type="warning" icon="el-icon-delete" size="mini" @click="handleEnter(cleanForm.days)">清理在场车辆</el-button>
+            <el-button type="text" icon="el-icon-caret-right" size="mini" style="cursor:default" />
           </el-form-item>
+          <el-tooltip class="item" effect="dark" content="请在左侧输入清理天数，再点击该按钮。" placement="bottom" :disabled="cleanForm.days?true:false">
+            <el-form-item>
+              <el-button :disabled="cleanForm.days?false:true" type="warning" icon="el-icon-delete" size="mini" @click="handleEnter(cleanForm.days)">清理在场车辆{{ ' : '+ (cleanForm.days===undefined?'':cleanForm.days) + '天' }}</el-button>
+            </el-form-item>
+          </el-tooltip>
         </el-form>
       </el-col>
       <el-col :span="4" :offset="12" style="padding-left:60px">
@@ -59,7 +64,7 @@
             />
           </el-form-item>
           <el-form-item label="是否离场" prop="isleave" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isleave" style="width:180px" clearable>
+            <el-select v-cloak v-model="queryParams.isleave" style="width:180px" clearable placeholder="请选择是否离场">
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -69,7 +74,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="车位类型" prop="recordcartype" label-width="70px">
-            <el-select v-cloak v-model="queryParams.recordcartype" style="width:180px" clearable>
+            <el-select v-cloak v-model="queryParams.recordcartype" style="width:180px" clearable placeholder="请选择是否离场">
               <el-option
                 v-for="item in laneOptions"
                 :key="item.dictValue"

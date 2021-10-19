@@ -14,9 +14,7 @@
           <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
         </div>
 
-        <search id="header-search" class="right-menu-item" />
-
-        <error-log class="errLog-container right-menu-item hover-effect" />
+        <!-- <search id="header-search" class="right-menu-item" /> -->
 
         <el-tooltip content="全屏切换" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -25,6 +23,8 @@
         <el-tooltip content="全局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
+
+        <error-log class="errLog-container right-menu-item hover-effect" />
 
       </template>
 
@@ -70,7 +70,7 @@ import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
-import Search from '@/components/HeaderSearch'
+// import Search from '@/components/HeaderSearch'
 
 export default {
   components: {
@@ -78,8 +78,8 @@ export default {
     Hamburger,
     ErrorLog,
     Screenfull,
-    SizeSelect,
-    Search
+    SizeSelect
+    // Search
   },
   data() {
     return {
