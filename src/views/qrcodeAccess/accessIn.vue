@@ -1,7 +1,7 @@
 <template>
   <div id="app-container">
     <el-row :gutter="0" style="height:45px;margin-top:10%;font-size:1.2rem">
-      <el-col :span="20" :offset="2">无牌车</el-col>
+      <el-col :span="20" :offset="2" style="color:#E6A23C">无牌车</el-col>
     </el-row>
     <el-row :gutter="0">
       <el-col :span="12" :offset="2">临时车牌号码:</el-col>
@@ -16,7 +16,7 @@
       </el-col>
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:10%">
-      <el-col :span="22" :offset="2">{{ message }}
+      <el-col :span="22" :offset="2">{{ `进场信息：${message}` }}
       </el-col>
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:10%">
@@ -26,7 +26,7 @@
     <el-row :gutter="0" style="font-size:14px;margin-top:3%">
       <el-col :span="22" :offset="2">
         <span>如有疑问请拨打客服电话:</span>
-        <a href="tel:0551—65521987">0551—65521987</a>
+        <a href="tel:0551—65521987" style="color:#409EFF">0551—65521987</a>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -42,8 +42,8 @@ export default {
     return {
       loading: false,
       parkId: '',
-      message: '临时车牌进入',
-      carNumber: '皖A88888',
+      message: '',
+      carNumber: '',
       queryParams: {
         cameraId: '',
         sn: ''
@@ -79,7 +79,6 @@ export default {
   methods: {
     // 查询进场数据
     getData() {
-      this.msgSuccess(this.queryParams)
       this.loading = true // 打开遮罩
       getEnterData(this.queryParams).then(res => {
         this.carNumber = res.data.carNumber
