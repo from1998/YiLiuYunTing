@@ -26,3 +26,12 @@ export function getCoupons(parkId, mcId, query) {
   })
 }
 
+// 查询车辆
+export function getCarDetails(parkId, query) {
+  return request({
+    url: '/third/get_coupons_' + parkId,
+    method: 'get',
+    params: query
+  })
+}
+

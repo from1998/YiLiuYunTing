@@ -2,7 +2,7 @@
   <div id="app-container">
     <!-- 计划将优惠券领取页面与之合并 -->
     <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">{{ parkName }}</el-header>
-    <div :v-if="pay">
+    <div v-if="pay">
       <el-row :gutter="0" style="font-size:1.4rem">
         <el-col :span="12" :offset="2">输入车牌号码:</el-col>
       </el-row>
@@ -10,7 +10,7 @@
         <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
       </el-row>
     </div>
-    <div :v-if="pay">
+    <div v-if="pay">
       <el-row :gutter="0" style="font-size:1.4rem">
         <el-col :span="12" :offset="2">{{ merchantCouponsName }}:</el-col>
       </el-row>
@@ -21,7 +21,7 @@
     <div>
       <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
     </div>
-    <el-row :v-if="pay" :gutter="0" style="color:#ccc">
+    <el-row v-if="pay" :gutter="0" style="color:#ccc">
       <div id="lineDowm" />
       <el-col :span="2" :offset="2">
         <svg-icon icon-class="historyRecord" />
@@ -35,8 +35,8 @@
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%" :v-if="pay" @click="handleQuery">查询</el-button>
-        <el-button type="primary" round style="width:100%" :v-if="pay" @click="handleSubmit">领取</el-button>
+        <el-button v-if="pay" type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
+        <el-button v-if="pay" type="primary" round style="width:100%" @click="handleSubmit">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -65,7 +65,8 @@
   </div>
 </template>
 <script>
-import { delCarNumberHistory, getCouponsDdata, getCoupons } from '@/api/qrcodeAccess/imprest'
+import { delCarNumberHistory, getCouponsDdata, getCoupons, getCarDetails } from '@/api/qrcodeAccess/imprest'
+import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
 
 import keyboard from '@/components/CarNumber/keyboard'
 
@@ -96,8 +97,9 @@ export default {
   },
   created() {
     // 取路由路径上的参数
-    this.pay = this.$route.query && this.$route.query.pay // 路由传参
+    this.pay = this.$route.query && this.$route.query.pay === 'true' // 路由传参
     this.queryParams.parkSn = this.$route.query && this.$route.query.parkSn// 路由传参
+    this.queryParams.sn = this.$route.query && this.$route.query.sn// 路由传参
     this.queryParams.couponsSn = this.$route.query && this.$route.query.couponsSn // 路由传参
     // 查询进场数据
     this.getData()
@@ -123,13 +125,21 @@ export default {
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      // this.msgSuccess(this.queryParams)
-      getCouponsDdata(this.queryParams).then(res => {
-        this.parkId = res.data.park.id
-        this.mcId = res.data.merchantCoupons.id
-        this.parkName = res.data.park.name
-        this.merchantCouponsName = res.data.merchantCoupons.name
-      })
+      if (this.pay) {
+        getLeaveData(this.queryParams).then(res => {
+          this.msgSuccess(res.data)
+          this.carNumber = res.data.carNumber
+          this.parkId = res.data.parkId
+        })
+      } else {
+        getCouponsDdata(this.queryParams).then(res => {
+          this.msgSuccess(res.data)
+          this.parkId = res.data.park.id
+          this.mcId = res.data.merchantCoupons.id
+          this.parkName = res.data.park.name
+          this.merchantCouponsName = res.data.merchantCoupons.name
+        })
+      }
       this.loading = false// 关闭遮罩
     },
     handleQuery() {
@@ -144,11 +154,19 @@ export default {
     postCarNumber(val) {
       this.carNumber = val
       this.loading = true // 打开遮罩
-      getCoupons(this.parkId, this.mcId, { 'carNumber': this.carNumber }).then(res => {
-        if (res.code === 200) {
-          this.msgSuccess(res.msg)
-        }
-      })
+      if (this.pay) {
+        getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
+          if (res.code === 200) {
+            this.msgSuccess(res.msg)
+          }
+        })
+      } else {
+        getCoupons(this.parkId, this.mcId, { 'carNumber': this.carNumber }).then(res => {
+          if (res.code === 200) {
+            this.msgSuccess(res.msg)
+          }
+        })
+      }
       this.loading = false// 关闭遮罩
     },
     delHistory() {
