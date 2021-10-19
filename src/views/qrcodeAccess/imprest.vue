@@ -21,18 +21,20 @@
     <div>
       <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
     </div>
-    <el-row v-if="pay" :gutter="0" style="color:#ccc">
-      <div id="lineDowm" />
-      <el-col :span="2" :offset="2">
-        <svg-icon icon-class="historyRecord" />
-      </el-col>
-      <el-col :span="10" :offset="0">
-        <span style="letter-spacing:0.5em" @click="handleInput(historyRecord)">{{ historyRecord }}</span>
-      </el-col>
-      <el-col :span="3" :offset="7">
-        <svg-icon icon-class="Close" @click="delHistoryopen=true" />
-      </el-col>
-    </el-row>
+    <div v-if="pay">
+      <el-row v-for="item in carNumberList" :key="item.carNumber" :gutter="0" style="color:#ccc">
+        <div id="lineDowm" />
+        <el-col :span="2" :offset="2">
+          <svg-icon icon-class="historyRecord" />
+        </el-col>
+        <el-col :span="10" :offset="0">
+          <span style="letter-spacing:0.5em" @click="handleInput(item.carNumber)">{{ item.carNumber }}</span>
+        </el-col>
+        <el-col :span="3" :offset="7">
+          <svg-icon icon-class="Close" @click="delHistoryopen=true" />
+        </el-col>
+      </el-row>
+    </div>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <el-button v-if="pay" type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
@@ -86,7 +88,7 @@ export default {
       // 要查询的车牌号
       carNumber: '',
       // 最近历史记录车牌号
-      historyRecord: '皖A88888',
+      historyRecord: [],
       show: true,
       keyState: false,
       queryParams: {
@@ -127,13 +129,11 @@ export default {
       this.loading = true // 打开遮罩
       if (this.pay) {
         getLeaveData(this.queryParams).then(res => {
-          this.msgSuccess(res.data)
-          this.carNumber = res.data.carNumber
-          this.parkId = res.data.parkId
+          this.parkId = res.data.park.id
+          this.historyRecord = res.data.carNumberList
         })
       } else {
         getCouponsDdata(this.queryParams).then(res => {
-          this.msgSuccess(res.data)
           this.parkId = res.data.park.id
           this.mcId = res.data.merchantCoupons.id
           this.parkName = res.data.park.name
