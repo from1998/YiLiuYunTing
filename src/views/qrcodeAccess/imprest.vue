@@ -2,22 +2,26 @@
   <div id="app-container">
     <!-- 计划将优惠券领取页面与之合并 -->
     <el-header style="text-align:center;margin-top:10%;height:50px;font-size:1.2rem">{{ parkName }}</el-header>
-    <!-- <el-row :gutter="0" style="font-size:1.4rem">
-      <el-col :span="12" :offset="2">输入车牌号码:</el-col>
-    </el-row>
-    <el-row :gutter="0" style="margin-top:5%">
-      <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
-    </el-row> -->
-    <el-row :gutter="0" style="font-size:1.4rem">
-      <el-col :span="12" :offset="2">{{ merchantCouponsName }}:</el-col>
-    </el-row>
-    <el-row :gutter="0" style="margin-top:5%">
-      <el-col :span="16" :offset="2">请输入车牌号领取优惠券:</el-col>
-    </el-row>
+    <div :v-if="pay">
+      <el-row :gutter="0" style="font-size:1.4rem">
+        <el-col :span="12" :offset="2">输入车牌号码:</el-col>
+      </el-row>
+      <el-row :gutter="0" style="margin-top:5%">
+        <el-col :span="16" :offset="2">请输入车牌号进行缴费查询:</el-col>
+      </el-row>
+    </div>
+    <div :v-if="pay">
+      <el-row :gutter="0" style="font-size:1.4rem">
+        <el-col :span="12" :offset="2">{{ merchantCouponsName }}:</el-col>
+      </el-row>
+      <el-row :gutter="0" style="margin-top:5%">
+        <el-col :span="16" :offset="2">请输入车牌号领取优惠券:</el-col>
+      </el-row>
+    </div>
     <div>
       <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
     </div>
-    <el-row :gutter="0" style="color:#ccc">
+    <el-row :v-if="pay" :gutter="0" style="color:#ccc">
       <div id="lineDowm" />
       <el-col :span="2" :offset="2">
         <svg-icon icon-class="historyRecord" />
@@ -31,8 +35,8 @@
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <!-- <el-button type="primary" round style="width:100%" @click="handleQuery">查询</el-button> -->
-        <el-button type="primary" round style="width:100%" @click="handleSubmit">领取</el-button>
+        <el-button type="primary" round style="width:100%" :v-if="pay" @click="handleQuery">查询</el-button>
+        <el-button type="primary" round style="width:100%" :v-if="pay" @click="handleSubmit">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -119,7 +123,7 @@ export default {
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      this.msgSuccess(this.queryParams)
+      // this.msgSuccess(this.queryParams)
       getCouponsDdata(this.queryParams).then(res => {
         this.parkId = res.data.park.id
         this.mcId = res.data.merchantCoupons.id

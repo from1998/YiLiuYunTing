@@ -91,9 +91,9 @@ export default {
     getDepotById({
       managerid: managerid
     }).then(res => {
-      if (res.data === null) {
+      if (!res.data.id) {
         this.flag = false
-        this.dialogVisible = false
+        this.dialogVisible = true
       }
     })
   },

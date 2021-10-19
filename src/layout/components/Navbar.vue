@@ -10,7 +10,7 @@
           <span>{{ Utils() }}</span>
         </div>
 
-        <div class="right-menu-item">
+        <div class="right-menu-item hover-effect">
           <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
         </div>
 
@@ -190,7 +190,7 @@ export default {
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
-          right: -20px;
+          right: -15px;
           top: 25px;
           font-size: 12px;
         }

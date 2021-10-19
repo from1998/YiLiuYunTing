@@ -7,7 +7,7 @@
     </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row style="margin-bottom:20px">
-      <el-col :span="18">
+      <el-col :span="19">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
@@ -35,7 +35,7 @@
           <svg-icon icon-class="export" />
         </el-button>
       </el-col>
-      <el-col :span="4" :offset="2" style="padding-left:55px">
+      <el-col :span="4" :offset="1" style="padding-left:55px">
         <el-select
           v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
           v-cloak
