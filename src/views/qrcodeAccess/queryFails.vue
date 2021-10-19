@@ -7,7 +7,7 @@
       </el-row>
       <el-row :gutter="0" style="font-size:14px;">
         <el-col :span="20" :offset="2">
-          【徽昌苑北门商业街停车场】:暂无此车辆信息
+          【{{ parkName }}】:暂无此车辆信息
         </el-col>
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%;">
@@ -46,24 +46,20 @@
   </div>
 </template>
 <script>
-// import { getLeaveData } from '@/api/qrcodeAccess/accessOut'
 
 export default {
   data() {
     return {
       loading: false,
-      parkId: '',
-      carNumber: '临NF00365',
-      queryParams: {
-        sn: '2021092410020961589649605'
-      }
+      parkName: '',
+      carNumber: '',
+      parkId: ''
     }
   },
   created() {
     // 取路由路径上的参数
-    // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
-    // 查询进场数据
-    this.getData()
+    this.parkName = this.$route.query && this.$route.query.parkName// 路由传参
+    this.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
   },
   mounted() {
     this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
@@ -83,16 +79,6 @@ export default {
     })
   },
   methods: {
-    // 查询进场数据
-    getData() {
-      this.loading = true // 打开遮罩
-      this.parkId = '340100202107124653'
-      // getLeaveData(this.queryParams).then(res => {
-      //   this.carNumber = res.data.carNumber
-      // this.parkId = res.data.parkId
-      // })
-      this.loading = false// 关闭遮罩
-    },
     loadScript(xyUrl, callback) {
       var head = document.getElementsByTagName('head')[0]
       var script = document.createElement('script')
