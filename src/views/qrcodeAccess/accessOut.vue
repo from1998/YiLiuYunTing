@@ -190,6 +190,7 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       getLeaveData(this.queryParams).then(res => {
+        this.msgSuccess(res.data)
         this.carNumber = res.data.carNumber
         this.parkId = res.data.parkId
       })
