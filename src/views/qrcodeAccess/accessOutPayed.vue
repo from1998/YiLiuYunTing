@@ -84,13 +84,16 @@ export default {
       currentDate: '',
       loadDate: '',
       queryParams: {
-        sn: ''
+        parkId: '',
+        carNumber: ''
       }
     }
   },
   created() {
     // 取路由路径上的参数
     this.pay = this.$route.query && this.$route.query.isPay === 'true' // 路由传参
+    this.queryParams.parkId = this.$route.query && this.$route.query.parkId// 路由传参
+    this.queryParams.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
 
     // 查询进场数据
     this.getData()
@@ -182,8 +185,7 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       getPayedData(this.queryParams).then(res => {
-        this.parkId = res.data.park.id
-        this.historyRecord = res.data.carNumberList
+        this.msgSuccess(res.data)
       })
       this.loading = false// 关闭遮罩
     },
