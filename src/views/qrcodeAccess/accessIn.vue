@@ -9,7 +9,7 @@
     <el-row :gutter="0" style="margin:30px 0 0 4%">
       <el-col v-for="(item,index) in carNumber.split('')" :key="index" :span="3" :offset="index===0?1:0">
         <div class="carNumberWrap">
-          <span>
+          <span :class="`carNumber${index}`">
             {{ item }}
           </span>
         </div>
@@ -43,7 +43,7 @@ export default {
       loading: false,
       parkId: '',
       message: '',
-      carNumber: '',
+      carNumber: '皖A12345',
       queryParams: {
         cameraId: '',
         sn: ''
@@ -122,5 +122,11 @@ export default {
   line-height: 5vh;
   border: 1px solid #dcdfe6;
   text-align:center;
+  background-color: #002DAA;
+  color: #fff;
+}
+.carNumber1 {
+  display: inline-block;
+  border-right: 1px solid #fff;
 }
 </style>

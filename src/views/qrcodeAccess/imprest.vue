@@ -156,14 +156,14 @@ export default {
       if (this.pay) {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
           if (res.code === 200) {
-            if (res.data.car === 'false') {
-              this.$router.push(`/qrcodeAccess/queryFails?${res.data.url}parkName=${this.parkName}`)
-            } else {
-              if (res.data.isPayed === 'false') {
-                this.$router.push(`/qrcodeAccess/accessOutNoPay?${res.data.url}parkName=${this.parkName}`)
-              } else {
+            if (res.data.car) {
+              if (res.data.isPay) {
                 this.$router.push(`/qrcodeAccess/accessOutPayed?${res.data.url}parkName=${this.parkName}`)
+              } else {
+                this.$router.push(`/qrcodeAccess/accessOutNoPay?${res.data.url}parkName=${this.parkName}`)
               }
+            } else {
+              this.$router.push(`/qrcodeAccess/queryFails?${res.data.url}parkName=${this.parkName}`)
             }
           }
         })
