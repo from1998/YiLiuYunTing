@@ -22,7 +22,7 @@
       <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
     </div>
     <div v-if="pay">
-      <el-row v-for="item in carNumberList" :key="item.carNumber" :gutter="0" style="color:#ccc">
+      <el-row v-for="item in historyRecord" :key="item.carNumber" :gutter="0" style="color:#ccc">
         <div id="lineDowm" />
         <el-col :span="2" :offset="2">
           <svg-icon icon-class="historyRecord" />
@@ -129,14 +129,14 @@ export default {
       if (this.pay) {
         getLeaveData(this.queryParams).then(res => {
           this.parkId = res.data.park.id
-          this.historyRecord = res.data.carNumberList
           this.parkName = res.data.park.name
+          this.historyRecord = res.data.carNumberList
         })
       } else {
         getCouponsDdata(this.queryParams).then(res => {
           this.parkId = res.data.park.id
-          this.mcId = res.data.merchantCoupons.id
           this.parkName = res.data.park.name
+          this.mcId = res.data.merchantCoupons.id
           this.merchantCouponsName = res.data.merchantCoupons.name
         })
       }

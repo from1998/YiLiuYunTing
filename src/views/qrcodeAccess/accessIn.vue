@@ -9,7 +9,8 @@
     <el-row :gutter="0" style="margin:30px 0 0 4%">
       <el-col v-for="(item,index) in carNumber.split('')" :key="index" :span="3" :offset="index===0?1:0">
         <div class="carNumberWrap">
-          <span :class="`carNumber${index}`">
+          <span :class="`border-right${index}`" />
+          <span>
             {{ item }}
           </span>
         </div>
@@ -122,11 +123,16 @@ export default {
   line-height: 5vh;
   border: 1px solid #dcdfe6;
   text-align:center;
-  background-color: #002DAA;
+  background-color: #0084FF;
   color: #fff;
 }
-.carNumber1 {
+.border-right1 {
   display: inline-block;
-  border-right: 1px solid #fff;
+  width: 3px;
+  height: 120%;
+  background-color: rgb(60, 185, 98);
+  position: absolute;
+  top: -10%;
+  left: 29%;
 }
 </style>

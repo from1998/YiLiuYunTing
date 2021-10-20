@@ -28,7 +28,7 @@
       <el-row :gutter="0" style="font-size:14px;margin-top:2%;">
         <el-col :span="22" :offset="2">
           <span>如有疑问请拨打客服电话:</span>
-          <a href="tel:0551—65521987">0551—65521987</a>
+          <a href="tel:0551—65521987" style="color:#409EFF">0551—65521987</a>
         </el-col>
       </el-row>
     </div>

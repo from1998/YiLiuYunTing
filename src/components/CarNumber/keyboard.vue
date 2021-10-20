@@ -244,7 +244,7 @@ export default {
     .active {
       width: 29.5px;
       height: 40px;
-      background-color: #CFD3DD;
+      background-color: #2d5fdf;
     }
   }
 
@@ -266,8 +266,8 @@ export default {
     border-radius: 2px;
     border: 1px solid #E1E1E1;
     margin-right: 7px;
-    background-color: #fff;
-    color: #222;
+    background-color: #0084FF;
+    color: #fff;
     z-index: 99;
   }
 
