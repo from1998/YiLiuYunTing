@@ -3,40 +3,42 @@
   <div id="app-container" style="padding:30px 0 0 0">
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
-        <el-col :span="20" :offset="2">{{ carNumber }}</el-col>
+        <el-col :span="20" :offset="2">
+          <span :v-text="carNumber || resDate.carNumber" />
+        </el-col>
       </el-row>
       <el-row :gutter="0" style="height:25px;font-size:14px;">
-        <el-col :span="20" :offset="2">一流云停</el-col>
+        <el-col :span="20" :offset="2">{{ resDate.park.name }}</el-col>
       </el-row>
       <el-row :gutter="0" style="font-size:14px">
         <el-col :span="6" :offset="2">入场时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 16:21</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.started }}</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">结束时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">2021-09-23 19:59</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.ended }}</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">停车时长</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">0小时1分</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.durationText }}</el-col>
         <el-col :span="2" :offset="0" />
         <div id="lineDowm" />
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">总金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">6.66</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">￥{{ resDate.amount }}</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">优惠类型</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">折扣</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountTypeText }}</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">应交金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥5.89</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥{{ resDate.money }}</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
     </div>
@@ -77,7 +79,8 @@ export default {
       parkId: '',
       carNumber: '',
       currentDate: '',
-      loadDate: ''
+      loadDate: '',
+      resDate: {}
     }
   },
   created() {
@@ -180,7 +183,7 @@ export default {
         parkId: this.parkId
       }
       getNoPayData(query).then(res => {
-        this.msgSuccess(res.data)
+        this.resDate = res.data
       })
       this.loading = false// 关闭遮罩
     },
