@@ -158,12 +158,12 @@ export default {
           if (res.code === 200) {
             if (res.data.car) {
               if (res.data.isPay) {
-                this.$router.push(`/qrcodeAccess/accessOutPayed?${res.data.url}parkName=${this.parkName}`)
+                this.$router.push(`/qrcodeAccess/accessOutPayed?${res.data.url}&parkName=${this.parkName}`)
               } else {
-                this.$router.push(`/qrcodeAccess/accessOutNoPay?${res.data.url}parkName=${this.parkName}`)
+                this.$router.push(`/qrcodeAccess/accessOutNoPay?${res.data.url}&parkName=${this.parkName}`)
               }
             } else {
-              this.$router.push(`/qrcodeAccess/queryFails?${res.data.url}parkName=${this.parkName}`)
+              this.$router.push(`/qrcodeAccess/queryFails?${res.data.url}&parkName=${this.parkName}`)
             }
           }
         })
