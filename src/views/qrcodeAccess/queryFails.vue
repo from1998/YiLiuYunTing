@@ -7,7 +7,8 @@
       </el-row>
       <el-row :gutter="0" style="font-size:14px;">
         <el-col :span="20" :offset="2">
-          【{{ parkName }}】:暂无此车辆信息
+          【{{ parkName }}】:
+          <span style="color:red">暂无此车辆信息</span>
         </el-col>
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%;">
