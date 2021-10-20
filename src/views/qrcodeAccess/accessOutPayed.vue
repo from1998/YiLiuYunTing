@@ -70,7 +70,7 @@
   </div>
 </template>
 <script>
-import { getNoPayData, getPayedData } from '@/api/qrcodeAccess/accessOut'
+import { getPayedData } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 
 const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
@@ -181,19 +181,10 @@ export default {
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      if (this.pay) {
-        getLeaveData(this.queryParams).then(res => {
-          this.parkId = res.data.park.id
-          this.historyRecord = res.data.carNumberList
-        })
-      } else {
-        getCouponsDdata(this.queryParams).then(res => {
-          this.parkId = res.data.park.id
-          this.mcId = res.data.merchantCoupons.id
-          this.parkName = res.data.park.name
-          this.merchantCouponsName = res.data.merchantCoupons.name
-        })
-      }
+      getPayedData(this.queryParams).then(res => {
+        this.parkId = res.data.park.id
+        this.historyRecord = res.data.carNumberList
+      })
       this.loading = false// 关闭遮罩
     },
     loadScript(xyUrl, callback) {

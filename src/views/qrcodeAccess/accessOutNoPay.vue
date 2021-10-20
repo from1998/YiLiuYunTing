@@ -65,7 +65,7 @@
   </div>
 </template>
 <script>
-import { getNoPayData, getPayedData } from '@/api/qrcodeAccess/accessOut'
+import { getNoPayData } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 
 const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
@@ -79,13 +79,16 @@ export default {
       currentDate: '',
       loadDate: '',
       queryParams: {
-        sn: ''
+        parkId: '',
+        carNumber: ''
       }
     }
   },
   created() {
     // 取路由路径上的参数
     this.pay = this.$route.query && this.$route.query.isPay === 'true' // 路由传参
+    this.queryParams.parkId = this.$route.query && this.$route.query.parkId// 路由传参
+    this.queryParams.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
 
     // 查询进场数据
     this.getData()
@@ -176,19 +179,9 @@ export default {
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      if (this.pay) {
-        getLeaveData(this.queryParams).then(res => {
-          this.parkId = res.data.park.id
-          this.historyRecord = res.data.carNumberList
-        })
-      } else {
-        getCouponsDdata(this.queryParams).then(res => {
-          this.parkId = res.data.park.id
-          this.mcId = res.data.merchantCoupons.id
-          this.parkName = res.data.park.name
-          this.merchantCouponsName = res.data.merchantCoupons.name
-        })
-      }
+      getNoPayData(this.queryParams).then(res => {
+        this.msgSuccess(res.data)
+      })
       this.loading = false// 关闭遮罩
     },
     loadScript(xyUrl, callback) {
