@@ -356,8 +356,15 @@ export default {
       const finalKey = halfCheckKeys.concat(checkedKeys)
       // console.log(finalKey)
       saveRoleMenu(this.currentRoleId, finalKey).then(res => {
-        this.msgSuccess(res.msg)
-        this.$router.go(0)
+        this.$message({
+          message: res.msg,
+          type: 'success',
+          center: true,
+          duration: '800',
+          onClose: () => {
+            this.$router.go(0)
+          }
+        })
       })
       this.selectMenuOpen = false
     },

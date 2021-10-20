@@ -96,12 +96,11 @@ export const constantRoutes = [
 export const asyncRoutes = [
   {
     path: '/companyLink',
-    name: '/companyLink',
-    redirect: 'http://www.ahdvl.com',
     component: Layout,
+    name: '/companyLink',
     children: [
       {
-        path: 'http://www.ahdvl.com',
+        path: 'http://www.ahdvl.com/',
         meta: { title: '公司官网', icon: 'link' }
       }
     ]
@@ -152,174 +151,6 @@ export const asyncRoutes = [
                 import ('@/views/updatePWD/index'),
       meta: { title: '更改密码' }
     }]
-  },
-  {
-    path: '/recordsQuery',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true,
-    name: '/recordsQuery',
-    meta: {
-      title: '记录查询',
-      icon: 'el-icon-tickets'
-    },
-    children: [{
-      path: 'accessRecord',
-      component: () =>
-                    import ('@/views/recordsQuery/accessRecord'),
-      name: '/recordsQuery/accessRecord',
-      meta: {
-        title: '进出记录',
-        icon: 'access'
-      }
-    },
-    {
-      path: 'orderRecord',
-      component: () =>
-                    import ('@/views/recordsQuery/orderRecord'),
-      name: '/recordsQuery/orderRecord',
-      meta: {
-        title: '订单记录',
-        icon: 'el-icon-s-claim'
-      }
-    }
-    ]
-  },
-  {
-    path: '/coupons',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true,
-    name: '/coupons',
-    meta: {
-      title: '优惠券',
-      icon: 'el-icon-money'
-    },
-    children: [{
-      path: 'couponsManger',
-      component: () =>
-                    import ('@/views/coupons/couponsManger'),
-      name: '/coupons/couponsManger',
-      meta: {
-        title: '优惠券管理',
-        icon: 'el-icon-edit-outline'
-      }
-    },
-    {
-      path: 'merchantManger',
-      component: () =>
-                    import ('@/views/coupons/merchantManger'),
-      name: '/coupons/merchantManger',
-      meta: {
-        title: '商家管理',
-        icon: 'el-icon-s-shop'
-      }
-    },
-    {
-      path: 'merchantCoupons',
-      component: () =>
-                    import ('@/views/coupons/merchantCoupons'),
-      name: '/coupons/merchantCoupons',
-      meta: {
-        title: '商家优惠券',
-        icon: 'el-icon-money'
-      }
-    },
-    {
-      path: 'couponsRecord',
-      component: () =>
-                    import ('@/views/coupons/couponsRecord'),
-      name: '/coupons/couponsRecord',
-      meta: {
-        title: '优惠券记录',
-        icon: 'el-icon-s-claim'
-      }
-    }
-    ]
-  },
-  {
-    path: '/statisticalForm',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true,
-    name: '/statisticalForm',
-    meta: {
-      title: '统计报表',
-      icon: 'el-icon-s-marketing'
-    },
-    children: [{
-      path: 'trafficStatistics',
-      component: () =>
-                    import ('@/views/statisticalForm/trafficStatistics'),
-      name: '/statisticalForm/trafficStatistics',
-      meta: {
-        title: '车流统计',
-        icon: 'car'
-      }
-    },
-    {
-      path: 'feeStatistical',
-      component: () =>
-                    import ('@/views/statisticalForm/feeStatistical'),
-      name: '/statisticalForm/feeStatistical',
-      meta: {
-        title: '收费统计',
-        icon: 'money'
-      }
-    }
-    ]
-  },
-  {
-    path: '/monitoringCenter',
-    component: Layout,
-    redirect: 'noRedirect',
-    alwaysShow: true,
-    name: '/monitoringCenter',
-    meta: {
-      title: '监控中心',
-      icon: 'monitoring'
-    },
-    children: [{
-      path: 'quickMonitoring',
-      component: () =>
-                    import ('@/views/monitoringCenter/quickMonitoring'),
-      name: '/monitoringCenter/quickMonitoring',
-      meta: {
-        title: '快捷监控',
-        icon: 'monitoring'
-      }
-    },
-    {
-      path: 'feeRule',
-      component: () =>
-                    import ('@/views/monitoringCenter/feeRule'),
-      name: '/monitoringCenter/feeRule',
-      meta: {
-        title: '收费规则',
-        icon: 'money'
-      }
-    },
-    {
-      path: 'accessRecord',
-      component: () =>
-                    import ('@/views/monitoringCenter/accessRecord'),
-      name: '/monitoringCenter/accessRecord',
-      meta: {
-        title: '进出记录',
-        icon: 'access'
-      }
-    },
-    {
-      path: 'deviceStates',
-      component: () =>
-                    import ('@/views/monitoringCenter/deviceStates'),
-      name: '/monitoringCenter/deviceStates',
-      meta: {
-        title: '设备状态',
-        icon: 'equipment'
-      }
-    }
-    ]
   },
   {
     path: '/system',
@@ -441,6 +272,174 @@ export const asyncRoutes = [
       meta: {
         title: '到账设置',
         icon: 'el-icon-coin'
+      }
+    }
+    ]
+  },
+  {
+    path: '/coupons',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/coupons',
+    meta: {
+      title: '优惠券',
+      icon: 'el-icon-money'
+    },
+    children: [{
+      path: 'couponsManger',
+      component: () =>
+                    import ('@/views/coupons/couponsManger'),
+      name: '/coupons/couponsManger',
+      meta: {
+        title: '优惠券管理',
+        icon: 'el-icon-edit-outline'
+      }
+    },
+    {
+      path: 'merchantManger',
+      component: () =>
+                    import ('@/views/coupons/merchantManger'),
+      name: '/coupons/merchantManger',
+      meta: {
+        title: '商家管理',
+        icon: 'el-icon-s-shop'
+      }
+    },
+    {
+      path: 'merchantCoupons',
+      component: () =>
+                    import ('@/views/coupons/merchantCoupons'),
+      name: '/coupons/merchantCoupons',
+      meta: {
+        title: '商家优惠券',
+        icon: 'el-icon-money'
+      }
+    },
+    {
+      path: 'couponsRecord',
+      component: () =>
+                    import ('@/views/coupons/couponsRecord'),
+      name: '/coupons/couponsRecord',
+      meta: {
+        title: '优惠券记录',
+        icon: 'el-icon-s-claim'
+      }
+    }
+    ]
+  },
+  {
+    path: '/recordsQuery',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/recordsQuery',
+    meta: {
+      title: '记录查询',
+      icon: 'el-icon-tickets'
+    },
+    children: [{
+      path: 'accessRecord',
+      component: () =>
+                    import ('@/views/recordsQuery/accessRecord'),
+      name: '/recordsQuery/accessRecord',
+      meta: {
+        title: '进出记录',
+        icon: 'access'
+      }
+    },
+    {
+      path: 'orderRecord',
+      component: () =>
+                    import ('@/views/recordsQuery/orderRecord'),
+      name: '/recordsQuery/orderRecord',
+      meta: {
+        title: '订单记录',
+        icon: 'el-icon-s-claim'
+      }
+    }
+    ]
+  },
+  {
+    path: '/statisticalForm',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/statisticalForm',
+    meta: {
+      title: '统计报表',
+      icon: 'el-icon-s-marketing'
+    },
+    children: [{
+      path: 'trafficStatistics',
+      component: () =>
+                    import ('@/views/statisticalForm/trafficStatistics'),
+      name: '/statisticalForm/trafficStatistics',
+      meta: {
+        title: '车流统计',
+        icon: 'car'
+      }
+    },
+    {
+      path: 'feeStatistical',
+      component: () =>
+                    import ('@/views/statisticalForm/feeStatistical'),
+      name: '/statisticalForm/feeStatistical',
+      meta: {
+        title: '收费统计',
+        icon: 'money'
+      }
+    }
+    ]
+  },
+  {
+    path: '/monitoringCenter',
+    component: Layout,
+    redirect: 'noRedirect',
+    alwaysShow: true,
+    name: '/monitoringCenter',
+    meta: {
+      title: '监控中心',
+      icon: 'monitoring'
+    },
+    children: [{
+      path: 'quickMonitoring',
+      component: () =>
+                    import ('@/views/monitoringCenter/quickMonitoring'),
+      name: '/monitoringCenter/quickMonitoring',
+      meta: {
+        title: '快捷监控',
+        icon: 'monitoring'
+      }
+    },
+    {
+      path: 'feeRule',
+      component: () =>
+                    import ('@/views/monitoringCenter/feeRule'),
+      name: '/monitoringCenter/feeRule',
+      meta: {
+        title: '收费规则',
+        icon: 'money'
+      }
+    },
+    {
+      path: 'accessRecord',
+      component: () =>
+                    import ('@/views/monitoringCenter/accessRecord'),
+      name: '/monitoringCenter/accessRecord',
+      meta: {
+        title: '进出记录',
+        icon: 'access'
+      }
+    },
+    {
+      path: 'deviceStates',
+      component: () =>
+                    import ('@/views/monitoringCenter/deviceStates'),
+      name: '/monitoringCenter/deviceStates',
+      meta: {
+        title: '设备状态',
+        icon: 'equipment'
       }
     }
     ]
