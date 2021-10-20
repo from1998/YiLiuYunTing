@@ -34,7 +34,7 @@
     </div>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <router-link to="/qrcodeAccess/imprest" class="link-type">
+        <router-link to="/qrcodeAccess/imprest?pay=true" class="link-type">
           <el-button type="primary" round style="width:100%">
             <span>返回</span>
           </el-button>

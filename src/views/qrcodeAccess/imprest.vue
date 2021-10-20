@@ -130,6 +130,7 @@ export default {
         getLeaveData(this.queryParams).then(res => {
           this.parkId = res.data.park.id
           this.historyRecord = res.data.carNumberList
+          this.parkName = res.data.park.name
         })
       } else {
         getCouponsDdata(this.queryParams).then(res => {

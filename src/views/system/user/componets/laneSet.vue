@@ -69,7 +69,7 @@
       <el-table-column label="所属岗亭" align="center" prop="workStationName" />
       <el-table-column label="相机品牌" align="center" prop="cameraBrandType" :formatter="cameraBrandTypeFormatter" />
       <el-table-column label="相机识别码" align="center" prop="cameraSn" />
-      <el-table-column label="相机IP" align="center" prop="cameraIp" />
+      <el-table-column label="相机IP" align="center" prop="cameraIp" width="120px" />
       <el-table-column label="是否在线" align="center">
         <template slot-scope="scope">
           <el-button v-show="scope.row.isOnLine===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在线</el-button>
