@@ -86,7 +86,6 @@ export default {
       queryParams: {
         carNumber: '',
         couponsRecordId: '',
-        orderSn: '',
         parkId: ''
       }
     }
@@ -149,9 +148,8 @@ export default {
     jsApiCall() {
       createOrder(this.queryParams).then(recieve => {
         // this.msgSuccess(recieve.data)
-        this.queryParams.orderSn = recieve.data.orderSn
-        // eslint-disable-next-line no-undef
-        WeixinJSBridge.invoke(
+        // this.queryParams.orderSn = recieve.data.orderSn
+        window.WeixinJSBridge.invoke(
           'getBrandWCPayRequest',
           recieve.data.payParams,
           res => {

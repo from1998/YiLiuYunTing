@@ -54,6 +54,7 @@
               v-model="queryParams.category"
               style="width:180px"
               placeholder="请选择优惠券类型"
+              clearable
             >
               <el-option
                 v-for="item in stateOptions"
@@ -73,6 +74,7 @@
               v-model="queryParams.isActive"
               style="width:180px"
               placeholder="请选择是否开放"
+              clearable
             >
               <el-option
                 v-for="item in statusOptions"

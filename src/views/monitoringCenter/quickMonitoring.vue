@@ -84,7 +84,7 @@
           <el-button type="primary" @click="open=false">关闭</el-button>
         </span>
       </el-dialog>
-      <!-- 每一个组件快 -->
+      <!-- 每一个组件块 -->
       <div v-for="(item,index) in resdata" :key="item.id" class="block">
         <!-- 组件快头部 -->
         <el-header height="50px">

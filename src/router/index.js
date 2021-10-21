@@ -179,7 +179,7 @@ export const asyncRoutes = [
       name: '/system/role',
       meta: {
         title: '角色管理',
-        icon: 'tab'
+        icon: 'peoples'
       }
     },
     {
@@ -189,7 +189,7 @@ export const asyncRoutes = [
       name: '/system/menu',
       meta: {
         title: '菜单管理',
-        icon: 'bug'
+        icon: 'list'
       }
     },
     {
@@ -199,7 +199,7 @@ export const asyncRoutes = [
       name: '/system/dict',
       meta: {
         title: '字典管理',
-        icon: 'zip'
+        icon: 'education'
       }
     },
     {
@@ -209,7 +209,7 @@ export const asyncRoutes = [
       name: '/system/notice',
       meta: {
         title: '通知公告',
-        icon: 'theme'
+        icon: 'notice'
       }
     },
     {
@@ -219,7 +219,7 @@ export const asyncRoutes = [
       name: '/system/log_opt',
       meta: {
         title: '操作日志管理',
-        icon: 'clipboard'
+        icon: 'tab'
       }
     }
     ]

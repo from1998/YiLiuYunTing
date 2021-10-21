@@ -9,6 +9,11 @@
         <div class="right-menu-item">
           <span>{{ Utils() }}</span>
         </div>
+        <el-tooltip content="通知公告" effect="dark" placement="bottom">
+          <div class="right-menu-item hover-effect">
+            <svg-icon icon-class="notice" style="font-weight:700" @click="noticeOpen" />
+          </div>
+        </el-tooltip>
         <el-tooltip content="便签" effect="dark" placement="bottom">
           <div class="right-menu-item hover-effect">
             <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
@@ -38,6 +43,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>你好,{{ username }}</el-dropdown-item>
+          <el-dropdown-item divided @click.prevent.stop="guide">操作指引</el-dropdown-item>
           <router-link to="/updatePWD">
             <el-dropdown-item divided> 修改密码</el-dropdown-item>
           </router-link>
@@ -47,6 +53,19 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <el-dialog
+      title="这是通知公告标题"
+      width="600px"
+      :visible.sync="noticeDialogVisible"
+      append-to-body
+      center
+      @closed="noticeDialogVisible = false"
+    >
+      这里是通知公告内容...
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="noticeDialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
     <el-dialog
       title="便签"
       width="400px"
@@ -73,6 +92,9 @@ import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
+import Driver from 'driver.js' // import driver.js
+import 'driver.js/dist/driver.min.css' // import driver.js css
+import steps from '@/assets/js/steps'
 // import Search from '@/components/HeaderSearch'
 
 export default {
@@ -88,7 +110,9 @@ export default {
     return {
       username: '',
       dialogVisible: false,
-      notes: localStorage.getItem('notes')
+      noticeDialogVisible: false,
+      notes: localStorage.getItem('notes'),
+      driver: null
     }
   },
   computed: {
@@ -98,12 +122,23 @@ export default {
       'device'
     ])
   },
+  mounted() {
+    this.driver = new Driver()
+  },
   async created() {
     this.username = await this.getUserInfo().realName
   },
   methods: {
+    guide() {
+      this.driver.defineSteps(steps)
+      this.driver.start()
+      this.msgSuccess('ok')
+    },
     noteOpen() {
       this.dialogVisible = true
+    },
+    noticeOpen() {
+      this.noticeDialogVisible = true
     },
     saveNotes() {
       localStorage.setItem('notes', this.notes)

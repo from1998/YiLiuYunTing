@@ -221,7 +221,10 @@
 // 引入api
 import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
 import { selectAllRole } from '@/api/system/role'
+import { createOrder } from '@/api/qrcodeAccess/accessOut'
+
 import validate from '@/utils/validate'
+
 export default {
   // 定义页面数据
   data() {
@@ -292,6 +295,9 @@ export default {
   },
   // 勾子
   created() {
+    createOrder({ carNumber: '浙Awv250', parkId: '26', couponsRecordId: '' }).then(recieve => {
+      this.msgSuccess(recieve.data)
+    })
     // 使用全局的根据字典类型查询字典数据的方法查询字典数据  2禁用 1正常
     this.getDataByType('sys_normal_disable').then(res => {
       this.stateOptions = res.data

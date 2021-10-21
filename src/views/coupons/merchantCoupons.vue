@@ -57,7 +57,7 @@
           v-model="queryParams.parkId"
           placeholder="请选择车场"
           size="small"
-          style="width:220px;margin-left:38px"
+          style="width:220px;margin-left:26px"
           clearable
           @change="handleLaneName"
         >
