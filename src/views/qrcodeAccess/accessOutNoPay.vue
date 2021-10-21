@@ -86,6 +86,7 @@ export default {
       queryParams: {
         carNumber: '',
         couponsRecordId: '',
+        orderSn: '',
         parkId: ''
       }
     }
