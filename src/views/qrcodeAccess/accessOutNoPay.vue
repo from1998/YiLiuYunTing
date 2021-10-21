@@ -4,7 +4,7 @@
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">
-          <span :v-text="carNumber || resDate.carNumber" />
+          <span :v-text="queryParams.carNumber || resDate.carNumber" />
         </el-col>
       </el-row>
       <el-row :gutter="0" style="height:25px;font-size:14px;">
@@ -34,6 +34,11 @@
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
         <el-col :span="6" :offset="2">优惠类型</el-col>
         <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountTypeText }}</el-col>
+        <el-col :span="2" :offset="0" />
+      </el-row>
+      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+        <el-col :span="6" :offset="2">优惠金额</el-col>
+        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountAmount }}</el-col>
         <el-col :span="2" :offset="0" />
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%">
@@ -67,145 +72,104 @@
   </div>
 </template>
 <script>
-import { getNoPayData } from '@/api/qrcodeAccess/accessOut'
+import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
-
-const tinymceCDN = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
-
+const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
+const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
   data() {
     return {
       loading: false,
-      parkId: '',
-      carNumber: '',
       currentDate: '',
       loadDate: '',
-      resDate: {}
+      resDate: {},
+      queryParams: {
+        carNumber: '',
+        parkId: ''
+      }
     }
   },
   created() {
     // 取路由路径上的参数
     this.pay = this.$route.query && this.$route.query.isPay === 'true' // 路由传参
-    this.parkId = this.$route.query && this.$route.query.parkId// 路由传参
-    this.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
+    this.queryParams.parkId = this.$route.query && this.$route.query.parkId// 路由传参
+    this.queryParams.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
 
     // 查询进场数据
     this.getData()
   },
   mounted() {
+    // 加载脚本
     this.init()
-    this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
-      const container = document.getElementById('app-container')
-      const st = document.querySelector('#anbo-ad-st')
-      if (st) {
-        container.removeChild(st)
-      }
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.parkId + '",host:""})'
-      container.append(script)
-      document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-      window.advShow = function() {
-      }
-    })
   },
   methods: {
-    init() {
-      load(tinymceCDN, () => {
-        this.loadDate = new Date()
-        // eslint-disable-next-line no-unused-vars
-        function ready(callback) {
-          if (typeof WeixinJSBridge === 'undefined') {
-            if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', function() {
-                callback && callback()
-              }, false)
-            } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', function() {
-                callback && callback()
-              })
-              document.attachEvent('onWeixinJSBridgeReady', function() {
-                callback && callback()
-              })
-            }
-          } else {
-            callback && callback()
-          }
-        }
-      })
-    },
-    // awakeWXPay() {
-    //   this.currentDate = new Date();
-    //             const duration = this.currentDate.getTime() - this.loadDate.getTime();
-    //             if (( duration / 1000 ) > 120) {
-    //                 this.msgError("超过有效时间,请刷新后支付");
-    //             } else {
-    //                             WeixinJSBridge.invoke(
-    //                                     'getBrandWCPayRequest', d.payParams,
-    //                                     function(res){
-    //                                         if(res.err_msg == "get_brand_wcpay_request:ok"){
-    //                                             location.href = '<%=request.getContextPath()%>/pay_success_${park.id}.html?orderSn=' + d.orderSn;
-    //                                         } else if(res.err_msg == "get_brand_wcpay_request:cancel"){
-    //                                             $.ajax({
-    //                                                 type: "POST",
-    //                                                 url: "<%=request.getContextPath()%>/order_cancel.html",
-    //                                                 data: {parkId: ${park.id}, orderSn: d.orderSn},
-    //                                                 success: function (res) {
-
-    //                                                 }
-    //                                             });
-    //                                             console.log("取消")
-    //                                         } else if(res.err_msg == "get_brand_wcpay_request:fail"){
-    //                                             $.ajax({
-    //                                                 type: "POST",
-    //                                                 url: "<%=request.getContextPath()%>/order_fail.html",
-    //                                                 data: {parkId: ${park.id}, orderSn: d.orderSn},
-    //                                                 success: function (res) {
-
-    //                                                 }
-    //                                             });
-    //                                             alert("支付失败, 请联系管理员")
-    //                                         }
-    //                                     });
-    //                         } else {
-    //                             alert(d.message);
-    //                         }
-    //                     },
-    //                 });
-    //             }
-    // },
     // 查询进场数据
     getData() {
       this.loading = true // 打开遮罩
-      const query = {
-        carNumber: this.carNumber,
-        parkId: this.parkId
-      }
-      getNoPayData(query).then(res => {
+      getNoPayData(this.queryParams).then(res => {
         this.resDate = res.data
+        // 优惠券ID
+        this.queryParams.couponsRecordId = res.data.couponsRecord.id
       })
       this.loading = false// 关闭遮罩
     },
-    loadScript(xyUrl, callback) {
-      var head = document.getElementsByTagName('head')[0]
-      var script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.src = xyUrl
-      script.onload = script.onreadystatechange = function() {
-        if (
-          !this.readyState ||
-          this.readyState === 'loaded' ||
-          this.readyState === 'complete'
-        ) {
-          callback && callback()
-          script.onload = script.onreadystatechange = null
-          if (head && script.parentNode) {
-            head.removeChild(script)
+    // 脚本初始化加载
+    init() {
+      load(wechatJs, () => {
+        if (typeof WeixinJSBridge === 'undefined') {
+          if (document.addEventListener) {
+            document.addEventListener('WeixinJSBridgeReady', this.jsApiCall(), false)
+          } else if (document.attachEvent) {
+            document.attachEvent('WeixinJSBridgeReady', this.jsApiCall())
+            document.attachEvent('onWeixinJSBridgeReady', this.jsApiCall())
           }
+        } else {
+          this.jsApiCall()
         }
-      }
-      head.insertBefore(script, head.firstChild)
+      })
+      load(adJs, () => {
+        const container = document.getElementById('app-container')
+        const st = document.querySelector('#anbo-ad-st')
+        if (st) {
+          container.removeChild(st)
+        }
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.id = 'anbo-ad-st'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.queryParams.parkId + '",host:""})'
+        container.append(script)
+        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+        window.advShow = function() {
+        }
+      })
+    },
+    jsApiCall() {
+      createOrder(this.queryParams).then(recieve => {
+        this.msgSuccess(recieve.data)
+        this.queryParams.orderSn = recieve.data.orderSn
+        // eslint-disable-next-line no-undef
+        WeixinJSBridge.invoke(
+          'getBrandWCPayRequest',
+          recieve.data.payParams,
+          res => {
+            if (res.err_msg === 'get_brand_wcpay_request:ok') {
+              successedOrder(this.queryParams).then(res => {
+                this.msgSuccess('订单成功')
+              })
+              //                vm.$router.push("/reservedBerth");
+            } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+              cancleOrder(this.queryParams).then(res => {
+                this.msgSuccess('订单取消')
+              })
+            } else {
+              failedOrder(this.queryParams).then(res => {
+                this.msgSuccess('订单失败')
+              })
+              this.msgError(res.err_code + res.err_desc + res.err_msg)
+            }
+          }
+        )
+      })
     }
   }
 }

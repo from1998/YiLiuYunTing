@@ -90,7 +90,7 @@ export default {
       })
       return {
         textStyle: {
-          color: '#000'
+          color: '#fff'
         },
         tooltip: {
           show: true, // 必须引入 tooltip 组件

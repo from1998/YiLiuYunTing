@@ -27,3 +27,39 @@ export function createOrder(data) {
   })
 }
 
+// 取消订单
+export function cancleOrder(data) {
+  return request({
+    url: '/third/order_cancel',
+    method: 'post',
+    data
+  })
+}
+
+// 订单失败
+export function failedOrder(data) {
+  return request({
+    url: '/third/order_fail',
+    method: 'post',
+    data
+  })
+}
+
+// 订单成功
+export function successedOrder(parkId, query) {
+  return request({
+    url: '/third/pay_success_' + parkId,
+    method: 'get',
+    params: query
+  })
+}
+
+// 订单成功页面数据
+export function successedOrderData(query) {
+  return request({
+    url: '/third/pay_success_Data',
+    method: 'get',
+    params: query
+  })
+}
+

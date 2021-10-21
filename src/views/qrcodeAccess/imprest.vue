@@ -22,8 +22,8 @@
       <keyboard ref="keyBoard" @confirmBtn="postCarNumber($event)" />
     </div>
     <div v-if="pay">
+      <div id="lineDowm" />
       <el-row v-for="item in historyRecord" :key="item.carNumber" :gutter="0" style="color:#ccc">
-        <div id="lineDowm" />
         <el-col :span="2" :offset="2">
           <svg-icon icon-class="historyRecord" />
         </el-col>
@@ -31,7 +31,7 @@
           <span style="letter-spacing:0.5em" @click="handleInput(item.carNumber)">{{ item.carNumber }}</span>
         </el-col>
         <el-col :span="3" :offset="7">
-          <svg-icon icon-class="Close" @click="delHistoryopen=true" />
+          <svg-icon icon-class="Close" @click="handleDelete(item.id)" />
         </el-col>
       </el-row>
     </div>
@@ -81,6 +81,7 @@ export default {
       parkName: '',
       merchantCouponsName: '',
       delHistoryopen: false,
+      delId: '',
       loading: false,
       parkId: '',
       mcId: '',
@@ -142,6 +143,10 @@ export default {
       }
       this.loading = false// 关闭遮罩
     },
+    handleDelete(id) {
+      this.delHistoryopen = true
+      this.delId = id
+    },
     handleQuery() {
       this.$refs.keyBoard.confirmBtnFn()
     },
@@ -157,7 +162,6 @@ export default {
       if (this.pay) {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
           if (res.code === 200) {
-            this.msgSuccess(this.parkName)
             if (res.data.car) {
               if (res.data.isPay) {
                 this.$router.push(`/qrcodeAccess/accessOutPayed?${res.data.url}`)
@@ -179,7 +183,7 @@ export default {
       this.loading = false// 关闭遮罩
     },
     delHistory() {
-      delCarNumberHistory(this.parkId).then(res => {
+      delCarNumberHistory(this.delId).then(res => {
         if (res.code === 200) {
           this.msgSuccess(res.msg)
         }

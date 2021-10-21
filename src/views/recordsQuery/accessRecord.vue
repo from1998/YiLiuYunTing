@@ -1,55 +1,57 @@
 <template>
   <div class="app-container">
-    <el-row :gutter="0">
-      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
-        <span>{{ laneName }}</span>
-      </el-col>
-    </el-row>
-    <!-- 表格工具按钮开始 -->
-    <el-row>
-      <el-col :span="8" :offset="0">
-        <el-form ref="cleanForm" :model="cleanForm" :inline="true">
-          <el-form-item>
-            <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleLeave">清理离场车辆</el-button>
-          </el-form-item>
-          <el-form-item label="" prop="days">
-            <el-input
-              v-model="cleanForm.days"
-              placeholder="请输入清理天数"
-              clearable
-              size="small"
-              style="width:140px"
-            />
-          </el-form-item>
-          <el-form-item>
-            <el-button type="text" icon="el-icon-caret-right" size="mini" style="cursor:default" />
-          </el-form-item>
-          <el-tooltip class="item" effect="dark" content="请在左侧输入清理天数，再点击该按钮。" placement="bottom" :disabled="cleanForm.days?true:false">
+    <div v-if="getUserInfo().role === 1 || getUserInfo().role === 3 || getUserInfo().role === 4">
+      <el-row :gutter="0">
+        <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+          <span>{{ laneName }}</span>
+        </el-col>
+      </el-row>
+      <!-- 表格工具按钮开始 -->
+      <el-row>
+        <el-col :span="8" :offset="0">
+          <el-form ref="cleanForm" :model="cleanForm" :inline="true">
             <el-form-item>
-              <el-button :disabled="cleanForm.days?false:true" type="warning" icon="el-icon-delete" size="mini" @click="handleEnter(cleanForm.days)">清理在场车辆{{ ' : '+ (cleanForm.days===undefined?'':cleanForm.days) + '天' }}</el-button>
+              <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleLeave">清理离场车辆</el-button>
             </el-form-item>
-          </el-tooltip>
-        </el-form>
-      </el-col>
-      <el-col :span="4" :offset="12" style="padding-left:60px">
-        <el-select
-          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-          v-cloak
-          v-model="queryParams.parkId"
-          placeholder="请选择您要查看的车场"
-          size="small"
-          clearable
-          @change="handleParkFocus"
-        >
-          <el-option
-            v-for="item in parkCategory"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
-      </el-col>
-    </el-row>
+            <el-form-item label="" prop="days">
+              <el-input
+                v-model="cleanForm.days"
+                placeholder="请输入清理天数"
+                clearable
+                size="small"
+                style="width:140px"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="text" icon="el-icon-caret-right" size="mini" style="cursor:default" />
+            </el-form-item>
+            <el-tooltip class="item" effect="dark" content="请在左侧输入清理天数，再点击该按钮。" placement="bottom" :disabled="cleanForm.days?true:false">
+              <el-form-item>
+                <el-button :disabled="cleanForm.days?false:true" type="warning" icon="el-icon-delete" size="mini" @click="handleEnter(cleanForm.days)">清理在场车辆{{ ' : '+ (cleanForm.days===undefined?'':cleanForm.days) + '天' }}</el-button>
+              </el-form-item>
+            </el-tooltip>
+          </el-form>
+        </el-col>
+        <el-col :span="4" :offset="12" style="padding-left:60px">
+          <el-select
+            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+            v-cloak
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            clearable
+            @change="handleParkFocus"
+          >
+            <el-option
+              v-for="item in parkCategory"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-col>
+      </el-row>
+    </div>
     <el-row :gutter="0">
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
