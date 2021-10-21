@@ -64,7 +64,7 @@
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="warning" round style="width:100%">刷新</el-button>
+        <el-button type="warning" round style="width:100%" @click="$router.go(0)">刷新</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
