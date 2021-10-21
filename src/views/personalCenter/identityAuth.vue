@@ -115,7 +115,13 @@
         <el-row>
           <el-col :span="options.registerInfo.type!==2?6:8">
             <el-form-item label="身份证正面照" prop="notEmpty">
-              <upload-img :title="form.idimagea" @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" :title="form.idimagea" @imgagePush="imageAccept('idimagea','idimageasrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.idimageasrc"
+                :preview-src-list="[form.idimageasrc]"
+              />
               <el-input v-show="false" v-model="form.idimagea" />
               <el-input v-show="false" v-model="form.idimageasrc" />
             </el-form-item>

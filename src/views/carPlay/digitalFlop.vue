@@ -6,16 +6,14 @@
       ref="digitalFlop"
       class="digital-flop-item"
     >
-      <dv-border-box-8 :reverse="true">
-        <div class="digital-flop-title">{{ item.title }}</div>
-        <div class="digital-flop">
-          <dv-digital-flop
-            :config="item.number"
-            style="width:100px;height:50px;"
-          />
-          <div class="unit">{{ item.unit }}</div>
-        </div>
-      </dv-border-box-8>
+      <div class="digital-flop-title">{{ item.title }}</div>
+      <div class="digital-flop">
+        <dv-digital-flop
+          :config="item.number"
+          style="width:100px;height:50px;"
+        />
+        <div class="unit">{{ item.unit }}</div>
+      </div>
     </div>
 
   </div>
