@@ -150,7 +150,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col v-if="form.role === 1 ||form.role === 3 || form.role === 4 " :span="12">
+          <el-col v-if="getUserInfo().role === 1 || getUserInfo().role === 3 || getUserInfo().role === 4 " :span="12">
             <el-form-item label="角色" prop="role">
               <el-select
                 v-model="form.role"
@@ -221,7 +221,6 @@
 // 引入api
 import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUserById, deleteUserByIds, resetPwd } from '@/api/system/user'
 import { selectAllRole } from '@/api/system/role'
-import { createOrder } from '@/api/qrcodeAccess/accessOut'
 
 import validate from '@/utils/validate'
 
@@ -295,9 +294,6 @@ export default {
   },
   // 勾子
   created() {
-    createOrder({ carNumber: '浙Awv250', parkId: '26', couponsRecordId: '' }).then(recieve => {
-      this.msgSuccess(recieve.data)
-    })
     // 使用全局的根据字典类型查询字典数据的方法查询字典数据  2禁用 1正常
     this.getDataByType('sys_normal_disable').then(res => {
       this.stateOptions = res.data
