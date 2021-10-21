@@ -59,7 +59,7 @@
     </div>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%" @click="awakeWXPay">支付</el-button>
+        <el-button type="primary" round style="width:100%" @click="jsApiCall">支付</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
@@ -85,6 +85,7 @@ export default {
       resDate: {},
       queryParams: {
         carNumber: '',
+        couponsRecordId: '',
         parkId: ''
       }
     }
@@ -110,6 +111,7 @@ export default {
         this.resDate = res.data
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
+        this.msgSuccess(this.queryParams.couponsRecordId)
       })
       this.loading = false// 关闭遮罩
     },
@@ -145,7 +147,7 @@ export default {
     },
     jsApiCall() {
       createOrder(this.queryParams).then(recieve => {
-        this.msgSuccess(recieve.data)
+        // this.msgSuccess(recieve.data)
         this.queryParams.orderSn = recieve.data.orderSn
         // eslint-disable-next-line no-undef
         WeixinJSBridge.invoke(
