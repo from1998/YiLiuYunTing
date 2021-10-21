@@ -140,6 +140,19 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否共享" prop="share">
+              <el-radio-group v-model="form.share">
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
         </el-row>
         <!-- 手续费及停车费分成 -->
         <el-row v-if="getUserInfo().role === 1">
@@ -290,7 +303,8 @@ export default {
         state: validate.notEmpty,
         isUploadData: validate.notEmpty,
         uploadPlatform: validate.notEmpty,
-        uploadPlatformSn: validate.notEmpty
+        uploadPlatformSn: validate.notEmpty,
+        share: validate.notEmpty
       },
       // 是否启用遮罩层
       loading: false,
@@ -345,6 +359,8 @@ export default {
         linkType: 2,
         // 是否收费
         charge: 1,
+        // 是否共享
+        share: 0,
         // 手续费
         commissionCharge: null,
         // 停车费
@@ -513,6 +529,8 @@ export default {
         linkType: 2,
         // 是否收费
         charge: 1,
+        // 是否共享
+        share: 0,
         // 手续费
         commissionCharge: null,
         // 停车费
