@@ -150,6 +150,24 @@
           </el-col>
         </el-row>
         <el-row>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="状态" prop="state">
+              <el-select
+                v-model="form.state"
+                placeholder="状态"
+                clearable
+                size="small"
+                style="width:240px"
+              >
+                <el-option
+                  v-for="d in stateOptions"
+                  :key="d.dictValue"
+                  :label="d.dictLabel"
+                  :value="d.dictValue"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
           <el-col v-if="getUserInfo().role === 1 || getUserInfo().role === 3 || getUserInfo().role === 4 " :span="12">
             <el-form-item label="角色" prop="role">
               <el-select
@@ -168,7 +186,9 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="6">
             <el-form-item v-if="form.role === 4" label="选择父级账号">
               <el-select
                 v-model="form.parentId"
@@ -183,26 +203,6 @@
                   :key="item.id"
                   :label="item.username"
                   :value="item.id"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12" :offset="6">
-            <el-form-item label="状态" prop="state">
-              <el-select
-                v-model="form.state"
-                placeholder="状态"
-                clearable
-                size="small"
-                style="width:240px"
-              >
-                <el-option
-                  v-for="d in stateOptions"
-                  :key="d.dictValue"
-                  :label="d.dictLabel"
-                  :value="d.dictValue"
                 />
               </el-select>
             </el-form-item>
@@ -422,11 +422,11 @@ export default {
       this.form.mobile = ''
       this.form.role = ''
       this.form.email = ''
-      this.title = '添加用户信息'
+      this.title = '添加用户'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改用户信息'
+      this.title = '修改用户'
       const id = row.id || this.ids
       this.open = true
       this.reset()
@@ -447,7 +447,7 @@ export default {
     // 执行删除
     handleDelete(row) {
       const userIds = row.id || this.ids
-      this.$confirm('此操作将永久删除该用户数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久删除该用户数据, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

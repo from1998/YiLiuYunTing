@@ -93,7 +93,7 @@ export default {
     },
     // 上传图片成功
     handleSuccess(res, file, fileList) {
-      if (res.data === 200) {
+      if (res.code === 200) {
         this.handHeld = fileList
         this.hideUpload = fileList.length >= this.limitCount
         this.msgSuccess(res.msg)
@@ -103,7 +103,7 @@ export default {
       } else {
         this.handHeld = []
         this.hideUpload = false
-        this.msgError('上传失败')
+        this.msgError(res.msg)
       }
     },
     // 上传图片失败
