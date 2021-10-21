@@ -6,7 +6,7 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <div v-show="registerstatus!==1" class="error">
+      <div v-if="registerstatus!==1" class="error">
         <el-row :gutter="20">
           <el-button
             type="warning"
@@ -22,7 +22,7 @@
           <el-button type="primary" class="goBack" @click="goIdentityAuth">转到身份认证</el-button>
         </el-row>
       </div>
-      <el-form v-show="registerstatus===1" ref="form" :model="form" label-width="150px" style="width:550px" label-position="left" :disabled="cardBindState===1?true:false" :rules="rules">
+      <el-form v-if="registerstatus===1" ref="form" :model="form" label-width="150px" style="width:550px" label-position="left" :disabled="cardBindState===1?true:false" :rules="rules">
         <el-form-item label="绑卡商户号" prop="sonmerno">
           <el-input v-model="form.sonmerno" placeholder="请输入绑卡商户号" disabled />
         </el-form-item>
@@ -51,7 +51,7 @@
         <el-form-item label="银行卡号码" prop="cardno">
           <el-input v-model="form.cardno" placeholder="请输入银行卡号码" clearable />
         </el-form-item>
-        <div v-show="form.cardtype===0">
+        <div v-if="form.cardtype===0">
           <el-form-item label="银行预留手机号码" prop="legalpersonphone">
             <el-input v-model="form.legalpersonphone" placeholder="请输入银行预留手机号码" clearable />
           </el-form-item>
@@ -64,23 +64,23 @@
         </div>
         <el-row>
           <el-col :span="20">
-            <el-tooltip v-show="form.cardtype===1" class="item" effect="dark" content="我们会往您的账户打款0.5元以下的金额，请务必在确认到账后输入收款金额后 点击绑卡!" placement="bottom-start">
+            <el-tooltip v-if="form.cardtype===1" class="item" effect="dark" content="我们会往您的账户打款0.5元以下的金额，请务必在确认到账后输入收款金额后 点击绑卡!" placement="bottom-start">
               <el-form-item label="收款金额" prop="account">
                 <el-input v-model="form.account" placeholder="请输入收款金额" :disabled="cardBindState===1?true:false" clearable />
               </el-form-item>
             </el-tooltip>
-            <el-form-item v-show="form.cardtype===0" label="验证码" prop="smscode">
+            <el-form-item v-if="form.cardtype===0" label="验证码" prop="smscode">
               <el-input v-model="form.smscode" placeholder="请输入验证码" :disabled="cardBindState===1?true:false" clearable />
             </el-form-item>
           </el-col>
-          <el-col v-show="form.cardtype!==null" :span="4" class="verifyCode">
-            <el-button v-show="cardBindState===null" type="primary" size="medium" :disabled="codeShow?false:true" @click="getAccount">
+          <el-col v-if="form.cardtype!==null" :span="4" class="verifyCode">
+            <el-button v-if="cardBindState===null" type="primary" size="medium" :disabled="codeShow?false:true" @click="getAccount">
               <span v-if="codeShow">
                 {{ submitTitle }}
               </span>
               <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
             </el-button>
-            <el-button v-show="cardBindState===1" type="primary">
+            <el-button v-if="cardBindState===1" type="primary">
               {{ submitTitle }}
             </el-button>
           </el-col>
@@ -88,8 +88,8 @@
         <el-row>
           <el-form-item>
             <div class="footer">
-              <el-button v-show="cardBindState===null" type="primary" @click="onSubmit">绑卡</el-button>
-              <el-button v-show="cardBindState===1" type="primary" disabled>已绑卡</el-button>
+              <el-button v-if="cardBindState===null" type="primary" @click="onSubmit">绑卡</el-button>
+              <el-button v-if="cardBindState===1" type="primary" disabled>已绑卡</el-button>
             </div>
           </el-form-item>
         </el-row>
@@ -119,8 +119,8 @@ export default {
         cardno: validate.notEmpty,
         bankno: validate.notEmpty,
         smscode: validate.notEmpty,
-        account: validate.notEmpty,
-        cardtype: validate.notEmpty
+        cardtype: validate.notEmpty,
+        account: validate.notEmpty
       },
       submitTitle: '发起打款',
       // 认证状态
@@ -191,6 +191,7 @@ export default {
     },
     onSubmit() {
       this.$refs['form'].validate((valid) => {
+        this.msgSuccess(valid)
         if (valid) {
           this.loading = true // 打开遮罩
           bindCard(this.form).then(res => {
