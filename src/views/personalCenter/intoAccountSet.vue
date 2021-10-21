@@ -6,10 +6,15 @@
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
-      <el-form :ref="form" :model="form" label-width="100px" style="width:500px" label-position="left" :rules="rules">
+      <el-form ref="form" :model="form" label-width="140px" style="width:500px" label-position="left" :rules="rules">
         <el-row>
-          <el-form-item label="手机号码" prop="legalpersonphone">
-            <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" disabled />
+          <el-form-item label="车场注册手机号码" prop="legalpersonphone">
+            <el-input v-model="form.legalpersonphone" disabled />
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-form-item label="银行预留手机号码" prop="legalpersonphone">
+            <el-input v-model="form.legalpersonphone" disabled />
           </el-form-item>
         </el-row>
         <!-- 如果自动到账未设置或状态不存在，则允许设置 -->
@@ -21,10 +26,12 @@
           </el-col>
           <!-- 如果已绑卡，则验证码可用 -->
           <el-col v-show="cardBindState===1" :span="5" class="verifyCode">
-            <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
-              <span v-if="codeShow">获取验证码</span>
-              <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
-            </el-button>
+            <el-tooltip class="item" effect="dark" content="验证码将发送到车场注册手机号码。" placement="bottom">
+              <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
+                <span v-if="codeShow">获取验证码</span>
+                <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
+              </el-button>
+            </el-tooltip>
           </el-col>
           <!-- 如果未绑卡或绑卡状态不存在，则验证码禁用并提示用户绑卡 -->
           <el-tooltip class="item" effect="dark" content="绑定银行卡后才可以进行到账设置！" placement="right">
