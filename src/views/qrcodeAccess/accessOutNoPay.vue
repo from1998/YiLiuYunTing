@@ -4,7 +4,7 @@
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">
-          <span :v-text="queryParams.carNumber || resDate.carNumber" />
+          <span :v-text="resDate.carNumber" />
         </el-col>
       </el-row>
       <el-row :gutter="0" style="height:25px;font-size:14px;">
@@ -57,7 +57,7 @@
         </el-col>
       </el-row>
     </div>
-    <el-row :gutter="0" style="font-size:14px;margin-top:5%">
+    <el-row v-show="resDate.amount!==0" :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
       </el-col>
