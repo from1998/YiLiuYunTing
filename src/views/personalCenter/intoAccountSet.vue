@@ -8,12 +8,12 @@
     <el-container class="container">
       <el-form ref="form" :model="form" label-width="140px" style="width:500px" label-position="left" :rules="rules">
         <el-row>
-          <el-form-item label="车场注册手机号码" prop="legalpersonphone">
-            <el-input v-model="form.legalpersonphone" disabled />
+          <el-form-item label="车场注册手机号码">
+            <el-input v-model="form.merchantphone" disabled />
           </el-form-item>
         </el-row>
         <el-row>
-          <el-form-item label="银行预留手机号码" prop="legalpersonphone">
+          <el-form-item label="银行预留手机号码">
             <el-input v-model="form.legalpersonphone" disabled />
           </el-form-item>
         </el-row>
@@ -71,7 +71,6 @@ export default {
       // 验证规则
       validate,
       rules: {
-        legalpersonphone: validate.phone,
         smscode: validate.notEmpty
       },
       // 到账设置状态

@@ -286,6 +286,7 @@
                 placeholder="请选择车辆类型"
                 clearable
                 size="small"
+                @change="change()"
               >
                 <el-option
                   v-for="item in options.carCategoryOptions"
@@ -305,6 +306,7 @@
                 placeholder="请选择车位类型"
                 clearable
                 size="small"
+                @change="change()"
               >
                 <el-option
                   v-for="item in options.depotCategoryOptions"
@@ -322,6 +324,7 @@
                 placeholder="请选择时长类型"
                 clearable
                 size="small"
+                @change="change()"
               >
                 <el-option
                   v-for="item in options.timeCategoryOptions"
@@ -341,6 +344,7 @@
                 value-format="HH:mm:ss"
                 placeholder="开始时间"
                 style="width:195px"
+                @change="change()"
               />
             </el-form-item>
           </el-col>
@@ -351,6 +355,7 @@
                 value-format="HH:mm:ss"
                 placeholder="结束时间"
                 style="width:195px"
+                @change="change()"
               />
             </el-form-item>
           </el-col>
@@ -385,7 +390,7 @@
           <el-col :span="24" :offset="0">
             <el-form-item label="编号" prop="number">
               <el-tooltip class="item" effect="dark" content="请先选择层号、区域号,再选择该字段" placement="bottom">
-                <el-select v-model="form.number" placeholder="请选择车位编号" size="small" clearable>
+                <el-select v-model="form.number" placeholder="请选择车位编号" size="small" clearable @change="$forceUpdate()">
                   <el-option
                     v-for="item in options.number"
                     :key="item.id"
@@ -636,6 +641,9 @@ export default {
 
   // },
   methods: {
+    change() {
+      this.$forceUpdate()
+    },
     handleParkFocus() {
       this.getList()
     },

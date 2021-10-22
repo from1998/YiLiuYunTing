@@ -128,7 +128,13 @@
           </el-col>
           <el-col :span="options.registerInfo.type!==2?6:8">
             <el-form-item label="身份证反面照" prop="notEmpty">
-              <upload-img @imgagePush="imageAccept('idimageb','idimagebsrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('idimageb','idimagebsrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.idimagebsrc"
+                :preview-src-list="[form.idimagebsrc]"
+              />
               <el-input v-show="false" v-model="form.idimageb" />
               <el-input v-show="false" v-model="form.idimagebsrc" />
             </el-form-item>
@@ -136,7 +142,13 @@
           <el-col :span="options.registerInfo.type!==2?6:8">
             <el-tooltip class="item" effect="dark" content="个人年龄若大于60岁，则必填" placement="top">
               <el-form-item label="手持身份证照片" prop="IDCardHandheld">
-                <upload-img @imgagePush="imageAccept('idimagec','idimagecsrc',$event)" />
+                <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('idimagec','idimagecsrc',$event)" />
+                <el-image
+                  v-else
+                  style="width: 100px; height: 100px"
+                  :src="form.idimagecsrc"
+                  :preview-src-list="[form.idimagecsrc]"
+                />
                 <el-input v-show="false" v-model="form.idimagec" />
                 <el-input v-show="false" v-model="form.idimagecsrc" />
               </el-form-item>
@@ -144,7 +156,13 @@
           </el-col>
           <el-col v-if="options.registerInfo.type!==2" :span="6">
             <el-form-item label="开户意愿书" prop="notEmpty">
-              <upload-img @imgagePush="imageAccept('accountLicense','accountLicensesrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('accountLicense','accountLicensesrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.accountLicensesrc"
+                :preview-src-list="[form.accountLicensesrc]"
+              />
               <el-input v-show="false" v-model="form.accountLicense" />
               <el-input v-show="false" v-model="form.accountLicensesrc" />
             </el-form-item>
@@ -261,28 +279,52 @@
         <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="6">
             <el-form-item label="营业执照" prop="notEmpty">
-              <upload-img @imgagePush="imageAccept('businesslicencecopy','businesslicencecopysrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('businesslicencecopy','businesslicencecopysrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.businesslicencecopysrc"
+                :preview-src-list="[form.businesslicencecopysrc]"
+              />
               <el-input v-show="false" v-model="form.businesslicencecopy" />
               <el-input v-show="false" v-model="form.businesslicencecopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="税务登记证副本" prop="notEmpty">
-              <upload-img @imgagePush="imageAccept('taxregistrationcopy','taxregistrationcopysrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('taxregistrationcopy','taxregistrationcopysrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.taxregistrationcopysrc"
+                :preview-src-list="[form.taxregistrationcopysrc]"
+              />
               <el-input v-show="false" v-model="form.taxregistrationcopy" />
               <el-input v-show="false" v-model="form.taxregistrationcopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="组织结构代码证副本" prop="notEmpty">
-              <upload-img @imgagePush="imageAccept('organizationcodecopy','organizationcodecopysrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('organizationcodecopy','organizationcodecopysrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.organizationcodecopysrc"
+                :preview-src-list="[form.organizationcodecopysrc]"
+              />
               <el-input v-show="false" v-model="form.organizationcodecopy" />
               <el-input v-show="false" v-model="form.organizationcodecopysrc" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="银行开户许可证" prop="notEmpty">
-              <upload-img @imgagePush="imageAccept('licenceforopeningaccounts','licenceforopeningaccountssrc',$event)" />
+              <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('licenceforopeningaccounts','licenceforopeningaccountssrc',$event)" />
+              <el-image
+                v-else
+                style="width: 100px; height: 100px"
+                :src="form.licenceforopeningaccountssrc"
+                :preview-src-list="[form.licenceforopeningaccountssrc]"
+              />
               <el-input v-show="false" v-model="form.licenceforopeningaccounts" />
               <el-input v-show="false" v-model="form.licenceforopeningaccountssrc" />
             </el-form-item>
