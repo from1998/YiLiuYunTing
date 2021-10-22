@@ -43,7 +43,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item>你好,{{ username }}</el-dropdown-item>
-          <el-dropdown-item divided @click.prevent.stop="guide">操作指引</el-dropdown-item>
+          <!-- <el-dropdown-item divided @click.prevent.stop="guide">操作指引</el-dropdown-item> -->
           <router-link to="/updatePWD">
             <el-dropdown-item divided> 修改密码</el-dropdown-item>
           </router-link>
@@ -59,6 +59,7 @@
       :visible.sync="noticeDialogVisible"
       append-to-body
       center
+      :close-on-click-modal="false"
       @closed="noticeDialogVisible = false"
     >
       这里是通知公告内容...

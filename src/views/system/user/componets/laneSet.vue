@@ -131,6 +131,7 @@
       :visible.sync="open"
       width="660px"
       center
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" label-width="110px" :rules="rules">
         <el-row>
@@ -286,6 +287,7 @@
       :visible.sync="qrcodeDialogVisible"
       width="770px"
       center
+      :close-on-click-modal="false"
     >
       <canvas
         id="myCanvas"
@@ -305,6 +307,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-input v-model="emergencyPhone" clearable size="small" placeholder="请输入应急联系方式" @keyup.enter.native="handleEmergencyConfirm" />
       <span slot="footer" class="dialog-footer">

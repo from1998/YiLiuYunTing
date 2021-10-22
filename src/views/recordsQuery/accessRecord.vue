@@ -197,6 +197,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
         <el-row :gutter="0">

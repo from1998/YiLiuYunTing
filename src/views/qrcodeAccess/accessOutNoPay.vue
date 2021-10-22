@@ -125,9 +125,10 @@ export default {
             document.attachEvent('WeixinJSBridgeReady', this.jsApiCall())
             document.attachEvent('onWeixinJSBridgeReady', this.jsApiCall())
           }
-        } else {
-          this.jsApiCall()
         }
+        // else {
+        //   this.jsApiCall()
+        // }
       })
       load(adJs, () => {
         const container = document.getElementById('app-container')

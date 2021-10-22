@@ -13,6 +13,7 @@
         width="500px"
         center
         append-to-body
+        :close-on-click-modal="false"
       >
         <el-form ref="form" v-loading="loading" :model="form" label-width="70px">
           <el-form-item label="来访原因" prop="comereason">

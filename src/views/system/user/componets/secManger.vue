@@ -86,6 +86,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="姓名" prop="realName">
@@ -119,6 +120,7 @@
       width="800px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
         在管车道

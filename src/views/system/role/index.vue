@@ -87,6 +87,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="角色名称" prop="roleName">
@@ -125,6 +126,7 @@
       width="400px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-tree
         ref="menu"

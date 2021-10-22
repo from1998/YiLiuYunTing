@@ -1,10 +1,10 @@
 <template>
   <div v-if="errorLogs.length>0">
     <el-badge :is-dot="true" style="line-height: 25px;margin-top: -5px;" @click.native="dialogTableVisible=true">
-      <svg-icon icon-class="bug" style="padding: 8px 10px;" />
+      <svg-icon icon-class="bug" style="padding: 8px 10px;color:red" />
     </el-badge>
 
-    <el-dialog :visible.sync="dialogTableVisible" width="80%" append-to-body>
+    <el-dialog :visible.sync="dialogTableVisible" width="80%" append-to-body :close-on-click-modal="false">
       <div slot="title">
         <span style="padding-right: 10px;">错误日志</span>
         <el-button size="mini" type="primary" icon="el-icon-delete" @click="clearAll">清除所有记录</el-button>

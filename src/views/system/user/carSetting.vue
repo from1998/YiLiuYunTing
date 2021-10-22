@@ -35,6 +35,7 @@
       :visible.sync="dialogVisible"
       width="300px"
       center
+      :close-on-click-modal="false"
     >
       请先注册车场，才可进行车厂配置。
       <span slot="footer" class="dialog-footer">

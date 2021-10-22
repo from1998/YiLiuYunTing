@@ -204,6 +204,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-form
         ref="form"
@@ -461,11 +462,11 @@ export default {
     handleAdd() {
       this.open = true
       this.reset()
-      this.title = '添加优惠券信息'
+      this.title = '添加优惠券'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改优惠券信息'
+      this.title = '修改优惠券'
       this.open = true
       this.reset()
       // 根据dictId查询一个字典信息

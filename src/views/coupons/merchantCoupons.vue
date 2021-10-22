@@ -128,6 +128,7 @@
       append-to-body
       title="发放优惠券"
       :visible.sync="grantShow"
+      :close-on-click-modal="false"
     >
       <el-form
         ref="grantForm"
@@ -155,6 +156,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" label-width="110px" :rules="rules">
         <el-form-item
@@ -305,6 +307,7 @@
       :visible.sync="qrcodeDialogVisible"
       width="300px"
       center
+      :close-on-click-modal="false"
     >
       <!-- 二维码 -->
       <canvas v-show="true" id="canvas" />

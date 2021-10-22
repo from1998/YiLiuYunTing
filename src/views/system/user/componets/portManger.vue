@@ -79,6 +79,7 @@
       :visible.sync="open"
       width="500px"
       center
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" label-width="80px" :rules="rules">
         <el-form-item label="层号" prop="tierNumber">

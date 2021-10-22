@@ -105,6 +105,7 @@
       width="500px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="账号" prop="account">

@@ -224,101 +224,123 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="600px"
       center
       append-to-body
+      :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item
-          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-          label="车场"
-          prop="parkId"
-        >
-          <el-select
-            v-cloak
-            v-model="form.parkId"
-            placeholder="请选择车场"
-            size="small"
-            style="width:370px"
-            clearable
-            @change="handleNumberFocus"
-          >
-            <el-option
-              v-for="item in options.parkCategory"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="车牌号" prop="carNumber">
-          <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="姓名" prop="userName">
-          <el-input v-model="form.userName" placeholder="请输入车主姓名" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="车辆地址" prop="address">
-          <el-input v-model="form.address" placeholder="请输入车辆地址" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="车辆类型" prop="carType">
-          <el-select
-            v-model="form.carType"
-            placeholder="请选择车辆类型"
-            clearable
-            size="small"
-            style="width:370px"
-          >
-            <el-option
-              v-for="item in options.carCategoryOptions"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="车位类型" prop="registerType">
-          <el-select
-            v-model="form.registerType"
-            placeholder="请选择车位类型"
-            clearable
-            size="small"
-            style="width:370px"
-          >
-            <el-option
-              v-for="item in options.depotCategoryOptions"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item v-if="form.registerType===3" label="时长类型" prop="splitType">
-          <el-select
-            v-model="form.splitType"
-            placeholder="请选择时长类型"
-            clearable
-            size="small"
-            style="width:370px"
-          >
-            <el-option
-              v-for="item in options.timeCategoryOptions"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-row v-if="form.splitType===2" :gutter="0">
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <el-form-item
+              v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+              label="车场"
+              prop="parkId"
+            >
+              <el-select
+                v-cloak
+                v-model="form.parkId"
+                placeholder="请选择车场"
+                size="small"
+                clearable
+                @change="handleNumberFocus"
+              >
+                <el-option
+                  v-for="item in options.parkCategory"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="车牌号" prop="carNumber">
+              <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="姓名" prop="userName">
+              <el-input v-model="form.userName" placeholder="请输入车主姓名" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="手机号" prop="mobile">
+              <el-input v-model="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="车辆地址" prop="address">
+              <el-input v-model="form.address" placeholder="请输入车辆地址" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="车辆类型" prop="carType">
+              <el-select
+                v-model="form.carType"
+                placeholder="请选择车辆类型"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="item in options.carCategoryOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="车位类型" prop="registerType">
+              <el-select
+                v-model="form.registerType"
+                placeholder="请选择车位类型"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="item in options.depotCategoryOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item v-if="form.registerType===3" label="时长类型" prop="splitType">
+              <el-select
+                v-model="form.splitType"
+                placeholder="请选择时长类型"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="item in options.timeCategoryOptions"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="form.splitType===2">
           <el-col :span="12" :offset="0">
             <el-form-item label="开始时间" prop="startSplit">
               <el-time-picker
                 v-model="form.startSplit"
                 value-format="HH:mm:ss"
                 placeholder="开始时间"
-                style="width:140px"
+                style="width:195px"
               />
             </el-form-item>
           </el-col>
@@ -328,43 +350,54 @@
                 v-model="form.endSplit"
                 value-format="HH:mm:ss"
                 placeholder="结束时间"
-                style="width:140px"
+                style="width:195px"
               />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="层号" prop="tierNumber">
-          <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" style="width:370px" clearable @change="handleNumberFocus">
-            <el-option
-              v-for="item in options.tierNumber"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="区域号" prop="areaNumber">
-          <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" style="width:370px" clearable @change="handleNumberFocus">
-            <el-option
-              v-for="item in options.areaNumber"
-              :key="item.dictValue"
-              :label="item.dictLabel"
-              :value="Number(item.dictValue)"
-            />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="编号" prop="number">
-          <el-tooltip class="item" effect="dark" content="请先选择层号、区域号,再选择该字段" placement="bottom">
-            <el-select v-model="form.number" placeholder="请选择车位编号" size="small" style="width:370px">
-              <el-option
-                v-for="item in options.number"
-                :key="item.id"
-                :label="item.number"
-                :value="item.number"
-              />
-            </el-select>
-          </el-tooltip>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="层号" prop="tierNumber">
+              <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" clearable @change="handleNumberFocus">
+                <el-option
+                  v-for="item in options.tierNumber"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="区域号" prop="areaNumber">
+              <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" clearable @change="handleNumberFocus">
+                <el-option
+                  v-for="item in options.areaNumber"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24" :offset="0">
+            <el-form-item label="编号" prop="number">
+              <el-tooltip class="item" effect="dark" content="请先选择层号、区域号,再选择该字段" placement="bottom">
+                <el-select v-model="form.number" placeholder="请选择车位编号" size="small" clearable>
+                  <el-option
+                    v-for="item in options.number"
+                    :key="item.id"
+                    :label="item.number"
+                    :value="item.number"
+                  />
+                </el-select>
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
