@@ -75,7 +75,7 @@
 import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
-// const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
+const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
 const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
   data() {
@@ -111,6 +111,8 @@ export default {
       this.loading = true // 打开遮罩
       getNoPayData(this.queryParams).then(res => {
         this.resDate = res.data
+        this.isWx = res.data.baseData.isWx
+        this.isAli = res.data.baseData.isAli
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
       })
@@ -132,15 +134,15 @@ export default {
         })
       }
       // 加载支付宝支付脚本
-      // if (this.isAli) {
-      //   load(aLiJs, () => {
-      //     if (window.AlipayJSBridge) {
-      //       () => {}
-      //     } else {
-      //       document.addEventListener('AlipayJSBridgeReady', () => {})
-      //     }
-      //   })
-      // }
+      if (this.isAli) {
+        load(aLiJs, () => {
+          if (window.AlipayJSBridge) {
+            () => {}
+          } else {
+            document.addEventListener('AlipayJSBridgeReady', () => {})
+          }
+        })
+      }
       // 加载安泊广告脚本
       load(adJs, () => {
         const container = document.getElementById('app-container')
@@ -181,26 +183,26 @@ export default {
               }
             })
         }
-        // if (this.isAli) {
-        //   window.AlipayJSBridge.call('tradePay', {
-        //     tradeNO: recieve.data.payParams
-        //   }, res => {
-        //     const code = res.resultCode
-        //     // 成功代码是9000
-        //     if (code === '9000') {
-        //       const parkId = this.queryParams.parkId
-        //       // delete this.queryParams.parkId
-        //       successedOrder(parkId, this.queryParams)
-        //       // 取消代码是6001
-        //     } else if (code === '6001') {
-        //       cancleOrder(this.queryParams)
-        //       // 失败代码是4000
-        //     } else if (code === '4000') {
-        //       failedOrder(this.queryParams)
-        //       this.msgError(code + res.memo + res.result)
-        //     }
-        //   })
-        // }
+        if (this.isAli) {
+          window.AlipayJSBridge.call('tradePay', {
+            tradeNO: recieve.data.payParams
+          }, res => {
+            const code = res.resultCode
+            // 成功代码是9000
+            if (code === '9000') {
+              const parkId = this.queryParams.parkId
+              // delete this.queryParams.parkId
+              successedOrder(parkId, this.queryParams)
+              // 取消代码是6001
+            } else if (code === '6001') {
+              cancleOrder(this.queryParams)
+              // 失败代码是4000
+            } else if (code === '4000') {
+              failedOrder(this.queryParams)
+              this.msgError(code + res.memo + res.result)
+            }
+          })
+        }
       })
     },
     // 刷新
