@@ -10,7 +10,7 @@
 <script>
 import echarts from 'echarts' // 引入echarts
 import jsonp from 'jsonp' // 引入jsonp
-import '@/assets/json/china' // 引入中国地图
+import '@/assets/js/china' // 引入中国地图
 
 const option = {
   tooltip: { // 提示信息
