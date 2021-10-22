@@ -154,7 +154,7 @@ export default {
           res => {
             if (res.err_msg === 'get_brand_wcpay_request:ok') {
               const parkId = this.queryParams.parkId
-              delete this.queryParams.parkId
+              // delete this.queryParams.parkId
               successedOrder(parkId, this.queryParams).then(res => {
                 if (res.code === 200) {
                   this.msgSuccess('订单成功')
