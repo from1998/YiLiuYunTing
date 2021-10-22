@@ -585,6 +585,8 @@ export default {
       },
       // 表单数据
       form: {
+        startSplit: '',
+        endSplit: '',
         number: ''
       },
       renewform: {
@@ -641,7 +643,8 @@ export default {
 
   // },
   methods: {
-    change() {
+    change(val) {
+      console.log(val)
       this.$forceUpdate()
     },
     handleParkFocus() {
@@ -757,8 +760,6 @@ export default {
     handleAdd() {
       this.open = true
       this.reset()
-      this.form.endSplit = ''
-      this.form.startSplit = ''
       this.title = '添加车辆'
     },
     // 打开修改的弹出层
