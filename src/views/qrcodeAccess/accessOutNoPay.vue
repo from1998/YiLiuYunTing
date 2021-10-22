@@ -120,10 +120,10 @@ export default {
       load(wechatJs, () => {
         if (typeof WeixinJSBridge === 'undefined') {
           if (document.addEventListener) {
-            document.addEventListener('WeixinJSBridgeReady', this.jsApiCall())
+            document.addEventListener('WeixinJSBridgeReady', () => {})
           } else if (document.attachEvent) {
-            document.attachEvent('WeixinJSBridgeReady', this.jsApiCall())
-            document.attachEvent('onWeixinJSBridgeReady', this.jsApiCall())
+            document.attachEvent('WeixinJSBridgeReady', () => {})
+            document.attachEvent('onWeixinJSBridgeReady', () => {})
           }
         }
       })
@@ -146,23 +146,31 @@ export default {
     jsApiCall() {
       createOrder(this.queryParams).then(recieve => {
         delete this.queryParams.carNumber
+        delete this.queryParams.couponsRecordId
         this.queryParams.orderSn = recieve.data.orderSn
         window.WeixinJSBridge.invoke(
           'getBrandWCPayRequest',
           recieve.data.payParams,
           res => {
             if (res.err_msg === 'get_brand_wcpay_request:ok') {
-              successedOrder(this.queryParams).then(res => {
-                this.msgSuccess('订单成功')
+              delete this.queryParams.parkId
+              successedOrder(this.parkId, this.queryParams).then(res => {
+                if (res.code === 200) {
+                  this.msgSuccess('订单成功')
+                }
               })
               //                vm.$router.push("/reservedBerth");
             } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
               cancleOrder(this.queryParams).then(res => {
-                this.msgSuccess('订单取消')
+                if (res.code === 200) {
+                  this.msgSuccess('订单取消')
+                }
               })
             } else {
               failedOrder(this.queryParams).then(res => {
-                this.msgSuccess('订单失败')
+                if (res.code === 200) {
+                  this.msgSuccess('订单失败')
+                }
               })
               this.msgError(res.err_code + res.err_desc + res.err_msg)
             }
