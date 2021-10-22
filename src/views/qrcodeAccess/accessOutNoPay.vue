@@ -64,7 +64,7 @@
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
-        <el-button type="warning" round style="width:100%" @click="$router.go(0)">刷新</el-button>
+        <el-button type="warning" round style="width:100%" @click="handleRefresh">刷新</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -126,9 +126,6 @@ export default {
             document.attachEvent('onWeixinJSBridgeReady', this.jsApiCall())
           }
         }
-        // else {
-        //   this.jsApiCall()
-        // }
       })
       load(adJs, () => {
         const container = document.getElementById('app-container')
@@ -148,8 +145,8 @@ export default {
     },
     jsApiCall() {
       createOrder(this.queryParams).then(recieve => {
-        // this.msgSuccess(recieve.data)
-        // this.queryParams.orderSn = recieve.data.orderSn
+        delete this.queryParams.carNumber
+        this.queryParams.orderSn = recieve.data.orderSn
         window.WeixinJSBridge.invoke(
           'getBrandWCPayRequest',
           recieve.data.payParams,
@@ -171,6 +168,17 @@ export default {
             }
           }
         )
+      })
+    },
+    handleRefresh() {
+      this.$message({
+        message: '刷新成功! 正在重载页面...',
+        type: 'success',
+        center: true,
+        duration: '800',
+        onClose: () => {
+          this.$router.go(0)
+        }
       })
     }
   }

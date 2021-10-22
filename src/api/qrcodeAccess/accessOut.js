@@ -28,20 +28,20 @@ export function createOrder(query) {
 }
 
 // 取消订单
-export function cancleOrder(data) {
+export function cancleOrder(query) {
   return request({
     url: '/third/order_cancel',
     method: 'post',
-    data
+    params: query
   })
 }
 
 // 订单失败
-export function failedOrder(data) {
+export function failedOrder(query) {
   return request({
     url: '/third/order_fail',
     method: 'post',
-    data
+    params: query
   })
 }
 
