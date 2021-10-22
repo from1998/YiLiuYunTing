@@ -120,7 +120,7 @@ export default {
       load(wechatJs, () => {
         if (typeof WeixinJSBridge === 'undefined') {
           if (document.addEventListener) {
-            document.addEventListener('WeixinJSBridgeReady', this.jsApiCall(), false)
+            document.addEventListener('WeixinJSBridgeReady', this.jsApiCall())
           } else if (document.attachEvent) {
             document.attachEvent('WeixinJSBridgeReady', this.jsApiCall())
             document.attachEvent('onWeixinJSBridgeReady', this.jsApiCall())
