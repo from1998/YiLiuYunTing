@@ -185,8 +185,9 @@ export default {
     delHistory() {
       delCarNumberHistory(this.delId).then(res => {
         if (res.code === 200) {
-          this.msgSuccess(res.msg)
           this.delHistoryopen = false
+          this.getData()
+          this.msgSuccess(res.msg)
         }
       })
     },
