@@ -1,7 +1,8 @@
 <template>
   <!-- 该页面既是出场支付页面也是用户预付款查询成功页面 -->
   <div id="app-container" style="padding:30px 0 0 0">
-    <div class="payCard">
+<div v-if="!success">
+      <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">
           <span style="text-align:center;color:#00f" v-text="queryParams.carNumber" />
@@ -67,6 +68,10 @@
         <el-button type="warning" round style="width:100%" @click="handleRefresh">刷新</el-button>
       </el-col>
     </el-row>
+</div>
+<div v-if="success">
+    <el-button type="success" icon="el-icon-check" circle></el-button>您已成功支付，请按时离场。
+</div>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
   </div>
@@ -74,7 +79,7 @@
 <script>
 import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
-const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
+const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
 const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
@@ -86,6 +91,7 @@ export default {
       currentDate: '',
       loadDate: '',
       resDate: {},
+      success: true,
       queryParams: {
         carNumber: '',
         couponsRecordId: '',
@@ -203,6 +209,7 @@ export default {
               const parkId = this.queryParams.parkId
               // delete this.queryParams.parkId
               successedOrder(parkId, this.queryParams)
+              this.
               // 取消代码是6001
             } else if (code === '6001') {
               cancleOrder(this.queryParams)

@@ -87,7 +87,7 @@
 <script>
 import { getPayedData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
-const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
+const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
 const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 
