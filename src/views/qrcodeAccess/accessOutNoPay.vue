@@ -91,7 +91,7 @@ export default {
       currentDate: '',
       loadDate: '',
       resDate: {},
-      success: true,
+      success: false,
       queryParams: {
         carNumber: '',
         couponsRecordId: '',
@@ -209,7 +209,7 @@ export default {
               const parkId = this.queryParams.parkId
               // delete this.queryParams.parkId
               successedOrder(parkId, this.queryParams)
-              this.success = false
+              this.success = true
               // 取消代码是6001
             } else if (code === '6001') {
               cancleOrder(this.queryParams)
