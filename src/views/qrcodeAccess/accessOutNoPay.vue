@@ -169,7 +169,6 @@ export default {
         carNumber: carNumber,
         couponsRecordId: couponsRecordId
       }
-      this.msgSuccess(query)
       createOrder(query).then(recieve => {
         this.queryParams.orderSn = recieve.data.orderSn
         if (this.isWx) {
@@ -186,6 +185,7 @@ export default {
                 successedOrder(parkId, orderSn)
               } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
                 cancleOrder(resQuery)
+                this.$router.go(0)
               } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
                 failedOrder(resQuery)
                 this.msgError(res.err_code + res.err_desc + res.err_msg)
