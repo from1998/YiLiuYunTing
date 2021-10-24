@@ -3,6 +3,8 @@ import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
+axios.defaults.withCredentials = true
+
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   timeout: 600000 // 设置请求超时间
