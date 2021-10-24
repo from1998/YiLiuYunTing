@@ -3,7 +3,7 @@
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">
-          <span v-text="carNumber || resDate.carNumber" />
+          <span v-text="queryParams.carNumber" />
         </el-col>
       </el-row>
       <el-row :gutter="0" style="height:25px;font-size:14px;">
@@ -142,11 +142,13 @@ export default {
         load(wechatJs, () => {
           if (typeof WeixinJSBridge === 'undefined') {
             if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', () => {})
+              document.addEventListener('WeixinJSBridgeReady', () => { this.$router.go(0) })
             } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', () => {})
-              document.attachEvent('onWeixinJSBridgeReady', () => {})
+              document.attachEvent('WeixinJSBridgeReady', () => { this.$router.go(0) })
+              document.attachEvent('onWeixinJSBridgeReady', () => { this.$router.go(0) })
             }
+          } else {
+            this.$router.go(0)
           }
         })
       }
@@ -154,9 +156,11 @@ export default {
       if (this.isAli) {
         load(aLiJs, () => {
           if (window.AlipayJSBridge) {
-            () => {}
+            () => {
+              this.$router.go(0)
+            }
           } else {
-            document.addEventListener('AlipayJSBridgeReady', () => {})
+            document.addEventListener('AlipayJSBridgeReady', () => { this.$router.go(0) })
           }
         })
       }
