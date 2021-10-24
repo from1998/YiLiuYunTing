@@ -1,77 +1,77 @@
 <template>
   <!-- 该页面既是出场支付页面也是用户预付款查询成功页面 -->
   <div id="app-container" style="padding:30px 0 0 0">
-<div v-if="!success">
+    <div v-if="!success">
       <div class="payCard">
-      <el-row :gutter="0" style="height:30px;margin-top:3%;">
+        <el-row :gutter="0" style="height:30px;margin-top:3%;">
+          <el-col :span="20" :offset="2">
+            <span style="text-align:center;color:#00f" v-text="queryParams.carNumber" />
+          </el-col>
+        </el-row>
+        <el-row :gutter="0" style="height:25px;font-size:14px;">
+          <el-col :span="20" :offset="2">{{ resDate.park.name }}</el-col>
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px">
+          <el-col :span="6" :offset="2">入场时间</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.started }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">结束时间</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.ended }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">停车时长</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.durationText }}</el-col>
+          <el-col :span="2" :offset="0" />
+          <div id="lineDowm" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">总金额</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">￥{{ resDate.amount }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">优惠类型</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountTypeText }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">优惠金额</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountAmount }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">应交金额</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥{{ resDate.money }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+      </div>
+      <div>
+        <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
+          <el-col :span="22" :offset="2">温馨提示:
+          </el-col>
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
+          <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
+          </el-col>
+        </el-row>
+      </div>
+      <el-row v-show="resDate.amount!==0" :gutter="0" style="font-size:14px;margin-top:5%">
         <el-col :span="20" :offset="2">
-          <span style="text-align:center;color:#00f" v-text="queryParams.carNumber" />
+          <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
         </el-col>
       </el-row>
-      <el-row :gutter="0" style="height:25px;font-size:14px;">
-        <el-col :span="20" :offset="2">{{ resDate.park.name }}</el-col>
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px">
-        <el-col :span="6" :offset="2">入场时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.started }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">结束时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.ended }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">停车时长</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.durationText }}</el-col>
-        <el-col :span="2" :offset="0" />
-        <div id="lineDowm" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">总金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">￥{{ resDate.amount }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">优惠类型</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountTypeText }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">优惠金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.discountAmount }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">应交金额</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥{{ resDate.money }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-    </div>
-    <div>
-      <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
-        <el-col :span="22" :offset="2">温馨提示:
-        </el-col>
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
-        <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
+      <el-row :gutter="0" style="font-size:14px;margin-top:5%">
+        <el-col :span="20" :offset="2">
+          <el-button type="warning" round style="width:100%" @click="handleRefresh">刷新</el-button>
         </el-col>
       </el-row>
     </div>
-    <el-row v-show="resDate.amount!==0" :gutter="0" style="font-size:14px;margin-top:5%">
-      <el-col :span="20" :offset="2">
-        <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
-      </el-col>
-    </el-row>
-    <el-row :gutter="0" style="font-size:14px;margin-top:5%">
-      <el-col :span="20" :offset="2">
-        <el-button type="warning" round style="width:100%" @click="handleRefresh">刷新</el-button>
-      </el-col>
-    </el-row>
-</div>
-<div v-if="success">
-    <el-button type="success" icon="el-icon-check" circle></el-button>您已成功支付，请按时离场。
-</div>
+    <div v-if="success">
+      <el-button type="success" icon="el-icon-check" circle />您已成功支付，请按时离场。
+    </div>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
   </div>
@@ -209,7 +209,7 @@ export default {
               const parkId = this.queryParams.parkId
               // delete this.queryParams.parkId
               successedOrder(parkId, this.queryParams)
-              this.
+              this.success = false
               // 取消代码是6001
             } else if (code === '6001') {
               cancleOrder(this.queryParams)
