@@ -58,7 +58,7 @@ export const constantRoutes = [
         import ('@/views/qrcodeAccess/accessOutNoPay'),
     name: '/qrcodeAccess/accessOutNoPay',
     meta: {
-      title: '扫码出场（未支付）',
+      title: '扫码出场',
       icon: 'el-icon-d-arrow-right'
     }
   },
@@ -68,7 +68,7 @@ export const constantRoutes = [
         import ('@/views/qrcodeAccess/accessOutPayed'),
     name: '/qrcodeAccess/accessOutPayed',
     meta: {
-      title: '扫码出场（已支付）',
+      title: '扫码出场',
       icon: 'el-icon-d-arrow-right'
     }
   },

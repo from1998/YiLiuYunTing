@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 // --------------------------------------车场信息
+// 获取svg地图
+export function getSvg(url) {
+  return request({
+    url,
+    method: 'get'
+  })
+}
+
 // 查询车场信息
 export function getDepotById(data) {
   return request({
