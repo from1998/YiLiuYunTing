@@ -1,84 +1,89 @@
 <template>
   <div id="app-container" style="padding:30px 0 0 0">
-    <div class="payCard">
-      <el-row :gutter="0" style="height:30px;margin-top:3%;">
-        <el-col :span="20" :offset="2">
-          <span v-text="queryParams.carNumber" />
-        </el-col>
-      </el-row>
-      <el-row :gutter="0" style="height:25px;font-size:14px;">
-        <el-col :span="20" :offset="2">{{ resDate.park.name }}</el-col>
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px">
-        <el-col :span="6" :offset="2">入场时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.started }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">结束时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.ended }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">停车时长</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.durationText }}</el-col>
-        <el-col :span="2" :offset="0" />
-        <div id="lineDowm" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">已付费用</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right;color:green;font-size:1.2rem">￥{{ resDate.hasPay }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-        <el-col :span="6" :offset="2">支付时间</el-col>
-        <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.pay }}</el-col>
-        <el-col :span="2" :offset="0" />
-      </el-row>
-      <div v-if="isTimeOut">
-        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">超时时长</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.overDurationText }}</el-col>
+    <div v-if="!success">
+      <div class="payCard">
+        <el-row :gutter="0" style="height:30px;margin-top:3%;">
+          <el-col :span="20" :offset="2">
+            <span v-text="queryParams.carNumber" />
+          </el-col>
+        </el-row>
+        <el-row :gutter="0" style="height:25px;font-size:14px;">
+          <el-col :span="20" :offset="2">{{ resDate.park.name }}</el-col>
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px">
+          <el-col :span="6" :offset="2">入场时间</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.started }}</el-col>
           <el-col :span="2" :offset="0" />
         </el-row>
         <el-row :gutter="0" style="font-size:14px;margin-top:2%">
-          <el-col :span="6" :offset="2">超时费用</el-col>
-          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.amount }}</el-col>
+          <el-col :span="6" :offset="2">结束时间</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.ended }}</el-col>
           <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">停车时长</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.durationText }}</el-col>
+          <el-col :span="2" :offset="0" />
+          <div id="lineDowm" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">已付费用</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right;color:green;font-size:1.2rem">￥{{ resDate.hasPay }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+          <el-col :span="6" :offset="2">支付时间</el-col>
+          <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.pay }}</el-col>
+          <el-col :span="2" :offset="0" />
+        </el-row>
+        <div v-if="isTimeOut">
+          <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+            <el-col :span="6" :offset="2">超时时长</el-col>
+            <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.overDurationText }}</el-col>
+            <el-col :span="2" :offset="0" />
+          </el-row>
+          <el-row :gutter="0" style="font-size:14px;margin-top:2%">
+            <el-col :span="6" :offset="2">超时费用</el-col>
+            <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.amount }}</el-col>
+            <el-col :span="2" :offset="0" />
+          </el-row>
+        </div>
+      </div>
+      <div v-if="isTimeOut">
+        <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
+          <el-col :span="22" :offset="2">温馨提示:
+          </el-col>
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
+          <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
+          </el-col>
+        </el-row>
+      </div>
+      <div v-if="!isTimeOut">
+        <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
+          <el-col :span="22" :offset="2">温馨提示:
+          </el-col>
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
+          <el-col :span="22" :offset="2">请您在 <span style="color:#f00" v-text="resDate.remainTime" /> 分钟内离场，超时将收取费用。
+          </el-col>
+        </el-row>
+      </div>
+      <div v-if="isTimeOut">
+        <el-row :gutter="0" style="font-size:14px;margin-top:5%">
+          <el-col :span="20" :offset="2">
+            <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
+          </el-col>
+        </el-row>
+        <el-row :gutter="0" style="font-size:14px;margin-top:5%">
+          <el-col :span="20" :offset="2">
+            <el-button type="warning" round style="width:100%">刷新</el-button>
+          </el-col>
         </el-row>
       </div>
     </div>
-    <div v-if="isTimeOut">
-      <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
-        <el-col :span="22" :offset="2">温馨提示:
-        </el-col>
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
-        <el-col :span="22" :offset="2">请核对您的车牌号，确认无误后,请在2分钟内支付。
-        </el-col>
-      </el-row>
-    </div>
-    <div v-if="!isTimeOut">
-      <el-row :gutter="0" style="font-size:14px;margin-top:10%;color:#DBA44F">
-        <el-col :span="22" :offset="2">温馨提示:
-        </el-col>
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:2%;color:#DBA44F">
-        <el-col :span="22" :offset="2">请您在 <span style="color:#f00" v-text="resDate.remainTime" /> 分钟内离场，超时将收取费用。
-        </el-col>
-      </el-row>
-    </div>
-    <div v-if="isTimeOut">
-      <el-row :gutter="0" style="font-size:14px;margin-top:5%">
-        <el-col :span="20" :offset="2">
-          <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
-        </el-col>
-      </el-row>
-      <el-row :gutter="0" style="font-size:14px;margin-top:5%">
-        <el-col :span="20" :offset="2">
-          <el-button type="warning" round style="width:100%">刷新</el-button>
-        </el-col>
-      </el-row>
+    <div v-if="success">
+      <el-button type="success" icon="el-icon-check" circle />您已成功支付，请按时离场。
     </div>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
@@ -101,6 +106,7 @@ export default {
       currentDate: '',
       loadDate: '',
       resDate: {},
+      success: true,
       queryParams: {
         carNumber: '',
         couponsRecordId: '',
@@ -217,8 +223,8 @@ export default {
             // 成功代码是9000
             if (code === '9000') {
               const parkId = this.queryParams.parkId
-              // delete this.queryParams.parkId
               successedOrder(parkId, this.queryParams)
+              this.success = false
               // 取消代码是6001
             } else if (code === '6001') {
               cancleOrder(this.queryParams)
