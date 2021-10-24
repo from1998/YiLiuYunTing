@@ -44,7 +44,7 @@
           </el-row>
           <el-row :gutter="0" style="font-size:14px;margin-top:2%">
             <el-col :span="6" :offset="2">超时费用</el-col>
-            <el-col :span="14" :offset="0" style="text-align:right">{{ resDate.amount }}</el-col>
+            <el-col :span="14" :offset="0" style="text-align:right;color:red;font-size:1.2rem">￥{{ resDate.amount }}</el-col>
             <el-col :span="2" :offset="0" />
           </el-row>
         </div>
@@ -77,7 +77,7 @@
         </el-row>
         <el-row :gutter="0" style="font-size:14px;margin-top:5%">
           <el-col :span="20" :offset="2">
-            <el-button type="warning" round style="width:100%">刷新</el-button>
+            <el-button type="warning" round style="width:100%" @click="handleRefresh">刷新</el-button>
           </el-col>
         </el-row>
       </div>
