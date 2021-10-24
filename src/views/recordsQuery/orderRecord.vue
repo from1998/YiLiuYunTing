@@ -80,7 +80,7 @@
       <el-table-column label="订单号" align="center" prop="sn" width="300" />
       <el-table-column label="车牌号" align="center" prop="carNumber" />
       <el-table-column label="停车时长" align="center" prop="duration" />
-      <el-table-column label="支付类目" align="center" prop="paytype" :formatter="paytypeFormatter" />
+      <el-table-column label="支付类目" align="center" prop="skutype" :formatter="paytypeFormatter" />
       <el-table-column label="支付时间" align="center" prop="pay" width="180px" />
       <el-table-column label="订单金额" align="center" prop="totalamount" />
       <el-table-column label="优惠金额" align="center" prop="discountableamount" />
@@ -196,8 +196,8 @@ export default {
     },
     // 翻译支付类目
     paytypeFormatter(row) {
-      if (row.paytype) {
-        return this.formatterDict(this.options.orderSkuType, row.paytype.toString())
+      if (row.skutype) {
+        return this.formatterDict(this.options.orderSkuType, row.skutype.toString())
       }
     },
     // 翻译支付平台
