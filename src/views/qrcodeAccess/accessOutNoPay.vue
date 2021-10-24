@@ -169,6 +169,7 @@ export default {
         carNumber: carNumber,
         couponsRecordId: couponsRecordId
       }
+      this.msgSuccess(query)
       createOrder(query).then(recieve => {
         this.queryParams.orderSn = recieve.data.orderSn
         if (this.isWx) {
