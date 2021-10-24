@@ -163,22 +163,24 @@ export default {
     // 支付
     handlePay() {
       createOrder(this.queryParams).then(recieve => {
-        delete this.queryParams.carNumber
-        delete this.queryParams.couponsRecordId
         this.queryParams.orderSn = recieve.data.orderSn
         if (this.isWx) {
           window.WeixinJSBridge.invoke(
             'getBrandWCPayRequest',
             recieve.data.payParams,
             res => {
+              const { parkId, orderSn } = this.queryParams
+              const query = {
+                parkId: parkId,
+                orderSn: orderSn
+              }
               if (res.err_msg === 'get_brand_wcpay_request:ok') {
-                const parkId = this.queryParams.parkId
-                // delete this.queryParams.parkId
-                successedOrder(parkId, this.queryParams)
+                const { parkId, orderSn } = this.queryParams
+                successedOrder(parkId, orderSn)
               } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
-                cancleOrder(this.queryParams)
+                cancleOrder(query)
               } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
-                failedOrder(this.queryParams)
+                failedOrder(query)
                 this.msgError(res.err_code + res.err_desc + res.err_msg)
               }
             })
