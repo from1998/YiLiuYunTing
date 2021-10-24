@@ -4,8 +4,8 @@
     <div v-if="!success">
       <div class="payCard">
         <el-row :gutter="0" style="height:30px;margin-top:3%;">
-          <el-col :span="20" :offset="2">
-            <span style="text-align:center;color:#00f" v-text="queryParams.carNumber" />
+          <el-col :span="20" :offset="2" style="text-align:center;">
+            <span style="color:#00f" v-text="queryParams.carNumber" />
           </el-col>
         </el-row>
         <el-row :gutter="0" style="height:25px;font-size:14px;">
