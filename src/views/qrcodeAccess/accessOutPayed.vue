@@ -125,7 +125,6 @@ export default {
   mounted() {
     // 加载脚本
     this.init()
-    this.$router.go(0)
   },
   methods: {
     // 查询进场数据
@@ -186,6 +185,7 @@ export default {
     },
     // 支付
     handlePay() {
+      this.getData()
       const { parkId, carNumber, couponsRecordId } = this.queryParams
       const query = {
         parkId: parkId,
