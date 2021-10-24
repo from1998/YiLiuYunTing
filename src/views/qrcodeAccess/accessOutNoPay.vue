@@ -115,6 +115,7 @@ export default {
         this.isAli = res.data.baseData.isAli
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
+        this.queryParams.carNumber = res.data.carNumber
       })
       this.loading = false// 关闭遮罩
     },
