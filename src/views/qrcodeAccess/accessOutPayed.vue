@@ -119,6 +119,7 @@ export default {
   mounted() {
     // 加载脚本
     this.init()
+    this.$router.go(0)
   },
   methods: {
     // 查询进场数据
@@ -142,13 +143,11 @@ export default {
         load(wechatJs, () => {
           if (typeof WeixinJSBridge === 'undefined') {
             if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', () => { this.$router.go(0) })
+              document.addEventListener('WeixinJSBridgeReady', () => {})
             } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', () => { this.$router.go(0) })
-              document.attachEvent('onWeixinJSBridgeReady', () => { this.$router.go(0) })
+              document.attachEvent('WeixinJSBridgeReady', () => {})
+              document.attachEvent('onWeixinJSBridgeReady', () => {})
             }
-          } else {
-            this.$router.go(0)
           }
         })
       }
@@ -156,11 +155,9 @@ export default {
       if (this.isAli) {
         load(aLiJs, () => {
           if (window.AlipayJSBridge) {
-            () => {
-              this.$router.go(0)
-            }
+            () => {}
           } else {
-            document.addEventListener('AlipayJSBridgeReady', () => { this.$router.go(0) })
+            document.addEventListener('AlipayJSBridgeReady', () => {})
           }
         })
       }
