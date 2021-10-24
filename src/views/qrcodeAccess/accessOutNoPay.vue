@@ -4,7 +4,7 @@
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">
-          <span :v-text="resDate.carNumber" />
+          <span v-text="resDate.carNumber" />
         </el-col>
       </el-row>
       <el-row :gutter="0" style="height:25px;font-size:14px;">

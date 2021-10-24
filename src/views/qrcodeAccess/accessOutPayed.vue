@@ -3,7 +3,7 @@
     <div class="payCard">
       <el-row :gutter="0" style="height:30px;margin-top:3%;">
         <el-col :span="20" :offset="2">
-          <span :v-text="carNumber || resDate.carNumber" />
+          <span v-text="carNumber || resDate.carNumber" />
         </el-col>
       </el-row>
       <el-row :gutter="0" style="height:25px;font-size:14px;">
@@ -71,7 +71,7 @@
     <div v-if="isTimeOut">
       <el-row :gutter="0" style="font-size:14px;margin-top:5%">
         <el-col :span="20" :offset="2">
-          <el-button type="primary" round style="width:100%" @click="awakeWXPay">支付</el-button>
+          <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
         </el-col>
       </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:5%">
@@ -88,12 +88,14 @@
 import { getPayedData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.0.0.js'
-// const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
+const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
 const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 
 export default {
   data() {
     return {
+      isWx: '',
+      isAli: '',
       isTimeOut: '',
       loading: false,
       currentDate: '',
@@ -108,8 +110,6 @@ export default {
   },
   created() {
     // 取路由路径上的参数
-    // 取路由路径上的参数
-    // this.pay = this.$route.query && this.$route.query.isPay === 'true' // 路由传参
     this.queryParams.parkId = this.$route.query && this.$route.query.parkId// 路由传参
     this.queryParams.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
 
@@ -127,33 +127,40 @@ export default {
       getPayedData(this.queryParams).then(res => {
         this.resDate = res.data
         this.isTimeOut = res.data.isTimeOut
+        this.isWx = res.data.baseData.isWx
+        this.isAli = res.data.baseData.isAli
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
+        this.queryParams.carNumber = res.data.carNumber
       })
       this.loading = false// 关闭遮罩
     },
     // 脚本初始化加载
     init() {
-      load(wechatJs, () => {
-        if (typeof WeixinJSBridge === 'undefined') {
-          if (document.addEventListener) {
-            document.addEventListener('WeixinJSBridgeReady', () => {})
-          } else if (document.attachEvent) {
-            document.attachEvent('WeixinJSBridgeReady', () => {})
-            document.attachEvent('onWeixinJSBridgeReady', () => {})
+      // 加载微信支付脚本
+      if (this.isWx) {
+        load(wechatJs, () => {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', () => {})
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', () => {})
+              document.attachEvent('onWeixinJSBridgeReady', () => {})
+            }
           }
-        }
-      })
-      // load(aLiJs, () => {
-      //   if (typeof WeixinJSBridge === 'undefined') {
-      //     if (document.addEventListener) {
-      //       document.addEventListener('WeixinJSBridgeReady', () => {})
-      //     } else if (document.attachEvent) {
-      //       document.attachEvent('WeixinJSBridgeReady', () => {})
-      //       document.attachEvent('onWeixinJSBridgeReady', () => {})
-      //     }
-      //   }
-      // })
+        })
+      }
+      // 加载支付宝支付脚本
+      if (this.isAli) {
+        load(aLiJs, () => {
+          if (window.AlipayJSBridge) {
+            () => {}
+          } else {
+            document.addEventListener('AlipayJSBridgeReady', () => {})
+          }
+        })
+      }
+      // 加载安泊广告脚本
       load(adJs, () => {
         const container = document.getElementById('app-container')
         const st = document.querySelector('#anbo-ad-st')
@@ -170,40 +177,57 @@ export default {
         }
       })
     },
-    jsApiCall() {
-      createOrder(this.queryParams).then(recieve => {
-        delete this.queryParams.carNumber
-        delete this.queryParams.couponsRecordId
+    // 支付
+    handlePay() {
+      const { parkId, carNumber, couponsRecordId } = this.queryParams
+      const query = {
+        parkId: parkId,
+        carNumber: carNumber,
+        couponsRecordId: couponsRecordId
+      }
+      createOrder(query).then(recieve => {
         this.queryParams.orderSn = recieve.data.orderSn
-        window.WeixinJSBridge.invoke(
-          'getBrandWCPayRequest',
-          recieve.data.payParams,
-          res => {
-            if (res.err_msg === 'get_brand_wcpay_request:ok') {
+        if (this.isWx) {
+          window.WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            recieve.data.payParams,
+            res => {
+              const { orderSn } = this.queryParams
+              const resQuery = {
+                parkId: parkId,
+                orderSn: orderSn
+              }
+              if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                successedOrder(parkId, orderSn)
+              } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                cancleOrder(resQuery)
+                this.$router.go(0)
+              } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
+                failedOrder(resQuery)
+                this.msgError(res.err_code + res.err_desc + res.err_msg)
+              }
+            })
+        }
+        if (this.isAli) {
+          window.AlipayJSBridge.call('tradePay', {
+            tradeNO: recieve.data.payParams
+          }, res => {
+            const code = res.resultCode
+            // 成功代码是9000
+            if (code === '9000') {
               const parkId = this.queryParams.parkId
               // delete this.queryParams.parkId
-              successedOrder(parkId, this.queryParams).then(res => {
-                if (res.code === 200) {
-                  this.msgSuccess('订单成功')
-                }
-              })
-              //                vm.$router.push("/reservedBerth");
-            } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
-              cancleOrder(this.queryParams).then(res => {
-                if (res.code === 200) {
-                  this.msgSuccess('订单取消')
-                }
-              })
-            } else {
-              failedOrder(this.queryParams).then(res => {
-                if (res.code === 200) {
-                  this.msgSuccess('订单失败')
-                }
-              })
-              this.msgError(res.err_code + res.err_desc + res.err_msg)
+              successedOrder(parkId, this.queryParams)
+              // 取消代码是6001
+            } else if (code === '6001') {
+              cancleOrder(this.queryParams)
+              // 失败代码是4000
+            } else if (code === '4000') {
+              failedOrder(this.queryParams)
+              this.msgError(code + res.memo + res.result)
             }
-          }
-        )
+          })
+        }
       })
     },
     handleRefresh() {
