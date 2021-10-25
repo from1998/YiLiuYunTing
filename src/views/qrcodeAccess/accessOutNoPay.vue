@@ -190,7 +190,7 @@ export default {
                 orderSn: orderSn
               }
               if (res.err_msg === 'get_brand_wcpay_request:ok') {
-                successedOrder(parkId, orderSn)
+                successedOrder(resQuery)
               } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
                 cancleOrder(resQuery)
                 this.$router.go(0)

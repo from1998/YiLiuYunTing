@@ -46,10 +46,10 @@ export function failedOrder(query) {
 }
 
 // 订单成功
-export function successedOrder(parkId, query) {
+export function successedOrder(query) {
   return request({
-    url: '/third/pay_success_' + parkId,
-    method: 'get',
+    url: '/third/pay_success',
+    method: 'post',
     params: query
   })
 }
