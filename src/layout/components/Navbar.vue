@@ -9,10 +9,7 @@
         <div class="right-menu-item">
           <span>{{ Utils() }}</span>
         </div>
-        <div>
-          <iframe class="right-menu-item hover-effect" width="240px" height="60px" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com/?c=code&a=getcode&id=34&icon=1" />
-
-        </div>
+        <iframe class="right-menu-item hover-effect" width="190px" height="60px" allowtransparency="true" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com?c=code&id=18&icon=1" />
         <el-tooltip content="通知公告" effect="dark" placement="bottom">
           <div class="right-menu-item hover-effect">
             <svg-icon icon-class="notice" style="font-weight:700" @click="noticeOpen" />
