@@ -68,11 +68,17 @@
           </el-col>
         </el-row>
         <el-row :gutter="20" style="margin-top:15px;margin-bottom:25px">
-          <el-col :span="8" :offset="0">
+          <el-col :span="6" :offset="0">
             <span>停车时长: {{ detailOptions.length!==0 && (detailOptions.duration / 60).toFixed(2) }} 小时</span>
           </el-col>
-          <el-col :span="8" :offset="0">
-            <span>应交金额: {{ detailOptions.length!==0 && detailOptions.amount }}</span>
+          <el-col :span="6" :offset="0">
+            <span>应交金额: {{ detailOptions.length!==0 && detailOptions.money }}</span>
+          </el-col>
+          <el-col :span="6" :offset="0">
+            <span>优惠金额: {{ detailOptions.length!==0 && detailOptions.discountAmount }}</span>
+          </el-col>
+          <el-col :span="6" :offset="0">
+            <span>实付金额: {{ detailOptions.length!==0 && detailOptions.amount }}</span>
           </el-col>
         </el-row>
         <!-- 图片 -->

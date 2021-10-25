@@ -33,13 +33,13 @@
         </el-col>
       </el-row>
     </div>
-    <el-row :gutter="0" style="font-size:14px;margin-top:5%">
+    <!-- <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <el-button type="primary" round style="width:100%" @click="$router.go(-1)">
           <span>返回</span>
         </el-button>
       </el-col>
-    </el-row>
+    </el-row> -->
     <div id="anbo-ad-st" />
     <div class="advwrap" />
   </div>
