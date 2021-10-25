@@ -153,6 +153,20 @@ export const asyncRoutes = [
     }]
   },
   {
+    path: '/guide',
+    component: Layout,
+    redirect: '/guide/index',
+    name: '/guide',
+    hidden: true,
+    children: [{
+      path: 'index',
+      name: '/guide/index',
+      component: () =>
+                import ('@/views/guide/index'),
+      meta: { title: '操作指引' }
+    }]
+  },
+  {
     path: '/system',
     component: Layout,
     redirect: 'noRedirect',
@@ -160,7 +174,7 @@ export const asyncRoutes = [
     name: '/system',
     meta: {
       title: '系统管理',
-      icon: 'lock'
+      icon: 'el-icon-menu'
     },
     children: [{
       path: 'user',

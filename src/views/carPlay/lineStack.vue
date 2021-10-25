@@ -132,13 +132,13 @@ export default {
             xAxisData: orderData.xAxis,
             seriesData: [
               {
-                name: '官方',
-                data: orderData.gfMap,
+                name: '微信',
+                data: orderData.wxMap,
                 color: '#67C23A'
               },
               {
-                name: '微信',
-                data: orderData.wxMap,
+                name: '官方',
+                data: orderData.gfMap,
                 color: '#Fa3534'
               },
               {
