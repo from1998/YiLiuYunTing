@@ -4,7 +4,8 @@ import request from '@/utils/request'
 export function getSvg(url) {
   return request({
     url,
-    method: 'get'
+    method: 'get',
+    responseType: 'image/svg+xml'
   })
 }
 

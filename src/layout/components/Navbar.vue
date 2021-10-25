@@ -9,6 +9,10 @@
         <div class="right-menu-item">
           <span>{{ Utils() }}</span>
         </div>
+        <div>
+          <iframe class="right-menu-item hover-effect" width="240px" height="60px" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com/?c=code&a=getcode&id=34&icon=1" />
+
+        </div>
         <el-tooltip content="通知公告" effect="dark" placement="bottom">
           <div class="right-menu-item hover-effect">
             <svg-icon icon-class="notice" style="font-weight:700" @click="noticeOpen" />
@@ -30,10 +34,7 @@
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <el-tooltip content="错误日志" effect="dark" placement="bottom">
-          <error-log class="errLog-container right-menu-item hover-effect" />
-        </el-tooltip>
-
+        <error-log class="errLog-container right-menu-item hover-effect" />
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -182,7 +183,7 @@ export default {
 
   .errLog-container {
     display: inline-block;
-    vertical-align: top;
+    vertical-align: middle;
   }
 
   .right-menu {

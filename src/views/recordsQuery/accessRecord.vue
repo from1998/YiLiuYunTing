@@ -379,11 +379,15 @@ export default {
     },
     // 翻译车位类型
     registerTypeFormatter(row) {
-      return this.selectDictLabel(this.laneOptions, row.recordcartype.toString())
+      if (row.recordcartype) {
+        return this.selectDictLabel(this.laneOptions, row.recordcartype.toString())
+      }
     },
     // 翻译记录类型
     recordTypeFormatter(row) {
-      return this.selectDictLabel(this.recordOptions, row.status.toString())
+      if (row.status) {
+        return this.selectDictLabel(this.recordOptions, row.status.toString())
+      }
     },
     // 格式化是否在租
     carStatusFormate() {
