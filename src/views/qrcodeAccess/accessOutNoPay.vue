@@ -184,6 +184,7 @@ export default {
             recieve.data.payParams,
             res => {
               const { orderSn } = this.queryParams
+              this.msgSuccess(orderSn)
               const resQuery = {
                 parkId: parkId,
                 orderSn: orderSn
