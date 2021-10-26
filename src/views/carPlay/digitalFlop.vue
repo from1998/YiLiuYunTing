@@ -6,14 +6,16 @@
       ref="digitalFlop"
       class="digital-flop-item"
     >
-      <div class="digital-flop-title">{{ item.title }}</div>
-      <div class="digital-flop">
-        <dv-digital-flop
-          :config="item.number"
-          style="width:100px;height:50px;"
-        />
-        <div class="unit">{{ item.unit }}</div>
-      </div>
+      <dv-border-box-10>
+        <div class="digital-flop-title">{{ item.title }}</div>
+        <div class="digital-flop">
+          <dv-digital-flop
+            :config="item.number"
+            style="width:100px;height:50px;"
+          />
+          <div class="unit">{{ item.unit }}</div>
+        </div>
+      </dv-border-box-10>
     </div>
 
   </div>
@@ -164,9 +166,6 @@ export default {
   width: 100%;
   flex-shrink: 0;
   padding: 0 0 0 10px;
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: center;
 
   .digital-flop-item {
     flex: 1;
@@ -176,11 +175,6 @@ export default {
     justify-content: center;
     align-items: center;
   background-color: rgba(6, 30, 93, 0.5);
-    // border-left: 3px solid rgb(6, 30, 93);
-    // border-right: 3px solid rgb(6, 30, 93);
-    // &:nth-child(-n+2) {
-    // float: left;
-    // }
     &:first-child {
     flex: 2.5;
     }
