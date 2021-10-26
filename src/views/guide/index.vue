@@ -8,10 +8,10 @@
         </el-col>
       </el-row>
     </el-header>
-    <aside>
+    <aside style="width:60%;margin:2% auto 3%">
       <el-row :gutter="0">
         <el-col :span="22" :offset="2">
-          指引对于首次使用该后台管理系统的人是非常有帮助的。它将一步步引领您了解并掌握该系统的相关功能与设置。
+          <span style="color:#67C23A">指引对于首次使用该后台管理系统的人是非常有帮助的。</span> 它将一步步引领您了解并掌握该系统的相关功能与设置。
         </el-col>
       </el-row>
       <el-row :gutter="0">
@@ -22,12 +22,11 @@
     </aside>
     <el-row :gutter="0">
       <el-col :span="12" :offset="6" style="text-align:center">
-        <el-button icon="el-icon-question" type="primary" @click.prevent.stop="guide">
+        <el-button icon="el-icon-magic-stick" type="success" @click.prevent.stop="guide">
           开始操作指引
         </el-button>
       </el-col>
     </el-row>
-
   </div>
 </template>
 
@@ -44,7 +43,9 @@ export default {
     }
   },
   mounted() {
-    this.driver = new Driver()
+    this.driver = new Driver({
+      allowClose: false
+    })
   },
   methods: {
     guide() {

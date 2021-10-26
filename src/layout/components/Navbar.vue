@@ -40,7 +40,7 @@
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>你好,{{ username }}</el-dropdown-item>
+          <el-dropdown-item>您好,{{ username }}</el-dropdown-item>
           <router-link to="/guide">
             <el-dropdown-item divided> 操作指引</el-dropdown-item>
           </router-link>

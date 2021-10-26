@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <el-header class="container" height="56px" style="padding:25px 0 45px;font-weight:700">
-      更改密码
+      修改密码
     </el-header>
     <el-form ref="form" :model="form" label-width="80px" style="width:500px;margin:0 auto" :rules="rules">
       <el-form-item label="当前密码" prop="password">

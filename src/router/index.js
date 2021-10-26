@@ -41,70 +41,9 @@ export const constantRoutes = [
     component: () =>
             import ('@/views/error-page/401'),
     hidden: true
-  },
-  {
-    path: '/qrcodeAccess/accessIn',
-    component: () =>
-        import ('@/views/qrcodeAccess/accessIn'),
-    name: '/qrcodeAccess/accessIn',
-    meta: {
-      title: '扫码进场',
-      icon: 'el-icon-d-arrow-left'
-    }
-  },
-  {
-    path: '/qrcodeAccess/accessOutNoPay',
-    component: () =>
-        import ('@/views/qrcodeAccess/accessOutNoPay'),
-    name: '/qrcodeAccess/accessOutNoPay',
-    meta: {
-      title: '扫码出场',
-      icon: 'el-icon-d-arrow-right'
-    }
-  },
-  {
-    path: '/qrcodeAccess/accessOutPayed',
-    component: () =>
-        import ('@/views/qrcodeAccess/accessOutPayed'),
-    name: '/qrcodeAccess/accessOutPayed',
-    meta: {
-      title: '扫码出场',
-      icon: 'el-icon-d-arrow-right'
-    }
-  },
-  {
-    path: '/qrcodeAccess/imprest',
-    component: () =>
-        import ('@/views/qrcodeAccess/imprest'),
-    name: '/qrcodeAccess/imprest',
-    meta: {
-      title: '预付款',
-      icon: 'money'
-    }
-  },
-  {
-    path: '/qrcodeAccess/queryFails',
-    component: () =>
-        import ('@/views/qrcodeAccess/queryFails'),
-    name: '/qrcodeAccess/queryFails',
-    meta: {
-      title: '查询失败',
-      icon: 'el-icon-close'
-    }
   }
 ]
 export const asyncRoutes = [
-  {
-    path: '/companyLink',
-    component: Layout,
-    name: '/companyLink',
-    children: [
-      {
-        path: 'http://www.ahdvl.com/',
-        meta: { title: '公司官网', icon: 'link' }
-      }
-    ]
-  },
   {
     path: '/',
     component: Layout,
@@ -157,13 +96,13 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/guide/index',
     name: '/guide',
-    hidden: true,
+    // hidden: true,
     children: [{
       path: 'index',
       name: '/guide/index',
       component: () =>
                 import ('@/views/guide/index'),
-      meta: { title: '操作指引' }
+      meta: { title: '操作指引', noCache: true }
     }]
   },
   {
@@ -457,6 +396,70 @@ export const asyncRoutes = [
       }
     }
     ]
+  },
+  {
+    path: '/qrcodeAccess',
+    redirect: 'noRedirect',
+    name: '/qrcodeAccess',
+    meta: { title: '扫码相关', icon: 'qrcode' },
+    children: [
+      {
+        path: '/qrcodeAccess/accessIn',
+        component: () =>
+            import ('@/views/qrcodeAccess/accessIn'),
+        name: '/qrcodeAccess/accessIn',
+        meta: {
+          title: '扫码进场',
+          icon: 'el-icon-d-arrow-left'
+        }
+      },
+      {
+        path: '/qrcodeAccess/accessOutNoPay',
+        component: () =>
+            import ('@/views/qrcodeAccess/accessOutNoPay'),
+        name: '/qrcodeAccess/accessOutNoPay',
+        meta: {
+          title: '扫码出场',
+          icon: 'el-icon-d-arrow-right'
+        }
+      },
+      {
+        path: '/qrcodeAccess/accessOutPayed',
+        component: () =>
+            import ('@/views/qrcodeAccess/accessOutPayed'),
+        name: '/qrcodeAccess/accessOutPayed',
+        meta: {
+          title: '扫码出场',
+          icon: 'el-icon-d-arrow-right'
+        }
+      },
+      {
+        path: '/qrcodeAccess/imprest',
+        component: () =>
+            import ('@/views/qrcodeAccess/imprest'),
+        name: '/qrcodeAccess/imprest',
+        meta: {
+          title: '预付款',
+          icon: 'money'
+        }
+      },
+      {
+        path: '/qrcodeAccess/queryFails',
+        component: () =>
+            import ('@/views/qrcodeAccess/queryFails'),
+        name: '/qrcodeAccess/queryFails',
+        meta: {
+          title: '查询失败',
+          icon: 'el-icon-close'
+        }
+      }
+    ]
+  },
+  {
+    path: 'http://www.ahdvl.com/',
+    component: Layout,
+    name: '/companyLink',
+    meta: { title: '公司官网', icon: 'link' }
   }
 ]
 export const lastRoute = [{

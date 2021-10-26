@@ -70,7 +70,21 @@
       </el-row>
     </div>
     <div v-if="success">
-      <el-button type="success" icon="el-icon-check" circle />您已成功支付，请按时离场。
+      <el-row :gutter="0">
+        <el-col :span="12" :offset="6" style="text-align:center;margin-top:7%;">
+          <svg-icon icon-class="zhifubao" style="font-size:16vw;" />
+        </el-col>
+      </el-row>
+      <el-row :gutter="0">
+        <el-col :span="12" :offset="6" style="text-align:center;margin-top:6%;margin-bottom:5%;">
+          <span style="color:#00A8FF;font-size:1.5em;">支付成功</span>
+        </el-col>
+      </el-row>
+      <el-row :gutter="0">
+        <el-col :span="12" :offset="6" style="text-align:center">
+          <span style="font-size:1.5em">￥ {{ resDate.money }} 元</span>
+        </el-col>
+      </el-row>
     </div>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
