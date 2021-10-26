@@ -8,7 +8,7 @@ import getPageTitle from '@/utils/get-page-title'
 
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/auth-redirect', '/qrcodeAccess/accessIn', '/qrcodeAccess/accessOutNoPay', '/qrcodeAccess/accessOutPayed', '/qrcodeAccess/queryFails', '/qrcodeAccess/imprest'] // no redirect whitelist
+const whiteList = ['/login', '/auth-redirect', '/qrcodeAccess', '/qrcodeAccess/accessIn', '/qrcodeAccess/accessOutNoPay', '/qrcodeAccess/accessOutPayed', '/qrcodeAccess/queryFails', '/qrcodeAccess/imprest'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   // start progress bar
