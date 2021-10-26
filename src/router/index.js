@@ -41,6 +41,65 @@ export const constantRoutes = [
     component: () =>
             import ('@/views/error-page/401'),
     hidden: true
+  },
+  {
+    path: '/qrcodeAccess',
+    redirect: 'noRedirect',
+    component: Layout,
+    name: '/qrcodeAccess',
+    meta: { title: '扫码相关', icon: 'qrcode' },
+    children: [
+      {
+        path: 'accessIn',
+        component: () =>
+            import ('@/views/qrcodeAccess/accessIn'),
+        name: '/qrcodeAccess/accessIn',
+        meta: {
+          title: '扫码进场',
+          icon: 'el-icon-d-arrow-left'
+        }
+      },
+      {
+        path: 'accessOutNoPay',
+        component: () =>
+            import ('@/views/qrcodeAccess/accessOutNoPay'),
+        name: '/qrcodeAccess/accessOutNoPay',
+        meta: {
+          title: '扫码出场',
+          icon: 'el-icon-d-arrow-right'
+        }
+      },
+      {
+        path: 'accessOutPayed',
+        component: () =>
+            import ('@/views/qrcodeAccess/accessOutPayed'),
+        name: '/qrcodeAccess/accessOutPayed',
+        meta: {
+          title: '扫码出场',
+          icon: 'el-icon-d-arrow-right'
+        }
+      },
+      {
+        path: 'imprest',
+        component: () =>
+            import ('@/views/qrcodeAccess/imprest'),
+        name: '/qrcodeAccess/imprest',
+        meta: {
+          title: '预付款',
+          icon: 'money'
+        }
+      },
+      {
+        path: 'queryFails',
+        component: () =>
+            import ('@/views/qrcodeAccess/queryFails'),
+        name: '/qrcodeAccess/queryFails',
+        meta: {
+          title: '查询失败',
+          icon: 'el-icon-close'
+        }
+      }
+    ]
   }
 ]
 export const asyncRoutes = [
@@ -394,65 +453,6 @@ export const asyncRoutes = [
         icon: 'equipment'
       }
     }
-    ]
-  },
-  {
-    path: '/qrcodeAccess',
-    redirect: 'noRedirect',
-    component: Layout,
-    name: '/qrcodeAccess',
-    meta: { title: '扫码相关', icon: 'qrcode' },
-    children: [
-      {
-        path: '/qrcodeAccess/accessIn',
-        component: () =>
-            import ('@/views/qrcodeAccess/accessIn'),
-        name: '/qrcodeAccess/accessIn',
-        meta: {
-          title: '扫码进场',
-          icon: 'el-icon-d-arrow-left'
-        }
-      },
-      {
-        path: '/qrcodeAccess/accessOutNoPay',
-        component: () =>
-            import ('@/views/qrcodeAccess/accessOutNoPay'),
-        name: '/qrcodeAccess/accessOutNoPay',
-        meta: {
-          title: '扫码出场',
-          icon: 'el-icon-d-arrow-right'
-        }
-      },
-      {
-        path: '/qrcodeAccess/accessOutPayed',
-        component: () =>
-            import ('@/views/qrcodeAccess/accessOutPayed'),
-        name: '/qrcodeAccess/accessOutPayed',
-        meta: {
-          title: '扫码出场',
-          icon: 'el-icon-d-arrow-right'
-        }
-      },
-      {
-        path: '/qrcodeAccess/imprest',
-        component: () =>
-            import ('@/views/qrcodeAccess/imprest'),
-        name: '/qrcodeAccess/imprest',
-        meta: {
-          title: '预付款',
-          icon: 'money'
-        }
-      },
-      {
-        path: '/qrcodeAccess/queryFails',
-        component: () =>
-            import ('@/views/qrcodeAccess/queryFails'),
-        name: '/qrcodeAccess/queryFails',
-        meta: {
-          title: '查询失败',
-          icon: 'el-icon-close'
-        }
-      }
     ]
   },
   {
