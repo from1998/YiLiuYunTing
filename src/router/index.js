@@ -72,8 +72,7 @@ export const asyncRoutes = [
     children: [{
       path: 'index',
       name: '/carManger/index',
-      component: () =>
-                import ('@/views/carManger/index'),
+      component: () => import ('@/views/carManger/index'),
       meta: { title: '固定车', icon: 'car' }
     }]
   },
@@ -400,6 +399,7 @@ export const asyncRoutes = [
   {
     path: '/qrcodeAccess',
     redirect: 'noRedirect',
+    component: Layout,
     name: '/qrcodeAccess',
     meta: { title: '扫码相关', icon: 'qrcode' },
     children: [
