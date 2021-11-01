@@ -85,24 +85,69 @@
         width="55"
         align="center"
       />
-      <el-table-column label="优惠券名称" align="center" prop="name" />
-      <el-table-column label="优惠券类型" align="center" prop="categoryString" />
-      <el-table-column label="所属商户" align="center" prop="merchantIdString" />
-      <el-table-column label="总数" align="center" prop="total" />
-      <el-table-column label="剩余" align="center" prop="residue" />
-      <el-table-column label="优惠力度" align="center" prop="discount" />
-      <el-table-column label="付款方式" align="center" prop="payTypeString" />
-      <!-- <el-table-column label="支付方式" align="center">
+      <el-table-column
+        align="center"
+        label="优惠券名称"
+      >
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.payType===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" />余额</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>优惠券名称: {{ scope.row.name }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.category===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 代金券</el-tag>
+          <el-tag v-show="scope.row.category===2" type="danger" size="mini" effect="dark"><i class="el-icon-time" /> 时间券</el-tag>
+          <el-tag v-show="scope.row.category===3" type="primary" size="mini" effect="dark"><i class="el-icon-money" /> 折扣券</el-tag>
+          <el-tag v-show="scope.row.category===4" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 全免券</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="所属商户"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>所属商户: {{ scope.row.merchantIdString }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.merchantIdString }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="总数" align="center">
+        <template slot-scope="scope">
+          <el-tag type="info" size="mini" effect="dark">{{ scope.row.total }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="剩余" align="center">
+        <template slot-scope="scope">
+          <el-tag type="danger" size="mini" effect="dark">{{ scope.row.residue }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="优惠力度" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.category===1" type="success" size="mini" effect="dark">减免￥{{ scope.row.discount }}元</el-tag>
+          <el-tag v-show="scope.row.category===2" type="success" size="mini" effect="dark"> <i class="el-icon-time" /> {{ scope.row.discount }}分钟内免费</el-tag>
+          <el-tag v-show="scope.row.category===3" type="success" size="mini" effect="dark">{{ scope.row.discount }}折</el-tag>
+          <el-tag v-show="scope.row.category===4" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 费用全免</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="支付方式" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.payType===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 余额</el-tag>
           <el-tag v-show="scope.row.payType===2" type="primary" size="mini" effect="dark">
-            <svg-icon icon-class="zhifubaozhifu" />支付宝
+            <svg-icon icon-class="zhifubaozhifu" /> 支付宝
           </el-tag>
           <el-tag v-show="scope.row.payType===3" type="success" size="mini" effect="dark">
-            <svg-icon icon-class="weixin" />微信
+            <svg-icon icon-class="weixin" /> 微信
           </el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button
@@ -314,7 +359,7 @@
     </el-dialog>
     <!-- 二维码弹出层 -->
     <el-dialog
-      title="优惠券二维码"
+      :title="qrTitle"
       :visible.sync="qrcodeDialogVisible"
       width="300px"
       center
@@ -378,6 +423,7 @@ export default {
       roleTableList: [],
       // 弹出层标题
       title: '',
+      qrTitle: '',
       // 是否显示弹出层
       open: false,
       // 状态数据字典
@@ -462,12 +508,11 @@ export default {
     },
     async handlePreview(row) {
       this.qrcodeDialogVisible = true
+      this.qrTitle = row.name
       await getQrcodeDoMain().then(async res => {
         this.creatCodeUrl = res.data + prod_url + '/third/coupons_code_' + row.parkSn + '_' + row.sn
       })
       this.createQrcode(this.creatCodeUrl)
-      this.msgSuccess(this.creatCodeUrl)
-      console.log(row.parkSn)
     },
     // 二维码下载
     handleDownload() {
@@ -639,7 +684,7 @@ export default {
     handleUpdate(row) {
       this.parkId = row.parkId
       this.getShopName(this.parkId)
-      this.title = '修改商家优惠券'
+      this.title = '修改' + row.name
       // const roleId = row.roleId || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true

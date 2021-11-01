@@ -80,12 +80,14 @@
       <el-table-column label="订单号" align="center" prop="sn" width="300" />
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag type="primary" size="mini" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="停车时长" width="200">
         <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.duration }}</el-tag>
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.durationFormater }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="支付类目" align="center" prop="skutype" :formatter="paytypeFormatter" />
@@ -261,6 +263,28 @@ export default {
       this.loading = true // 打开遮罩
       getOrderList(this.queryParams).then(res => {
         this.orderTableList = res.data.list
+        this.orderTableList.map(val => {
+          // this.orderTableList.push({
+          //   number: val.number,
+          //   id: val.id
+          // })
+          if (val.carNumber.charAt(0) === '临') {
+            val.carNumberFlag = '临'
+          } else if (val.carNumber.length === 8) {
+            val.carNumberFlag = '新'
+          }
+          if (val.duration > 60) {
+            const days = (val.duration / 1440).toFixed(0)
+            const hours = ((val.duration % 1440) / 60).toFixed(0)
+            const minutes = (val.duration % 1440) % 60
+            val.durationFormater = hours + '小时' + minutes + '分钟'
+            if (val.duration > 1440) {
+              val.durationFormater = days + '天' + val.durationFormater
+            }
+          } else {
+            val.durationFormater = val.duration + '分钟'
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

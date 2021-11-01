@@ -137,16 +137,26 @@
         align="center"
       />
       <el-table-column
+        align="center"
         label="名称"
-        align="center"
-        prop="name"
-      />
-      <el-table-column
-        label="类型"
-        align="center"
-        prop="category"
-        :formatter="carTypeFormatter"
-      />
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>名称: {{ scope.row.name }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="类型" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.category===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 代金券</el-tag>
+          <el-tag v-show="scope.row.category===2" type="danger" size="mini" effect="dark"><i class="el-icon-time" /> 时间券</el-tag>
+          <el-tag v-show="scope.row.category===3" type="primary" size="mini" effect="dark"><i class="el-icon-money" /> 折扣券</el-tag>
+          <el-tag v-show="scope.row.category===4" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 全免券</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column
         label="是否开放"
         align="center"
@@ -390,10 +400,6 @@ export default {
       }).catch(err => {
         console.log(err)
       })
-    },
-    // 翻译类型
-    carTypeFormatter(row) {
-      return this.selectDictLabel(this.stateOptions, row.category.toString())
     },
     // 翻译状态
     statusFormatter(row) {
