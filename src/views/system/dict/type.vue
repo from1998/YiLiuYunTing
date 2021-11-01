@@ -69,18 +69,24 @@
       <el-table-column label="字典名称" prop="dictName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" prop="dictType" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/dict/data/' + scope.row.dictId" class="link-type">
-            <span>{{ scope.row.dictType }}</span>
-          </router-link>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制字典类型。</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.dictType" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-notebook-2" /> {{ scope.row.dictType }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
       <el-table-column label="备注" prop="remark" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="创建时间" prop="createTime" align="center" width="180" />
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="350">
         <template slot-scope="scope">
           <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-thumb" size="mini" @click="handleGo('/dict/data/' + scope.row.dictId)">
+            <span>查看详情</span>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -140,7 +146,12 @@
 <script>
 // 引入api
 import { listForPage, addDictType, updateDictType, getDictTypeById, deleteDictTypeByIds } from '@/api/system/dict/type'
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -194,6 +205,14 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    handleGo(url) {
+      this.$router.push(url)
+    },
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！字典类型已复制到剪贴板。')
+    },
     // 查询表格数据
     getDictTypeList() {
       this.loading = true // 打开遮罩

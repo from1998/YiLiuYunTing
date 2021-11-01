@@ -70,7 +70,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="角色ID" align="center" prop="roleId" />
       <el-table-column label="角色名称" align="center" prop="roleName" />
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.status==='1'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
+          <el-tag v-show="scope.row.status==='2'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="350">
         <template slot-scope="scope">
@@ -260,10 +265,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getRoleList()
-    },
-    // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 打开添加的弹出层
     handleAdd() {

@@ -87,45 +87,69 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="操作模块">
-              <span>{{ props.row.title }}</span>
+            <el-form-item label="日志ID:">
+              <span>{{ props.row.operId }}</span>
             </el-form-item>
-            <el-form-item label="登陆信息">
+            <el-form-item label="登陆信息:">
               <span>{{ props.row.operName }} // {{ props.row.operIp }} // {{ props.row.operLocation }}</span>
             </el-form-item>
-            <el-form-item label="请求地址">
-              <span>{{ props.row.operUrl }}</span>
+            <el-form-item label="操作模块:">
+              <span>{{ props.row.title }}</span>
             </el-form-item>
-            <el-form-item label="操作方法">
+            <el-form-item label="操作方法:">
               <span>{{ props.row.requestMethod }}</span>
             </el-form-item>
-            <el-form-item label="请求参数">
+            <el-form-item label="请求地址:">
+              <span>{{ props.row.operUrl }}</span>
+            </el-form-item>
+            <el-form-item label="请求参数:">
               <span>{{ props.row.operParam }}</span>
             </el-form-item>
-            <el-form-item label="返回参数">
+            <el-form-item label="响应信息:">
               <span>{{ props.row.jsonResult }}</span>
             </el-form-item>
-            <el-form-item label="操作状态">
+            <el-form-item label="状态:">
               <span>{{ props.row.status==0?'成功':'失败' }}</span>
             </el-form-item>
-            <el-form-item label="操作时间">
+            <el-form-item label="操作时间:">
               <span>{{ props.row.operTime }}</span>
             </el-form-item>
-            <el-form-item label="异常信息">
+            <el-form-item label="异常信息:">
               <span>{{ props.row.errorMsg }}</span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column label="日志ID" align="center" prop="operId" />
-      <el-table-column label="系统模块" align="center" prop="title" />
+      <el-table-column
+        align="center"
+        label="系统模块"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>系统模块: {{ scope.row.title }}</p>
+            <div v-show="scope.row.title" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.title }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="操作类型" align="center" prop="businessType" :formatter="businessTypeFormatter" />
       <el-table-column label="请求方式" width="180" align="center" prop="requestMethod" />
       <el-table-column label="操作人员" align="center" prop="operName" />
       <el-table-column label="主机" align="center" prop="operIp" />
       <el-table-column label="操作地点" align="center" prop="operLocation" />
-      <el-table-column label="操作状态" prop="status" align="center" :formatter="statusFormatter" />
-      <el-table-column label="操作时间" align="center" prop="operTime" width="200" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.status==='0'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 成功</el-tag>
+          <el-tag v-show="scope.row.status==='1'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 失败</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作时间" align="center" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.operTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="100">
         <template slot-scope="scope">
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
@@ -246,10 +270,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getOperLogList()
-    },
-    // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 翻译操作类型
     businessTypeFormatter(row) {

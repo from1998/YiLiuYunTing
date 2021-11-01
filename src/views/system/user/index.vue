@@ -83,8 +83,20 @@
       </el-table-column>
       <el-table-column label="真实姓名" align="center" prop="realName" />
       <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
-      <el-table-column label="状态" prop="state" align="center" :formatter="stateFormatter" />
-      <el-table-column label="角色" prop="role" align="center" :formatter="roleFormatter" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.state===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
+          <el-tag v-show="scope.row.state===2" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="角色" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.role===1" type="success" size="mini" effect="dark"><svg-icon icon-class="admin" /> 超管</el-tag>
+          <el-tag v-show="scope.row.role===3" type="warning" size="mini" effect="dark"><svg-icon icon-class="agent" /> 代理商</el-tag>
+          <el-tag v-show="scope.row.role===4" type="primary" size="mini" effect="dark"><svg-icon icon-class="park" /> 车场</el-tag>
+          <el-tag v-show="scope.row.role===6" type="info" size="mini" effect="dark"><svg-icon icon-class="police" /> 保安</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
@@ -329,7 +341,7 @@ export default {
   },
   // 方法
   methods: {
-    // 复制SN值成功的回调函数
+    // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess('复制成功！登录名称已复制到剪贴板。')
     },
@@ -412,16 +424,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getUserList()
-    },
-    // 翻译状态
-    stateFormatter(row) {
-      if (row.state !== null) {
-        return this.selectDictLabel(this.stateOptions, row.state.toString())
-      }
-    },
-    // 翻译角色
-    roleFormatter(row) {
-      return this.selectRoleLabel(this.roleOptions, row.role)
     },
     // 打开添加的弹出层
     handleAdd() {

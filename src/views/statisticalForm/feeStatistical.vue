@@ -82,7 +82,7 @@
       </el-table-column>
       <el-table-column align="center" label="官方">
         <template slot-scope="scope">
-          <el-tag type="warning" size="medium">￥{{ scope.row.gf }}</el-tag>
+          <el-tag type="danger" size="medium">￥{{ scope.row.gf }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
