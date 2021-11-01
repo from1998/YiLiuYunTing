@@ -126,7 +126,11 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="车牌号" align="center" prop="carnumber" width="120" />
+      <el-table-column label="车牌号" align="center" width="120">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carnumber }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="进场时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.entered }}</el-tag>

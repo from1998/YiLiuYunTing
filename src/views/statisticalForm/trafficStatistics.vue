@@ -64,10 +64,34 @@
     </el-header>
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="trafficTableList" stripe>
-      <el-table-column label="车牌号" align="center" prop="carnumber" />
-      <el-table-column label="进场时间" align="center" prop="entered" />
-      <el-table-column label="出场时间" align="center" prop="leaved" />
-      <el-table-column label="车场名称" align="center" prop="parkName" />
+      <el-table-column label="车牌号" align="center">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carnumber }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="进场时间" align="center">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.entered }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="出场时间" align="center">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.leaved }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="车场名称"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>车场名称: {{ scope.row.parkName }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 分页控件 -->
