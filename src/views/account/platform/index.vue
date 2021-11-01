@@ -74,7 +74,11 @@
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="手机号码" align="center" prop="phoneCode" />
       <el-table-column label="权限设置" prop="power" align="center" :formatter="statusFormatter" />
-      <el-table-column label="修改时间" align="center" prop="createTime" />
+      <el-table-column align="center" label="修改时间" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">

@@ -72,9 +72,19 @@
       <el-table-column label="所属商户" align="center" prop="merchantIdString" />
       <el-table-column label="所属优惠券" align="center" prop="couponsIdString" />
       <el-table-column label="优惠类型" align="center" prop="category" :formatter="carTypeFormatter" />
-      <el-table-column label="是否使用" align="center" prop="isUsed" :formatter="statusFormatter" />
+      <el-table-column label="状态" align="center" prop="isUsed" :formatter="statusFormatter" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.isUsed===1" type="danger" size="mini" effect="dark"><i class="el-icon-close" />未使用</el-tag>
+          <el-tag v-show="scope.row.isUsed===2" type="success" size="mini" effect="dark"><i class="el-icon-check" />已使用</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="使用车牌" align="center" prop="carNumber" />
-      <el-table-column label="使用时间" align="center" prop="used" />
+      <el-table-column align="center" label="使用时间" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.used }}</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
 
     <!-- 分页控件开始 -->
@@ -251,10 +261,6 @@ export default {
         this.loading = false// 关闭遮罩
       })
     },
-    // 翻译状态 是否立即生效
-    statusFormatter(row) {
-      return this.selectDictLabel(this.YesOrNo, row.isUsed.toString())
-    },
     // 翻译类型
     carTypeFormatter(row) {
       if (row.category !== null) {
@@ -295,10 +301,6 @@ export default {
       // 重新查询
       this.getRoleList()
     },
-    // 翻译状态
-    // statusFormatter(row) {
-    //   return this.selectDictLabel(this.statusOptions, row.status)
-    // },
     // 打开添加的弹出层
     handleAdd() {
       this.open = true

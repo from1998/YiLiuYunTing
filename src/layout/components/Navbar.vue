@@ -7,21 +7,21 @@
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <div id="time-container" class="right-menu-item">
-          <span>{{ Utils() }}</span>
+          {{ Utils() }}
         </div>
         <iframe id="weather-container" class="right-menu-item hover-effect" width="220px" height="60px" allowtransparency="true" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com?c=code&id=18&icon=1" />
-        <el-tooltip content="通知公告" effect="dark" placement="bottom">
+        <!-- <el-tooltip content="通知公告" effect="dark" placement="bottom">
           <div id="notices-container" class="right-menu-item hover-effect">
             <svg-icon icon-class="notice" style="font-weight:700" @click="noticeOpen" />
           </div>
-        </el-tooltip>
+        </el-tooltip> -->
         <el-tooltip content="便签" effect="dark" placement="bottom">
           <div id="note-container" class="right-menu-item hover-effect">
             <i class="el-icon-edit" style="font-weight:700" @click="noteOpen" />
           </div>
         </el-tooltip>
 
-        <!-- <search id="header-search" class="right-menu-item" /> -->
+        <search id="header-search" class="right-menu-item" />
 
         <el-tooltip content="全屏切换" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
@@ -53,7 +53,7 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <el-dialog
+    <!-- <el-dialog
       title="这是通知公告标题"
       width="600px"
       :visible.sync="noticeDialogVisible"
@@ -66,7 +66,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="noticeDialogVisible = false">关 闭</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
     <el-dialog
       title="便签"
       width="400px"
@@ -111,7 +111,7 @@ export default {
     return {
       username: '',
       dialogVisible: false,
-      noticeDialogVisible: false,
+      // noticeDialogVisible: false,
       notes: localStorage.getItem('notes'),
       driver: null
     }
@@ -138,9 +138,9 @@ export default {
     noteOpen() {
       this.dialogVisible = true
     },
-    noticeOpen() {
-      this.noticeDialogVisible = true
-    },
+    // noticeOpen() {
+    //   this.noticeDialogVisible = true
+    // },
     saveNotes() {
       localStorage.setItem('notes', this.notes)
     },

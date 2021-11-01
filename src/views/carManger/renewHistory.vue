@@ -5,8 +5,16 @@
       <el-table-column label="车主姓名" align="center" prop="userName" />
       <el-table-column label="车牌号" align="center" prop="carNumber" />
       <el-table-column label="起租时间" align="center" prop="effectiveTime" />
-      <el-table-column label="到期时间" align="center" prop="expireTime" />
-      <el-table-column label="费用" align="center" prop="amount" />
+      <el-table-column align="center" label="到期时间" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.expireTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="费用">
+        <template slot-scope="scope">
+          <el-tag type="info" size="medium">￥{{ scope.row.amount }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>

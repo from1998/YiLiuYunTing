@@ -78,14 +78,48 @@
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="orderTableList" stripe>
       <el-table-column label="订单号" align="center" prop="sn" width="300" />
-      <el-table-column label="车牌号" align="center" prop="carNumber" />
-      <el-table-column label="停车时长" align="center" prop="duration" />
+      <el-table-column label="车牌号" align="center">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="停车时长" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.duration }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="支付类目" align="center" prop="skutype" :formatter="paytypeFormatter" />
-      <el-table-column label="支付时间" align="center" prop="pay" width="180px" />
-      <el-table-column label="订单金额" align="center" prop="totalamount" />
-      <el-table-column label="优惠金额" align="center" prop="discountableamount" />
-      <el-table-column label="实付金额" align="center" prop="amount" />
-      <el-table-column label="支付平台" align="center" prop="platform" :formatter="platformFormatter" />
+      <el-table-column align="center" label="支付时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="应付金额">
+        <template slot-scope="scope">
+          <el-tag type="info" size="medium">￥{{ scope.row.totalamount }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="优惠金额">
+        <template slot-scope="scope">
+          <el-tag type="success" size="medium"> ￥{{ scope.row.discountableamount }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="实付金额">
+        <template slot-scope="scope">
+          <el-tag type="danger" size="medium">￥{{ scope.row.amount }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="支付平台" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.platform===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" />官方</el-tag>
+          <el-tag v-show="scope.row.platform===2" type="primary" size="mini" effect="dark">
+            <svg-icon icon-class="zhifubaozhifu" />支付宝
+          </el-tag>
+          <el-tag v-show="scope.row.platform===3" type="success" size="mini" effect="dark">
+            <svg-icon icon-class="weixin" />微信
+          </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="订单状态" align="center" prop="state" :formatter="ordersStateFormatter" />
     </el-table>
 
@@ -198,12 +232,6 @@ export default {
     paytypeFormatter(row) {
       if (row.skutype) {
         return this.formatterDict(this.options.orderSkuType, row.skutype.toString())
-      }
-    },
-    // 翻译支付平台
-    platformFormatter(row) {
-      if (row.platform) {
-        return this.formatterDict(this.options.payChannel, row.platform.toString())
       }
     },
     // 翻译类型

@@ -46,12 +46,17 @@
       <el-table-column label="相机IP" align="center" prop="cameraIp" />
       <el-table-column label="是否在线" align="center">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.isOnLine===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在线</el-button>
-          <el-button v-show="scope.row.isOnLine===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">离线</el-button>
+          <el-tag v-show="scope.row.isOnLine===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />在线</el-tag>
+          <el-tag v-show="scope.row.isOnLine===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />离线</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" width="180" />
-      <el-table-column label="是否有屏" align="center" prop="haveScreen" :formatter="statusFormatter" />
+      <el-table-column label="是否有屏" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.haveScreen===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />无屏</el-tag>
+          <el-tag v-show="scope.row.haveScreen===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />有屏</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="是否显示余位" align="center" prop="remainder" :formatter="statusFormatter" />
     </el-table>
     <!-- 分页控件开始 -->
@@ -199,11 +204,5 @@ export default {
 .container {
 width: 95%;
 margin: 0 auto;
-}
-.btnMini {
-  padding: 0 5px!important;
-  height: 17px;
-  margin-left: 0;
-  cursor: default;
 }
 </style>

@@ -65,10 +65,26 @@
     </el-header>
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="feeTableList" stripe>
-      <el-table-column label="日期" align="center" prop="created" />
-      <el-table-column label="微信" align="center" prop="wx" />
-      <el-table-column label="支付宝" align="center" prop="zfb" />
-      <el-table-column label="官方" align="center" prop="gf" />
+      <el-table-column align="center" label="日期" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.created }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="微信">
+        <template slot-scope="scope">
+          <el-tag type="success" size="medium">￥{{ scope.row.wx }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="支付宝">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium">￥{{ scope.row.zfb }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="官方">
+        <template slot-scope="scope">
+          <el-tag type="warning" size="medium">￥{{ scope.row.gf }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="车场名称" align="center" prop="parkName" />
     </el-table>
 

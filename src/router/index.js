@@ -150,7 +150,7 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/guide/index',
     name: '/guide',
-    // hidden: true,
+    hidden: true,
     children: [{
       path: 'index',
       name: '/guide/index',

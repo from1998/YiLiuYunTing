@@ -127,10 +127,44 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
       <el-table-column label="车牌号" align="center" prop="carnumber" width="120" />
-      <el-table-column label="进场时间" align="center" prop="entered" width="180" />
-      <el-table-column label="进场车道" align="center" prop="elaneName" width="80" />
-      <el-table-column label="出场时间" align="center" prop="leaved" width="180" />
-      <el-table-column label="出场车道" align="center" prop="llaneName" width="80" />
+      <el-table-column align="center" label="进场时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.entered }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="进场车道"
+        width="80"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>进场车道: {{ scope.row.elaneName }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.elaneName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="出场时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.leaved }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="出场车道"
+        width="80"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>出场车道: {{ scope.row.llaneName }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.llaneName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <!-- RecordCarTypeDic -->
       <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" width="80" />
       <!-- CarRecordStatusDic -->
@@ -157,17 +191,21 @@
       </el-table-column>
       <el-table-column label="是否进场" align="center" width="90">
         <template slot-scope="scope">
-          <el-button v-show=" scope.row.isenter===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已进场</el-button>
-          <el-button v-show="scope.row.isenter===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未进场</el-button>
+          <el-tag v-show="scope.row.isenter===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />未进场</el-tag>
+          <el-tag v-show="scope.row.isenter===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />已进场</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="是否出场" align="center" width="90">
         <template slot-scope="scope">
-          <el-button v-show=" scope.row.isleave===1" type="success" icon="el-icon-check" size="mini" class="btnMini">已出场</el-button>
-          <el-button v-show="scope.row.isleave===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">未出场</el-button>
+          <el-tag v-show="scope.row.isleave===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />未出场</el-tag>
+          <el-tag v-show="scope.row.isleave===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />已出场</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="支付时间" align="center" prop="pay" width="168" />
+      <el-table-column align="center" label="支付时间" width="168">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
@@ -216,7 +254,7 @@
       </el-image>
       <el-row v-show="accessInSrc===null" :gutter="0">
         <el-col :span="6" :offset="9">
-          <el-button type="info" icon="el-icon-close" size="mini" class="btnMini">暂无进场图片</el-button>
+          <el-tag type="info" size="mini" effect="dark"><i class="el-icon-close" />暂无进场图片</el-tag>
         </el-col>
       </el-row>
       <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
@@ -236,7 +274,7 @@
       </el-image>
       <el-row v-show="accessOutSrc===null" :gutter="0">
         <el-col :span="6" :offset="9">
-          <el-button type="info" icon="el-icon-close" size="mini" class="btnMini">暂无出场图片</el-button>
+          <el-tag type="info" size="mini" effect="dark"><i class="el-icon-close" />暂无出场图片</el-tag>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -443,11 +481,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-  .btnMini {
-    padding: 0 5px!important;
-    height: 17px;
-    margin-left: 0;
-    cursor: default;
-  }
-</style>

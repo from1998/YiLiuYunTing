@@ -92,6 +92,17 @@
       <el-table-column label="剩余" align="center" prop="residue" />
       <el-table-column label="优惠力度" align="center" prop="discount" />
       <el-table-column label="付款方式" align="center" prop="payTypeString" />
+      <!-- <el-table-column label="支付方式" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.payType===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" />余额</el-tag>
+          <el-tag v-show="scope.row.payType===2" type="primary" size="mini" effect="dark">
+            <svg-icon icon-class="zhifubaozhifu" />支付宝
+          </el-tag>
+          <el-tag v-show="scope.row.payType===3" type="success" size="mini" effect="dark">
+            <svg-icon icon-class="weixin" />微信
+          </el-tag>
+        </template>
+      </el-table-column> -->
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button

@@ -128,7 +128,8 @@
               :key="dict.dictValue"
               :label="dict.dictValue"
               :value="dict.dictValue"
-            >{{ dict.dictLabel }}</el-radio>
+            >{{ dict.dictLabel }}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="字典备注" prop="remark">

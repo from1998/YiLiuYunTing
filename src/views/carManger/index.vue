@@ -140,8 +140,8 @@
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
       <el-table-column label="是否在租" align="center">
         <template slot-scope="scope">
-          <el-button v-show="scope.row.status===1" type="success" icon="el-icon-check" size="mini" class="btnMini">在租中</el-button>
-          <el-button v-show="scope.row.status===0" type="danger" icon="el-icon-close" size="mini" class="btnMini">不在租</el-button>
+          <el-tag v-show="scope.row.status===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />在租中</el-tag>
+          <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />不在租</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="首次续租时间" align="center" prop="workTimeDur" width="392">
@@ -932,11 +932,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-  .btnMini {
-    padding: 0 5px!important;
-    height: 17px;
-    margin-left: 0;
-    cursor: default;
-  }
-</style>
