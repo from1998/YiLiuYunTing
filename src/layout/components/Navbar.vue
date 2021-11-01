@@ -21,7 +21,7 @@
           </div>
         </el-tooltip>
 
-        <search id="header-search" class="right-menu-item" />
+        <!-- <search id="header-search" class="right-menu-item" /> -->
 
         <el-tooltip content="全屏切换" effect="dark" placement="bottom">
           <screenfull id="screenfull" class="right-menu-item hover-effect" />
