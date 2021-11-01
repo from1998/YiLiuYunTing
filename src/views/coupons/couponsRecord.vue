@@ -71,15 +71,27 @@
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="所属商户" align="center" prop="merchantIdString" />
       <el-table-column label="所属优惠券" align="center" prop="couponsIdString" />
-      <el-table-column label="优惠类型" align="center" prop="category" :formatter="carTypeFormatter" />
-      <el-table-column label="状态" align="center" prop="isUsed" :formatter="statusFormatter" />
-      <el-table-column label="状态" align="center">
+      <el-table-column label="优惠类型" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.isUsed===1" type="danger" size="mini" effect="dark"><i class="el-icon-close" />未使用</el-tag>
-          <el-tag v-show="scope.row.isUsed===2" type="success" size="mini" effect="dark"><i class="el-icon-check" />已使用</el-tag>
+          <el-tag v-show="scope.row.category===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 代金券</el-tag>
+          <el-tag v-show="scope.row.category===2" type="danger" size="mini" effect="dark"><i class="el-icon-time" /> 时间券</el-tag>
+          <el-tag v-show="scope.row.category===3" type="primary" size="mini" effect="dark"><i class="el-icon-money" /> 折扣券</el-tag>
+          <el-tag v-show="scope.row.category===4" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 全免券</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="使用车牌" align="center" prop="carNumber" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.isUsed===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 未使用</el-tag>
+          <el-tag v-show="scope.row.isUsed===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 已使用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="使用车牌" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="使用时间" width="200">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.used }}</el-tag>
@@ -257,15 +269,16 @@ export default {
       this.loading = true // 打开遮罩
       getListCouponsRecord(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.carTableList = res.data.list
+        this.carTableList.map(val => {
+          if (val.carNumber.charAt(0) === '临') {
+            val.carNumberFlag = '临'
+          } else if (val.carNumber.length === 8) {
+            val.carNumberFlag = '新'
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
-    },
-    // 翻译类型
-    carTypeFormatter(row) {
-      if (row.category !== null) {
-        return this.selectDictLabel(this.stateOptions, row.category.toString())
-      }
     },
     // 条件查询
     handleQuery() {
