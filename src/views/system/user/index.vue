@@ -319,10 +319,6 @@ export default {
     this.getDataByType('sys_normal_disable').then(res => {
       this.stateOptions = res.data
     })
-    // 加载用户级别
-    // this.getDataByType('sys_role_manager').then(res => {
-    //   this.roleOptions = res.data
-    // })
     selectAllRole().then(res => {
       this.roleOptions = res.data
       res.data.map(item => {
@@ -485,10 +481,15 @@ export default {
           this.loading = true
           if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
             addUser(this.form).then(res => {
-              this.msgSuccess(res.msg)
-              this.getUserList()// 列表重新查询
-              this.open = false// 关闭弹出层
+              if (res.code === 200) {
+                this.msgSuccess(res.msg)
+                this.getUserList()// 列表重新查询
+                this.open = false// 关闭弹出层
+              } else {
+                this.$set(this.form, 'username', '')
+              }
             })
+            this.loading = false
           } else { // 做修改
             updateUser(this.form).then(res => {
               this.msgSuccess(res.msg)
@@ -527,9 +528,7 @@ export default {
         cancelButtonText: '取消'
       }).then(function() {
         resetPwd(userIds).then(res => {
-          tx.msgSuccess('重置成功')
-        }).catch(function() {
-          tx.msgSuccess('重置失败')
+          tx.msgSuccess(res.msg)
         })
       }).catch(function() {
         tx.msgError('重置已取消')
