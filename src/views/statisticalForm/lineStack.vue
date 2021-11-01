@@ -90,7 +90,7 @@ export default {
       })
       return {
         textStyle: {
-          color: '#fff'
+          color: '#000'
         },
         tooltip: {
           show: true, // 必须引入 tooltip 组件
@@ -108,7 +108,6 @@ export default {
             }
           }
         },
-
         color: ['#67C23A', '#Fa3534', '#2979ff'],
         legend: {
           top: '3%',

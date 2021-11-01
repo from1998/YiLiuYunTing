@@ -68,9 +68,32 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="所属商户" align="center" prop="merchantIdString" />
-      <el-table-column label="所属优惠券" align="center" prop="couponsIdString" />
+      <el-table-column
+        align="center"
+        label="所属商户"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>所属商户: {{ scope.row.merchantIdString }}</p>
+            <div v-show="scope.row.merchantIdString" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.merchantIdString }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="所属优惠券"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>所属优惠券: {{ scope.row.couponsIdString }}</p>
+            <div v-show="scope.row.couponsIdString" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.couponsIdString }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="优惠类型" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.category===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 代金券</el-tag>

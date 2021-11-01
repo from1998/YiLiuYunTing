@@ -64,11 +64,11 @@
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
       <el-table-column label="创建时间" align="center" prop="createTime" />
       <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center">
+      <el-table-column label="操作" align="center" width="350">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)">添加</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)">添加</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 

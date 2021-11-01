@@ -195,9 +195,6 @@ export default {
       this.getList(e)
       this.getTrafficList()
     },
-    // handlelines() {
-    //   this.$refs.linestack.setOptions()
-    // },
     getleaveMap() {
       for (var p in this.listData2.leaveMap) {
         this.hang.push(p)

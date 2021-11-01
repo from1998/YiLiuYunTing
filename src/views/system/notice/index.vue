@@ -1,8 +1,13 @@
 <template>
   <div class="app-container">
-    <!-- 查询条件开始 -->
-    <el-row :gutter="0">
-      <el-col :span="20" :offset="4">
+    <!-- 表格工具按钮开始 -->
+    <el-row :gutter="0" style="margin-bottom: 8px;">
+      <el-col :span="6">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+      </el-col>
+      <el-col :span="18">
+        <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
           <el-form-item label="标题" prop="noticeTitle">
             <el-input
@@ -10,7 +15,6 @@
               placeholder="请输入通知公告标题"
               clearable
               size="small"
-              style="width:240px"
             />
           </el-form-item>
           <el-form-item label="发布者" prop="createBy" label-width="55px">
@@ -19,7 +23,6 @@
               placeholder="请输入发布者"
               clearable
               size="small"
-              style="width:240px"
             />
           </el-form-item>
           <el-form-item label="类型" prop="noticeType">
@@ -28,7 +31,6 @@
               placeholder="类型"
               clearable
               size="small"
-              style="width:240px"
             >
               <el-option
                 v-for="dict in noticeTypeOptions"
@@ -44,7 +46,6 @@
               placeholder="可用状态"
               clearable
               size="small"
-              style="width:240px"
             >
               <el-option
                 v-for="dict in statusOptions"
@@ -59,21 +60,6 @@
             <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
-      </el-col>
-    </el-row>
-
-    <!-- 查询条件结束 -->
-
-    <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->
@@ -91,9 +77,9 @@
       <el-table-column label="更新时间" align="center" prop="updateTime" width="160px" />
       <el-table-column label="操作" align="center" width="300px">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
-          <el-button type="text" icon="el-icon-view" size="mini" @click="handleView(scope.row)">查看</el-button>
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-view" size="mini" @click="handleView(scope.row)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -209,8 +195,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 分页数据总条数
@@ -287,7 +271,6 @@ export default {
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
       this.ids = selection.map(item => item.noticeId)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     // 分页pageSize变化时触发
