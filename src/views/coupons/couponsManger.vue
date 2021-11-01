@@ -92,7 +92,7 @@
               @click="handleQuery"
             >搜索</el-button>
             <el-button
-              type="primary"
+              type="danger"
               icon="el-icon-refresh"
               size="mini"
               @click="resetQuery"

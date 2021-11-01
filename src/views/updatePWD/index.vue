@@ -17,7 +17,7 @@
       </el-form-item>
       <el-form-item style="margin:0 90px">
         <el-button type="primary" @click="onSubmit">保存</el-button>
-        <el-button @click="onReset">重置</el-button>
+        <el-button type="danger" @click="onReset">重置</el-button>
       </el-form-item>
     </el-form>
   </el-container>

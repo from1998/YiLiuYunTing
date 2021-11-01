@@ -49,7 +49,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-            <el-button type="primary" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+            <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
         </el-form>
         <!-- 查询条件结束 -->
@@ -80,7 +80,7 @@
       <el-table-column label="订单号" align="center" prop="sn" width="300" />
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+          <el-tag type="primary" size="mini" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="停车时长" width="200">
@@ -111,12 +111,12 @@
       </el-table-column>
       <el-table-column label="支付平台" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.platform===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" />官方</el-tag>
+          <el-tag v-show="scope.row.platform===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 官方</el-tag>
           <el-tag v-show="scope.row.platform===2" type="primary" size="mini" effect="dark">
-            <svg-icon icon-class="zhifubaozhifu" />支付宝
+            <svg-icon icon-class="zhifubaozhifu" /> 支付宝
           </el-tag>
           <el-tag v-show="scope.row.platform===3" type="success" size="mini" effect="dark">
-            <svg-icon icon-class="weixin" />微信
+            <svg-icon icon-class="weixin" /> 微信
           </el-tag>
         </template>
       </el-table-column>
