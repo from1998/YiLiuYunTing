@@ -12,7 +12,7 @@
     <!-- 主体 -->
     <el-container class="container">
 
-      <div v-show="resData===null" class="error">
+      <div v-show="!resData" class="error">
         <el-row :gutter="20">
           <el-button
             type="warning"
@@ -29,7 +29,7 @@
         </el-row>
       </div>
 
-      <el-form :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
+      <el-form v-show="resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
