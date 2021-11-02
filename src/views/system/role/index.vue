@@ -68,7 +68,16 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="roleTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="角色ID" align="center" prop="roleId" />
+      <el-table-column align="center" label="角色ID">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制角色ID。</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.roleId" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-document-copy" /> {{ scope.row.roleId }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="角色名称" align="center" prop="roleName" />
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
@@ -169,7 +178,12 @@
 import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
 import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
 
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -229,6 +243,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！角色ID已复制到剪贴板。')
+    },
     // 查询表格数据
     getRoleList() {
       this.loading = true // 打开遮罩

@@ -72,9 +72,17 @@
       <el-table-column label="类型" prop="noticeType" align="center" :formatter="noticeTypeFormatter" />
       <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
       <el-table-column label="发布者" align="center" prop="createBy" />
-      <el-table-column label="发布时间" align="center" prop="createTime" width="160px" />
+      <el-table-column align="center" label="发布时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="更新者" align="center" prop="updateBy" />
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="160px" />
+      <el-table-column align="center" label="更新时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.updateTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="300px">
         <template slot-scope="scope">
           <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>

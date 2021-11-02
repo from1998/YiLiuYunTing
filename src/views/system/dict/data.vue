@@ -68,7 +68,11 @@
       <el-table-column label="字典排序" prop="dictSort" align="center" />
       <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
       <el-table-column label="备注" prop="remark" align="center" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" prop="createTime" align="center" width="180" />
+      <el-table-column align="center" label="创建时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center">
         <template slot-scope="scope">
           <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>

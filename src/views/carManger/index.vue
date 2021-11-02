@@ -560,6 +560,7 @@ export default {
       rules: {
         carNumber: validate.carNumber,
         address: validate.notEmpty,
+        mobile: validate.phone,
         carType: validate.notEmpty,
         registerType: validate.notEmpty,
         splitType: validate.notEmpty,

@@ -76,7 +76,7 @@
           <el-popover trigger="hover" placement="top">
             <p>提示：点击复制登陆名称。</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag v-clipboard:copy="scope.row.username" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user" /> {{ scope.row.username }}</el-tag>
+              <el-tag v-clipboard:copy="scope.row.username" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.username }}</el-tag>
             </div>
           </el-popover>
         </template>

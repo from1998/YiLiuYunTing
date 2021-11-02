@@ -3,7 +3,11 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="renewTableList" @selection-change="handleSelectionChnage">
       <el-table-column label="车主姓名" align="center" prop="userName" />
-      <el-table-column label="车牌号" align="center" prop="carNumber" />
+      <el-table-column label="车牌号" align="center">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="起租时间" align="center" prop="effectiveTime" />
       <el-table-column align="center" label="到期时间" width="200">
         <template slot-scope="scope">
@@ -185,6 +189,7 @@ export default {
       this.open = true
       this.reset()
       this.form = {
+        id: row.id,
         userName: row.userName,
         carNumber: row.carNumber,
         amount: row.amount
