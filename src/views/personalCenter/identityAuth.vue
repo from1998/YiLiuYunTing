@@ -29,7 +29,7 @@
         </el-row>
       </div>
 
-      <el-form v-show="resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
+      <el-form :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
@@ -425,7 +425,7 @@ export default {
         licenceforopeningaccounts: '',
         licenceforopeningaccountssrc: '',
         // 身份证是否长期
-        longtimeornoper: 1,
+        longtimeornoper: 0,
         // 身份证有效期开始与结束日期
         idvalidity: '',
         idvaliditybegin: '',
@@ -520,7 +520,6 @@ export default {
         if (res.code === 200 && res.data !== null) {
           this.options.registerInfo = res.data
           this.form = Object.assign(this.form, res.data)
-          this.form.longtimeornoper = 1
           if (res.data.idvaliditybegin && res.data.idvalidity) {
             this.handletime()
           }
