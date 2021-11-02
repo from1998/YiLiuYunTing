@@ -94,7 +94,6 @@
           <el-tag v-show="scope.row.role===1" type="success" size="mini" effect="dark"><svg-icon icon-class="admin" /> 超管</el-tag>
           <el-tag v-show="scope.row.role===3" type="warning" size="mini" effect="dark"><svg-icon icon-class="agent" /> 代理商</el-tag>
           <el-tag v-show="scope.row.role===4" type="primary" size="mini" effect="dark"><svg-icon icon-class="park" /> 车场</el-tag>
-          <el-tag v-show="scope.row.role===6" type="info" size="mini" effect="dark"><svg-icon icon-class="police" /> 保安</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="创建时间" width="180">
@@ -378,7 +377,12 @@ export default {
     getUserList() {
       this.loading = true // 打开遮罩
       listUserForPage(this.queryParams, this.dateRange).then(res => {
-        this.userTableList = res.data.list
+        res.data.list.map(val => {
+          // 列表只显示超管 代理商 车场
+          if (val.role === 1 || val.role === 3 || val.role === 4) {
+            this.userTableList.push(val)
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
