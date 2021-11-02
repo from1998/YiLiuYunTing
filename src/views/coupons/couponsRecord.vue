@@ -104,7 +104,8 @@
       </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.isUsed===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 未使用</el-tag>
+          <el-tag v-show="scope.row.isUsed===0 && (scope.row.effectiveTime < scope.row.expireTime)" type="warning" size="mini" effect="dark"><i class="el-icon-close" /> 未使用</el-tag>
+          <el-tag v-show="scope.row.isUsed===0 && (scope.row.effectiveTime > scope.row.expireTime)" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 已过期</el-tag>
           <el-tag v-show="scope.row.isUsed===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 已使用</el-tag>
         </template>
       </el-table-column>
@@ -113,6 +114,16 @@
           <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
           <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
           <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="生效日期" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.effectiveTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="截至日期" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.expireTime }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="使用时间" width="200">

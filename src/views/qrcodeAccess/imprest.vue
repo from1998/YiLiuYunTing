@@ -187,7 +187,6 @@ export default {
         if (res.code === 200) {
           this.delHistoryopen = false
           this.getData()
-          this.msgSuccess(res.msg)
         }
       })
     },

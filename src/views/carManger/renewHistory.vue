@@ -8,7 +8,11 @@
           <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="起租时间" align="center" prop="effectiveTime" />
+      <el-table-column align="center" label="起租时间" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.effectiveTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="到期时间" width="200">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.expireTime }}</el-tag>
@@ -16,13 +20,13 @@
       </el-table-column>
       <el-table-column align="center" label="费用">
         <template slot-scope="scope">
-          <el-tag type="info" size="medium">￥{{ scope.row.amount }}</el-tag>
+          <el-tag type="danger" size="medium">￥{{ scope.row.amount }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>

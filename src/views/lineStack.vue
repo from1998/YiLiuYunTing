@@ -10,10 +10,6 @@ import echarts from 'echarts'
 export default {
   name: 'LineStack',
   props: {
-    listData: {
-      type: Object,
-      default: null
-    },
     leaveMap: {
       type: Array,
       default: null
@@ -47,71 +43,23 @@ export default {
             {
               name: this.parkName[0],
               data: this.enterMap,
-              color: '#FF0000'
+              color: '#67C23A'
             },
             {
               name: this.parkName[1],
               data: this.leaveData,
-              color: '#00FF00'
+              color: '#Fa3534'
             },
             {
               name: this.parkName[2],
               data: this.zfbMap,
-              color: '#409eff'
+              color: '#2979ff'
             }
           ]
         }
       },
       id: ''
     }
-  },
-  created() {
-    // this.resData = {
-    //   park: {
-    //     //   legendData可以不用传回
-    //     legendData: ['进场车辆', '出场车辆'],
-    //     xAxisData: this.leaveMap,
-    //     seriesData: [
-    //       {
-    //         name: '进场车辆',
-    //         data: [120, 132, 101, 134, 90, 230, 210],
-    //         color: '#FF0000'
-    //       },
-    //       {
-    //         name: '出场车辆',
-    //         data: [220, 182, 191, 234, 290, 330, 310],
-    //         color: '#00FF00'
-    //       }
-    //     ]
-    //   }
-    // }
-
-    // this.resData = {
-    //   park: {
-    //     //   legendData可以不用传回
-    //     legendData: ['进场车辆', '出场车辆'],
-    //     xAxisData: this.leaveMap,
-    //     seriesData: [
-    //       {
-    //         name: '进场车辆',
-    //         data: [120, 132, 101, 134, 90, 230, 210],
-    //         color: '#FF0000'
-    //       },
-    //       {
-    //         name: '出场车辆',
-    //         data: [220, 182, 191, 234, 290, 330, 310],
-    //         color: '#00FF00'
-    //       }
-    //     ]
-    //   }
-    // }
-    // if(this.listData) {
-    //   for (var item in listData) {
-    //     this.heng.push(item)
-    //
-    //     this.zhi.push(obj[item])
-    //   }
-    // }
   },
   mounted() {
     // 基于准备好的dom，初始化echarts实例
@@ -142,7 +90,7 @@ export default {
       })
       return {
         textStyle: {
-          color: '#000'
+          color: '#FFF'
         },
         tooltip: {
           show: true, // 必须引入 tooltip 组件
@@ -157,15 +105,10 @@ export default {
             saveAsImage: {
               show: true,
               title: '保存为图片'
-            },
-            dataView: {
-              show: true,
-              title: '切换到数据视图'
             }
           }
         },
-
-        color: ['#FF0000', '#00FF00', '#409eff'],
+        color: ['#67C23A', '#Fa3534', '#2979ff'],
         legend: {
           top: '3%',
           left: 'center',
@@ -211,13 +154,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .lineStack {
+.lineStack {
     height: 350px;
     width: 100%;
     display: flex;
     #park {
-      flex: 1;
-      color: #000;
+        flex: 1;
+        color: #000;
     }
-  }
+}
 </style>
