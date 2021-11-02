@@ -54,21 +54,42 @@
         <template slot-scope="scope">
           <el-tag
             :type="scope.row.menuType==='M'?'primary':scope.row.menuType==='C'?'danger':'success'"
+            size="mini"
+            effect="dark"
           >
             {{ scope.row.menuType==='M'?'目录':scope.row.menuType==='C'?'菜单':'权限' }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="组件路径" align="center" prop="path" width="280" />
-      <!-- <el-table-column label="权限标识" align="center" prop="percode" /> -->
-      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
-      <el-table-column label="创建时间" align="center" prop="createTime" />
-      <el-table-column label="备注" align="center" prop="remark" />
-      <el-table-column label="操作" align="center">
+      <el-table-column align="center" label="组件路径" width="280">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)">添加</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-popover trigger="hover" placement="top">
+            <p>点击跳转到：{{ scope.row.path }}</p>
+            <router-link
+              v-show="scope.row.menuType==='C'"
+              slot="reference"
+              type="primary"
+              :to="scope.row.path"
+              class="name-wrapper"
+            >
+              <span style="color:#409EFF"><i class="el-icon-s-promotion" /> {{ scope.row.path }}</span>
+            </router-link>
+          </el-popover>
+          <span v-show="scope.row.menuType!=='C'">{{ scope.row.path }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
+      <el-table-column align="center" label="创建时间">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column label="操作" align="center" width="350">
+        <template slot-scope="scope">
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)">添加</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 

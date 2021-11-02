@@ -1,70 +1,63 @@
 <template>
   <div class="app-container">
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="字典名称" prop="dictName">
-        <el-input
-          v-model="queryParams.dictName"
-          placeholder="请输入字典名称"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="字典类型" prop="dictType">
-        <el-input
-          v-model="queryParams.dictType"
-          placeholder="请输入字典类型"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="字典状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="字典状态"
-          clearable
-          size="small"
-          style="width:240px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="创建时间">
-        <el-date-picker
-          v-model="dateRange"
-          size="small"
-          style="width:240px"
-          value-format="yyyy-MM-dd"
-          type="daterange"
-          range-separator="-"
-          start-placeholde="开始日期"
-          end-placeholde="结束日期"
-        />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 查询条件结束 -->
-
     <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="2">
+    <el-row :gutter="0" style="margin-bottom: 8px;">
+      <el-col :span="4">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="2">
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="2">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+      </el-col>
+      <el-col :span="19" :offset="1">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+          <el-form-item label="字典名称" prop="dictName">
+            <el-input
+              v-model="queryParams.dictName"
+              placeholder="请输入字典名称"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="字典类型" prop="dictType">
+            <el-input
+              v-model="queryParams.dictType"
+              placeholder="请输入字典类型"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="字典状态" prop="status">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="字典状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="创建时间">
+            <el-date-picker
+              v-model="dateRange"
+              style="width:220px"
+              size="small"
+              value-format="yyyy-MM-dd"
+              type="daterange"
+              range-separator="-"
+              start-placeholde="开始日期"
+              end-placeholde="结束日期"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- 查询条件结束 -->
       </el-col>
     </el-row>
     <!-- 表格工具按钮结束 -->
@@ -72,22 +65,31 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="dictTypeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编号" prop="dictId" align="center" />
       <el-table-column label="字典名称" prop="dictName" align="center" :show-overflow-tooltip="true" />
       <el-table-column label="字典类型" prop="dictType" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <router-link :to="'/dict/data/' + scope.row.dictId" class="link-type">
-            <span>{{ scope.row.dictType }}</span>
-          </router-link>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制字典类型。</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.dictType" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-notebook-2" /> {{ scope.row.dictType }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
       <el-table-column label="备注" prop="remark" align="center" :show-overflow-tooltip="true" />
-      <el-table-column label="创建时间" prop="createTime" align="center" width="180" />
-      <el-table-column label="操作" align="center">
+      <el-table-column align="center" label="创建时间" width="180">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="350">
+        <template slot-scope="scope">
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="primary" icon="el-icon-thumb" size="mini" @click="handleGo('/dict/data/' + scope.row.dictId)">
+            <span>查看详情</span>
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -147,7 +149,12 @@
 <script>
 // 引入api
 import { listForPage, addDictType, updateDictType, getDictTypeById, deleteDictTypeByIds } from '@/api/system/dict/type'
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -155,8 +162,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 分页数据总条数
@@ -203,6 +208,14 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    handleGo(url) {
+      this.$router.push(url)
+    },
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！字典类型已复制到剪贴板。')
+    },
     // 查询表格数据
     getDictTypeList() {
       this.loading = true // 打开遮罩
@@ -225,7 +238,6 @@ export default {
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
       this.ids = selection.map(item => item.dictId)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     // 分页size变化时触发

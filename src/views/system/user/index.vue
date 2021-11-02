@@ -1,64 +1,54 @@
 <template>
   <div class="app-container">
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="登录名称" prop="username">
-        <el-input
-          v-model="queryParams.username"
-          placeholder="请输入登录名称"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="手机号" prop="mobile">
-        <el-input
-          v-model="queryParams.mobile"
-          placeholder="请输入手机号"
-          clearable
-          size="small"
-          style="width:240px"
-        />
-      </el-form-item>
-      <el-form-item label="状态" prop="state">
-        <el-select
-          v-model="queryParams.state"
-          placeholder="请选择状态"
-          clearable
-          size="small"
-          style="width:240px"
-        >
-          <el-option
-            v-for="dict in stateOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 查询条件结束 -->
-
     <!-- 表格工具按钮开始 -->
-    <el-row v-if="getUserInfo().role === 1 || getUserInfo().role=== 3" :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+    <el-row :gutter="0" style="margin-bottom: 8px;">
+      <el-col :span="7">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleResetPwd">重置密码</el-button>
       </el-col>
+      <el-col :span="15" :offset="2">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+          <el-form-item label="用户姓名" prop="userName">
+            <el-input
+              v-model="queryParams.userName"
+              placeholder="请输入用户姓名"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="手机号" prop="mobile">
+            <el-input
+              v-model="queryParams.mobile"
+              placeholder="请输入手机号"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="状态" prop="state">
+            <el-select
+              v-model="queryParams.state"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+            >
+              <el-option
+                v-for="dict in stateOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- 查询条件结束 -->
+      </el-col>
     </el-row>
-    <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="userTableList" stripe @selection-change="handleSelectionChange">
@@ -81,22 +71,50 @@
           </el-form>
         </template>
       </el-table-column> -->
-      <el-table-column label="用户ID" align="center" prop="id" />
-      <el-table-column label="登陆名称" align="center" prop="username" width="200" />
+      <el-table-column align="center" label="登陆名称">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制登陆名称。</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.username" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.username }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="真实姓名" align="center" prop="realName" />
       <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
-      <el-table-column label="状态" prop="state" align="center" :formatter="stateFormatter" />
-      <el-table-column label="角色" prop="role" align="center" :formatter="roleFormatter" />
-      <el-table-column label="创建时间" align="center" prop="createTime" width="180" />
-      <el-table-column label="上次登陆时间" align="center" prop="lastLoginTime" width="180" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.state===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
+          <el-tag v-show="scope.row.state===2" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="角色" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.role===1" type="success" size="mini" effect="dark"><svg-icon icon-class="admin" /> 超管</el-tag>
+          <el-tag v-show="scope.row.role===3" type="warning" size="mini" effect="dark"><svg-icon icon-class="agent" /> 代理商</el-tag>
+          <el-tag v-show="scope.row.role===4" type="primary" size="mini" effect="dark"><svg-icon icon-class="park" /> 车场</el-tag>
+          <el-tag v-show="scope.row.role===6" type="info" size="mini" effect="dark"><svg-icon icon-class="police" /> 保安</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="创建时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="上次登陆时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.lastLoginTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="300">
         <template slot-scope="scope">
           <span v-if="getUserInfo().role === 1 || getUserInfo().role=== 3">
-            <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-            <el-button v-if="scope.row.role!==1" type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+            <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+            <el-button v-if="scope.row.role!==1" type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           </span>
           <router-link v-if="scope.row.role===4" :to="'/user/carSetting/' + scope.row.id" class="link-type">
-            <el-button type="text" size="mini">
+            <el-button type="primary" size="mini">
               <svg-icon icon-class="car" />
               车场配置
             </el-button>
@@ -224,8 +242,12 @@ import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUse
 import { selectAllRole } from '@/api/system/role'
 
 import validate from '@/utils/validate'
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -241,8 +263,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 分页数据总条数
@@ -299,10 +319,6 @@ export default {
     this.getDataByType('sys_normal_disable').then(res => {
       this.stateOptions = res.data
     })
-    // 加载用户级别
-    // this.getDataByType('sys_role_manager').then(res => {
-    //   this.roleOptions = res.data
-    // })
     selectAllRole().then(res => {
       this.roleOptions = res.data
       res.data.map(item => {
@@ -321,6 +337,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！登录名称已复制到剪贴板。')
+    },
     encode64(input) {
       const keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/_' + '='
       let output = ''
@@ -387,7 +407,6 @@ export default {
     // 数据表格的多选择框选择时触发
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     // 分页size变化时触发
@@ -401,16 +420,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getUserList()
-    },
-    // 翻译状态
-    stateFormatter(row) {
-      if (row.state !== null) {
-        return this.selectDictLabel(this.stateOptions, row.state.toString())
-      }
-    },
-    // 翻译角色
-    roleFormatter(row) {
-      return this.selectRoleLabel(this.roleOptions, row.role)
     },
     // 打开添加的弹出层
     handleAdd() {
@@ -472,10 +481,15 @@ export default {
           this.loading = true
           if (this.form.id === undefined || this.form.id === null || this.form.id === '') {
             addUser(this.form).then(res => {
-              this.msgSuccess(res.msg)
-              this.getUserList()// 列表重新查询
-              this.open = false// 关闭弹出层
+              if (res.code === 200) {
+                this.msgSuccess(res.msg)
+                this.getUserList()// 列表重新查询
+                this.open = false// 关闭弹出层
+              } else {
+                this.$set(this.form, 'username', '')
+              }
             })
+            this.loading = false
           } else { // 做修改
             updateUser(this.form).then(res => {
               this.msgSuccess(res.msg)
@@ -514,9 +528,7 @@ export default {
         cancelButtonText: '取消'
       }).then(function() {
         resetPwd(userIds).then(res => {
-          tx.msgSuccess('重置成功')
-        }).catch(function() {
-          tx.msgSuccess('重置失败')
+          tx.msgSuccess(res.msg)
         })
       }).catch(function() {
         tx.msgError('重置已取消')

@@ -133,31 +133,35 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="车牌号" align="center" prop="carNumber" />
+      <el-table-column label="车牌号" align="center">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="车主姓名" align="center" prop="userName" />
       <el-table-column label="车主手机号" align="center" prop="mobile" />
       <el-table-column label="车辆类型" align="center" prop="carType" :formatter="carTypeFormatter" />
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
       <el-table-column label="是否在租" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.status===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />在租中</el-tag>
-          <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />不在租</el-tag>
+          <el-tag v-show="scope.row.status===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 在租中</el-tag>
+          <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 不在租</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="首次续租时间" align="center" prop="workTimeDur" width="392">
+      <el-table-column label="首次续租时间" align="center" prop="workTimeDur" width="280">
         <template slot-scope="scope">
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
             <template>
               <el-popover trigger="hover" placement="top">
-                <p style="line: height 1.5em;">
+                <p style="text-align:center">
                   <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length===0">暂无续费记录！</span>
-                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0">最近三条续费记录:</span>
+                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0" style="line-height:30px">最近三条续费记录:</span>
                   <span v-show="scope.row.recentRecord===undefined">点击查看最近三条续费记录</span>
                   <br>
-                  <span v-for="item in scope.row.recentRecord" :key="item.id">
+                  <el-tag v-for="item in scope.row.recentRecord" :key="item.id" effect="dark" size="mini">
                     {{ item.effectiveTime +' -- '+ item.expireTime }}
                     <br>
-                  </span>
+                  </el-tag>
                 </p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="small" style="cursor:pointer" @click="handleMouseEnter(scope.row.id)">
@@ -189,8 +193,32 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column label="车辆地址" align="center" prop="address" />
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column
+        align="center"
+        label="车辆地址"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>车辆地址: {{ scope.row.address }}</p>
+            <div v-show="scope.row.address" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.address }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="备注"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>备注: {{ scope.row.remark }}</p>
+            <div v-show="scope.row.remark" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.remark }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -532,6 +560,7 @@ export default {
       rules: {
         carNumber: validate.carNumber,
         address: validate.notEmpty,
+        mobile: validate.phone,
         carType: validate.notEmpty,
         registerType: validate.notEmpty,
         splitType: validate.notEmpty,
@@ -779,7 +808,7 @@ export default {
           this[form] = res.data
           this[form].effectiveTime = ''
           this[form].expireTime = ''
-          this[form].remark = ''
+          // this[form].remark = ''
           this.loading = false
         })
       }

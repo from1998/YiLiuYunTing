@@ -92,7 +92,7 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>优惠券名称: {{ scope.row.name }}</p>
-            <div slot="reference" class="name-wrapper">
+            <div v-show="scope.row.name" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
             </div>
           </el-popover>
@@ -113,7 +113,7 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>所属商户: {{ scope.row.merchantIdString }}</p>
-            <div slot="reference" class="name-wrapper">
+            <div v-show="scope.row.merchantIdString" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.merchantIdString }}</el-tag>
             </div>
           </el-popover>

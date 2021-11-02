@@ -143,7 +143,7 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>名称: {{ scope.row.name }}</p>
-            <div slot="reference" class="name-wrapper">
+            <div v-show="scope.row.name" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
             </div>
           </el-popover>

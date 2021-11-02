@@ -1,136 +1,158 @@
 <template>
   <div class="app-container">
-    <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-      <el-form-item label="系统模块" prop="title">
-        <el-input
-          v-model="queryParams.title"
-          placeholder="请输入系统模块"
-          clearable
-          size="small"
-          style="width:200px"
-        />
-      </el-form-item>
-      <el-form-item label="操作人员" prop="operName">
-        <el-input
-          v-model="queryParams.operName"
-          placeholder="请输入操作人员"
-          clearable
-          size="small"
-          style="width:200px"
-        />
-      </el-form-item>
-      <el-form-item label="操作类型" prop="businessType">
-        <el-select
-          v-model="queryParams.businessType"
-          placeholder="请选择类型"
-          clearable
-          size="small"
-          style="width:200px"
-        >
-          <el-option
-            v-for="dict in businessTypeOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="状态" prop="status">
-        <el-select
-          v-model="queryParams.status"
-          placeholder="请选择状态"
-          clearable
-          size="small"
-          style="width:200px"
-        >
-          <el-option
-            v-for="dict in statusOptions"
-            :key="dict.dictValue"
-            :label="dict.dictLabel"
-            :value="dict.dictValue"
-          />
-        </el-select>
-      </el-form-item>
-      <el-tooltip class="item" effect="dark" content="默认显示当天的操作记录" placement="bottom">
-        <el-form-item label="操作时间">
-          <el-date-picker
-            v-model="dateRange"
-            placeholder="请选择操作时间"
-            size="small"
-            style="width:240px"
-            value-format="yyyy-MM-dd HH-mm-ss"
-            type="daterange"
-            range-separator="-"
-            start-placeholde="开始日期"
-            end-placeholde="结束日期"
-          />
-        </el-form-item>
-      </el-tooltip>
-      <el-form-item>
-        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
-        <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-      </el-form-item>
-    </el-form>
-    <!-- 查询条件结束 -->
     <!-- 表头按钮开始 -->
     <el-row :gutter="10" style="margin-bottom: 8px;">
-      <el-col :span="1.5">
+      <el-col :span="3">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
         <el-button type="warning" icon="el-icon-thumb" size="mini" @click="handleClearInfo">清空</el-button>
       </el-col>
+      <el-col :span="21">
+        <!-- 查询条件开始 -->
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+          <el-form-item label="系统模块" prop="title">
+            <el-input
+              v-model="queryParams.title"
+              placeholder="请输入系统模块"
+              clearable
+              size="small"
+              style="width:160px"
+            />
+          </el-form-item>
+          <el-form-item label="操作人员" prop="operName">
+            <el-input
+              v-model="queryParams.operName"
+              placeholder="请输入操作人员"
+              clearable
+              size="small"
+              style="width:160px"
+            />
+          </el-form-item>
+          <el-form-item label="操作类型" prop="businessType">
+            <el-select
+              v-model="queryParams.businessType"
+              placeholder="请选择类型"
+              clearable
+              size="small"
+              style="width:160px"
+            >
+              <el-option
+                v-for="dict in businessTypeOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="状态" prop="status" label-width="40px">
+            <el-select
+              v-model="queryParams.status"
+              placeholder="请选择状态"
+              clearable
+              size="small"
+              style="width:160px"
+            >
+              <el-option
+                v-for="dict in statusOptions"
+                :key="dict.dictValue"
+                :label="dict.dictLabel"
+                :value="dict.dictValue"
+              />
+            </el-select>
+          </el-form-item>
+          <el-tooltip class="item" effect="dark" content="默认显示当天的操作记录" placement="bottom">
+            <el-form-item label="操作时间">
+              <el-date-picker
+                v-model="dateRange"
+                placeholder="请选择操作时间"
+                size="small"
+                style="width:220px"
+                value-format="yyyy-MM-dd HH-mm-ss"
+                type="daterange"
+                range-separator="-"
+                start-placeholde="开始日期"
+                end-placeholde="结束日期"
+              />
+            </el-form-item>
+          </el-tooltip>
+          <el-form-item>
+            <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+            <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
-    <!-- 表头按钮结束 -->
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="operLogTableList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="操作模块">
-              <span>{{ props.row.title }}</span>
+            <el-form-item label="日志ID:">
+              <span>{{ props.row.operId }}</span>
             </el-form-item>
-            <el-form-item label="登陆信息">
+            <el-form-item label="登陆信息:">
               <span>{{ props.row.operName }} // {{ props.row.operIp }} // {{ props.row.operLocation }}</span>
             </el-form-item>
-            <el-form-item label="请求地址">
-              <span>{{ props.row.operUrl }}</span>
+            <el-form-item label="操作模块:">
+              <span>{{ props.row.title }}</span>
             </el-form-item>
-            <el-form-item label="操作方法">
+            <el-form-item label="操作方法:">
               <span>{{ props.row.requestMethod }}</span>
             </el-form-item>
-            <el-form-item label="请求参数">
+            <el-form-item label="请求地址:">
+              <span>{{ props.row.operUrl }}</span>
+            </el-form-item>
+            <el-form-item label="请求参数:">
               <span>{{ props.row.operParam }}</span>
             </el-form-item>
-            <el-form-item label="返回参数">
+            <el-form-item label="响应信息:">
               <span>{{ props.row.jsonResult }}</span>
             </el-form-item>
-            <el-form-item label="操作状态">
+            <el-form-item label="状态:">
               <span>{{ props.row.status==0?'成功':'失败' }}</span>
             </el-form-item>
-            <el-form-item label="操作时间">
+            <el-form-item label="操作时间:">
               <span>{{ props.row.operTime }}</span>
             </el-form-item>
-            <el-form-item label="异常信息">
+            <el-form-item label="异常信息:">
               <span>{{ props.row.errorMsg }}</span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column label="日志ID" align="center" prop="operId" />
-      <el-table-column label="系统模块" align="center" prop="title" />
+      <el-table-column
+        align="center"
+        label="系统模块"
+        width="200"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>系统模块: {{ scope.row.title }}</p>
+            <div v-show="scope.row.title" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.title }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="操作类型" align="center" prop="businessType" :formatter="businessTypeFormatter" />
       <el-table-column label="请求方式" width="180" align="center" prop="requestMethod" />
       <el-table-column label="操作人员" align="center" prop="operName" />
       <el-table-column label="主机" align="center" prop="operIp" />
       <el-table-column label="操作地点" align="center" prop="operLocation" />
-      <el-table-column label="操作状态" prop="status" align="center" :formatter="statusFormatter" />
-      <el-table-column label="操作时间" align="center" prop="operTime" width="200" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.status==='0'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 成功</el-tag>
+          <el-tag v-show="scope.row.status==='1'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 失败</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作时间" align="center" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.operTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="100">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -248,10 +270,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getOperLogList()
-    },
-    // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 翻译操作类型
     businessTypeFormatter(row) {
