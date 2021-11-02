@@ -66,13 +66,16 @@
           <el-popover trigger="hover" placement="top">
             <p>点击跳转到：{{ scope.row.path }}</p>
             <router-link
+              v-show="scope.row.menuType==='C'"
               slot="reference"
+              type="primary"
               :to="scope.row.path"
               class="name-wrapper"
             >
-              <i class="el-icon-thumb" /> {{ scope.row.path }}
+              <span style="color:#409EFF"><i class="el-icon-s-promotion" /> {{ scope.row.path }}</span>
             </router-link>
           </el-popover>
+          <span v-show="scope.row.menuType!=='C'">{{ scope.row.path }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
