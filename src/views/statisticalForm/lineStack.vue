@@ -43,17 +43,17 @@ export default {
             {
               name: this.parkName[0],
               data: this.enterMap,
-              color: '#67C23A'
+              color: '#FF0000'
             },
             {
               name: this.parkName[1],
               data: this.leaveData,
-              color: '#Fa3534'
+              color: '#00FF00'
             },
             {
               name: this.parkName[2],
               data: this.zfbMap,
-              color: '#2979ff'
+              color: '#409eff'
             }
           ]
         }
@@ -90,7 +90,7 @@ export default {
       })
       return {
         textStyle: {
-          color: '#FFF'
+          color: '#000'
         },
         tooltip: {
           show: true, // 必须引入 tooltip 组件
@@ -108,7 +108,8 @@ export default {
             }
           }
         },
-        color: ['#67C23A', '#Fa3534', '#2979ff'],
+
+        color: ['#FF0000', '#00FF00', '#409eff'],
         legend: {
           top: '3%',
           left: 'center',
@@ -154,13 +155,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.lineStack {
+  .lineStack {
     height: 350px;
     width: 100%;
     display: flex;
     #park {
-        flex: 1;
-        color: #000;
+      flex: 1;
+      color: #000;
     }
-}
+  }
 </style>
