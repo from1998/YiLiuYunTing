@@ -148,20 +148,20 @@
           <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 不在租</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="首次续租时间" align="center" prop="workTimeDur">
+      <el-table-column label="首次续租时间" align="center" prop="workTimeDur" width="280">
         <template slot-scope="scope">
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
             <template>
               <el-popover trigger="hover" placement="top">
-                <p style="line: height 1.5em;">
+                <p style="text-align:center">
                   <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length===0">暂无续费记录！</span>
-                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0">最近三条续费记录:</span>
+                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0" style="line-height:30px">最近三条续费记录:</span>
                   <span v-show="scope.row.recentRecord===undefined">点击查看最近三条续费记录</span>
                   <br>
-                  <span v-for="item in scope.row.recentRecord" :key="item.id">
+                  <el-tag v-for="item in scope.row.recentRecord" :key="item.id" effect="dark" size="mini">
                     {{ item.effectiveTime +' -- '+ item.expireTime }}
                     <br>
-                  </span>
+                  </el-tag>
                 </p>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="small" style="cursor:pointer" @click="handleMouseEnter(scope.row.id)">
