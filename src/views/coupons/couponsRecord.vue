@@ -115,6 +115,16 @@
           <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="生效日期" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.effectiveTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="有效期" width="200">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.expireTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="使用时间" width="200">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.used }}</el-tag>

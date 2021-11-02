@@ -3,11 +3,11 @@
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
       身份认证
-      <el-button v-show="options.registerInfo.registerstatus===''" type="success" icon="el-icon-success" size="mini">未注册</el-button>
-      <el-button v-show="options.registerInfo.registerstatus===1" type="success" icon="el-icon-success" size="mini">已认证</el-button>
-      <el-button v-show="options.registerInfo.registerstatus===2" type="info" icon="el-icon-info" size="mini">未认证</el-button>
-      <el-button v-show="options.registerInfo.registerstatus===3" type="warning" icon="el-icon-warning" size="mini">审核中</el-button>
-      <el-button v-show="options.registerInfo.registerstatus===0" type="error" icon="el-icon-error" size="mini">认证失败</el-button>
+      <el-tag v-show="options.registerInfo.registerstatus===''" type="success" icon="el-icon-success" effect="dark" size="mini">未注册</el-tag>
+      <el-tag v-show="options.registerInfo.registerstatus===1" type="success" icon="el-icon-success" effect="dark" size="mini">已认证</el-tag>
+      <el-tag v-show="options.registerInfo.registerstatus===2" type="info" icon="el-icon-info" effect="dark" size="mini">未认证</el-tag>
+      <el-tag v-show="options.registerInfo.registerstatus===3" type="warning" icon="el-icon-warning" effect="dark" size="mini">审核中</el-tag>
+      <el-tag v-show="options.registerInfo.registerstatus===0" type="error" icon="el-icon-error" effect="dark" size="mini">认证失败</el-tag>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
@@ -141,7 +141,7 @@
           </el-col>
           <el-col :span="options.registerInfo.type!==2?6:8">
             <el-tooltip class="item" effect="dark" content="个人年龄若大于60岁，则必填" placement="top">
-              <el-form-item label="手持身份证照片" prop="IDCardHandheld">
+              <el-form-item v-show="form.idimagecsrc" label="手持身份证照片" prop="IDCardHandheld">
                 <upload-img v-if="options.registerInfo.registerstatus===2" @imgagePush="imageAccept('idimagec','idimagecsrc',$event)" />
                 <el-image
                   v-else
@@ -182,13 +182,13 @@
           </el-col>
         </el-row>
         <!-- 商户号与统一社会信用码 -->
-        <el-row v-if="options.registerInfo.type!==2">
+        <el-row>
           <el-col :span="12">
             <el-form-item label="商户号" prop="sonmerno">
               <el-input v-model="options.registerInfo.sonmerno" disabled />
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col v-if="options.registerInfo.type!==2" :span="12">
             <el-form-item label="统一社会信用代码" prop="businesslicenceno">
               <el-input v-model="form.businesslicenceno" placeholder="请输入统一社会信用代码" />
             </el-form-item>
@@ -332,7 +332,7 @@
         </el-row>
         <el-row class="container">
           <el-form-item>
-            <el-button type="primary" class="btn" @click="onSubmit">提交</el-button>
+            <el-button type="primary" class="btn" :disabled="options.registerInfo.registerstatus!==2?'true':'false'" @click="onSubmit">提交</el-button>
           </el-form-item>
         </el-row>
       </el-form>

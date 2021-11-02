@@ -53,7 +53,7 @@
       <el-table-column label="菜单类型" align="center" prop="menuType">
         <template slot-scope="scope">
           <el-tag
-            :type="scope.row.menuType==='M'?'primary':scope.row.menuType==='C'?'danger':'success'"
+            :type="scope.row.menuType==='M'?'info':scope.row.menuType==='C'?'primary':'danger'"
             size="mini"
             effect="dark"
           >

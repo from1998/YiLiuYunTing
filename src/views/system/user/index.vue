@@ -2,12 +2,12 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row :gutter="0" style="margin-bottom: 8px;">
-      <el-col :span="7">
+      <el-col v-if="getUserInfo().role === 1" :span="7">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleResetPwd">重置密码</el-button>
       </el-col>
-      <el-col :span="15" :offset="2">
+      <el-col :span="15" :offset="getUserInfo().role === 1?2:9">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="用户姓名" prop="userName">

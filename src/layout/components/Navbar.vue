@@ -93,9 +93,6 @@ import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
-import Driver from 'driver.js' // import driver.js
-import 'driver.js/dist/driver.min.css' // import driver.js css
-import steps from '@/assets/js/steps'
 // import Search from '@/components/HeaderSearch'
 
 export default {
@@ -112,8 +109,7 @@ export default {
       username: '',
       dialogVisible: false,
       // noticeDialogVisible: false,
-      notes: localStorage.getItem('notes'),
-      driver: null
+      notes: localStorage.getItem('notes')
     }
   },
   computed: {
@@ -123,18 +119,10 @@ export default {
       'device'
     ])
   },
-  mounted() {
-    this.driver = new Driver()
-  },
   async created() {
     this.username = await this.getUserInfo().realName
   },
   methods: {
-    guide() {
-      this.driver.defineSteps(steps)
-      this.driver.start()
-      this.msgSuccess('ok')
-    },
     noteOpen() {
       this.dialogVisible = true
     },

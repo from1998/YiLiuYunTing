@@ -1,9 +1,9 @@
 <template>
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="地图测试" name="test" lazy>
+      <!-- <el-tab-pane label="地图测试" name="test" lazy>
         <test />
-      </el-tab-pane>
+      </el-tab-pane> -->
       <el-tab-pane label="车场信息" name="depotInfo" lazy>
         <depot-info />
       </el-tab-pane>
@@ -57,7 +57,7 @@ import portManger from './componets/portManger'
 import secManger from './componets/secManger'
 import watchhouseSet from './componets/watchhouseSet'
 import energyRule from './componets/energyRule'
-import test from './componets/test'
+// import test from './componets/test'
 import BackToTop from '@/components/BackToTop'
 
 import { getDepotById } from '@/api/system/carSetting'
@@ -72,8 +72,8 @@ export default {
     secManger,
     watchhouseSet,
     BackToTop,
-    energyRule,
-    test
+    energyRule
+    // test
   },
   data() {
     return {
