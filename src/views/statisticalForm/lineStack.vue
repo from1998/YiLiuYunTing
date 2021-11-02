@@ -65,54 +65,6 @@ export default {
       id: ''
     }
   },
-  created() {
-    // this.resData = {
-    //   park: {
-    //     //   legendData可以不用传回
-    //     legendData: ['进场车辆', '出场车辆'],
-    //     xAxisData: this.leaveMap,
-    //     seriesData: [
-    //       {
-    //         name: '进场车辆',
-    //         data: [120, 132, 101, 134, 90, 230, 210],
-    //         color: '#FF0000'
-    //       },
-    //       {
-    //         name: '出场车辆',
-    //         data: [220, 182, 191, 234, 290, 330, 310],
-    //         color: '#00FF00'
-    //       }
-    //     ]
-    //   }
-    // }
-
-    // this.resData = {
-    //   park: {
-    //     //   legendData可以不用传回
-    //     legendData: ['进场车辆', '出场车辆'],
-    //     xAxisData: this.leaveMap,
-    //     seriesData: [
-    //       {
-    //         name: '进场车辆',
-    //         data: [120, 132, 101, 134, 90, 230, 210],
-    //         color: '#FF0000'
-    //       },
-    //       {
-    //         name: '出场车辆',
-    //         data: [220, 182, 191, 234, 290, 330, 310],
-    //         color: '#00FF00'
-    //       }
-    //     ]
-    //   }
-    // }
-    // if(this.listData) {
-    //   for (var item in listData) {
-    //     this.heng.push(item)
-    //
-    //     this.zhi.push(obj[item])
-    //   }
-    // }
-  },
   mounted() {
     // 基于准备好的dom，初始化echarts实例
     this.parkChart = echarts.init(document.getElementById('park'))
@@ -193,10 +145,6 @@ export default {
           type: 'value'
         },
         series: seriesData
-        // axisLabel: {
-        //   interval: 0,
-        //   rotate: 40
-        // }
       }
     },
 
