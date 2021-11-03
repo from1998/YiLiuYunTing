@@ -129,7 +129,7 @@ export default {
       this.loading = true // 打开遮罩
       if (this.pay) {
         getLeaveData(this.queryParams).then(res => {
-          this.parkId = res.data.park.id
+          this.parkId = res.data.parkId
           this.msgSuccess(this.parkId)
           this.parkName = res.data.park.name
           this.historyRecord = res.data.carNumberList

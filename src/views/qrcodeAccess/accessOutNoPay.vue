@@ -141,6 +141,22 @@ export default {
     },
     // 脚本初始化加载
     init() {
+      // 加载安泊广告脚本
+      load(adJs, () => {
+        const container = document.getElementById('app-container')
+        const st = document.querySelector('#anbo-ad-st')
+        if (st) {
+          container.removeChild(st)
+        }
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.id = 'anbo-ad-st'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.queryParams.parkId + '",host:""})'
+        container.append(script)
+        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+        window.advShow = function() {
+        }
+      })
       // 加载微信支付脚本
       if (this.isWx) {
         load(wechatJs, () => {
@@ -164,22 +180,6 @@ export default {
           }
         })
       }
-      // 加载安泊广告脚本
-      load(adJs, () => {
-        const container = document.getElementById('app-container')
-        const st = document.querySelector('#anbo-ad-st')
-        if (st) {
-          container.removeChild(st)
-        }
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.queryParams.parkId + '",host:""})'
-        container.append(script)
-        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-        window.advShow = function() {
-        }
-      })
     },
     // 支付
     handlePay() {
