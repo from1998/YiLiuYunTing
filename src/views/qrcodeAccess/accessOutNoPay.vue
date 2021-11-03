@@ -129,7 +129,6 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       getNoPayData(this.queryParams).then(res => {
-        this.resDate
         Object.assign(this.resDate, res.data)
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
@@ -146,6 +145,7 @@ export default {
     init() {
       // 加载安泊广告脚本
       load(adJs, () => {
+        this.msgSuccess('加载成功')
         const container = document.getElementById('app-container')
         const st = document.querySelector('#anbo-ad-st')
         if (st) {

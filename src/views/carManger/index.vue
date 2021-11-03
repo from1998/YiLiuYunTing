@@ -680,8 +680,12 @@ export default {
       this.getList()
     },
     handleSuccess(res) {
-      this.msgSuccess(res.msg)
-      this.getList()
+      if (res.code === 200) {
+        this.msgSuccess(res.msg)
+        this.getList()
+      } else {
+        this.msgErroe(res.msg)
+      }
     },
     handleError(res) {
       this.msgErroe(res.msg)
