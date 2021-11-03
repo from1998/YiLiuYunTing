@@ -50,7 +50,7 @@
             <span>是否进场: {{ detailOptions.length!==0 && (detailOptions.isenter===1?'已进场':'未进场') }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>进场车道: {{ detailOptions.length!==0 && detailOptions.entermid }}</span>
+            <span>进场车道: {{ detailOptions.length!==0 && detailOptions.eLaneName }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
             <span>进场时间: {{ detailOptions.length!==0 && detailOptions.entered }}</span>
@@ -61,7 +61,7 @@
             <span>是否出场: {{ detailOptions.length!==0 && (detailOptions.isleave===1?'已出场':'未出场') }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
-            <span>出场车道: {{ detailOptions.length!==0 && detailOptions.leavemid }}</span>
+            <span>出场车道: {{ detailOptions.length!==0 && detailOptions.lLaneName }}</span>
           </el-col>
           <el-col :span="8" :offset="0">
             <span>出场时间: {{ detailOptions.length!==0 && detailOptions.leaved }}</span>

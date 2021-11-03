@@ -207,12 +207,12 @@
           <el-tag v-show="scope.row.isleave===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />已出场</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="支付时间" width="168">
+      <el-table-column align="center" label="支付时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="200">
+      <el-table-column label="操作" align="center" width="180">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
             查看进出场图片
@@ -393,24 +393,39 @@ export default {
     },
     // 清理异常车辆
     handleLeave() {
-      this.loading = true // 打开遮罩
-      cleanLeaveRecord().then(res => {
-        if (res.code === 200) {
-          this.msgSuccess(res.msg)
-          this.getAccessList()
-        }
+      this.$confirm('确定清理离场车辆?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 打开遮罩
+        cleanLeaveRecord().then(res => {
+          if (res.code === 200) {
+            this.msgSuccess(res.msg)
+            this.getAccessList()
+          }
+        })
+        this.loading = false// 关闭遮罩
+      }).catch(() => {
+        this.msgError('清理已取消')
       })
-      this.loading = false// 关闭遮罩
     },
     // 清理指定天数车辆
     handleEnter(days) {
-      console.log(days)
-      this.loading = true // 打开遮罩
-      cleanEnterRecord(days).then(() => {
-        this.msgSuccess(days + '天前的在场车辆已被成功清理')
-        this.getAccessList()
+      this.$confirm(`确定清理${days}天前的在场车辆?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 打开遮罩
+        cleanEnterRecord(days).then(() => {
+          this.msgSuccess(days + '天前的在场车辆已被成功清理')
+          this.getAccessList()
+        })
+        this.loading = false// 关闭遮罩
+      }).catch(() => {
+        this.msgError('清理已取消')
       })
-      this.loading = false// 关闭遮罩
     },
     timeChange(start, end, val) {
       if (val === null) {

@@ -148,7 +148,7 @@
           <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 不在租</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="首次续租时间" align="center" prop="workTimeDur" width="280">
+      <el-table-column label="当前续租时间" align="center" prop="workTimeDur" width="280">
         <template slot-scope="scope">
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
             <template>
@@ -680,8 +680,12 @@ export default {
       this.getList()
     },
     handleSuccess(res) {
-      this.msgSuccess(res.msg)
-      this.getList()
+      if (res.code === 200) {
+        this.msgSuccess(res.msg)
+        this.getList()
+      } else {
+        this.msgErroe(res.msg)
+      }
     },
     handleError(res) {
       this.msgErroe(res.msg)

@@ -40,7 +40,7 @@
       center
       :close-on-click-modal="false"
     >
-      请先注册车场，才可进行车厂配置。
+      请先注册车场，才可进行场配置。
       <span slot="footer" class="dialog-footer">
         <el-button type="success" icon="el-icon-close" @click="dialogVisible = false">关闭</el-button>
       </span>

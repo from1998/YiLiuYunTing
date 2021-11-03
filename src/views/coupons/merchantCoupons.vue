@@ -537,7 +537,7 @@ export default {
         }
       }
     },
-    // 获取车厂信息
+    // 获取车场信息
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
