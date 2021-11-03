@@ -122,10 +122,6 @@ export default {
     // 查询进场数据
     this.getData()
   },
-  mounted() {
-    // 加载脚本
-    this.init()
-  },
   methods: {
     // 查询进场数据
     getData() {
@@ -138,6 +134,8 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
+        // 加载脚本
+        this.init()
       })
       this.loading = false// 关闭遮罩
     },

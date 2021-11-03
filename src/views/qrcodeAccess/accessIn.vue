@@ -54,16 +54,11 @@ export default {
   },
   created() {
     // 取路由路径上的参数
-    // this.queryParams.cameraId = this.encode64(this.$route.params && this.$route.params.cameraId) // 路由传参
     this.queryParams.cameraId = this.$route.query && this.$route.query.cameraId// 路由传参
     this.queryParams.sn = this.$route.query && this.$route.query.sn // 路由传参
-    // this.queryParams.sn = this.encode64(this.$route.params && this.$route.params.sn) // 路由传参
     // 查询进场数据
     this.getData()
   },
-  // mounted() {
-
-  // },
   methods: {
     // 查询进场数据
     getData() {

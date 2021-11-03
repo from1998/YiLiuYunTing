@@ -107,23 +107,6 @@ export default {
     // 查询进场数据
     this.getData()
   },
-  mounted() {
-    this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
-      const container = document.getElementById('app-container')
-      const st = document.querySelector('#anbo-ad-st')
-      if (st) {
-        container.removeChild(st)
-      }
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
-      container.append(script)
-      document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-      window.advShow = function() {
-      }
-    })
-  },
   methods: {
     // 查询进场数据
     getData() {
@@ -135,6 +118,21 @@ export default {
           this.AbParkId = res.data.park.abId
           this.msgSuccess(this.parkId)
           this.historyRecord = res.data.carNumberList
+          this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+            const container = document.getElementById('app-container')
+            const st = document.querySelector('#anbo-ad-st')
+            if (st) {
+              container.removeChild(st)
+            }
+            const script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.id = 'anbo-ad-st'
+            script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+            container.append(script)
+            document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+            window.advShow = function() {
+            }
+          })
         })
       } else {
         getCouponsDdata(this.queryParams).then(res => {
@@ -143,6 +141,21 @@ export default {
           this.parkName = res.data.park.name
           this.mcId = res.data.merchantCoupons.id
           this.merchantCouponsName = res.data.merchantCoupons.name
+          this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+            const container = document.getElementById('app-container')
+            const st = document.querySelector('#anbo-ad-st')
+            if (st) {
+              container.removeChild(st)
+            }
+            const script = document.createElement('script')
+            script.type = 'text/javascript'
+            script.id = 'anbo-ad-st'
+            script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+            container.append(script)
+            document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+            window.advShow = function() {
+            }
+          })
         })
       }
       this.loading = false// 关闭遮罩
