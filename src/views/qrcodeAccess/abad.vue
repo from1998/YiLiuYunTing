@@ -10,6 +10,13 @@ import { getNoPayData } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
 const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
+  name: 'AbWrapper',
+  //   props: {
+  //     abParkId: {
+  //       type: String,
+  //       default: ''
+  //     }
+  //   },
   data() {
     return {
       AbParkId: '',
@@ -60,26 +67,6 @@ export default {
         }
       })
     }
-    // loadScript(xyUrl, callback) {
-    //   var head = document.getElementsByTagName('head')[0]
-    //   var script = document.createElement('script')
-    //   script.type = 'text/javascript'
-    //   script.src = xyUrl
-    //   script.onload = script.onreadystatechange = function() {
-    //     if (
-    //       !this.readyState ||
-    //       this.readyState === 'loaded' ||
-    //       this.readyState === 'complete'
-    //     ) {
-    //       callback && callback()
-    //       script.onload = script.onreadystatechange = null
-    //       if (head && script.parentNode) {
-    //         head.removeChild(script)
-    //       }
-    //     }
-    //   }
-    //   head.insertBefore(script, head.firstChild)
-    // }
   }
 }
 </script>

@@ -86,20 +86,17 @@
         </el-col>
       </el-row>
     </div>
-    <AbWrapper />
+    <div id="anbo-ad-st" />
+    <div class="advwrap" />
   </div>
 </template>
 <script>
 import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
-import AbWrapper from './abad'
 const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
 // const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
-  components: {
-    AbWrapper
-  },
   data() {
     return {
       isWx: '',
@@ -139,6 +136,23 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
+        this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+          // 加载脚本
+          this.init()
+          const container = document.getElementById('app-container')
+          const st = document.querySelector('#anbo-ad-st')
+          if (st) {
+            container.removeChild(st)
+          }
+          const script = document.createElement('script')
+          script.type = 'text/javascript'
+          script.id = 'anbo-ad-st'
+          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+          container.append(script)
+          document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+          window.advShow = function() {
+          }
+        })
       })
       this.loading = false// 关闭遮罩
     },
@@ -234,6 +248,26 @@ export default {
           this.$router.go(0)
         }
       })
+    },
+    loadScript(xyUrl, callback) {
+      var head = document.getElementsByTagName('head')[0]
+      var script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = xyUrl
+      script.onload = script.onreadystatechange = function() {
+        if (
+          !this.readyState ||
+          this.readyState === 'loaded' ||
+          this.readyState === 'complete'
+        ) {
+          callback && callback()
+          script.onload = script.onreadystatechange = null
+          if (head && script.parentNode) {
+            head.removeChild(script)
+          }
+        }
+      }
+      head.insertBefore(script, head.firstChild)
     }
   }
 }
