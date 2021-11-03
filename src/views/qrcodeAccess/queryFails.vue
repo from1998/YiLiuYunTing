@@ -52,13 +52,14 @@ export default {
       loading: false,
       parkName: '',
       carNumber: '',
-      parkId: ''
+      AbParkId: ''
     }
   },
   created() {
     // 取路由路径上的参数
     this.parkName = this.$route.query && this.$route.query.parkName// 路由传参
     this.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
+    this.carNumber = this.$route.query && this.$route.query.AbParkId// 路由传参
   },
   mounted() {
     this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
@@ -70,7 +71,7 @@ export default {
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.parkId + '",host:""})'
+      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
       container.append(script)
       document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
       window.advShow = function() {

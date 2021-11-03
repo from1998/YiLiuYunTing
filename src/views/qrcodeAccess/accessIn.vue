@@ -43,6 +43,7 @@ export default {
     return {
       loading: false,
       parkId: '',
+      AbParkId: '',
       message: '',
       carNumber: '皖A12345',
       queryParams: {
@@ -70,7 +71,7 @@ export default {
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.parkId + '",host:""})'
+      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
       container.append(script)
       document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
       window.advShow = function() {
@@ -83,6 +84,7 @@ export default {
       this.loading = true // 打开遮罩
       getEnterData(this.queryParams).then(res => {
         this.carNumber = res.data.carNumber
+        this.AbParkId = res.data.park.abId
         this.parkId = res.data.parkId
         this.message = res.data.message
       })
