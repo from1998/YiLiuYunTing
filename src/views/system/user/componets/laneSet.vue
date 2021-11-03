@@ -72,8 +72,8 @@
       <el-table-column label="相机IP" align="center" prop="cameraIp" width="120px" />
       <el-table-column label="是否在线" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.isOnLine===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />离线</el-tag>
-          <el-tag v-show="scope.row.isOnLine===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />在线</el-tag>
+          <el-tag v-show="scope.row.isOnLine===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 离线</el-tag>
+          <el-tag v-show="scope.row.isOnLine===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 在线</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" />
