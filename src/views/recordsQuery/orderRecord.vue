@@ -264,10 +264,6 @@ export default {
       getOrderList(this.queryParams).then(res => {
         this.orderTableList = res.data.list
         this.orderTableList.map(val => {
-          // this.orderTableList.push({
-          //   number: val.number,
-          //   id: val.id
-          // })
           if (val.carNumber.charAt(0) === '临') {
             val.carNumberFlag = '临'
           } else if (val.carNumber.length === 8) {

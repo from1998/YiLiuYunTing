@@ -126,9 +126,11 @@
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" stripe>
-      <el-table-column label="车牌号" align="center" width="120">
+      <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carnumber }}</el-tag>
+          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
+          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }} 新</el-tag>
+          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="进场时间" width="180">
@@ -445,6 +447,13 @@ export default {
       this.loading = true // 打开遮罩
       getRecordList(this.queryParams).then(res => {
         this.carTableList = res.data.list
+        this.carTableList.map(val => {
+          if (val.carnumber.charAt(0) === '临') {
+            val.carNumberFlag = '临'
+          } else if (val.carnumber.length === 8) {
+            val.carNumberFlag = '新'
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

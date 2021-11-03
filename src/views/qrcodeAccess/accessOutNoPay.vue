@@ -192,7 +192,6 @@ export default {
       }
       createOrder(query).then(recieve => {
         this.queryParams.orderSn = recieve.data.orderSn
-        this.msgSuccess(recieve.data.orderSn)
         if (this.isWx) {
           window.WeixinJSBridge.invoke(
             'getBrandWCPayRequest',
