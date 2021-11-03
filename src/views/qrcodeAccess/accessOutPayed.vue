@@ -105,6 +105,7 @@ export default {
       loading: false,
       currentDate: '',
       loadDate: '',
+      AbParkId: '',
       resDate: {},
       success: false,
       queryParams: {
@@ -133,6 +134,7 @@ export default {
       getPayedData(this.queryParams).then(res => {
         this.resDate = res.data
         this.isTimeOut = res.data.isTimeOut
+        this.AbParkId = res.data.park.abId
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
         // 优惠券ID
@@ -176,7 +178,7 @@ export default {
         const script = document.createElement('script')
         script.type = 'text/javascript'
         script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.queryParams.parkId + '",host:""})'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
         container.append(script)
         document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
         window.advShow = function() {

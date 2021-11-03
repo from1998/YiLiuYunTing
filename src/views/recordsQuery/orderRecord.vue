@@ -96,16 +96,6 @@
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="应付金额">
-        <template slot-scope="scope">
-          <el-tag type="info" size="medium">￥{{ scope.row.totalamount }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="优惠金额">
-        <template slot-scope="scope">
-          <el-tag type="success" size="medium"> ￥{{ scope.row.discountableamount }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="实付金额">
         <template slot-scope="scope">
           <el-tag type="danger" size="medium">￥{{ scope.row.amount }}</el-tag>

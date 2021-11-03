@@ -84,6 +84,7 @@ export default {
       delId: '',
       loading: false,
       parkId: '',
+      AbParkId: '',
       mcId: '',
       // 要查询的车牌号
       carNumber: '',
@@ -116,7 +117,7 @@ export default {
       const script = document.createElement('script')
       script.type = 'text/javascript'
       script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.parkId + '",host:""})'
+      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
       container.append(script)
       document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
       window.advShow = function() {
@@ -132,11 +133,13 @@ export default {
           this.parkId = res.data.park.id
           this.msgSuccess(this.parkId)
           this.parkName = res.data.park.name
+          this.AbParkId = res.data.park.abId
           this.historyRecord = res.data.carNumberList
         })
       } else {
         getCouponsDdata(this.queryParams).then(res => {
           this.parkId = res.data.park.id
+          this.AbParkId = res.data.park.abId
           this.parkName = res.data.park.name
           this.mcId = res.data.merchantCoupons.id
           this.merchantCouponsName = res.data.merchantCoupons.name

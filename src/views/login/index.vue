@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <!-- 控制区域 -->
-    <div v-show="false">
+    <!-- <div v-show="false">
       <el-form ref="control" :model="controlForm" :inline="true" label-width="68px">
         <el-form-item label="动态背景" prop="menuName">
           <el-switch v-model="tagsView" class="drawer-switch" />
@@ -10,7 +10,7 @@
           <el-switch v-model="tagsView" class="drawer-switch" />
         </el-form-item>
         <span>粒子效果</span><el-switch v-model="tagsView" class="drawer-switch" />
-        <!-- 选择动态背景： 默认css渐变-->
+        选择动态背景： 默认css渐变
         <el-form-item label="背景样式" prop="bgStyle">
           <el-select
             v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
@@ -30,7 +30,7 @@
           </el-select>
         </el-form-item>
       </el-form>
-    </div>
+    </div>-->
     <div class="logo">
       <img src="../../assets/images/logo.png" alt="一流云停后台管理系统">
     </div>
