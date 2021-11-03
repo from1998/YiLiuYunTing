@@ -540,6 +540,7 @@ export default {
       this.open = true
       this.reset()
       this.title = '添加车道'
+      this.getlaneList()
     },
     // 打开修改的弹出层
     handleUpdate(row) {
@@ -551,6 +552,7 @@ export default {
       this.reset()
       // 根据id查询车道信息
       this.loading = true
+      this.getlaneList()
       getLaneById({
         id: id
       }).then(res => {
