@@ -393,24 +393,39 @@ export default {
     },
     // 清理异常车辆
     handleLeave() {
-      this.loading = true // 打开遮罩
-      cleanLeaveRecord().then(res => {
-        if (res.code === 200) {
-          this.msgSuccess(res.msg)
-          this.getAccessList()
-        }
+      this.$confirm('确定清理离场车辆?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 打开遮罩
+        cleanLeaveRecord().then(res => {
+          if (res.code === 200) {
+            this.msgSuccess(res.msg)
+            this.getAccessList()
+          }
+        })
+        this.loading = false// 关闭遮罩
+      }).catch(() => {
+        this.msgError('清理已取消')
       })
-      this.loading = false// 关闭遮罩
     },
     // 清理指定天数车辆
     handleEnter(days) {
-      console.log(days)
-      this.loading = true // 打开遮罩
-      cleanEnterRecord(days).then(() => {
-        this.msgSuccess(days + '天前的在场车辆已被成功清理')
-        this.getAccessList()
+      this.$confirm(`确定清理${days}天前的在场车辆?`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 打开遮罩
+        cleanEnterRecord(days).then(() => {
+          this.msgSuccess(days + '天前的在场车辆已被成功清理')
+          this.getAccessList()
+        })
+        this.loading = false// 关闭遮罩
+      }).catch(() => {
+        this.msgError('清理已取消')
       })
-      this.loading = false// 关闭遮罩
     },
     timeChange(start, end, val) {
       if (val === null) {

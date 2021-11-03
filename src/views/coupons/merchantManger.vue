@@ -253,7 +253,7 @@ export default {
     })
     // 查询表格数据
     this.getRoleList()
-    // 获取车厂数据
+    // 获取车场数据
     this.getCarList()
     this.roleId = this.getUserInfo().role
   },
@@ -272,7 +272,7 @@ export default {
         }
       }
     },
-    // 获取车厂信息
+    // 获取车场信息
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data

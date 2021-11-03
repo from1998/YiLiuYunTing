@@ -267,14 +267,22 @@ export default {
   methods: {
     // 清理过期未使用优惠券
     handleError() {
-      this.loading = true // 打开遮罩
-      cleanErrorRecord(this.queryParams.parkId).then(res => {
-        if (res.code === 200) {
-          this.msgSuccess(res.msg)
-          this.getRoleList()
-        }
+      this.$confirm('确定清理过期未使用优惠券?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true // 打开遮罩
+        cleanErrorRecord(this.queryParams.parkId).then(res => {
+          if (res.code === 200) {
+            this.msgSuccess(res.msg)
+            this.getRoleList()
+          }
+        })
+        this.loading = false// 关闭遮罩
+      }).catch(() => {
+        this.msgError('清理已取消')
       })
-      this.loading = false// 关闭遮罩
     },
     handleParkFocus(val) {
       if (val === '') {
@@ -289,7 +297,7 @@ export default {
         }
       }
     },
-    // 获取车厂信息
+    // 获取车场信息
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data

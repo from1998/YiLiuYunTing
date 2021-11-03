@@ -1,7 +1,7 @@
 <template>
   <div style="width: 100%;height:100%;  position: relative;">
     <dv-decoration-7 class="mapTitle">
-      <span>全国车厂分布图</span>
+      <span>全国车场分布图</span>
     </dv-decoration-7>
     <div id="chart" style="width: 100%;height:100%;" />
   </div>
