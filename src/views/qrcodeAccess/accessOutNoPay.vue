@@ -105,7 +105,9 @@ export default {
       loading: false,
       currentDate: '',
       loadDate: '',
-      resDate: {},
+      resDate: {
+        park: {}
+      },
       success: false,
       queryParams: {
         carNumber: '',
@@ -127,7 +129,8 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       getNoPayData(this.queryParams).then(res => {
-        this.resDate = res.data
+        this.resDate
+        Object.assign(this.resDate, res.data)
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
         this.AbParkId = res.data.park.abId
