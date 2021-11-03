@@ -207,12 +207,12 @@
           <el-tag v-show="scope.row.isleave===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />已出场</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="支付时间" width="168">
+      <el-table-column align="center" label="支付时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="200">
+      <el-table-column label="操作" align="center" width="180">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
             查看进出场图片
