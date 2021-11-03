@@ -61,23 +61,9 @@ export default {
     // 查询进场数据
     this.getData()
   },
-  mounted() {
-    this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
-      const container = document.getElementById('app-container')
-      const st = document.querySelector('#anbo-ad-st')
-      if (st) {
-        container.removeChild(st)
-      }
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.id = 'anbo-ad-st'
-      script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:' + this.AbParkId + ',host:""})'
-      container.append(script)
-      document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-      window.advShow = function() {
-      }
-    })
-  },
+  // mounted() {
+
+  // },
   methods: {
     // 查询进场数据
     getData() {
@@ -88,6 +74,21 @@ export default {
         this.msgSuccess(this.AbParkId)
         this.parkId = res.data.parkId
         this.message = res.data.message
+        this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+          const container = document.getElementById('app-container')
+          const st = document.querySelector('#anbo-ad-st')
+          if (st) {
+            container.removeChild(st)
+          }
+          const script = document.createElement('script')
+          script.type = 'text/javascript'
+          script.id = 'anbo-ad-st'
+          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+          container.append(script)
+          document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+          window.advShow = function() {
+          }
+        })
       })
       this.loading = false// 关闭遮罩
     },

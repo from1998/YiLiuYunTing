@@ -131,9 +131,9 @@ export default {
       if (this.pay) {
         getLeaveData(this.queryParams).then(res => {
           this.parkId = res.data.park.id
-          this.msgSuccess(this.parkId)
           this.parkName = res.data.park.name
           this.AbParkId = res.data.park.abId
+          this.msgSuccess(this.parkId)
           this.historyRecord = res.data.carNumberList
         })
       } else {
