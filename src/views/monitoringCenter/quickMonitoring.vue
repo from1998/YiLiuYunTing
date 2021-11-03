@@ -117,7 +117,7 @@
         <el-container class="container">
           <el-main class="main">
             <!-- 图片 -->
-            <el-image :src="item.carRecord!==null?(item.lane.type===1?item.carRecord.epicture:item.carRecord.lpicture):src" :preview-src-list="[item.carRecord!==null?(item.lane.type===1?item.carRecord.epicture:item.carRecord.lpicture):src]">
+            <el-image :src="item.carRecord!==null?(item.lane.type===1?(item.carRecord.epicture !== null?item.carRecord.epicture:src):(item.carRecord.lpicture!==null?item.carRecord.lpicture:src)):src" :preview-src-list="[item.carRecord!==null?(item.lane.type===1?item.carRecord.epicture:item.carRecord.lpicture):src]">
               <div slot="placeholder" class="image-slot">
                 加载中<span class="dot">...</span>
               </div>
