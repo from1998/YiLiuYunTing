@@ -137,6 +137,7 @@ export default {
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+          this.msgSuccess('ab成功')
           // 加载脚本
           this.init()
           const container = document.getElementById('app-container')
@@ -161,6 +162,7 @@ export default {
       // 加载微信支付脚本
       if (this.isWx) {
         load(wechatJs, () => {
+          this.msgSuccess('-------------------')
           if (typeof WeixinJSBridge === 'undefined') {
             if (document.addEventListener) {
               document.addEventListener('WeixinJSBridgeReady', () => { })
