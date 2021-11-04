@@ -86,12 +86,7 @@
         label="车场名称"
       >
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>车场名称: {{ scope.row.parkName }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
-            </div>
-          </el-popover>
+          <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
         </template>
       </el-table-column>
     </el-table>

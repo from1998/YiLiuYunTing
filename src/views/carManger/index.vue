@@ -9,7 +9,6 @@
     <el-row style="margin-bottom:20px">
       <el-col :span="19">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
         <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
         <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
@@ -574,8 +573,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 分页数据总条数
@@ -783,7 +780,6 @@ export default {
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     // 分页size变化时触发
