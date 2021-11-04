@@ -112,11 +112,12 @@ export const constantRoutes = [
 ]
 export const asyncRoutes = [
   {
-    path: '/dashboard',
+    path: '/',
     component: Layout,
+    redirect: '/dashboard',
     name: '/dashboard',
     children: [{
-      path: 'index',
+      path: 'dashboard',
       name: '/dashboard/index',
       component: () =>
                 import ('@/views/dashboard/index'),
