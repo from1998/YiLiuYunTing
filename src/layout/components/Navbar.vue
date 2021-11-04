@@ -9,7 +9,7 @@
         <div id="time-container" class="right-menu-item">
           {{ Utils() }}
         </div>
-        <iframe id="weather-container" class="right-menu-item hover-effect" width="220px" height="60px" allowtransparency="true" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com?c=code&id=18&icon=1" />
+        <iframe id="weather-container" style="padding: 0" class="right-menu-item hover-effect" width="220px" height="60px" allowtransparency="true" frameborder="0" scrolling="no" hspace="0" src="https://i.tianqi.com?c=code&id=18&icon=1" />
         <!-- <el-tooltip content="通知公告" effect="dark" placement="bottom">
           <div id="notices-container" class="right-menu-item hover-effect">
             <svg-icon icon-class="notice" style="font-weight:700" @click="noticeOpen" />

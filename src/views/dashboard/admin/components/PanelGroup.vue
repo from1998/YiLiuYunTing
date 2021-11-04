@@ -1,6 +1,6 @@
 <template>
-  <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :md="8" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
+  <el-row :gutter="20" class="panel-group">
+    <el-col :xl="4" :xs="12" :sm="12" :md="8" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?8:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
@@ -13,7 +13,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
+    <el-col :xl="4" :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?8:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="car" class-name="card-panel-icon" />
@@ -26,7 +26,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
+    <el-col :xl="4" :md="8" :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?8:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money-bag" class-name="card-panel-icon" />
@@ -39,7 +39,7 @@
         </div>
       </div>
     </el-col>
-    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
+    <el-col :xl="4" :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?8:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-money">
           <svg-icon icon-class="money" class-name="card-panel-icon" />
@@ -53,7 +53,7 @@
       </div>
     </el-col>
     <div v-if="getUserInfo().role === 1 || getUserInfo().role=== 3">
-      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+      <el-col :xl="4" :md="8" :span="4" :xs="12" :sm="12" :lg="8" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="ai-profit" class-name="card-panel-icon" />
@@ -66,7 +66,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :xs="12" :sm="12" :lg="4" class="card-panel-col">
+      <el-col :xl="4" :xs="12" :sm="12" :lg="8" class="card-panel-col">
         <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="money_pay_fill" class-name="card-panel-icon" />
@@ -118,8 +118,6 @@ export default {
 
 <style lang="scss" scoped>
 .panel-group {
-  margin-top: 18px;
-
   .card-panel-col {
     margin-bottom: 32px;
   }

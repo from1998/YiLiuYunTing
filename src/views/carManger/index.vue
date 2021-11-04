@@ -537,7 +537,7 @@
 </template>
 <script>
 // 引入api
-import { getPortList, getPortType, getPortById, addPort, updatePort, deletePort, doRenew, doManyRenew, downloadRegisterCar, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
+import { getPortList, getPortById, addPort, updatePort, deletePort, doRenew, doManyRenew, downloadRegisterCar, exportRegisterCar, getPortRenewHistory } from '@/api/carManger'
 import { getSiteByMid } from '@/api/system/carSetting'
 import { listAll } from '@/api/coupons/couponsManger'
 import { getToken } from '@/utils/auth'
@@ -652,7 +652,7 @@ export default {
       this.options.areaNumber = res.data
     })
     // 获取车位类型数据
-    getPortType().then(res => {
+    this.getDataByType('CarRegisterTypeDic').then(res => {
       this.options.depotCategoryOptions = res.data
     })
     // 获取车场列表数据
