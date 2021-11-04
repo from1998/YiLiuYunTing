@@ -83,14 +83,24 @@
         width="300"
       >
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.sn" size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.sn }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制订单号{{ scope.row.sn }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-show="scope.row.sn" v-clipboard:copy="scope.row.sn" v-clipboard:success="clipboardSuccess" size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.sn }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
-          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
-          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车牌号{{ scope.row.carNumber }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+              <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+              <el-tag v-else v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="center" label="停车时长" width="180">
@@ -140,8 +150,12 @@
 // 引入api
 import { getOrderList, getOrderDict } from '@/api/recordsQuery/orderRecord'
 import { listAll } from '@/api/coupons/couponsManger'
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -209,6 +223,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！${val.text}已复制到剪贴板。`)
+    },
     handleParkFocus(val) {
       if (val === '') {
         this.laneName = ''

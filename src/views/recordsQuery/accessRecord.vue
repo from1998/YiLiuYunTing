@@ -128,9 +128,14 @@
     <el-table v-loading="loading" border :data="carTableList" stripe>
       <el-table-column label="车牌号" align="center" width="126">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
-          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }} 新</el-tag>
-          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车牌号{{ scope.row.carnumber }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carnumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
+              <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carnumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }} 新</el-tag>
+              <el-tag v-else v-clipboard:copy="scope.row.carnumber" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="center" label="进场时间" width="170">
@@ -293,8 +298,12 @@
 // 引入api
 import { getRecordList, cleanLeaveRecord, cleanEnterRecord } from '@/api/monitoringCenter/accessRecord'
 import { listAll } from '@/api/coupons/couponsManger'
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -378,6 +387,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！${val.text}已复制到剪贴板。`)
+    },
     handleParkFocus(val) {
       if (val === '') {
         this.laneName = ''
