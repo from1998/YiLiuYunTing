@@ -95,7 +95,7 @@ import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } f
 import load from '@/components/Tinymce/dynamicLoadScript'
 const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
-// const adJs = 'https://sdk.anbokeji.net/adv/index.js'
+const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
   data() {
     return {
@@ -129,7 +129,6 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       getNoPayData(this.queryParams).then(res => {
-        const that = this
         Object.assign(this.resDate, res.data)
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
@@ -137,28 +136,27 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
-          const container = document.getElementById('app-container')
-          const st = document.querySelector('#anbo-ad-st')
-          if (st) {
-            container.removeChild(st)
-          }
-          const script = document.createElement('script')
-          script.type = 'text/javascript'
-          script.id = 'anbo-ad-st'
-          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
-          container.append(script)
-          document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-          window.advShow = function() {
-            // 加载脚本
-            that.init()
-          }
-        })
       })
       this.loading = false// 关闭遮罩
     },
     // 脚本初始化加载
-    init() {
+    async init() {
+      // 加载安泊广告脚本
+      await load(adJs, () => {
+        const container = document.getElementById('app-container')
+        const st = document.querySelector('#anbo-ad-st')
+        if (st) {
+          container.removeChild(st)
+        }
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.id = 'anbo-ad-st'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+        container.append(script)
+        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+        window.advShow = function() {
+        }
+      })
       // 加载微信支付脚本
       if (this.isWx) {
         load(wechatJs, () => {
@@ -249,26 +247,6 @@ export default {
           this.$router.go(0)
         }
       })
-    },
-    loadScript(xyUrl, callback) {
-      var head = document.getElementsByTagName('head')[0]
-      var script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.src = xyUrl
-      script.onload = script.onreadystatechange = function() {
-        if (
-          !this.readyState ||
-          this.readyState === 'loaded' ||
-          this.readyState === 'complete'
-        ) {
-          callback && callback()
-          script.onload = script.onreadystatechange = null
-          if (head && script.parentNode) {
-            head.removeChild(script)
-          }
-        }
-      }
-      head.insertBefore(script, head.firstChild)
     }
   }
 }
