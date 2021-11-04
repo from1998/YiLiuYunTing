@@ -4,6 +4,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
+
 /**
  * constantRoutes 常量路由，这些路由由后台的数据控制是否显示
  */
@@ -111,12 +112,11 @@ export const constantRoutes = [
 ]
 export const asyncRoutes = [
   {
-    path: '/',
+    path: '/dashboard',
     component: Layout,
-    redirect: '/dashboard',
     name: '/dashboard',
     children: [{
-      path: 'dashboard',
+      path: 'index',
       name: '/dashboard/index',
       component: () =>
                 import ('@/views/dashboard/index'),

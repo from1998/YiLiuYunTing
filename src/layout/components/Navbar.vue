@@ -137,7 +137,13 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      let path = ''
+      if (this.getUserInfo().role === 6) {
+        path = '/monitoringCenter/quickMonitoring'
+      } else {
+        path = '/dashboard'
+      }
+      this.$router.push(`/login?redirect=${path}`)
     }
   }
 }

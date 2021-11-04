@@ -134,13 +134,36 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
-          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
-          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车牌号{{ scope.row.carNumber }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+              <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+              <el-tag v-else v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="车主姓名" align="center" prop="userName" />
-      <el-table-column label="车主手机号" align="center" prop="mobile" />
+      <el-table-column label="车主姓名" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车主姓名{{ scope.row.userName }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.userName" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><i class="el-icon-user-solid" /> {{ scope.row.userName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="车主手机号" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车主手机号{{ scope.row.mobile }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.mobile" v-clipboard:success="clipboardSuccess" type="info" size="mini" effect="dark"><i class="el-icon-phone" /> {{ scope.row.mobile }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="车辆类型" align="center" prop="carType" :formatter="carTypeFormatter" />
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
       <el-table-column label="是否在租" align="center">
@@ -542,10 +565,13 @@ import { getPortList, getPortById, addPort, updatePort, deletePort, doRenew, doM
 import { getSiteByMid } from '@/api/system/carSetting'
 import { listAll } from '@/api/coupons/couponsManger'
 import { getToken } from '@/utils/auth'
-
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 import validate from '@/utils/validate.js'
 
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -671,6 +697,10 @@ export default {
 
   // },
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！${val.text}已复制到剪贴板。`)
+    },
     change(val) {
       console.log(val)
       this.$forceUpdate()
