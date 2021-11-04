@@ -37,7 +37,19 @@
     </el-row>
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="laneList" stripe>
-      <el-table-column label="车场名称" align="center" prop="parkName" />
+      <el-table-column
+        align="center"
+        label="车场名称"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>车场名称: {{ scope.row.parkName }}</p>
+            <div v-show="scope.row.parkName" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="车道名称" align="center" prop="name" />
       <el-table-column label="车道类型" align="center" prop="type" :formatter="typeFormatter" />
       <el-table-column label="所属岗亭" align="center" prop="workStationName" />

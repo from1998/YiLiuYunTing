@@ -146,7 +146,7 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>进场车道: {{ scope.row.elaneName }}</p>
-            <div slot="reference" class="name-wrapper">
+            <div v-show="scope.row.elaneName" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.elaneName }}</el-tag>
             </div>
           </el-popover>
@@ -165,16 +165,16 @@
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>出场车道: {{ scope.row.llaneName }}</p>
-            <div slot="reference" class="name-wrapper">
+            <div v-show="scope.row.llaneName" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.llaneName }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
       <!-- RecordCarTypeDic -->
-      <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" width="80" />
+      <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" />
       <!-- CarRecordStatusDic -->
-      <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" width="80" />
+      <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" />
       <el-table-column label="进场检查情况" align="center">
         <template slot-scope="scope">
           <el-popover v-show="scope.row.echeckmark !== null" trigger="hover" placement="top">
@@ -195,16 +195,16 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="是否进场" align="center" width="90">
+      <el-table-column label="是否进场" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.isenter===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />未进场</el-tag>
-          <el-tag v-show="scope.row.isenter===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />已进场</el-tag>
+          <el-tag v-show="scope.row.isenter===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 未进场</el-tag>
+          <el-tag v-show="scope.row.isenter===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 已进场</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="是否出场" align="center" width="90">
+      <el-table-column label="是否出场" align="center">
         <template slot-scope="scope">
-          <el-tag v-show="scope.row.isleave===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" />未出场</el-tag>
-          <el-tag v-show="scope.row.isleave===1" type="success" size="mini" effect="dark"><i class="el-icon-check" />已出场</el-tag>
+          <el-tag v-show="scope.row.isleave===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 未出场</el-tag>
+          <el-tag v-show="scope.row.isleave===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 已出场</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="支付时间" width="180">
@@ -212,7 +212,7 @@
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180">
+      <el-table-column label="操作" align="center" width="170">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
             查看进出场图片

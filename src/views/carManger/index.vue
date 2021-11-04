@@ -135,7 +135,9 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="车主姓名" align="center" prop="userName" />
@@ -188,7 +190,7 @@
           </el-row>
           <el-row v-show="scope.row.registerType!==3" :gutter="20">
             <el-col :span="12" :offset="6">
-              <span>该车位长期有效</span>
+              <el-tag type="success" size="mini" effect="dark"><i class="el-icon-check" /> 该车位长期有效</el-tag>
             </el-col>
           </el-row>
         </template>
@@ -758,6 +760,13 @@ export default {
       this.loading = true // 打开遮罩
       getPortList(this.queryParams).then(res => {
         this.carTableList = res.data.list
+        this.carTableList.map(val => {
+          if (val.carNumber.charAt(0) === '临') {
+            val.carNumberFlag = '临'
+          } else if (val.carNumber.length === 8) {
+            val.carNumberFlag = '新'
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

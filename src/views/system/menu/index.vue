@@ -295,16 +295,16 @@ export default {
             addMenu(this.form).then(res => {
               this.msgSuccess(res.msg)
               this.loading = false
-              this.getMenuList()// 列表重新查询
               this.open = false// 关闭弹出层
+              this.$router.go(0)
             })
             this.loading = false
           } else { // 做修改
             updateMenu(this.form).then(res => {
               this.msgSuccess(res.msg)
               this.loading = false
-              this.getMenuList()// 列表重新查询
               this.open = false// 关闭弹出层
+              this.$router.go(0)
             })
             this.loading = false
           }
