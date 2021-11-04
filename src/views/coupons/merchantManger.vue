@@ -97,10 +97,34 @@
         width="55"
         align="center"
       />
-      <el-table-column label="商户号" align="center" prop="username" />
+      <el-table-column
+        align="center"
+        label="商户号"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>商户号: {{ scope.row.username }}</p>
+            <div v-show="scope.row.username" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.username }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="联系人" align="center" prop="realName" />
       <el-table-column label="手机号" align="center" prop="mobile" />
-      <el-table-column label="地址" align="center" prop="email" />
+      <el-table-column
+        align="center"
+        label="地址"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>地址: {{ scope.row.email }}</p>
+            <div v-show="scope.row.email" slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.email }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>

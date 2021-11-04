@@ -74,7 +74,7 @@
       <el-table-column align="center" label="登陆名称">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制登陆名称。</p>
+            <p>提示：点击复制登陆名称{{ scope.row.username }}</p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-clipboard:copy="scope.row.username" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.username }}</el-tag>
             </div>
@@ -377,12 +377,7 @@ export default {
     getUserList() {
       this.loading = true // 打开遮罩
       listUserForPage(this.queryParams, this.dateRange).then(res => {
-        res.data.list.map(val => {
-          // 列表只显示超管 代理商 车场
-          if (val.role === 1 || val.role === 3 || val.role === 4) {
-            this.userTableList.push(val)
-          }
-        })
+        this.userTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

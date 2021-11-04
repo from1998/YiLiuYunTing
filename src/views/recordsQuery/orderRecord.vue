@@ -77,7 +77,15 @@
 
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="orderTableList" stripe>
-      <el-table-column label="订单号" align="center" prop="sn" width="300" />
+      <el-table-column
+        align="center"
+        label="订单号"
+        width="300"
+      >
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.sn" size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.sn }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
@@ -85,7 +93,7 @@
           <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="停车时长" width="200">
+      <el-table-column align="center" label="停车时长" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.durationFormater }}</el-tag>
         </template>

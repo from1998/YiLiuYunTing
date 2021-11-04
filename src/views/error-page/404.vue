@@ -15,7 +15,7 @@
         <div class="bullshit__headline">{{ message }}</div>
         <div class="bullshit__info">请检查您输入的URL是否正确，或者点击下面的按钮返回主页。</div>
         <a href="" class="bullshit__return-home">
-          <router-link to="/dashboard">
+          <router-link :to="getUserInfo().role === 6?'/monitoringCenter/quickMonitoring':'dashboard'">
             回首页
           </router-link>
         </a>

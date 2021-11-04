@@ -13,7 +13,7 @@
         <ul class="list-unstyled">
           <li>或者你可以:</li>
           <li class="link-type">
-            <router-link to="/dashboard">
+            <router-link :to="getUserInfo().role=== 6?'/monitoringCenter/quickMonitoring':'dashboard'">
               回首页
             </router-link>
           </li>

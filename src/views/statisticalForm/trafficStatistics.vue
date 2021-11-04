@@ -66,7 +66,9 @@
     <el-table v-loading="loading" border :data="trafficTableList" stripe>
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carnumber }}</el-tag>
+          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
+          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }} 新</el-tag>
+          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="进场时间" align="center">
@@ -84,12 +86,7 @@
         label="车场名称"
       >
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>车场名称: {{ scope.row.parkName }}</p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
-            </div>
-          </el-popover>
+          <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -233,6 +230,13 @@ export default {
       this.form.times = this.form.trafficMonth
       getRecordList(this.form).then(res => {
         this.trafficTableList = res.data.list
+        this.trafficTableList.map(val => {
+          if (val.carnumber.charAt(0) === '临') {
+            val.carNumberFlag = '临'
+          } else if (val.carnumber.length === 8) {
+            val.carNumberFlag = '新'
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

@@ -9,7 +9,6 @@
     <el-row style="margin-bottom:20px">
       <el-col :span="19">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-        <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
         <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
         <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
@@ -135,11 +134,36 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
-          <el-tag type="primary" size="medium" effect="dark"><svg-icon icon-class="car" />{{ scope.row.carNumber }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车牌号{{ scope.row.carNumber }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+              <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+              <el-tag v-else v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="车主姓名" align="center" prop="userName" />
-      <el-table-column label="车主手机号" align="center" prop="mobile" />
+      <el-table-column label="车主姓名" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车主姓名{{ scope.row.userName }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.userName" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><i class="el-icon-user-solid" /> {{ scope.row.userName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="车主手机号" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车主手机号{{ scope.row.mobile }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.mobile" v-clipboard:success="clipboardSuccess" type="info" size="mini" effect="dark"><i class="el-icon-phone" /> {{ scope.row.mobile }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="车辆类型" align="center" prop="carType" :formatter="carTypeFormatter" />
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
       <el-table-column label="是否在租" align="center">
@@ -188,7 +212,7 @@
           </el-row>
           <el-row v-show="scope.row.registerType!==3" :gutter="20">
             <el-col :span="12" :offset="6">
-              <span>该车位长期有效</span>
+              <el-tag type="success" size="mini" effect="dark"><i class="el-icon-check" /> 该车位长期有效</el-tag>
             </el-col>
           </el-row>
         </template>
@@ -541,10 +565,13 @@ import { getPortList, getPortById, addPort, updatePort, deletePort, doRenew, doM
 import { getSiteByMid } from '@/api/system/carSetting'
 import { listAll } from '@/api/coupons/couponsManger'
 import { getToken } from '@/utils/auth'
-
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 import validate from '@/utils/validate.js'
 
 export default {
+  directives: {
+    clipboard
+  },
   // 定义页面数据
   data() {
     return {
@@ -572,8 +599,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 分页数据总条数
@@ -672,6 +697,10 @@ export default {
 
   // },
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！${val.text}已复制到剪贴板。`)
+    },
     change(val) {
       console.log(val)
       this.$forceUpdate()
@@ -758,6 +787,13 @@ export default {
       this.loading = true // 打开遮罩
       getPortList(this.queryParams).then(res => {
         this.carTableList = res.data.list
+        this.carTableList.map(val => {
+          if (val.carNumber.charAt(0) === '临') {
+            val.carNumberFlag = '临'
+          } else if (val.carNumber.length === 8) {
+            val.carNumberFlag = '新'
+          }
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
@@ -775,7 +811,6 @@ export default {
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     // 分页size变化时触发
