@@ -66,7 +66,6 @@ export default {
       getEnterData(this.queryParams).then(res => {
         this.carNumber = res.data.carNumber
         this.AbParkId = res.data.park.abId
-        this.msgSuccess(this.AbParkId)
         this.parkId = res.data.parkId
         this.message = res.data.message
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
@@ -78,7 +77,7 @@ export default {
           const script = document.createElement('script')
           script.type = 'text/javascript'
           script.id = 'anbo-ad-st'
-          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",})'
           container.append(script)
           document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
           window.advShow = function() {

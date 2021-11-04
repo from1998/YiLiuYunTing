@@ -44,9 +44,12 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        this.init()
       })
       this.loading = false// 关闭遮罩
+    },
+    mounted() {
+      this.init()
+      this.msgSuccess('加载成功')
     },
     // 脚本初始化加载
     init() {
@@ -60,9 +63,9 @@ export default {
         const script = document.createElement('script')
         script.type = 'text/javascript'
         script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",})'
         container.append(script)
-        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+        document.querySelector('.advwrap').innerHTML = "<anboadv type='10001' @show='advShow'></anboadv>"
         window.advShow = function() {
         }
       })
