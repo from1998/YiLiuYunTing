@@ -116,7 +116,6 @@ export default {
           this.parkId = res.data.park.id
           this.parkName = res.data.park.name
           this.AbParkId = res.data.park.abId
-          this.msgSuccess(this.parkId)
           this.historyRecord = res.data.carNumberList
           this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
             const container = document.getElementById('app-container')

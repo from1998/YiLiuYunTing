@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="40" class="panel-group">
-    <el-col :xs="12" :sm="12" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
+    <el-col :xs="12" :sm="12" :md="8" :lg="getUserInfo().role === 1 || getUserInfo().role=== 3?4:6" class="card-panel-col">
       <div class="card-panel">
         <div class="card-panel-icon-wrapper icon-people">
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
