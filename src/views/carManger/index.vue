@@ -769,6 +769,7 @@ export default {
     // 重置条件查询
     resetQuery() {
       this.resetForm('queryForm')
+      this.queryParams.page = 1
       this.getList()
     },
     // 数据表格的多选择框选择时触发

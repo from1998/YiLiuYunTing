@@ -224,6 +224,7 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('form')
+      this.form.page = 1
       this.getTimeList()
     },
     // 分页size变化时触发

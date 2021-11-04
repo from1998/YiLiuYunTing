@@ -486,6 +486,7 @@ export default {
       this.queryParams.enterEnd = undefined
       this.queryParams.leaveStart = undefined
       this.queryParams.leaveEnd = undefined
+      this.queryParams.page = 1
       this.getAccessList()
     },
     // 分页size变化时触发

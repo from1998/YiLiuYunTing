@@ -282,6 +282,7 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      this.queryParams.page = 1
       this.getOrderTable()
     },
     // 分页size变化时触发

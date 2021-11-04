@@ -252,6 +252,7 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.dateRange = this.timeDefault()
+      this.queryParams.page = 1
       this.getOperLogList()
     },
     // 数据表格的多选择框选择时触发

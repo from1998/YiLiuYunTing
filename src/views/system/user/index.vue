@@ -396,6 +396,7 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.dateRange = []
+      this.queryParams.page = 1
       this.getUserList()
     },
     // 手机号校验

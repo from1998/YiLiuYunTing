@@ -443,6 +443,7 @@ export default {
         this.queryParams.parkId = ''
       }
       this.dateRange = []
+      this.queryParams.page = 1
       this.getCouponsList()
     },
     // 数据表格的多选择框选择时触发
