@@ -176,12 +176,16 @@ export default {
     getData() {
       this.loading = true // 打开遮罩
       getNoPayData(this.queryParams).then(res => {
-        Object.assign(this.resDate, res.data)
-        this.isWx = res.data.baseData.isWx
-        this.isAli = res.data.baseData.isAli
-        // 优惠券ID
-        this.queryParams.couponsRecordId = res.data.couponsRecord.id
-        this.queryParams.carNumber = res.data.carNumber
+        if (res.code === 200) {
+          Object.assign(this.resDate, res.data)
+          this.isWx = res.data.baseData.isWx
+          this.isAli = res.data.baseData.isAli
+          // 优惠券ID
+          this.queryParams.couponsRecordId = res.data.couponsRecord.id
+          this.queryParams.carNumber = res.data.carNumber
+        } else {
+          this.$router.push(`/qrcodeAccess/queryFails?${res.data}`)
+        }
       })
       this.loading = false// 关闭遮罩
     },
