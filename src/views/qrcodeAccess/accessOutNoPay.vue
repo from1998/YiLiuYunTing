@@ -141,8 +141,9 @@ export default {
     },
     // 脚本初始化加载
     init(AbParkId) {
+      console.log(AbParkId)
       // 加载安泊广告脚本
-      this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+      this.loadScript('//sdk.anbokeji.net/adv/index.js', () => {
         const container = document.getElementById('app-container')
         const st = document.querySelector('#anbo-ad-st')
         if (st) {
