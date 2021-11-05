@@ -195,7 +195,7 @@
           <el-popover v-show="scope.row.lcheckmark" trigger="hover" placement="top">
             <p>出场检查情况: <el-tag type="primary" size="mini" effect="dark">{{ scope.row.lcheckmark }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="small">{{ scope.row.lcheckmark }}</el-tag>
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.lcheckmark }}</el-tag>
             </div>
           </el-popover>
         </template>
