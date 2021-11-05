@@ -140,30 +140,33 @@ export default {
       this.loading = false// 关闭遮罩
     },
     mounted() {
-      // 加载微信支付脚本
-      if (this.isWx) {
-        load(wechatJs, () => {
-          if (typeof WeixinJSBridge === 'undefined') {
-            if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', () => { })
-            } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', () => { })
+      this.$nextTick(() => {
+        // 确保dom异步加载完毕
+        // 加载微信支付脚本
+        if (this.isWx) {
+          load(wechatJs, () => {
+            if (typeof WeixinJSBridge === 'undefined') {
+              if (document.addEventListener) {
+                document.addEventListener('WeixinJSBridgeReady', () => { })
+              } else if (document.attachEvent) {
+                document.attachEvent('WeixinJSBridgeReady', () => { })
 
-              document.attachEvent('onWeixinJSBridgeReady', () => {})
+                document.attachEvent('onWeixinJSBridgeReady', () => {})
+              }
             }
-          }
-        })
-      }
-      // 加载支付宝支付脚本
-      if (this.isAli) {
-        load(aLiJs, () => {
-          if (window.AlipayJSBridge) {
-            () => { }
-          } else {
-            document.addEventListener('AlipayJSBridgeReady', () => {})
-          }
-        })
-      }
+          })
+        }
+        // 加载支付宝支付脚本
+        if (this.isAli) {
+          load(aLiJs, () => {
+            if (window.AlipayJSBridge) {
+              () => { }
+            } else {
+              document.addEventListener('AlipayJSBridgeReady', () => {})
+            }
+          })
+        }
+      })
     },
     // 脚本初始化加载
     init(AbParkId) {
