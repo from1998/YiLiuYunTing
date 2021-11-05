@@ -144,6 +144,21 @@ export const asyncRoutes = [
     }]
   },
   {
+    path: '/detailed',
+    component: Layout,
+    redirect: '/detailed/detailed',
+    name: '/detailed',
+    children: [{
+      path: 'detailed',
+      name: '/detailed/detailed',
+      component: () => import('@/views/detailed/detailed'),
+      meta: {
+        title: '分润明细',
+        icon: 'mx'
+      }
+    }]
+  },
+  {
     path: '/updatePWD',
     component: Layout,
     redirect: '/updatePWD/index',
