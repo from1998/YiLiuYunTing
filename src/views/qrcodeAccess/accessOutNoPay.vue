@@ -125,9 +125,9 @@ export default {
   },
   methods: {
     // 查询进场数据
-    getData() {
+    async getData() {
       this.loading = true // 打开遮罩
-      getNoPayData(this.queryParams).then(res => {
+      await getNoPayData(this.queryParams).then(res => {
         Object.assign(this.resDate, res.data)
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
@@ -135,8 +135,8 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        this.init(this.AbParkId)
       })
+      this.init(this.AbParkId)
       this.loading = false// 关闭遮罩
     },
     mounted() {
