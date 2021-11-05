@@ -126,24 +126,25 @@ export default {
   mounted() {
     // 确保dom异步加载完毕
     this.$nextTick(() => {
-      this.getData()
-      // 加载安泊广告脚本
-      console.log('开始加载')
-      this.loadScript('//sdk.anbokeji.net/adv/index.js', () => {
-        console.log('================' + this.AbParkId)
-        const container = document.getElementById('app-container')
-        // const st = document.querySelector('#anbo-ad-st')
-        // if (st) {
-        //   container.removeChild(st)
-        // }
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",})'
-        container.append(script)
-        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-        window.advShow = function() {
-        }
+      getNoPayData(this.queryParams).then(res => {
+        // 加载安泊广告脚本
+        console.log('开始加载')
+        this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+          console.log('================' + this.AbParkId)
+          const container = document.getElementById('app-container')
+          // const st = document.querySelector('#anbo-ad-st')
+          // if (st) {
+          //   container.removeChild(st)
+          // }
+          const script = document.createElement('script')
+          script.type = 'text/javascript'
+          script.id = 'anbo-ad-st'
+          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + res.data.park.abId + '",})'
+          container.append(script)
+          document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+          window.advShow = function() {
+          }
+        })
       })
       // 加载微信支付脚本
       if (this.isWx) {
