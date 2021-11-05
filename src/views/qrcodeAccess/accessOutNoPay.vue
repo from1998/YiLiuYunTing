@@ -139,6 +139,32 @@ export default {
       })
       this.loading = false// 关闭遮罩
     },
+    mounted() {
+      // 加载微信支付脚本
+      if (this.isWx) {
+        load(wechatJs, () => {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', () => { })
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', () => { })
+
+              document.attachEvent('onWeixinJSBridgeReady', () => {})
+            }
+          }
+        })
+      }
+      // 加载支付宝支付脚本
+      if (this.isAli) {
+        load(aLiJs, () => {
+          if (window.AlipayJSBridge) {
+            () => { }
+          } else {
+            document.addEventListener('AlipayJSBridgeReady', () => {})
+          }
+        })
+      }
+    },
     // 脚本初始化加载
     init(AbParkId) {
       console.log(AbParkId)
@@ -155,31 +181,7 @@ export default {
         script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + AbParkId + '",})'
         container.append(script)
         document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-        window.advShow = () => {
-          // 加载微信支付脚本
-          if (this.isWx) {
-            load(wechatJs, () => {
-              if (typeof WeixinJSBridge === 'undefined') {
-                if (document.addEventListener) {
-                  document.addEventListener('WeixinJSBridgeReady', () => { })
-                } else if (document.attachEvent) {
-                  document.attachEvent('WeixinJSBridgeReady', () => { })
-
-                  document.attachEvent('onWeixinJSBridgeReady', () => {})
-                }
-              }
-            })
-          }
-          // 加载支付宝支付脚本
-          if (this.isAli) {
-            load(aLiJs, () => {
-              if (window.AlipayJSBridge) {
-                () => { }
-              } else {
-                document.addEventListener('AlipayJSBridgeReady', () => {})
-              }
-            })
-          }
+        window.advShow = function() {
         }
       })
     },
