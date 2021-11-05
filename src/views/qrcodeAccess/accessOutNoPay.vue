@@ -93,8 +93,8 @@
 <script>
 import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } from '@/api/qrcodeAccess/accessOut'
 import load from '@/components/Tinymce/dynamicLoadScript'
-// const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
-// const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
+const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
+const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
 const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
   data() {
@@ -158,6 +158,31 @@ export default {
         window.advShow = function() {
         }
       })
+      // 加载微信支付脚本
+      if (this.isWx) {
+        load(wechatJs, () => {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', () => { })
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', () => { })
+
+              document.attachEvent('onWeixinJSBridgeReady', () => {})
+            }
+          }
+        })
+      }
+
+      // 加载支付宝支付脚本
+      if (this.isAli) {
+        load(aLiJs, () => {
+          if (window.AlipayJSBridge) {
+            () => { }
+          } else {
+            document.addEventListener('AlipayJSBridgeReady', () => {})
+          }
+        })
+      }
     },
     // 支付
     handlePay() {
