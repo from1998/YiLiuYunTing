@@ -44,17 +44,6 @@ export const constantRoutes = [
     hidden: true
   },
   {
-    path: '/qrcodeAccess/abad',
-    hidden: true,
-    component: () =>
-        import ('@/views/qrcodeAccess/abad'),
-    name: '/qrcodeAccess/abad',
-    meta: {
-      title: '安泊广告',
-      icon: 'el-icon-d-arrow-left'
-    }
-  },
-  {
     path: '/qrcodeAccess/accessIn',
     hidden: true,
     component: () =>

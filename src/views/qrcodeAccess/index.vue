@@ -1,9 +1,6 @@
 <template>
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="安泊广告" name="abad" lazy>
-        <abad />
-      </el-tab-pane>
       <el-tab-pane label="扫码进场" name="accessIn" lazy>
         <accessIn />
       </el-tab-pane>
@@ -32,7 +29,6 @@ import accessOutNoPay from './accessOutNoPay'
 import accessOutPayed from './accessOutPayed'
 import imprest from './imprest'
 import queryFails from './queryFails'
-import abad from './abad'
 
 import BackToTop from '@/components/BackToTop'
 
@@ -43,7 +39,6 @@ export default {
     accessOutPayed,
     imprest,
     queryFails,
-    abad,
     BackToTop
   },
   data() {

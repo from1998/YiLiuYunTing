@@ -127,7 +127,7 @@ export default {
     this.$nextTick(() => {
       getNoPayData(this.queryParams).then(res => {
         // 加载安泊广告脚本
-        if (res.code === 500) {
+        if (res.code === 302) {
           this.$router.push(`/qrcodeAccess/queryFails?${res.data}`)
         }
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {

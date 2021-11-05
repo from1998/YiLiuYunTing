@@ -698,7 +698,7 @@ export default {
   // },
   methods: {
     // 复制成功的回调函数
-    clipboardSuccess(val) {
+    clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
     },
     change(val) {
