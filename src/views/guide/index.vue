@@ -11,7 +11,7 @@
     <aside style="width:60%;margin:2% auto 3%">
       <el-row :gutter="0">
         <el-col :span="22" :offset="2">
-          <span style="color:#67C23A">指引对于首次使用该后台管理系统的人是非常有帮助的。</span> 它将一步步引领您了解并掌握该系统的相关功能与设置。
+          <span style="color:#67C23A">指引对于首次使用该停车管理系统的人是非常有帮助的。</span> 它将一步步引领您了解并掌握该系统的相关功能与设置。
         </el-col>
       </el-row>
       <el-row :gutter="0">
