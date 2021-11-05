@@ -65,7 +65,12 @@
     <el-table v-loading="loading" border :data="laneList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="40" align="center" />
       <el-table-column label="车道名称" align="center" prop="name" />
-      <el-table-column label="车道类型" align="center" prop="type" :formatter="typeFormatter" />
+      <el-table-column label="车道类型" align="type">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.type===1" type="success" size="mini" effect="dark"><i class="el-icon-right" /> 入口</el-tag>
+          <el-tag v-show="scope.row.type===2" type="warning" size="mini" effect="dark"><i class="el-icon-back" /> 出口</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="所属岗亭" align="center" prop="workStationName" />
       <el-table-column label="相机品牌" align="center" prop="cameraBrandType" :formatter="cameraBrandTypeFormatter" />
       <el-table-column label="相机识别码" align="center" prop="cameraSn" />
@@ -76,25 +81,26 @@
           <el-tag v-show="scope.row.isOnLine===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 在线</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" />
-      <el-table-column label="是否有屏" align="center" prop="haveScreen" :formatter="statusFormatter" />
-      <el-table-column label="是否显示余位" align="center" prop="remainder" :formatter="statusFormatter" />
-      <!-- <el-table-column label="闸口状态" align="center">
+      <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" width="160" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;" />
+      <el-table-column label="是否有屏" align="center">
         <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.gateState"
-            :active-text="scope.row.gateState?'开闸':'关闸'"
-            @change="gateStateChanged(scope.row)"
-          />
+          <el-tag v-show="scope.row.haveScreen===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 否</el-tag>
+          <el-tag v-show="scope.row.haveScreen===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 是</el-tag>
         </template>
-      </el-table-column> -->
-      <el-table-column label="操作" align="center" width="280">
+      </el-table-column>
+      <el-table-column label="是否显示余位" align="center">
         <template slot-scope="scope">
-          <el-button type="text" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
-          <el-button type="text" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-tag v-show="scope.row.remainder===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 否</el-tag>
+          <el-tag v-show="scope.row.remainder===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 是</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="350">
+        <template slot-scope="scope">
+          <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
           <el-button
             v-if="scope.row.type===1"
-            type="text"
+            type="success"
             size="mini"
             @click="handleAccess(scope.row,'in')"
           >
@@ -103,7 +109,7 @@
           </el-button>
           <el-button
             v-if="scope.row.type===2"
-            type="text"
+            type="success"
             size="mini"
             @click="handleAccess(scope.row,'out')"
           >
@@ -470,18 +476,6 @@ export default {
   },
   // 方法
   methods: {
-    // 翻译是否状态
-    statusFormatter(row, column, cellValue) {
-      if (cellValue !== null) {
-        return this.selectDictLabel(this.options.status, cellValue.toString())
-      }
-    },
-    // 翻译车道类型
-    typeFormatter(row) {
-      if (row.type) {
-        return this.selectDictLabel(this.options.laneCategory, row.type.toString())
-      }
-    },
     // 翻译相机品牌
     cameraBrandTypeFormatter(row) {
       if (row.cameraBrandType !== null) {
@@ -807,7 +801,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-width: 80%;
+width: 85%;
 margin: 0 auto;
 }
 </style>
