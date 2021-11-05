@@ -100,7 +100,6 @@ export default {
     return {
       isWx: '',
       isAli: '',
-      AbParkId: '',
       loading: false,
       currentDate: '',
       loadDate: '',
@@ -130,7 +129,6 @@ export default {
         // 加载安泊广告脚本
         console.log('开始加载')
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
-          console.log('================' + this.AbParkId)
           const container = document.getElementById('app-container')
           // const st = document.querySelector('#anbo-ad-st')
           // if (st) {
@@ -181,7 +179,6 @@ export default {
         Object.assign(this.resDate, res.data)
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
-        this.AbParkId = res.data.park.abId
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber

@@ -94,7 +94,6 @@ import { getPayedData, createOrder, successedOrder, cancleOrder, failedOrder } f
 import load from '@/components/Tinymce/dynamicLoadScript'
 const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
-const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 
 export default {
   data() {
@@ -105,7 +104,6 @@ export default {
       loading: false,
       currentDate: '',
       loadDate: '',
-      AbParkId: '',
       resDate: {
         park: {}
       },
@@ -125,6 +123,54 @@ export default {
     // 查询进场数据
     this.getData()
   },
+  mounted() {
+    // 确保dom异步加载完毕
+    this.$nextTick(() => {
+      getPayedData(this.queryParams).then(res => {
+        // 加载安泊广告脚本
+        this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
+          const container = document.getElementById('app-container')
+          // const st = document.querySelector('#anbo-ad-st')
+          // if (st) {
+          //   container.removeChild(st)
+          // }
+          const script = document.createElement('script')
+          script.type = 'text/javascript'
+          script.id = 'anbo-ad-st'
+          script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + res.data.park.abId + '",})'
+          container.append(script)
+          document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+          window.advShow = function() {
+          }
+        })
+      })
+      // 加载微信支付脚本
+      if (this.isWx) {
+        load(wechatJs, () => {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', () => { })
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', () => { })
+
+              document.attachEvent('onWeixinJSBridgeReady', () => {})
+            }
+          }
+          console.log('wx加载')
+        })
+      }
+      // 加载支付宝支付脚本
+      if (this.isAli) {
+        load(aLiJs, () => {
+          if (window.AlipayJSBridge) {
+            () => { }
+          } else {
+            document.addEventListener('AlipayJSBridgeReady', () => {})
+          }
+        })
+      }
+    })
+  },
   methods: {
     // 查询进场数据
     getData() {
@@ -132,58 +178,13 @@ export default {
       getPayedData(this.queryParams).then(res => {
         this.resDate = res.data
         this.isTimeOut = res.data.isTimeOut
-        this.AbParkId = res.data.park.abId
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        // 加载脚本
-        this.init()
       })
       this.loading = false// 关闭遮罩
-    },
-    // 脚本初始化加载
-    init() {
-      // 加载安泊广告脚本
-      load(adJs, () => {
-        const container = document.getElementById('app-container')
-        const st = document.querySelector('#anbo-ad-st')
-        if (st) {
-          container.removeChild(st)
-        }
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
-        container.append(script)
-        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-        window.advShow = function() {
-        }
-      })
-      // 加载微信支付脚本
-      if (this.isWx) {
-        load(wechatJs, () => {
-          if (typeof WeixinJSBridge === 'undefined') {
-            if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', () => {})
-            } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', () => {})
-              document.attachEvent('onWeixinJSBridgeReady', () => {})
-            }
-          }
-        })
-      }
-      // 加载支付宝支付脚本
-      if (this.isAli) {
-        load(aLiJs, () => {
-          if (window.AlipayJSBridge) {
-            () => {}
-          } else {
-            document.addEventListener('AlipayJSBridgeReady', () => {})
-          }
-        })
-      }
     },
     // 支付
     handlePay() {

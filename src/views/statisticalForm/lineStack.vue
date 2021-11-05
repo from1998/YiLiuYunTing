@@ -47,12 +47,12 @@ export default {
             {
               name: this.parkName[0],
               data: this.enterMap,
-              color: '#FF0000'
+              color: '#00FF00'
             },
             {
               name: this.parkName[1],
               data: this.leaveData,
-              color: '#00FF00'
+              color: '#FF0000'
             },
             {
               name: this.parkName[2],
@@ -94,7 +94,7 @@ export default {
       })
       return {
         textStyle: {
-          color: '#000'
+          color: '#FFF'
         },
         tooltip: {
           show: true, // 必须引入 tooltip 组件
@@ -117,12 +117,12 @@ export default {
           }
         },
 
-        color: ['#FF0000', '#00FF00', '#409eff'],
+        color: ['#00FF00', '#FF0000', '#409eff'],
         legend: {
           top: '3%',
           left: 'center',
           textStyle: {
-            color: '#000'
+            color: '#3888fa'
           },
           data: legendData
         },
@@ -138,11 +138,19 @@ export default {
           data: xAxisData,
           axisLabel: {
             interval: 0,
-            rotate: 40
+            rotate: 40,
+            textStyle: {
+              color: '#3888fa'
+            }
           }
         },
         yAxis: {
-          type: 'value'
+          type: 'value',
+          axisLabel: {
+            textStyle: {
+              color: '#3888fa'
+            }
+          }
         },
         series: seriesData
       }
