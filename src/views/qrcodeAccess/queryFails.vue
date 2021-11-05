@@ -59,7 +59,7 @@ export default {
     // 取路由路径上的参数
     this.parkName = this.$route.query && this.$route.query.parkName// 路由传参
     this.carNumber = this.$route.query && this.$route.query.carNumber// 路由传参
-    this.carNumber = this.$route.query && this.$route.query.AbParkId// 路由传参
+    this.AbParkId = this.$route.query && this.$route.query.AbParkId// 路由传参
   },
   mounted() {
     this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
