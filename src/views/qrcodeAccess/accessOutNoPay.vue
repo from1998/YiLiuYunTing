@@ -127,7 +127,9 @@ export default {
     this.$nextTick(() => {
       getNoPayData(this.queryParams).then(res => {
         // 加载安泊广告脚本
-        console.log('开始加载')
+        if (res.code === 500) {
+          this.$router.push(`/qrcodeAccess/queryFails?${res.data}`)
+        }
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
           const container = document.getElementById('app-container')
           // const st = document.querySelector('#anbo-ad-st')
@@ -183,8 +185,6 @@ export default {
           // 优惠券ID
           this.queryParams.couponsRecordId = res.data.couponsRecord.id
           this.queryParams.carNumber = res.data.carNumber
-        } else {
-          this.$router.push(`/qrcodeAccess/queryFails?${res.data}`)
         }
       })
       this.loading = false// 关闭遮罩
