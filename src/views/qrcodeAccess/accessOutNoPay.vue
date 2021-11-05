@@ -123,6 +123,55 @@ export default {
     // 查询进场数据
     this.getData()
   },
+  mounted() {
+    this.$nextTick(() => {
+      // 脚本初始化加载
+      // 加载安泊广告脚本
+      console.log('开始加载')
+      this.loadScript('//sdk.anbokeji.net/adv/index.js', () => {
+        console.log('================' + this.AbParkId)
+        const container = document.getElementById('app-container')
+        // const st = document.querySelector('#anbo-ad-st')
+        // if (st) {
+        //   container.removeChild(st)
+        // }
+        const script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.id = 'anbo-ad-st'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",})'
+        container.append(script)
+        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
+        window.advShow = function() {
+        }
+      })
+      // 确保dom异步加载完毕
+      // 加载微信支付脚本
+      if (this.isWx) {
+        load(wechatJs, () => {
+          if (typeof WeixinJSBridge === 'undefined') {
+            if (document.addEventListener) {
+              document.addEventListener('WeixinJSBridgeReady', () => { })
+            } else if (document.attachEvent) {
+              document.attachEvent('WeixinJSBridgeReady', () => { })
+
+              document.attachEvent('onWeixinJSBridgeReady', () => {})
+            }
+          }
+          console.log('wx加载')
+        })
+      }
+      // 加载支付宝支付脚本
+      if (this.isAli) {
+        load(aLiJs, () => {
+          if (window.AlipayJSBridge) {
+            () => { }
+          } else {
+            document.addEventListener('AlipayJSBridgeReady', () => {})
+          }
+        })
+      }
+    })
+  },
   methods: {
     // 查询进场数据
     getData() {
@@ -135,59 +184,10 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        this.init(this.AbParkId)
+        // this.init(this.AbParkId)
+        console.log(this.AbParkId)
       })
       this.loading = false// 关闭遮罩
-    },
-    mounted() {
-      this.$nextTick(() => {
-        // 确保dom异步加载完毕
-        // 加载微信支付脚本
-        if (this.isWx) {
-          load(wechatJs, () => {
-            if (typeof WeixinJSBridge === 'undefined') {
-              if (document.addEventListener) {
-                document.addEventListener('WeixinJSBridgeReady', () => { })
-              } else if (document.attachEvent) {
-                document.attachEvent('WeixinJSBridgeReady', () => { })
-
-                document.attachEvent('onWeixinJSBridgeReady', () => {})
-              }
-            }
-          })
-        }
-        // 加载支付宝支付脚本
-        if (this.isAli) {
-          load(aLiJs, () => {
-            if (window.AlipayJSBridge) {
-              () => { }
-            } else {
-              document.addEventListener('AlipayJSBridgeReady', () => {})
-            }
-          })
-        }
-      })
-    },
-    // 脚本初始化加载
-    init(AbParkId) {
-      console.log(AbParkId)
-      // 加载安泊广告脚本
-      this.loadScript('//sdk.anbokeji.net/adv/index.js', () => {
-        console.log('================' + AbParkId)
-        const container = document.getElementById('app-container')
-        // const st = document.querySelector('#anbo-ad-st')
-        // if (st) {
-        //   container.removeChild(st)
-        // }
-        const script = document.createElement('script')
-        script.type = 'text/javascript'
-        script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + AbParkId + '",})'
-        container.append(script)
-        document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-        window.advShow = function() {
-        }
-      })
     },
     // 支付
     handlePay() {
@@ -257,6 +257,7 @@ export default {
       })
     },
     loadScript(xyUrl, callback) {
+      console.log('调用方法')
       var head = document.getElementsByTagName('head')[0]
       var script = document.createElement('script')
       script.type = 'text/javascript'
@@ -267,6 +268,7 @@ export default {
           this.readyState === 'loaded' ||
           this.readyState === 'complete'
         ) {
+          console.log('调用回调')
           callback && callback()
           script.onload = script.onreadystatechange = null
           if (head && script.parentNode) {
