@@ -61,7 +61,7 @@ export default {
             item.platform = '微信'
             break
         }
-        this.order.push([item.parkName, item.carNumber, item.created, item.platform, '￥' + item.amount.toFixed(2)])
+        this.order.push([item.carNumber, item.pay, item.platform, '￥' + item.amount.toFixed(2)])
       })
       this.inOutConfig = {
         header: ['车场', '车牌', '进场时间', '出场时间'],
@@ -75,9 +75,9 @@ export default {
         evenRowBGC: 'rgba(10, 29, 50, 0.8)'
       }
       this.orderConfig = {
-        header: ['车场', '车牌', '出场时间', '支付平台', '费用'],
+        header: ['车牌', '支付时间', '支付平台', '费用'],
         data: this.order,
-        columnWidth: [110, 110, 160],
+        columnWidth: [110, 160],
         align: ['center'],
         rowNum: 3,
         headerBGC: '#1981f6',

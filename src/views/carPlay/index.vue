@@ -11,7 +11,6 @@
           <div class="block-left-content">
             <!-- <dv-border-box-13 class="left-top"> -->
             <right-chart />
-
             <!-- </dv-border-box-13> -->
             <rose-chart />
           </div>
