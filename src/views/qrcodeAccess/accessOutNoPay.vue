@@ -173,6 +173,7 @@ export default {
       console.log(AbParkId)
       // 加载安泊广告脚本
       this.loadScript('//sdk.anbokeji.net/adv/index.js', () => {
+        console.log('================' + AbParkId)
         const container = document.getElementById('app-container')
         const st = document.querySelector('#anbo-ad-st')
         if (st) {
