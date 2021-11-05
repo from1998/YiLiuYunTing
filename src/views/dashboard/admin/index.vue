@@ -79,8 +79,8 @@ const lineChartData = {
   totalProfits: {
     actualData: [],
     date: [],
-    title: '最近一周订单流量',
-    dataName: '订单流量'
+    title: '最近一周订单收益',
+    dataName: '订单收益'
   }
   // currentParking: {
   //   expectedData: [200, 192, 120, 144, 160, 130, 140],
