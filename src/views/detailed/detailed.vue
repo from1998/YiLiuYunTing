@@ -29,8 +29,8 @@
             >
               <el-option
                 v-for="dict in parkList"
-                :key="dict.address"
-                :label="dict.address"
+                :key="dict.id"
+                :label="dict.name"
                 :value="dict.id"
               />
             </el-select>
@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column align="center" label="分润金额" width="180">
         <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.amount }}</el-tag>
+          <el-tag size="medium" type="warning"> <i class="el-icon-coin" /> {{ scope.row.amount }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
@@ -219,7 +219,7 @@ export default {
     // },
     // 复制成功的回调函数
     clipboardSuccess() {
-      this.msgSuccess('复制成功！登录名称已复制到剪贴板。')
+      this.msgSuccess('复制成功！')
     },
     encode64(input) {
       const keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/_' + '='

@@ -2,11 +2,7 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row :gutter="0" style="margin-bottom: 8px;">
-      <el-col :span="4">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-      </el-col>
-      <el-col :span="19" :offset="1">
+      <el-col :span="16" :offset="8">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="字典名称" prop="dictName">
@@ -214,7 +210,7 @@ export default {
     },
     // 复制成功的回调函数
     clipboardSuccess() {
-      this.msgSuccess('复制成功！字典类型已复制到剪贴板。')
+      this.msgSuccess('复制成功！')
     },
     // 查询表格数据
     getDictTypeList() {

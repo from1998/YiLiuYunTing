@@ -225,7 +225,7 @@ export default {
   methods: {
     // 复制成功的回调函数
     clipboardSuccess(val) {
-      this.msgSuccess(`复制成功！${val.text}已复制到剪贴板。`)
+      this.msgSuccess(`复制成功！`)
     },
     handleParkFocus(val) {
       if (val === '') {

@@ -407,7 +407,7 @@ export default {
   methods: {
     // 复制SN值成功的回调函数
     clipboardSuccess() {
-      this.msgSuccess('复制成功！SN值已复制到剪贴板。')
+      this.msgSuccess('复制成功！')
     },
     async init() {
       this.loading = true // 打开遮罩

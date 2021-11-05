@@ -338,7 +338,7 @@ export default {
   methods: {
     // 复制成功的回调函数
     clipboardSuccess() {
-      this.msgSuccess('复制成功！登录名称已复制到剪贴板。')
+      this.msgSuccess('复制成功')
     },
     encode64(input) {
       const keyStr = 'ABCDEFGHIJKLMNOP' + 'QRSTUVWXYZabcdef' + 'ghijklmnopqrstuv' + 'wxyz0123456789+/_' + '='
