@@ -95,7 +95,6 @@ import { getNoPayData, createOrder, successedOrder, cancleOrder, failedOrder } f
 import load from '@/components/Tinymce/dynamicLoadScript'
 const wechatJs = 'https://res.wx.qq.com/open/js/jweixin-1.6.0.js'
 const aLiJs = 'https://gw.alipayobjects.com/as/g/h5-lib/alipayjsapi/3.1.1/alipayjsapi.inc.min.js'
-const adJs = 'https://sdk.anbokeji.net/adv/index.js'
 export default {
   data() {
     return {
@@ -136,14 +135,14 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        this.init()
+        this.init(this.AbParkId)
       })
       this.loading = false// 关闭遮罩
     },
     // 脚本初始化加载
-    init() {
+    init(AbParkId) {
       // 加载安泊广告脚本
-      load(adJs, () => {
+      this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
         const container = document.getElementById('app-container')
         const st = document.querySelector('#anbo-ad-st')
         if (st) {
@@ -152,37 +151,36 @@ export default {
         const script = document.createElement('script')
         script.type = 'text/javascript'
         script.id = 'anbo-ad-st'
-        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + this.AbParkId + '",host:""})'
+        script.innerHTML = '__anbo_adv_sdk__.init({appid: "ab9N879pd0ZUt1dAZh", adPosId:"3",parkId:"' + AbParkId + '",})'
         container.append(script)
         document.querySelector('.advwrap').innerHTML = "<anboadv @show='advShow'></anboadv>"
-        window.advShow = function() {
+        window.advShow = () => {
+          // 加载微信支付脚本
+          if (this.isWx) {
+            load(wechatJs, () => {
+              if (typeof WeixinJSBridge === 'undefined') {
+                if (document.addEventListener) {
+                  document.addEventListener('WeixinJSBridgeReady', () => { })
+                } else if (document.attachEvent) {
+                  document.attachEvent('WeixinJSBridgeReady', () => { })
+
+                  document.attachEvent('onWeixinJSBridgeReady', () => {})
+                }
+              }
+            })
+          }
+          // 加载支付宝支付脚本
+          if (this.isAli) {
+            load(aLiJs, () => {
+              if (window.AlipayJSBridge) {
+                () => { }
+              } else {
+                document.addEventListener('AlipayJSBridgeReady', () => {})
+              }
+            })
+          }
         }
       })
-      // 加载微信支付脚本
-      if (this.isWx) {
-        load(wechatJs, () => {
-          if (typeof WeixinJSBridge === 'undefined') {
-            if (document.addEventListener) {
-              document.addEventListener('WeixinJSBridgeReady', () => { })
-            } else if (document.attachEvent) {
-              document.attachEvent('WeixinJSBridgeReady', () => { })
-
-              document.attachEvent('onWeixinJSBridgeReady', () => {})
-            }
-          }
-        })
-      }
-
-      // 加载支付宝支付脚本
-      if (this.isAli) {
-        load(aLiJs, () => {
-          if (window.AlipayJSBridge) {
-            () => { }
-          } else {
-            document.addEventListener('AlipayJSBridgeReady', () => {})
-          }
-        })
-      }
     },
     // 支付
     handlePay() {
@@ -250,6 +248,26 @@ export default {
           this.$router.go(0)
         }
       })
+    },
+    loadScript(xyUrl, callback) {
+      var head = document.getElementsByTagName('head')[0]
+      var script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = xyUrl
+      script.onload = script.onreadystatechange = function() {
+        if (
+          !this.readyState ||
+          this.readyState === 'loaded' ||
+          this.readyState === 'complete'
+        ) {
+          callback && callback()
+          script.onload = script.onreadystatechange = null
+          if (head && script.parentNode) {
+            head.removeChild(script)
+          }
+        }
+      }
+      head.insertBefore(script, head.firstChild)
     }
   }
 }
