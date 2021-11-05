@@ -228,6 +228,7 @@ export default {
       this.msgSuccess(`复制成功！`)
     },
     handleParkFocus(val) {
+      this.queryParams.page = 1
       if (val === '') {
         this.laneName = ''
         this.getOrderTable()
@@ -278,11 +279,14 @@ export default {
     getOrderTable() {
       this.loading = true // 打开遮罩
       getOrderList(this.queryParams).then(res => {
+        console.log(res)
         this.orderTableList = res.data.list
+        this.total = res.data.total
         this.orderTableList.map(val => {
-          if (val.carNumber.charAt(0) === '临') {
+          console.log(val.carNumber)
+          if (val.carNumber !== null && val.carNumber !== '' && val.carNumber.charAt(0) === '临') {
             val.carNumberFlag = '临'
-          } else if (val.carNumber.length === 8) {
+          } else if (val.carNumber !== null && val.carNumber !== '' && val.carNumber.length === 8) {
             val.carNumberFlag = '新'
           }
           if (val.duration > 60) {
@@ -297,7 +301,6 @@ export default {
             val.durationFormater = val.duration + '分钟'
           }
         })
-        this.total = res.data.total
         this.loading = false// 关闭遮罩
       })
     },
