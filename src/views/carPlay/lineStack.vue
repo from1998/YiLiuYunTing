@@ -98,7 +98,12 @@ export default {
         xAxis: {
           type: 'category',
           boundaryGap: false,
-          data: xAxisData
+          data: xAxisData,
+          axisLabel: {
+            formatter: function(value) {
+              return value.substring(5)
+            }
+          }
         },
         yAxis: {
           type: 'value'
