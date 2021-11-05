@@ -89,9 +89,21 @@
       </div>
     </div>
     <div v-if="freeFlag">
-      无需支付。
-      <br>
-      费用零元，已自动出场。
+      <el-row :gutter="0">
+        <el-col :span="12" :offset="6" style="text-align:center;margin-top:7%;">
+          <i class="el-icon-edit" style="font-size:16vw;color:#409EFF" />
+        </el-col>
+      </el-row>
+      <el-row :gutter="0">
+        <el-col :span="12" :offset="6" style="text-align:center;margin-top:6%;margin-bottom:5%;">
+          <span style="color:#00A8FF;font-size:1.5em;">费用零元， 无需支付。</span>
+        </el-col>
+      </el-row>
+      <el-row :gutter="0">
+        <el-col :span="12" :offset="6" style="text-align:center">
+          <span style="font-size:1.5em">费用零元，已自动出场。</span>
+        </el-col>
+      </el-row>
     </div>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
