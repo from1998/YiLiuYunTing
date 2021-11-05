@@ -276,7 +276,7 @@
       </span>
     </el-dialog>
     <!-- 二维码 -->
-    <canvas v-show="true" id="canvas" />
+    <canvas v-show="false" id="canvas" />
     <!-- 联系方式 -->
     <canvas v-show="false" id="textCanvas" />
     <!-- 车道 -->
