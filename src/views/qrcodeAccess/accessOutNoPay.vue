@@ -125,9 +125,9 @@ export default {
   },
   methods: {
     // 查询进场数据
-    async getData() {
+    getData() {
       this.loading = true // 打开遮罩
-      await getNoPayData(this.queryParams).then(res => {
+      getNoPayData(this.queryParams).then(res => {
         Object.assign(this.resDate, res.data)
         this.isWx = res.data.baseData.isWx
         this.isAli = res.data.baseData.isAli
@@ -135,8 +135,8 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
+        this.init(this.AbParkId)
       })
-      this.init(this.AbParkId)
       this.loading = false// 关闭遮罩
     },
     mounted() {
@@ -175,10 +175,10 @@ export default {
       this.loadScript('//sdk.anbokeji.net/adv/index.js', () => {
         console.log('================' + AbParkId)
         const container = document.getElementById('app-container')
-        const st = document.querySelector('#anbo-ad-st')
-        if (st) {
-          container.removeChild(st)
-        }
+        // const st = document.querySelector('#anbo-ad-st')
+        // if (st) {
+        //   container.removeChild(st)
+        // }
         const script = document.createElement('script')
         script.type = 'text/javascript'
         script.id = 'anbo-ad-st'
