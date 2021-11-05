@@ -75,14 +75,14 @@
           <el-tag type="success" size="medium">￥{{ scope.row.wx }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="支付宝">
-        <template slot-scope="scope">
-          <el-tag type="primary" size="medium">￥{{ scope.row.zfb }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column align="center" label="官方">
         <template slot-scope="scope">
           <el-tag type="danger" size="medium">￥{{ scope.row.gf }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="支付宝">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="medium">￥{{ scope.row.zfb }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
