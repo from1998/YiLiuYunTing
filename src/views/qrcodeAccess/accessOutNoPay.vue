@@ -136,13 +136,14 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
+        this.init()
       })
       this.loading = false// 关闭遮罩
     },
     // 脚本初始化加载
-    async init() {
+    init() {
       // 加载安泊广告脚本
-      await load(adJs, () => {
+      load(adJs, () => {
         const container = document.getElementById('app-container')
         const st = document.querySelector('#anbo-ad-st')
         if (st) {
@@ -157,29 +158,6 @@ export default {
         window.advShow = function() {
         }
       })
-      // 加载微信支付脚本
-      // if (this.isWx) {
-      //   load(wechatJs, () => {
-      //     if (typeof WeixinJSBridge === 'undefined') {
-      //       if (document.addEventListener) {
-      //         document.addEventListener('WeixinJSBridgeReady', () => { })
-      //       } else if (document.attachEvent) {
-      //         document.attachEvent('WeixinJSBridgeReady', () => { })
-      //         document.attachEvent('onWeixinJSBridgeReady', () => {})
-      //       }
-      //     }
-      //   })
-      // }
-      // 加载支付宝支付脚本
-      // if (this.isAli) {
-      //   load(aLiJs, () => {
-      //     if (window.AlipayJSBridge) {
-      //       () => { }
-      //     } else {
-      //       document.addEventListener('AlipayJSBridgeReady', () => {})
-      //     }
-      //   })
-      // }
     },
     // 支付
     handlePay() {
