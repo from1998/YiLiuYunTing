@@ -2,7 +2,7 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row :gutter="0" style="margin-bottom: 8px;">
-      <el-col :span="15" :offset="getUserInfo().role === 1?2:9">
+      <el-col :span="15" :offset="9">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="分润对象" prop="parkId">
@@ -81,7 +81,7 @@
       </el-table-column>
       <el-table-column align="center" label="分润金额" width="180">
         <template slot-scope="scope">
-          <el-tag size="medium" type="warning"> <i class="el-icon-coin" /> {{ scope.row.amount }}</el-tag>
+          <el-tag size="mini" type="warning" effect="dark"> <i class="el-icon-coin" /> {{ scope.row.amount }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
