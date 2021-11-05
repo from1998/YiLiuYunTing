@@ -124,6 +124,9 @@ export default {
     // 查询进场数据
     this.getData()
   },
+  mounted() {
+    this.init()
+  },
   methods: {
     // 查询进场数据
     getData() {
@@ -136,7 +139,6 @@ export default {
         // 优惠券ID
         this.queryParams.couponsRecordId = res.data.couponsRecord.id
         this.queryParams.carNumber = res.data.carNumber
-        this.init()
       })
       this.loading = false// 关闭遮罩
     },
@@ -233,7 +235,7 @@ export default {
 .advwrap {
   height: 200px;
   margin: auto;
-    margin-top: 50px;
+    margin-top: 30px;
   width: 90%;
 }
 #lineDowm {
