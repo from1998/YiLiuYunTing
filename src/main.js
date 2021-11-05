@@ -39,13 +39,13 @@ Vue.prototype.encode64 = encode64 // 加密解密
 Vue.prototype.bus = new Vue() // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 // 挂载全局消息框
 Vue.prototype.msgSuccess = function(msg) {
-  this.$message({ showClose: true, message: msg, type: 'success' })
+  this.$message({ showClose: true, message: msg, type: 'success', center: true })
 }
 Vue.prototype.msgError = function(msg) {
-  this.$message({ showClose: true, message: msg, type: 'error' })
+  this.$message({ showClose: true, message: msg, type: 'error', center: true })
 }
 Vue.prototype.msgInfo = function(msg) {
-  this.$message.info(msg)
+  this.$message({ showClose: true, message: msg, type: 'info', center: true })
 }
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size

@@ -45,14 +45,16 @@ service.interceptors.response.use(
       Message({
         showClose: true,
         type: 'error',
-        message: res.msg
+        message: res.msg,
+        center: true
       })
       return Promise.reject('error') // 记录错误
     } else if (res.code === 400) { // 可能是其它参数出错
       Message({
         showClose: true,
         type: 'error',
-        message: res.msg
+        message: res.msg,
+        center: true
       })
       return Promise.reject('error') // 记录错误
     } else {
