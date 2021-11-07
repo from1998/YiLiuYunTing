@@ -53,24 +53,6 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="userTableList" stripe @selection-change="handleSelectionChange">
       <el-table-column v-if="getUserInfo().role === 1 || getUserInfo().role=== 3" type="selection" width="55" align="center" />
-      <!-- <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="邮箱">
-              <span>{{ props.row.email }}</span>
-            </el-form-item>
-            <el-form-item label="擅长">
-              <span>{{ props.row.strong }}</span>
-            </el-form-item>
-            <el-form-item label="荣耀">
-              <span>{{ props.row.honor }}</span>
-            </el-form-item>
-            <el-form-item label="简介">
-              <span>{{ props.row.introduction }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column> -->
       <el-table-column align="center" label="登陆名称">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">

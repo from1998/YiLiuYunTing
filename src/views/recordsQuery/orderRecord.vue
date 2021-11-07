@@ -283,7 +283,7 @@ export default {
         this.orderTableList = res.data.list
         this.total = res.data.total
         this.orderTableList.map(val => {
-          console.log(val.carNumber)
+          val.amount = val.amount.toFixed(2)
           if (val.carNumber !== null && val.carNumber !== '' && val.carNumber.charAt(0) === '临') {
             val.carNumberFlag = '临'
           } else if (val.carNumber !== null && val.carNumber !== '' && val.carNumber.length === 8) {

@@ -623,6 +623,9 @@ export default {
       this.loading = true // 打开遮罩
       listMerchantForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
         this.carTableList = res.data.list
+        this.carTableList.map(val => {
+          val.discount = val.discount.toFixed(2)
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

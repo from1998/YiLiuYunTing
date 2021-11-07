@@ -204,6 +204,11 @@ export default {
       this.loading = true // 打开遮罩
       getOrderList(this.form).then(res => {
         this.feeTableList = res.data.list
+        this.feeTableList.map(val => {
+          val.wx = val.wx && val.wx.toFixed(2)
+          val.gf = val.gf && val.gf.toFixed(2)
+          val.zfb = val.zfb && val.zfb.toFixed(2)
+        })
         this.total = res.data.total
         this.loading = false// 关闭遮罩
       })

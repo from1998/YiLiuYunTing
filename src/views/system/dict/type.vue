@@ -204,7 +204,6 @@ export default {
   },
   // 方法
   methods: {
-    // 复制成功的回调函数
     handleGo(url) {
       this.$router.push(url)
     },
