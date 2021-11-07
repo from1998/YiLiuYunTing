@@ -62,8 +62,6 @@ export default {
     chinaMap,
     rightChart,
     lineStack
-    // waterLevelChart,
-    // cards
   },
   data() {
     return {
@@ -92,16 +90,6 @@ export default {
       data['xAxis'] = xAxis
       return data
     }
-    // getData() {
-    //   this.loading = true // 打开遮罩
-    //   getLineData().then(res => {
-    //     this.parkData = this.processData(res.data.park)
-    //     this.orderData = this.processData(res.data.order)
-    //     console.log(this.parkData)
-    //     this.$refs.stack.renderChart()
-    //     this.loading = false// 关闭遮罩
-    //   })
-    // }
   }
 }
 </script>
@@ -168,10 +156,6 @@ export default {
     .right-top {
       display: flex;
       height: 65%;
-      // background-color: #fff;
-      // font-size: 72px;
-      // text-align: center;
-      // color: red;
       .right-top-right , .right-top-left {
         flex: 1;
       }

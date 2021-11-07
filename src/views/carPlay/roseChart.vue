@@ -70,20 +70,10 @@ export default {
             {
               type: 'pie',
               radius: '50%',
-              roseSort: false,
+              avoidLabelOverlap: true,
               data: this.resData.seriesData,
-              insideLabel: {
-                show: false
-              },
               outsideLabel: {
-                formatter: '{name} {percent}%',
-                labelLineEndLength: 20,
-                style: {
-                  fill: 'aqua'
-                },
-                labelLineStyle: {
-                  stroke: 'aqua'
-                }
+                formatter: `{name}:￥{value}\n占比:{percent}%`
               },
               roseType: true
             }

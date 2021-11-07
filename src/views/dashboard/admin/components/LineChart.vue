@@ -122,6 +122,11 @@ export default {
               }
             }
           },
+          markPoint: {
+            data: [
+              { type: 'max', name: '最大值' }
+            ]
+          },
           data: actualData,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'

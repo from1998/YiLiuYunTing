@@ -1,10 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <!-- <github-corner class="github-corner" /> -->
-
-    <!-- <panel-group @handleSetLineChartData="handleSetLineChartData" /> -->
     <panel-group :val="orders" />
-
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
@@ -17,36 +13,6 @@
         </div>
       </el-col>
     </el-row>
-
-    <!-- <el-row :gutter="32">
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <raddar-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <pie-chart />
-        </div>
-      </el-col>
-      <el-col :xs="24" :sm="24" :lg="8">
-        <div class="chart-wrapper">
-          <bar-chart />
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="8">
-      <el-col :xs="{span: 24}" :sm="{span: 24}" :md="{span: 24}" :lg="{span: 12}" :xl="{span: 12}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <todo-list />
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 12}" :md="{span: 12}" :lg="{span: 6}" :xl="{span: 6}" style="margin-bottom:30px;">
-        <box-card />
-      </el-col>
-    </el-row> -->
   </div>
 </template>
 
@@ -56,18 +22,6 @@ import { getPanelGroup } from '@/api/dashboard'
 import PanelGroup from './components/PanelGroup'
 // 折线统计图
 import LineChart from './components/LineChart'
-// 雷达图
-// import RaddarChart from './components/RaddarChart'
-// 饼图
-// import PieChart from './components/PieChart'
-// 柱状图
-// import BarChart from './components/BarChart'
-// 订单编号图
-// import TransactionTable from './components/TransactionTable'
-// 事件清单
-// import TodoList from './components/TodoList'
-// 右下角百分比图
-// import BoxCard from './components/BoxCard'
 
 const lineChartData = {
   totalParking: {

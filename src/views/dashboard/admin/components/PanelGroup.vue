@@ -62,7 +62,7 @@
             <div class="card-panel-text">
               总分润
             </div>
-            <count-to :start-val="0" :end-val="val[4]" :duration="3600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="val[5]" :duration="3600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
@@ -75,7 +75,7 @@
             <div class="card-panel-text">
               当日分润
             </div>
-            <count-to :start-val="0" :end-val="val[5]" :duration="3600" class="card-panel-num" />
+            <count-to :start-val="0" :end-val="val[4]" :duration="3600" class="card-panel-num" />
           </div>
         </div>
       </el-col>
