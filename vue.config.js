@@ -21,7 +21,8 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 
 // 设置项目的访问端口
 const port = process.env.port || process.env.npm_config_port || 80 // dev port
-
+const CompressionPlugin = require('compression-webpack-plugin')
+const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -36,6 +37,20 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  chainWebpack: config => {
+    config.resolve.alias.set('@', resolve('src'))
+    if (process.env.NODE_ENV === 'production') {
+      config.plugin('compressionPlugin')
+        .use(new CompressionPlugin({
+          filename: '[path].gz[query]',
+          algorithm: 'gzip',
+          test: productionGzipExtensions,
+          threshold: 10240,
+          minRatio: 0.8,
+          deleteOriginalAssets: true
+        }))
+    }
+  },
   devServer: {
     disableHostCheck: true,
     port: port,
