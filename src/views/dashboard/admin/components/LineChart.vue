@@ -20,7 +20,7 @@ export default {
     },
     height: {
       type: String,
-      default: '350px'
+      default: '360px'
     },
     autoResize: {
       type: Boolean,
@@ -69,7 +69,7 @@ export default {
           padding: [
             1, // 上
             10, // 右
-            20, // 下
+            30, // 下
             10 // 左
           ]
         },
@@ -91,15 +91,8 @@ export default {
           left: 10,
           right: 10,
           bottom: 20,
-          top: 30,
+          top: 50,
           containLabel: true
-        },
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: {
-            type: 'cross'
-          },
-          padding: [5, 10]
         },
         yAxis: {
           axisTick: {
