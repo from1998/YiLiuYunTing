@@ -95,23 +95,6 @@ export default {
       type: Array,
       required: true
     }
-  },
-  // created() {
-  // this.fetchData()
-  // console.log(this.val)
-  // },
-  methods: {
-    // fetchData() {
-    //   getPanelGroup.then(response => {
-    //     console.log('response', response)
-    //     // 列表数据
-    //     // this.list = response.data.records
-    //     // this.page.total = response.data.total
-    //   })
-    // }
-    // handleSetLineChartData(type) {
-    //   this.$emit('handleSetLineChartData', type)
-    // }
   }
 }
 </script>

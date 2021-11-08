@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <panel-group :val="orders" />
-    <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
+    <el-row style="background:#fff;padding:1rem;margin-bottom:1.5rem;">
       <el-col :xs="24" :sm="24" :lg="12">
         <div class="chart-wrapper">
           <line-chart :time="date" :chart-data="totalParkingData" />
@@ -36,22 +36,6 @@ const lineChartData = {
     title: '最近一周订单收益',
     dataName: '订单收益'
   }
-  // currentParking: {
-  //   expectedData: [200, 192, 120, 144, 160, 130, 140],
-  //   actualData: [180, 160, 151, 106, 145, 150, 130]
-  // },
-  // GMV: {
-  //   expectedData: [80, 100, 121, 104, 105, 90, 100],
-  //   actualData: [120, 90, 100, 138, 142, 130, 130]
-  // },
-  // dayTurnover: {
-  //   expectedData: [130, 140, 141, 142, 145, 150, 160],
-  //   actualData: [120, 82, 91, 154, 162, 140, 130]
-  // },
-  // dayProfits: {
-  //   expectedData: [80, 100, 121, 104, 105, 90, 100],
-  //   actualData: [120, 90, 100, 138, 142, 130, 130]
-  // }
 }
 
 export default {
@@ -80,17 +64,11 @@ export default {
   },
   methods: {
     fetchData() {
-      // const { data: res } = await getPanelGroup()
-      // console.log(res)
       getPanelGroup().then(res => {
         this.orders = res.data.orders
-        // console.log(this.orders)
         this.totalParkingData.date = this.totalProfitsData.date = res.data.times
         this.totalParkingData.actualData = res.data.carRecordMap
         this.totalProfitsData.actualData = res.data.orderMap
-        // this.lineChartData.totalParking =
-      }).catch(err => {
-        console.log(err)
       })
     }
   }
@@ -102,13 +80,6 @@ export default {
   padding: 32px;
   background-color: #fff;
   position: relative;
-
-  .github-corner {
-    position: absolute;
-    top: 0px;
-    border: 0;
-    right: 0;
-  }
 
   .chart-wrapper {
     background: #fff;

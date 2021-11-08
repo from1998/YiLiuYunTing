@@ -135,12 +135,12 @@ export const asyncRoutes = [
   {
     path: '/detailed',
     component: Layout,
-    redirect: '/detailed/detailed',
+    redirect: '/detailed/index',
     name: '/detailed',
     children: [{
-      path: 'detailed',
-      name: '/detailed/detailed',
-      component: () => import('@/views/detailed/detailed'),
+      path: 'index',
+      name: '/detailed/index',
+      component: () => import('@/views/detailed/index'),
       meta: {
         title: '分润明细',
         icon: 'mx'

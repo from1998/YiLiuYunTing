@@ -67,7 +67,7 @@ export default {
           show: true,
           text: title,
           padding: [
-            0, // 上
+            1, // 上
             10, // 右
             20, // 下
             10 // 左
