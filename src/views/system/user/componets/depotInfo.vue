@@ -158,16 +158,12 @@
         <el-row v-if="getUserInfo().role === 1 || getUserInfo().role === 4">
           <el-col :span="12">
             <el-form-item label="手续费(千分比)" prop="commissionCharge">
-              <el-tooltip class="item" effect="dark" content="请输入手续费(千分比)" placement="right">
-                <el-input-number v-model="form.commissionCharge" :precision="0" :step="1" :disabled="getUserInfo().role === 4?'true':'false'" />
-              </el-tooltip>
+              <el-input-number v-model="form.commissionCharge" :precision="0" :step="1" :disabled="getUserInfo().role === 4?true:false" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="停车费分成比(0-10)" prop="parkFeeCharge">
-              <el-tooltip class="item" effect="dark" content="请输入停车费分成(占比)" placement="right">
-                <el-input-number v-model="form.parkFeeCharge" :precision="0" :step="1" :max="10" :min="0" :disabled="getUserInfo().role === 4?'true':'false'" />
-              </el-tooltip>
+              <el-input-number v-model="form.parkFeeCharge" :precision="0" :step="1" :max="10" :min="0" :disabled="getUserInfo().role === 4?true:false" />
             </el-form-item>
           </el-col>
         </el-row>

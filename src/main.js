@@ -12,7 +12,6 @@ import './icons' // icon
 import './permission' // permission control
 import './utils/error-log' // error log
 import * as filters from './filters' // global filters
-import moment from 'moment'
 // 大屏可视化插件
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)
@@ -33,7 +32,6 @@ Vue.prototype.convertCarCategory = convertCarCategory
 Vue.prototype.getDataByType = getDataByType // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 Vue.prototype.handleTree = handleTree // 挂载全局的构造树的JSON的方法
 Vue.prototype.Utils = Utils// 挂载全局计算时段的方法
-Vue.prototype.moment = moment
 Vue.prototype.getDataByMoreType = getDataByMoreType // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]
 Vue.prototype.encode64 = encode64 // 加密解密
 Vue.prototype.bus = new Vue() // 加载全局的根据字典类型查询字典的方法[基本每个页面都要使用]

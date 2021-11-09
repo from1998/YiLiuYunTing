@@ -56,16 +56,15 @@
       </el-col>
     </el-row>
     <el-row :gutter="0" style="margin-top:20px">
-      <el-col :span="24" :offset="0">
+      <el-col :span="23" :offset="1">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item label="车牌号" prop="carNumber">
+          <el-form-item label="车牌号" prop="carNumber" label-width="120px">
             <el-input
               v-model="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="姓名" prop="userName" label-width="45px">
@@ -74,7 +73,6 @@
               placeholder="请输入姓名"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
@@ -83,7 +81,6 @@
               placeholder="请输入车主手机号"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="车位类型" prop="registerType" label-width="70px">
@@ -92,7 +89,6 @@
               placeholder="请选择车位类型"
               clearable
               size="small"
-              style="width:180px"
             >
               <el-option
                 v-for="item in options.depotCategoryOptions"
@@ -108,7 +104,6 @@
               placeholder="请选择是否在租"
               clearable
               size="small"
-              style="width:180px"
             >
               <el-option
                 v-for="item in options.status"
@@ -482,35 +477,23 @@
             <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
           </el-form-item>
         </div>
-        <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租时间段" prop="notEmpty">
-          <el-row :gutter="0">
-            <el-col :span="11" :offset="0">
-              <el-form-item prop="effectiveTime" label="" label-width="0">
-                <el-date-picker
-                  v-model="renewform.effectiveTime"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="起租时间"
-                  style="width:157px"
-                  type="date"
-                />
-              </el-form-item>
-            </el-col>
-            <el-col :span="1" :offset="0">
-              --
-            </el-col>
-            <el-col :span="11" :offset="0">
-              <el-form-item prop="expireTime" label="" label-width="0">
-                <el-date-picker
-                  v-model="renewform.expireTime"
-                  value-format="yyyy-MM-dd HH:mm:ss"
-                  placeholder="到期时间"
-                  style="width:175px"
-                  type="date"
-                />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form-item>
+        <el-tooltip class="item" effect="dark" placement="top">
+          <div slot="content">警告：请勿更改起租时间。<br><br>起租时间已自动设置为上次续租到期时间。</div>
+          <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租时间段" prop="notEmpty">
+            <el-date-picker
+              v-model="timeValue"
+              type="daterange"
+              align="right"
+              unlink-panels
+              size="small"
+              range-separator="-"
+              start-placeholder="起租日期"
+              end-placeholder="到期日期"
+              :picker-options="pickerOptions"
+              @change="timeChange(timeValue)"
+            />
+          </el-form-item>
+        </el-tooltip>
         <div v-show="showotherFlag">
           <el-form-item label="层号" prop="tierNumber">
             <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" disabled>
@@ -565,6 +548,7 @@ import { getPortList, getPortById, addPort, updatePort, deletePort, doRenew, doM
 import { getSiteByMid } from '@/api/system/carSetting'
 import { listAll } from '@/api/coupons/couponsManger'
 import { getToken } from '@/utils/auth'
+import { setPickOptions } from '@/utils/shortcuts'
 import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 import validate from '@/utils/validate.js'
 
@@ -575,6 +559,8 @@ export default {
   // 定义页面数据
   data() {
     return {
+      pickerOptions: {},
+      timeValue: [],
       laneName: '',
       CarList: [],
       parkId: '',
@@ -693,10 +679,11 @@ export default {
     // 设置请求头加入token 避免请求认证的问题
     this.headers = { 'token': getToken() }
   },
-  // mounted() {
-
-  // },
   methods: {
+    timeChange(val) {
+      this.renewform.effectiveTime = val[0]
+      this.renewform.expireTime = val[1]
+    },
     // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
@@ -846,9 +833,12 @@ export default {
       if (id !== this.ids) {
         getPortById(query).then(res => {
           this[form] = res.data
-          this[form].effectiveTime = ''
-          this[form].expireTime = ''
-          // this[form].remark = ''
+          if (form === 'renewform') {
+            this.timeValue = [this[form].expireTime, this[form].expireTime]
+            this.$set(this[form], 'effectiveTime', this[form].expireTime)
+            this.pickerOptions = setPickOptions(this[form].expireTime)
+            this.$set(this[form], 'remark', '')
+          }
           this.loading = false
         })
       }
@@ -916,6 +906,7 @@ export default {
       this.reset()
       const portIds = row.id || this.ids
       this.getInfoById(portIds, 'renewform')
+      this.msgSuccess(this.renewform.expireTime)
       if (row === undefined) {
         this.showotherFlag = false
       }
@@ -931,10 +922,6 @@ export default {
               this.msgSuccess(res.msg)
               this.loading = false
               this.getList()// 列表重新查询
-              this.renewform.effectiveTime = ''
-              this.renewform.expireTime = ''
-              this.renewform.remark = ''
-              this.renewform.amount = ''
             })
           } else {
             this.renewform.carRegisterId = this.ids.toString()
@@ -942,10 +929,6 @@ export default {
               this.msgSuccess(res.msg)
               this.loading = false
               this.getList()// 列表重新查询
-              this.renewform.effectiveTime = ''
-              this.renewform.expireTime = ''
-              this.renewform.remark = ''
-              this.renewform.amount = ''
             })
           }
           this.loading = false
