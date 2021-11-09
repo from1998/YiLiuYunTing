@@ -478,7 +478,7 @@
           </el-form-item>
         </div>
         <el-tooltip class="item" effect="dark" placement="top">
-          <div slot="content">警告：请勿更改起租时间。<br><br>起租时间已自动设置为上次续租到期时间。</div>
+          <div slot="content">提示:<br><br>起租时间已自动设置为上次续租到期时间。</div>
           <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租时间段" prop="notEmpty">
             <el-date-picker
               v-model="timeValue"
