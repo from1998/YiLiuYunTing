@@ -84,7 +84,7 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制订单号{{ scope.row.sn }}</p>
+            <p>提示：点击复制订单号:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.sn }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-show="scope.row.sn" v-clipboard:copy="scope.row.sn" v-clipboard:success="clipboardSuccess" size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.sn }}</el-tag>
             </div>
@@ -94,7 +94,7 @@
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制车牌号{{ scope.row.carNumber }}</p>
+            <p>提示：点击复制车牌号:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.carNumber }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
               <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>

@@ -41,26 +41,6 @@
               style="width:180px"
             />
           </el-form-item>
-          <!--          <el-form-item label="类型" prop="isLeave" label-width="70px">-->
-          <!--            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券类型">-->
-          <!--              <el-option-->
-          <!--                v-for="item in stateOptions"-->
-          <!--                :key="item.dictValue"-->
-          <!--                :label="item.dictLabel"-->
-          <!--                :value="Number(item.dictValue)"-->
-          <!--              />-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
-          <!--          <el-form-item label="是否开放" prop="isLeave" label-width="70px">-->
-          <!--            <el-select v-cloak v-model="queryParams.isLeave" style="width:180px" placeholder="请选择优惠券是否开放">-->
-          <!--              <el-option-->
-          <!--                v-for="item in stateOptions"-->
-          <!--                :key="item.dictValue"-->
-          <!--                :label="item.dictLabel"-->
-          <!--                :value="Number(item.dictValue)"-->
-          <!--              />-->
-          <!--            </el-select>-->
-          <!--          </el-form-item>-->
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -103,15 +83,33 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>商户号: {{ scope.row.username }}</p>
-            <div v-show="scope.row.username" slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.username }}</el-tag>
+            <p>提示：点击复制商户号:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.username }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.username" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.username }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="联系人" align="center" prop="realName" />
-      <el-table-column label="手机号" align="center" prop="mobile" />
+      <el-table-column align="center" label="联系人">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制联系人:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.realName }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.realName" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.realName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号码" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制手机号码:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.mobile }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.mobile" v-clipboard:success="clipboardSuccess" type="info" size="mini" effect="dark"><i class="el-icon-phone" /> {{ scope.row.mobile }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         label="地址"
@@ -283,6 +281,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！`)
+    },
     handleLaneName(val) {
       if (val === '') {
         this.laneName = ''

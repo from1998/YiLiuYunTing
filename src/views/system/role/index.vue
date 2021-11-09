@@ -1,13 +1,12 @@
 <template>
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
+    <el-row :gutter="0" style="margin-bottom: 8px;">
       <el-col :span="6">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-        <el-button type="success" icon="el-icon-thumb" size="mini" :disabled="single" @click="handleSelectMenu">分配权限</el-button>
       </el-col>
-      <el-col :span="18" :offset="0">
+      <el-col :span="13" :offset="5">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="角色名称" prop="roleName">
@@ -28,7 +27,7 @@
               style="width:160px"
             />
           </el-form-item>
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="状态" prop="status" label-width="40px">
             <el-select
               v-model="queryParams.status"
               placeholder="可用状态"
@@ -43,18 +42,6 @@
                 :value="dict.dictValue"
               />
             </el-select>
-          </el-form-item>
-          <el-form-item label="创建时间">
-            <el-date-picker
-              v-model="dateRange"
-              size="small"
-              style="width:230px"
-              value-format="yyyy-MM-dd"
-              type="daterange"
-              range-separator="-"
-              start-placeholde="开始日期"
-              end-placeholde="结束日期"
-            />
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -71,14 +58,23 @@
       <el-table-column align="center" label="角色ID">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制角色ID。</p>
+            <p>提示：点击复制角色ID:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.roleId }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
-              <el-tag v-clipboard:copy="scope.row.roleId" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-document-copy" /> {{ scope.row.roleId }}</el-tag>
+              <el-tag v-clipboard:copy="scope.row.roleId" v-clipboard:success="clipboardSuccess" size="medium"> <svg-icon icon-class="peoples" /> {{ scope.row.roleId }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="角色名称" align="center" prop="roleName" />
+      <el-table-column align="center" label="角色名称">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制角色名称:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.roleName }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.roleName" v-clipboard:success="clipboardSuccess" size="medium"><i class="el-icon-user-solid" /> {{ scope.row.roleName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.status==='1'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
@@ -86,6 +82,16 @@
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column align="center" label="创建时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="更新时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.updateTime }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="350">
         <template slot-scope="scope">
           <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -191,8 +197,6 @@ export default {
       loading: false,
       // 选中数组
       ids: [],
-      // 非单个禁用
-      single: true,
       // 非多个禁用
       multiple: true,
       // 分页数据总条数
@@ -205,8 +209,6 @@ export default {
       open: false,
       // 状态数据字典
       statusOptions: [],
-      // 日期范围
-      dateRange: [],
       // 查询参数
       queryParams: {
         page: 1,
@@ -250,7 +252,7 @@ export default {
     // 查询表格数据
     getRoleList() {
       this.loading = true // 打开遮罩
-      listRoleForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
+      listRoleForPage(this.addDateRange(this.queryParams)).then(res => {
         this.roleTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
@@ -263,14 +265,12 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
       this.queryParams.page = 1
       this.getRoleList()
     },
     // 数据表格的多选择框选择时触发
     handleSelectionChnage(selection) {
       this.ids = selection.map(item => item.roleId)
-      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     // 分页size变化时触发

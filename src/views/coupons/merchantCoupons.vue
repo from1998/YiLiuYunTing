@@ -91,9 +91,9 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>优惠券名称: {{ scope.row.name }}</p>
-            <div v-show="scope.row.name" slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
+            <p>提示：点击复制优惠券名称:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.name }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.name" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.name }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -112,7 +112,7 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>所属商户: {{ scope.row.merchantIdString }}</p>
+            <p>所属商户:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.merchantIdString }}</el-tag></p>
             <div v-show="scope.row.merchantIdString" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.merchantIdString }}</el-tag>
             </div>
@@ -195,10 +195,6 @@
         <el-form-item label="车牌号" prop="carNumber">
           <el-input v-model="grantForm.carNumber" placeholder="请输入发放对象的车牌号" size="normal" clearable />
         </el-form-item>
-        <!--      <el-form-item label="优惠券唯一识别码" prop="sn">-->
-        <!--        <el-input v-model="grantForm.sn" placeholder="优惠券唯一识别码" clearable size="small" />-->
-        <!--      </el-form-item>-->
-
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="grantSubmit">确 定</el-button>
@@ -498,6 +494,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！`)
+    },
     // 生成二维码
     createQrcode(text) {
       const canvas = document.getElementById('canvas')

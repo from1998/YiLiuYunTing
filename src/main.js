@@ -15,6 +15,8 @@ import * as filters from './filters' // global filters
 // 大屏可视化插件
 import dataV from '@jiaminghi/data-view'
 Vue.use(dataV)
+import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
+Vue.use(clipboard)
 // 粒子效果插件
 import VueParticles from 'vue-particles'
 Vue.use(VueParticles)

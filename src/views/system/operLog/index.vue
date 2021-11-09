@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 表头按钮开始 -->
-    <el-row :gutter="10" style="margin-bottom: 8px;">
+    <el-row :gutter="0" style="margin-bottom: 8px;">
       <el-col :span="3">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
         <el-button type="warning" icon="el-icon-thumb" size="mini" @click="handleClearInfo">清空</el-button>
@@ -9,7 +9,7 @@
       <el-col :span="21">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="系统模块" prop="title">
+          <el-form-item label="系统模块" prop="title" label-width="95px">
             <el-input
               v-model="queryParams.title"
               placeholder="请输入系统模块"
@@ -96,6 +96,9 @@
             <el-form-item label="操作模块:">
               <span>{{ props.row.title }}</span>
             </el-form-item>
+            <el-form-item label="操作时间:">
+              <span>{{ props.row.operTime }}</span>
+            </el-form-item>
             <el-form-item label="操作方法:">
               <span>{{ props.row.requestMethod }}</span>
             </el-form-item>
@@ -111,32 +114,34 @@
             <el-form-item label="状态:">
               <span>{{ props.row.status==0?'成功':'失败' }}</span>
             </el-form-item>
-            <el-form-item label="操作时间:">
-              <span>{{ props.row.operTime }}</span>
-            </el-form-item>
             <el-form-item label="异常信息:">
               <span>{{ props.row.errorMsg }}</span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="系统模块"
-        width="200"
-      >
+      <el-table-column label="系统模块" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>系统模块: {{ scope.row.title }}</p>
-            <div v-show="scope.row.title" slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.title }}</el-tag>
+            <p>提示：点击复制系统模块:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.title }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.title" v-clipboard:success="clipboardSuccess" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;" type="primary" size="mini" effect="dark"> {{ scope.row.title }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="操作类型" align="center" prop="businessType" :formatter="businessTypeFormatter" />
       <el-table-column label="请求方式" width="180" align="center" prop="requestMethod" />
-      <el-table-column label="操作人员" align="center" prop="operName" />
+      <el-table-column align="center" label="操作人员">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制操作人员:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.operName }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.operName" v-clipboard:success="clipboardSuccess" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;" size="medium"><i class="el-icon-user-solid" /> {{ scope.row.operName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="主机" align="center" prop="operIp" />
       <el-table-column label="操作地点" align="center" prop="operLocation" />
       <el-table-column label="状态" align="center">
@@ -222,6 +227,10 @@ export default {
   },
   // 自定义方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！')
+    },
     // 默认时间
     timeDefault() {
       const date = new Date()

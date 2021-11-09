@@ -2,10 +2,10 @@
   <div class="app-container">
     <!-- 表格工具按钮开始 -->
     <el-row :gutter="0" style="margin-bottom: 8px;">
-      <el-col :span="16" :offset="8">
+      <el-col :span="20" :offset="4">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="字典名称" prop="dictName">
+          <el-form-item label="字典名称" prop="dictName" label-width="98px">
             <el-input
               v-model="queryParams.dictName"
               placeholder="请输入字典名称"
@@ -61,22 +61,53 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="dictTypeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典名称" prop="dictName" align="center" :show-overflow-tooltip="true" />
+      <el-table-column label="字典名称" prop="dictType" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制字典名称:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.dictName }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.dictName" v-clipboard:success="clipboardSuccess" size="medium" effect="dark"> <i class="el-icon-notebook-2" /> {{ scope.row.dictName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="字典类型" prop="dictType" align="center" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制字典类型。</p>
+            <p>提示：点击复制字典类型:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.dictType }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-clipboard:copy="scope.row.dictType" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-notebook-2" /> {{ scope.row.dictType }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
-      <el-table-column label="备注" prop="remark" align="center" :show-overflow-tooltip="true" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.status==='1'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
+          <el-tag v-show="scope.row.status==='2'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="更新时间" width="180">
+        <template slot-scope="scope">
+          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.updateTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="备注"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>备注: {{ scope.row.remark }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;"><i class="el-icon-notebook-2" /> {{ scope.row.remark }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="350">
@@ -145,12 +176,8 @@
 <script>
 // 引入api
 import { listForPage, addDictType, updateDictType, getDictTypeById, deleteDictTypeByIds } from '@/api/system/dict/type'
-import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 
 export default {
-  directives: {
-    clipboard
-  },
   // 定义页面数据
   data() {
     return {
@@ -247,10 +274,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getDictTypeList()
-    },
-    // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 打开添加的弹出层
     handleAdd() {

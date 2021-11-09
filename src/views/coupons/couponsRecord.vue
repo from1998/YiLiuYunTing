@@ -74,9 +74,9 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>所属商户: {{ scope.row.merchantIdString }}</p>
-            <div v-show="scope.row.merchantIdString" slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.merchantIdString }}</el-tag>
+            <p>提示：点击复制所属商户:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.merchantIdString }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.merchantIdString" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.merchantIdString }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -109,11 +109,16 @@
           <el-tag v-show="scope.row.isUsed===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 已使用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="使用车牌" align="center">
+      <el-table-column label="车牌号" align="center" width="126">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
-          <el-tag v-else-if="scope.row.carNumberFlag==='新'" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
-          <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制车牌号:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.carNumber }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+              <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
+              <el-tag v-else v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column align="center" label="生效日期" width="200">
@@ -265,6 +270,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！`)
+    },
     // 清理过期未使用优惠券
     handleError() {
       this.$confirm('确定清理过期未使用优惠券?', '提示', {

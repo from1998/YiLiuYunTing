@@ -9,7 +9,7 @@
       <el-col :span="18">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
-          <el-form-item label="标题" prop="noticeTitle">
+          <el-form-item label="标题" prop="noticeTitle" label-width="79px">
             <el-input
               v-model="queryParams.noticeTitle"
               placeholder="请输入通知公告标题"
@@ -67,17 +67,39 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="noticeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标题" align="center" prop="noticeTitle" />
+      <el-table-column label="标题" prop="dictType" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制标题:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.noticeTitle }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.noticeTitle" v-clipboard:success="clipboardSuccess" size="medium" effect="dark">{{ scope.row.noticeTitle }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="内容" align="center" prop="noticeContent" width="300px" />
       <el-table-column label="类型" prop="noticeType" align="center" :formatter="noticeTypeFormatter" />
       <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
-      <el-table-column label="发布者" align="center" prop="createBy" />
+      <el-table-column label="发布者" prop="dictType" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制发布者:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.createBy }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.createBy" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.createBy }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="发布时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="更新者" align="center" prop="updateBy" />
+      <el-table-column label="更新者" prop="dictType" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <el-tag v-clipboard:copy="scope.row.createBy" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.updateBy }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="更新时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.updateTime }}</el-tag>
@@ -257,6 +279,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功！')
+    },
     // 查询表格数据
     getNoticeList() {
       this.loading = true // 打开遮罩

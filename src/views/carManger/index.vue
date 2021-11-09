@@ -70,7 +70,7 @@
           <el-form-item label="姓名" prop="userName" label-width="45px">
             <el-input
               v-model="queryParams.userName"
-              placeholder="请输入姓名"
+              placeholder="请输入车主姓名"
               clearable
               size="small"
             />
@@ -130,7 +130,7 @@
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制车牌号{{ scope.row.carNumber }}</p>
+            <p>提示：点击复制车牌号:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.carNumber }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-if="scope.row.carNumberFlag==='临'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }}</el-tag>
               <el-tag v-else-if="scope.row.carNumberFlag==='新'" v-clipboard:copy="scope.row.carNumber" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carNumber }} 新</el-tag>
@@ -142,7 +142,7 @@
       <el-table-column label="车主姓名" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制车主姓名{{ scope.row.userName }}</p>
+            <p>提示：点击复制车主姓名:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.userName }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-clipboard:copy="scope.row.userName" v-clipboard:success="clipboardSuccess" type="success" size="mini" effect="dark"><i class="el-icon-user-solid" /> {{ scope.row.userName }}</el-tag>
             </div>
@@ -152,7 +152,7 @@
       <el-table-column label="车主手机号" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制车主手机号{{ scope.row.mobile }}</p>
+            <p>提示：点击复制车主手机号:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.mobile }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-clipboard:copy="scope.row.mobile" v-clipboard:success="clipboardSuccess" type="info" size="mini" effect="dark"><i class="el-icon-phone" /> {{ scope.row.mobile }}</el-tag>
             </div>

@@ -139,12 +139,13 @@
       <el-table-column
         align="center"
         label="名称"
+        width="300"
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>名称: {{ scope.row.name }}</p>
-            <div v-show="scope.row.name" slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
+            <p>提示：点击复制名称:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.name }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-show="scope.row.name" v-clipboard:copy="scope.row.sn" v-clipboard:success="clipboardSuccess" size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.name }}</el-tag>
             </div>
           </el-popover>
         </template>
@@ -379,6 +380,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess(val) {
+      this.msgSuccess(`复制成功！`)
+    },
     handleLaneName(val) {
       if (val === '') {
         this.laneName = ''

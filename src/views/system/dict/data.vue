@@ -2,14 +2,14 @@
   <div class="app-container">
     <!-- 表头按钮开始 -->
     <el-row :gutter="0" style="margin-bottom: 8px;">
-      <el-col :span="6">
+      <el-col :span="4">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="17" :offset="3">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="字典类型" prop="dictType">
+          <el-form-item label="字典类型" prop="dictType" label-width="115px">
             <el-select
               v-model="queryParams.dictType"
               placeholder="请选择字典类型"
@@ -34,7 +34,7 @@
               style="width:240px"
             />
           </el-form-item>
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="状态" prop="status" label-width="40px">
             <el-select
               v-model="queryParams.status"
               placeholder="字典状态"
@@ -62,15 +62,31 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="dictDataTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典编码" prop="dictCode" align="center" />
       <el-table-column label="字典标签" prop="dictLabel" align="center" />
       <el-table-column label="字典键值" prop="dictValue" align="center" />
       <el-table-column label="字典排序" prop="dictSort" align="center" />
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
-      <el-table-column label="备注" prop="remark" align="center" :show-overflow-tooltip="true" />
+      <el-table-column label="状态" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.status==='1'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
+          <el-tag v-show="scope.row.status==='2'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="创建时间" width="180">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="备注"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>备注: {{ scope.row.remark }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;"><i class="el-icon-notebook-2" /> {{ scope.row.remark }}</el-tag>
+            </div>
+          </el-popover>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center">
@@ -246,10 +262,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getDictDataList()
-    },
-    // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
     },
     // 重置表单
     reset() {

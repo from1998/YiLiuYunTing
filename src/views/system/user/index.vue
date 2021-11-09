@@ -9,16 +9,16 @@
       </el-col>
       <el-col :span="15" :offset="getUserInfo().role === 1?2:9">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="用户姓名" prop="userName">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
+          <el-form-item label="登陆名称" prop="username" label-width="120px">
             <el-input
-              v-model="queryParams.userName"
-              placeholder="请输入用户姓名"
+              v-model="queryParams.username"
+              placeholder="请输入登陆名称"
               clearable
               size="small"
             />
           </el-form-item>
-          <el-form-item label="手机号" prop="mobile">
+          <el-form-item label="手机号" prop="mobile" label-width="55px">
             <el-input
               v-model="queryParams.mobile"
               placeholder="请输入手机号"
@@ -56,7 +56,7 @@
       <el-table-column align="center" label="登陆名称">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制登陆名称{{ scope.row.username }}</p>
+            <p>提示：点击复制登陆名称:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.username }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-clipboard:copy="scope.row.username" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.username }}</el-tag>
             </div>
@@ -64,7 +64,16 @@
         </template>
       </el-table-column>
       <el-table-column label="真实姓名" align="center" prop="realName" />
-      <el-table-column label="手机号码" width="180" align="center" prop="mobile" />
+      <el-table-column label="手机号码" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制手机号码:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.mobile }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.mobile" v-clipboard:success="clipboardSuccess" type="info" size="mini" effect="dark"><i class="el-icon-phone" /> {{ scope.row.mobile }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.state===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
@@ -223,12 +232,8 @@ import { listUserForPage, selectNeedSchedulingUsers, addUser, updateUser, getUse
 import { selectAllRole } from '@/api/system/role'
 
 import validate from '@/utils/validate'
-import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 
 export default {
-  directives: {
-    clipboard
-  },
   // 定义页面数据
   data() {
     return {

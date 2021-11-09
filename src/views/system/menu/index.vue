@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="105px">
       <el-row>
         <el-col :span="6" :offset="0">
           <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
@@ -16,7 +16,7 @@
               style="width:240px"
             />
           </el-form-item>
-          <el-form-item label="状态" prop="status">
+          <el-form-item label="状态" prop="status" label-width="40px">
             <el-select
               v-model="queryParams.status"
               placeholder="请选择状态"
@@ -84,11 +84,23 @@
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="remark" />
+      <el-table-column
+        align="center"
+        label="备注"
+      >
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>备注: {{ scope.row.remark }}</p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;"><i class="el-icon-notebook-2" /> {{ scope.row.remark }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="350">
         <template slot-scope="scope">
-          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)">添加</el-button>
+          <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
