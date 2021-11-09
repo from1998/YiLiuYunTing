@@ -906,7 +906,6 @@ export default {
       this.reset()
       const portIds = row.id || this.ids
       this.getInfoById(portIds, 'renewform')
-      this.msgSuccess(this.renewform.expireTime)
       if (row === undefined) {
         this.showotherFlag = false
       }
