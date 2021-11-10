@@ -333,7 +333,6 @@
                 placeholder="请选择车辆类型"
                 clearable
                 size="small"
-                @change="change()"
               >
                 <el-option
                   v-for="item in options.carCategoryOptions"
@@ -353,7 +352,6 @@
                 placeholder="请选择车位类型"
                 clearable
                 size="small"
-                @change="change()"
               >
                 <el-option
                   v-for="item in options.depotCategoryOptions"
@@ -371,7 +369,6 @@
                 placeholder="请选择时长类型"
                 clearable
                 size="small"
-                @change="change()"
               >
                 <el-option
                   v-for="item in options.timeCategoryOptions"
@@ -391,7 +388,7 @@
                 value-format="HH:mm:ss"
                 placeholder="开始时间"
                 style="width:195px"
-                @change="change()"
+                @change="$forceUpdate()"
               />
             </el-form-item>
           </el-col>
@@ -402,7 +399,7 @@
                 value-format="HH:mm:ss"
                 placeholder="结束时间"
                 style="width:195px"
-                @change="change()"
+                @change="$forceUpdate()"
               />
             </el-form-item>
           </el-col>
@@ -416,7 +413,7 @@
                 placeholder="起租日期"
                 style="width:195px"
                 type="date"
-                @change="change()"
+                @change="$forceUpdate()"
               />
             </el-form-item>
           </el-col>
@@ -428,7 +425,7 @@
                 placeholder="截至日期"
                 style="width:195px"
                 type="date"
-                @change="change()"
+                @change="$forceUpdate()"
               />
             </el-form-item>
           </el-col>
@@ -750,10 +747,6 @@ export default {
     // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
-    },
-    change(val) {
-      console.log(val)
-      this.$forceUpdate()
     },
     handleParkFocus() {
       this.getList()
