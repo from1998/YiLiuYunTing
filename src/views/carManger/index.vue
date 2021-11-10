@@ -412,7 +412,7 @@
             <el-form-item label="起租日期" prop="effectiveTime">
               <el-date-picker
                 v-model="form.effectiveTime"
-                value-format="YYYY-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="起租日期"
                 style="width:195px"
                 type="date"
@@ -424,7 +424,7 @@
             <el-form-item label="截至日期" prop="expireTime">
               <el-date-picker
                 v-model="form.expireTime"
-                value-format="YYYY-MM-dd HH:mm:ss"
+                value-format="yyyy-MM-dd HH:mm:ss"
                 placeholder="截至日期"
                 style="width:195px"
                 type="date"
@@ -533,7 +533,6 @@
                   :placeholder="renewform.effectiveTime"
                   style="width:157px"
                   type="date"
-                  :disabled="renewPickflag"
                   value-format="yyyy-MM-dd HH:mm:ss"
                 />
               </el-form-item>
@@ -661,7 +660,8 @@ export default {
       updateFlag: false,
       // 续费弹出层
       RenewOpen: false,
-      renewPickflag: false,
+      // 起租日期禁用标志位
+      // renewPickflag: false,
       // 续费历史弹出层
       RenewHistoryOpen: false,
       // 下拉列表数据
@@ -901,10 +901,10 @@ export default {
             let date
             if (this[form].expireTime) {
               date = moment(this[form].expireTime).subtract(-1, 'days').format('YYYY-MM-DD HH:mm:ss')
-              this.renewPickflag = true
+              // this.renewPickflag = true
             } else {
-              date = moment().subtract(-1, 'days').format('YYYY-MM-DD HH:mm:ss')
-              this.renewPickflag = false
+              date = moment().format('YYYY-MM-DD HH:mm:ss')
+              // this.renewPickflag = false
             }
             this.$set(this[form], 'effectiveTime', date)
             this.$set(this[form], 'expireTime', date)
