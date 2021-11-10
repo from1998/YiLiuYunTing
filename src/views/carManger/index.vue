@@ -172,16 +172,16 @@
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
             <template>
               <el-popover trigger="hover" placement="top">
-                <p style="text-align:center">
-                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length===0">暂无续费记录！</span>
-                  <span v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0" style="line-height:30px">最近三条续费记录:</span>
-                  <span v-show="scope.row.recentRecord===undefined">点击查看最近三条续费记录</span>
+                <div style="text-align:center">
+                  <el-tag v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length===0" effect="dark" size="mini" type="danger">暂无续费记录！</el-tag>
+                  <el-tag v-show="scope.row.recentRecord!==undefined && scope.row.recentRecord.length!==0" effect="dark" size="mini" type="primary">最近三条续费记录:</el-tag>
+                  <el-tag v-show="scope.row.recentRecord===undefined" effect="dark" size="mini" type="primary">点击查看最近三条续费记录</el-tag>
                   <br>
-                  <el-tag v-for="item in scope.row.recentRecord" :key="item.id" effect="dark" size="mini">
-                    {{ item.effectiveTime +' -- '+ item.expireTime }}
+                  <span v-for="item in scope.row.recentRecord" :key="item.id" style="line-height:2em">
+                    <el-tag effect="dark" type="success" size="mini">{{ item.effectiveTime +' -- '+ item.expireTime }}</el-tag>
                     <br>
-                  </el-tag>
-                </p>
+                  </span>
+                </div>
                 <div slot="reference" class="name-wrapper">
                   <el-tag size="small" style="cursor:pointer" @click="handleMouseEnter(scope.row.id)">
                     <el-row v-show="scope.row.effectiveTime!==null && scope.row.effectiveTime!==null" :gutter="0">
@@ -407,6 +407,32 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row v-if="updateFlag">
+          <el-col :span="12" :offset="0">
+            <el-form-item label="起租日期" prop="effectiveTime">
+              <el-date-picker
+                v-model="form.effectiveTime"
+                value-format="YYYY-MM-dd HH:mm:ss"
+                placeholder="起租日期"
+                style="width:195px"
+                type="date"
+                @change="change()"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="截至日期" prop="expireTime">
+              <el-date-picker
+                v-model="form.expireTime"
+                value-format="YYYY-MM-dd HH:mm:ss"
+                placeholder="截至日期"
+                style="width:195px"
+                type="date"
+                @change="change()"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12" :offset="0">
             <el-form-item label="层号" prop="tierNumber">
@@ -477,10 +503,9 @@
             <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
           </el-form-item>
         </div>
-        <el-tooltip class="item" effect="dark" placement="top">
+        <!-- <el-tooltip class="item" effect="dark" placement="top">
           <div slot="content">提示:<br><br>起租时间已自动设置为上次续租到期时间。</div>
-          <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租时间段" prop="notEmpty">
-            <el-date-picker
+ <el-date-picker
               v-model="timeValue"
               type="daterange"
               align="right"
@@ -491,9 +516,45 @@
               end-placeholder="到期日期"
               :picker-options="pickerOptions"
               @change="timeChange(timeValue)"
+<el-date-picker
+              v-model="renewform.effectiveTime"
+              type="date"
+              placeholder="起租日期"
+              style="width:175px"
             />
           </el-form-item>
-        </el-tooltip>
+        </el-tooltip> -->
+        <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租日期范围" prop="notEmpty">
+          <el-row :gutter="0">
+            <el-col :span="11" :offset="0">
+              <el-form-item prop="effectiveTime" label="" label-width="0">
+                <el-date-picker
+                  v-model="renewform.effectiveTime"
+                  :placeholder="renewform.effectiveTime"
+                  style="width:157px"
+                  type="date"
+                  :disabled="renewPickflag"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                />
+              </el-form-item>
+            </el-col>
+            <el-col :span="1" :offset="0">
+              --
+            </el-col>
+            <el-col :span="11" :offset="0">
+              <el-form-item prop="expireTime" label="" label-width="0">
+                <el-date-picker
+                  v-model="renewform.expireTime"
+                  placeholder="到期时间"
+                  style="width:175px"
+                  type="date"
+                  value-format="yyyy-MM-dd HH:mm:ss"
+                  :picker-options="pickerOptions"
+                />
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form-item>
         <div v-show="showotherFlag">
           <el-form-item label="层号" prop="tierNumber">
             <el-select v-model="renewform.tierNumber" placeholder="请选择车位层号" size="small" style="width:350px" disabled>
@@ -551,7 +612,7 @@ import { getToken } from '@/utils/auth'
 import { setPickOptions } from '@/utils/shortcuts'
 import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 import validate from '@/utils/validate.js'
-
+import moment from 'moment'
 export default {
   directives: {
     clipboard
@@ -597,8 +658,10 @@ export default {
       title: '',
       // 添加修改弹出层
       open: false,
+      updateFlag: false,
       // 续费弹出层
       RenewOpen: false,
+      renewPickflag: false,
       // 续费历史弹出层
       RenewHistoryOpen: false,
       // 下拉列表数据
@@ -680,10 +743,10 @@ export default {
     this.headers = { 'token': getToken() }
   },
   methods: {
-    timeChange(val) {
-      this.renewform.effectiveTime = val[0]
-      this.renewform.expireTime = val[1]
-    },
+    // timeChange(val) {
+    //   this.renewform.effectiveTime = val[0]
+    //   this.renewform.expireTime = val[1]
+    // },
     // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
@@ -822,6 +885,7 @@ export default {
     handleUpdate(row) {
       this.title = '修改车辆'
       this.open = true
+      this.updateFlag = true
       const portIds = row.id || this.ids[0]
       this.reset()
       this.getInfoById(portIds, 'form')
@@ -834,8 +898,16 @@ export default {
         getPortById(query).then(res => {
           this[form] = res.data
           if (form === 'renewform') {
-            this.timeValue = [this[form].expireTime, this[form].expireTime]
-            this.$set(this[form], 'effectiveTime', this[form].expireTime)
+            let date
+            if (this[form].expireTime) {
+              date = moment(this[form].expireTime).subtract(-1, 'days').format('YYYY-MM-DD HH:mm:ss')
+              this.renewPickflag = true
+            } else {
+              date = moment().subtract(-1, 'days').format('YYYY-MM-DD HH:mm:ss')
+              this.renewPickflag = false
+            }
+            this.$set(this[form], 'effectiveTime', date)
+            this.$set(this[form], 'expireTime', date)
             this.pickerOptions = setPickOptions(this[form].expireTime)
             this.$set(this[form], 'remark', '')
           }
