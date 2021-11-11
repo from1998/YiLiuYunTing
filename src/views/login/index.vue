@@ -1,34 +1,61 @@
 <template>
   <div class="login-container">
+    <div v-show="false" @click="controlFormOpen = true">
+      <el-popover
+        placement="top-start"
+        title="提示："
+        width="188"
+        trigger="hover"
+        content="点击打开样式控制台。"
+      >
+        <dv-decoration-9 slot="reference" class="styleControlForm" style="width:50px;height:50px;"><span style="color:#F00"><i class="el-icon-loading" /></span></dv-decoration-9>
+      </el-popover>
+    </div>
     <!-- 控制区域 -->
-    <!-- <div v-show="false">
-      <el-form :model="controlForm" :inline="true" label-width="68px">
-        <el-form-item label="动态背景" prop="menuName">
-          <el-switch v-model="dynamicBg" />
-        </el-form-item>
-        <el-form-item label="粒子效果" prop="menuName">
-          <el-switch v-model="particle" />
-        </el-form-item>
-        <el-form-item label="背景样式" prop="bgStyle">
+    <el-dialog
+      title="样式控制台"
+      :visible.sync="controlFormOpen"
+      width="25%"
+      center
+      append-to-body
+      :close-on-click-modal="false"
+    >
+      <el-form :model="controlForm" label-width="68px">
+        <el-row :gutter="20">
+          <el-col :span="12" :offset="0">
+            <el-form-item label="粒子效果" prop="particle">
+              <el-switch v-model="controlForm.particle" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="背景类型" prop="bgType">
+              <!-- true为动态，false为静态 -->
+              <el-switch v-model="controlForm.bgType" inactive-color="#13ce66" :active-text="controlForm.bgType?'动态':'静态'" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item v-show="controlForm.bgType" label="背景样式" prop="bgStyle">
           <el-select
-            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-            v-cloak
-            v-model="form.parkId"
+            v-model="controlForm.dynamicBgStyle"
             size="small"
             clearable
-            style="padding-left:55px"
-            @change="handleParkFocus"
+            @change="handlebgStyleChange"
           >
             <el-option
-              v-for="(item, index) in CarList"
-              :key="index"
+              v-for="item in bgStyleList"
+              :key="item.id"
               :label="item.name"
-              :value="Number(item.id)"
+              :value="item.value"
             />
           </el-select>
         </el-form-item>
       </el-form>
-    </div> -->
+      <span slot="footer">
+        <el-button @click="controlFormOpen = false">取消</el-button>
+        <el-button type="primary" @click="handleStyleSubmit">确定</el-button>
+      </span>
+    </el-dialog>
+
     <div class="logo">
       <img src="../../assets/images/logo.png" alt="一流云停停车管理系统">
     </div>
@@ -105,6 +132,7 @@
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
     </el-form>
     <vue-particles
+      v-if="controlForm.particle"
       color:
       particles-color
       :particle-opacity="0.7"
@@ -156,6 +184,14 @@ export default {
       }
     }
     return {
+      bgStyleList: [
+        {
+          id: 1,
+          name: '流光溢彩',
+          value: 1
+        }
+      ],
+      controlFormOpen: false,
       image_verify_code: '',
       loginForm: {
         username: '',
@@ -164,7 +200,10 @@ export default {
         uuid: ''
       },
       controlForm: {
-        username: ''
+        bgType: true,
+        staticBgStyle: '',
+        dynamicBgStyle: '',
+        particle: true
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -189,6 +228,13 @@ export default {
       },
       immediate: true
     }
+    // controlForm: {
+    //   deep: true,
+    //   immediate: true,
+    //   handler(val) {
+    //     this.msgSuccess(val)
+    //   }
+    // }
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -199,6 +245,13 @@ export default {
     this.getVerifyCode()
   },
   methods: {
+    handleStyleSubmit() {
+      // this.msgSuccess('ok')
+      this.controlFormOpen = false
+    },
+    handlebgStyleChange(val) {
+      this.msgSuccess(val)
+    },
     getVerifyCode() {
       this.loginForm.verifyCode = ''
       this.loginForm.uuid = uuidv4().split('-')[0] // ⇨ '9b1deb4d'
@@ -328,6 +381,12 @@ $light_gray:#eee;
   width: 100%;
   height: 100vh;
 }
+.styleControlForm {
+  position: fixed;
+  top: 1%;
+  right: 1%;
+  z-index: 2;
+}
 .login-container {
   position: relative;
   min-height: 100%;
@@ -345,7 +404,7 @@ $light_gray:#eee;
 }
   .login-form {
     position: relative;
-    z-index: 9999;
+    z-index: 1;
     width: 520px;
     max-width: 100%;
     padding: 0 35px;
