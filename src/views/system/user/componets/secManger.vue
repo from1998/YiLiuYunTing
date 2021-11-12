@@ -41,8 +41,26 @@
     <el-table v-loading="loading" border :data="securityList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="ID" align="center" prop="id" />
-      <el-table-column label="姓名" align="center" prop="realName" />
-      <el-table-column label="手机号码" align="center" prop="mobile" />
+      <el-table-column label="姓名" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制姓名:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.realName }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.realName" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><i class="el-icon-user-solid" /> {{ scope.row.realName }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号码" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制手机号码:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.mobile }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.mobile" v-clipboard:success="clipboardSuccess" type="info" size="mini" effect="dark"><i class="el-icon-phone" /> {{ scope.row.mobile }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
       <el-table-column label="上下班时间" align="center" prop="workTimeDur" width="392">
         <template slot-scope="scope">
           <el-time-picker
@@ -253,6 +271,10 @@ export default {
   },
   // 方法
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功')
+    },
     // 翻译是否状态
     statusFormatter(row, column, cellValue) {
       if (cellValue !== null) {
