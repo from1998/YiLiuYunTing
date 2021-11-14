@@ -8,7 +8,7 @@
     <!-- 表格工具按钮开始 -->
     <el-row style="margin-bottom:20px">
       <el-col :span="19">
-        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">新增</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
         <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
         <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
@@ -61,7 +61,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="车牌号" prop="carNumber" label-width="120px">
             <el-input
-              v-model="queryParams.carNumber"
+              v-model.trim="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
@@ -69,7 +69,7 @@
           </el-form-item>
           <el-form-item label="姓名" prop="userName" label-width="45px">
             <el-input
-              v-model="queryParams.userName"
+              v-model.trim="queryParams.userName"
               placeholder="请输入车主姓名"
               clearable
               size="small"
@@ -77,7 +77,7 @@
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
             <el-input
-              v-model="queryParams.mobile"
+              v-model.trim="queryParams.mobile"
               placeholder="请输入车主手机号"
               clearable
               size="small"
@@ -108,7 +108,7 @@
               <el-option
                 v-for="item in options.status"
                 :key="item.dictValue"
-                :label="item.dictLabel"
+                :label="item.dictValue==='1'?'在租':'不在租'"
                 :value="Number(item.dictValue)"
               />
             </el-select>
@@ -301,21 +301,21 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12" :offset="0">
+          <el-col :span="getUserInfo().role === 4?24:12" :offset="0">
             <el-form-item label="车牌号" prop="carNumber">
-              <el-input v-model="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
+              <el-input v-model.trim="form.carNumber" placeholder="请输入车牌号" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
         <el-row>
           <el-col :span="12" :offset="0">
             <el-form-item label="姓名" prop="userName">
-              <el-input v-model="form.userName" placeholder="请输入车主姓名" clearable size="small" />
+              <el-input v-model.trim="form.userName" placeholder="请输入车主姓名" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
             <el-form-item label="手机号" prop="mobile">
-              <el-input v-model="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
+              <el-input v-model.trim="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -323,7 +323,7 @@
         <el-row>
           <el-col :span="12" :offset="0">
             <el-form-item label="车辆地址" prop="address">
-              <el-input v-model="form.address" placeholder="请输入车辆地址" clearable size="small" />
+              <el-input v-model.trim="form.address" placeholder="请输入车辆地址" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
@@ -404,7 +404,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="updateFlag">
+        <el-row v-show="updateFlag">
           <el-col :span="12" :offset="0">
             <el-form-item label="起租日期" prop="effectiveTime">
               <el-date-picker
@@ -425,6 +425,7 @@
                 placeholder="截至日期"
                 style="width:195px"
                 type="date"
+                :picker-options="pickerOptions"
                 @change="$forceUpdate()"
               />
             </el-form-item>
@@ -474,7 +475,7 @@
         </el-row>
 
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
+          <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -494,33 +495,12 @@
       <el-form ref="renewForm" :model="renewform" :rules="rules" label-width="100px">
         <div v-show="showotherFlag">
           <el-form-item label="车牌号">
-            <el-input v-model="renewform.carNumber" placeholder="请输入车牌号" clearable size="small" :disabled="true" />
+            <el-input v-model.trim="renewform.carNumber" placeholder="请输入车牌号" clearable size="small" :disabled="true" />
           </el-form-item>
           <el-form-item label="车主姓名" prop="userName">
-            <el-input v-model="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
+            <el-input v-model.trim="renewform.userName" placeholder="请输入车主姓名" clearable size="small" :disabled="true" />
           </el-form-item>
         </div>
-        <!-- <el-tooltip class="item" effect="dark" placement="top">
-          <div slot="content">提示:<br><br>起租时间已自动设置为上次续租到期时间。</div>
- <el-date-picker
-              v-model="timeValue"
-              type="daterange"
-              align="right"
-              unlink-panels
-              size="small"
-              range-separator="-"
-              start-placeholder="起租日期"
-              end-placeholder="到期日期"
-              :picker-options="pickerOptions"
-              @change="timeChange(timeValue)"
-<el-date-picker
-              v-model="renewform.effectiveTime"
-              type="date"
-              placeholder="起租日期"
-              style="width:175px"
-            />
-          </el-form-item>
-        </el-tooltip> -->
         <el-form-item v-if="renewform.registerType===3 || !renewform.id" label="续租日期范围" prop="notEmpty">
           <el-row :gutter="0">
             <el-col :span="11" :offset="0">
@@ -545,7 +525,7 @@
                   style="width:175px"
                   type="date"
                   value-format="yyyy-MM-dd HH:mm:ss"
-                  :picker-options="pickerOptions"
+                  :picker-options="pickerRenewOptions"
                 />
               </el-form-item>
             </el-col>
@@ -589,7 +569,7 @@
           </el-tooltip>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="renewform.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
+          <el-input v-model.trim="renewform.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -617,6 +597,7 @@ export default {
   data() {
     return {
       pickerOptions: {},
+      pickerRenewOptions: {},
       timeValue: [],
       laneName: '',
       CarList: [],
@@ -740,10 +721,6 @@ export default {
     this.headers = { 'token': getToken() }
   },
   methods: {
-    // timeChange(val) {
-    //   this.renewform.effectiveTime = val[0]
-    //   this.renewform.expireTime = val[1]
-    // },
     // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
@@ -901,8 +878,10 @@ export default {
             }
             this.$set(this[form], 'effectiveTime', date)
             this.$set(this[form], 'expireTime', date)
-            this.pickerOptions = setPickOptions(this[form].expireTime)
+            this.pickerRenewOptions = setPickOptions(this[form].expireTime, '续费')
             this.$set(this[form], 'remark', '')
+          } else {
+            this.pickerOptions = setPickOptions(res.data.expireTime, '未来')
           }
           this.loading = false
         })
@@ -947,6 +926,7 @@ export default {
               this.loading = false
               this.getList()// 列表重新查询
               this.open = false// 关闭弹出层
+              this.updateFlag = false
             }).catch(() => {
               this.loading = false
             })
@@ -958,6 +938,7 @@ export default {
     cancel() {
       this.open = false
       this.loading = false
+      this.updateFlag = false
       this.title = ''
     },
     // 重置表单

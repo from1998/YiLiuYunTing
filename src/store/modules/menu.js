@@ -11,7 +11,7 @@ const mutations = {
 
 // 动态菜单还是定义在前端，后台只会返回有权限的菜单列表，通过遍历服务端的菜单数据，没有的将对于菜单进行隐藏
 // 这样的好处是服务端无需返回前端菜单相关结构，并且菜单显示又可以通过服务端来控制，进行菜单的动态控制
-// 前端新增页面也无需先通过服务端进行菜单添加，遵循了前后端分离原则
+// 前端添加页面也无需先通过服务端进行菜单添加，遵循了前后端分离原则
 function generateRoutes(routes, srvMenus) {
   for (let i = 0; i < routes.length; i++) {
     const routeItem = routes[i]

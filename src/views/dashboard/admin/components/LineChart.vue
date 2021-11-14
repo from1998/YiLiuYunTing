@@ -94,6 +94,13 @@ export default {
           top: 50,
           containLabel: true
         },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross'
+          },
+          padding: [5, 10]
+        },
         yAxis: {
           axisTick: {
             show: false
