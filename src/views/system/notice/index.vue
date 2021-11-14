@@ -11,7 +11,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
           <el-form-item label="标题" prop="noticeTitle" label-width="79px">
             <el-input
-              v-model="queryParams.noticeTitle"
+              v-model.trim="queryParams.noticeTitle"
               placeholder="请输入通知公告标题"
               clearable
               size="small"
@@ -19,7 +19,7 @@
           </el-form-item>
           <el-form-item label="发布者" prop="createBy" label-width="55px">
             <el-input
-              v-model="queryParams.createBy"
+              v-model.trim="queryParams.createBy"
               placeholder="请输入发布者"
               clearable
               size="small"
@@ -140,7 +140,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="标题" prop="noticeTitle">
-              <el-input v-model="form.noticeTitle" placeholder="请输入通知公告标题" clearable size="small" />
+              <el-input v-model.trim="form.noticeTitle" placeholder="请输入通知公告标题" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -185,7 +185,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" placeholder="请输入备注" clearable size="small" />
+              <el-input v-model.trim="form.remark" placeholder="请输入备注" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -31,18 +31,16 @@
           ref="queryForm"
           :model="queryParams"
           :inline="true"
-          label-width="45px"
         >
           <el-form-item
             label="名称"
             prop="name"
           >
             <el-input
-              v-model="queryParams.name"
+              v-model.trim="queryParams.name"
               placeholder="请输入优惠券名称"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item
@@ -52,7 +50,6 @@
             <el-select
               v-cloak
               v-model="queryParams.category"
-              style="width:180px"
               placeholder="请选择优惠券类型"
               clearable
             >
@@ -67,19 +64,17 @@
           <el-form-item
             label="是否开放"
             prop="isActive"
-            label-width="70px"
           >
             <el-select
               v-cloak
               v-model="queryParams.isActive"
-              style="width:180px"
               placeholder="请选择是否开放"
               clearable
             >
               <el-option
                 v-for="item in statusOptions"
                 :key="item.dictValue"
-                :label="item.dictLabel"
+                :label="item.dictValue==='1'?'开放':'关闭'"
                 :value="Number(item.dictValue)"
               />
             </el-select>
@@ -229,7 +224,7 @@
         >
           <el-row :span="5">
             <el-input
-              v-model="form.name"
+              v-model.trim="form.name"
               placeholder="请输入优惠劵名称"
               clearable
               size="small"
@@ -253,7 +248,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          v-if="title === '添加优惠券信息' && roleId === 1 "
+          v-if="addFlag && roleId === 1 "
           label="车场"
           prop="parkId"
           label-width="70px"
@@ -327,6 +322,7 @@ export default {
       title: '',
       // 是否显示弹出层
       open: false,
+      addFlag: false,
       // 状态数据字典
       statusOptions: [],
       // 日期范围
@@ -475,6 +471,7 @@ export default {
       this.open = true
       this.reset()
       this.title = '添加优惠券'
+      this.addFlag = true
     },
     // 打开修改的弹出层
     handleUpdate(row) {
@@ -522,6 +519,7 @@ export default {
           this.loading = true
           if (this.form.id === undefined) {
             addCoupons(this.form).then((res) => {
+              this.addFlag = false
               if (res.code === 200) {
                 this.msgSuccess(res.msg)
                 this.open = false // 关闭弹出层
@@ -556,6 +554,7 @@ export default {
     // 取消
     cancel() {
       this.open = false
+      this.addFlag = false
       this.title = ''
     },
     // 重置表单

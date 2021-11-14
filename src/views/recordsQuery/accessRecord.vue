@@ -15,7 +15,7 @@
             </el-form-item>
             <el-form-item label="" prop="days">
               <el-input
-                v-model="cleanForm.days"
+                v-model.trim="cleanForm.days"
                 placeholder="请输入清理天数"
                 clearable
                 size="small"
@@ -58,7 +58,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="车牌号" prop="carnumber">
             <el-input
-              v-model="queryParams.carnumber"
+              v-model.trim="queryParams.carnumber"
               placeholder="请输入车牌号"
               clearable
               size="small"

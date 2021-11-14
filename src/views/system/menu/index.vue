@@ -9,7 +9,7 @@
         <el-col :span="12" :offset="6">
           <el-form-item label="菜单名称" prop="menuName">
             <el-input
-              v-model="queryParams.menuName"
+              v-model.trim="queryParams.menuName"
               placeholder="请输入菜单名称"
               clearable
               size="small"
@@ -141,12 +141,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model="form.menuName" placeholder="请输入菜单名称" clearable size="small" />
+              <el-input v-model.trim="form.menuName" placeholder="请输入菜单名称" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="路由地址" prop="path">
-              <el-input v-model="form.path" placeholder="请输入路由地址" clearable size="small" />
+              <el-input v-model.trim="form.path" placeholder="请输入路由地址" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -168,7 +168,7 @@
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model="form.remark" type="textarea" />
+              <el-input v-model.trim="form.remark" type="textarea" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -7,7 +7,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="字典名称" prop="dictName" label-width="98px">
             <el-input
-              v-model="queryParams.dictName"
+              v-model.trim="queryParams.dictName"
               placeholder="请输入字典名称"
               clearable
               size="small"
@@ -15,7 +15,7 @@
           </el-form-item>
           <el-form-item label="字典类型" prop="dictType">
             <el-input
-              v-model="queryParams.dictType"
+              v-model.trim="queryParams.dictType"
               placeholder="请输入字典类型"
               clearable
               size="small"
@@ -145,10 +145,10 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典名称" prop="dictName">
-          <el-input v-model="form.dictName" placeholder="请输入字典名称" clearable size="small" />
+          <el-input v-model.trim="form.dictName" placeholder="请输入字典名称" clearable size="small" />
         </el-form-item>
         <el-form-item label="字典类型" prop="dictType">
-          <el-input v-model="form.dictType" placeholder="请输入字典类型" clearable size="small" @keyup.enter.native="handleSubmit" />
+          <el-input v-model.trim="form.dictType" placeholder="请输入字典类型" clearable size="small" @keyup.enter.native="handleSubmit" />
         </el-form-item>
         <el-form-item label="字典状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -161,7 +161,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="字典备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
+          <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

@@ -16,7 +16,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="商户号" prop="username">
             <el-input
-              v-model="queryParams.username"
+              v-model.trim="queryParams.username"
               placeholder="请输入商户号"
               clearable
               size="small"
@@ -25,7 +25,7 @@
           </el-form-item>
           <el-form-item label="联系人" prop="realName">
             <el-input
-              v-model="queryParams.realName"
+              v-model.trim="queryParams.realName"
               placeholder="请输入联系人"
               clearable
               size="small"
@@ -34,7 +34,7 @@
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
             <el-input
-              v-model="queryParams.mobile"
+              v-model.trim="queryParams.mobile"
               placeholder="请输入手机号"
               clearable
               size="small"
@@ -176,16 +176,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="商户号" prop="username">
-          <el-input v-model="form.username" placeholder="请输入商家账号" clearable size="small" />
+          <el-input v-model.trim="form.username" placeholder="请输入商家账号" clearable size="small" />
         </el-form-item>
         <el-form-item label="联系人" prop="realName">
-          <el-input v-model="form.realName" placeholder="请输入商家联系人" clearable size="small" />
+          <el-input v-model.trim="form.realName" placeholder="请输入商家联系人" clearable size="small" />
         </el-form-item>
         <el-form-item label="手机号" prop="mobile">
-          <el-input v-model="form.mobile" placeholder="请输入商家手机号" clearable size="small" />
+          <el-input v-model.trim="form.mobile" placeholder="请输入商家手机号" clearable size="small" />
         </el-form-item>
         <el-form-item label="地址" prop="email">
-          <el-input v-model="form.email" placeholder="请输入商家地址" clearable size="small" />
+          <el-input v-model.trim="form.email" placeholder="请输入商家地址" clearable size="small" />
         </el-form-item>
 
       </el-form>

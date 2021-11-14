@@ -17,7 +17,7 @@
       >
         <el-form ref="form" v-loading="loading" :model="form" label-width="70px">
           <el-form-item label="来访原因" prop="comereason">
-            <el-input v-model="form.comereason" />
+            <el-input v-model.trim="form.comereason" />
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">

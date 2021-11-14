@@ -11,7 +11,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="70px">
           <el-form-item label="所属商户" prop="merchantIdString">
             <el-input
-              v-model="queryParams.merchantIdString"
+              v-model.trim="queryParams.merchantIdString"
               placeholder="请输入所属商户"
               clearable
               size="small"
@@ -30,7 +30,7 @@
           </el-form-item>
           <el-form-item label="使用车牌" prop="carNumber">
             <el-input
-              v-model="queryParams.carNumber"
+              v-model.trim="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
@@ -150,49 +150,10 @@
       @current-change="handleCurrentChange"
     />
     <!-- 分页控件结束 -->
-
-    <!-- 添加修改弹出层开始 -->
-    <el-dialog
-      :title="title"
-      :visible.sync="open"
-      width="500px"
-      center
-      append-to-body
-      :close-on-click-modal="false"
-    >
-      <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="form.roleName" placeholder="请输入角色名称" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="权限编码" prop="roleCode">
-          <el-input v-model="form.roleCode" placeholder="请输入权限字符" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="显示顺序" prop="roleSort">
-          <el-input-number v-model="form.roleSort" clearable size="small" />
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="form.status">
-            <el-radio
-              v-for="dict in statusOptions"
-              :key="dict.dictValue"
-              :label="dict.dictValue"
-            >{{ dict.dictLabel }}</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
-        </el-form-item>
-      </el-form>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
 // 引入api
-// import { listRoleForPage } from '@/api/system/role'
 import { getListCouponsRecord, cleanErrorRecord } from '@/api/coupons/record'
 import { listAll } from '@/api/coupons/couponsManger'
 export default {
@@ -211,8 +172,6 @@ export default {
       multiple: true,
       // 分页数据总条数
       total: 0,
-      // 字典表格数据
-      roleTableList: [],
       // 弹出层标题
       title: '',
       // 是否显示弹出层
@@ -234,12 +193,6 @@ export default {
       form: {
         status: '1'
       },
-      // 是否打开分配权限的弹出层
-      selectMenuOpen: false,
-      // 菜单树的数据
-      menuOptions: [],
-      // 当前选中持角色ID
-      currentRoleId: undefined,
       id: '',
       YesOrNo: [],
       stateOptions: [],
@@ -365,75 +318,6 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getRoleList()
-    },
-    // 打开添加的弹出层
-    handleAdd() {
-      this.open = true
-      this.reset()
-      this.title = '添加角色信息'
-    },
-    // 打开修改的弹出层
-    handleUpdate(row) {
-      this.title = '修改角色信息'
-      this.open = true
-      this.reset()
-      // 根据dictId查询一个字典信息
-      this.loading = true
-    },
-    // 执行删除
-    handleDelete(row) {
-      this.$confirm('此操作将永久删除该角色数据, 是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.loading = true
-      })
-    },
-    // 保存
-    handleSubmit() {
-      this.$refs['form'].validate((valid) => {
-        if (valid) {
-          // 做添加
-          this.loading = true
-          if (this.form.roleId === undefined) {
-            // addRole(this.form).then(res => {
-            //   this.msgSuccess('保存成功')
-            //   this.loading = false
-            //   this.getRoleList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
-          } else { // 做修改
-            // updateRole(this.form).then(res => {
-            //   this.msgSuccess('修改成功')
-            //   this.loading = false
-            //   this.getRoleList()// 列表重新查询
-            //   this.open = false// 关闭弹出层
-            // }).catch(() => {
-            //   this.loading = false
-            // })
-          }
-        }
-      })
-    },
-    // 取消
-    cancel() {
-      this.open = false
-      this.title = ''
-    },
-    // 重置表单
-    reset() {
-      this.resetForm('form')
-      this.form = {
-        roleId: undefined,
-        roleName: undefined,
-        roleCode: undefined,
-        roleSort: 0,
-        remark: undefined,
-        status: '0'
-      }
     }
   }
 }

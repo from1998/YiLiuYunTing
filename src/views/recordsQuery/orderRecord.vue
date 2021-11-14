@@ -12,7 +12,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
           <el-form-item label="车牌号" prop="carNumber">
             <el-input
-              v-model="queryParams.carNumber"
+              v-model.trim="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
@@ -21,7 +21,7 @@
           </el-form-item>
           <el-form-item label="订单号" prop="sn">
             <el-input
-              v-model="queryParams.sn"
+              v-model.trim="queryParams.sn"
               placeholder="请输入订单号"
               clearable
               size="small"

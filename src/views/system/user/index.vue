@@ -12,7 +12,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
           <el-form-item label="登陆名称" prop="username" label-width="120px">
             <el-input
-              v-model="queryParams.username"
+              v-model.trim="queryParams.username"
               placeholder="请输入登陆名称"
               clearable
               size="small"
@@ -20,7 +20,7 @@
           </el-form-item>
           <el-form-item label="手机号" prop="mobile" label-width="55px">
             <el-input
-              v-model="queryParams.mobile"
+              v-model.trim="queryParams.mobile"
               placeholder="请输入手机号"
               clearable
               size="small"
@@ -139,22 +139,22 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="登录名称" prop="username">
-              <el-input v-model="form.username" style="width:240px" placeholder="请输入登录名称" clearable size="small" />
+              <el-input v-model.trim="form.username" style="width:240px" placeholder="请输入登录名称" clearable size="small" />
             </el-form-item></el-col>
           <el-col :span="12">
             <el-form-item label="真实姓名" prop="realName">
-              <el-input v-model="form.realName" style="width:240px" placeholder="请输入真实姓名" clearable size="small" />
+              <el-input v-model.trim="form.realName" style="width:240px" placeholder="请输入真实姓名" clearable size="small" />
             </el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="手机号" prop="mobile">
-              <el-input v-model="form.mobile" style="width:240px" placeholder="请输入手机号" clearable size="small" />
+              <el-input v-model.trim="form.mobile" style="width:240px" placeholder="请输入手机号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="form.email" style="width:240px" placeholder="请输入用户邮箱" clearable size="small" />
+              <el-input v-model.trim="form.email" style="width:240px" placeholder="请输入用户邮箱" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>

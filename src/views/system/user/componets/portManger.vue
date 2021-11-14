@@ -35,7 +35,7 @@
           </el-form-item>
           <el-form-item label="编号" prop="number">
             <el-input
-              v-model="queryParams.number"
+              v-model.trim="queryParams.number"
               placeholder="请输入车位编号"
               clearable
               size="small"
@@ -103,7 +103,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="编号" prop="number">
-          <el-input v-model="form.number" placeholder="请输入车位编号" clearable size="small" />
+          <el-input v-model.trim="form.number" placeholder="请输入车位编号" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

@@ -16,12 +16,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="名称" prop="name">
-              <el-input v-model="form.name" />
+              <el-input v-model.trim="form.name" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="简称">
-              <el-input v-model="form.shortName" />
+              <el-input v-model.trim="form.shortName" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -42,7 +42,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="详细地址" prop="address">
-              <el-input v-model="form.address" />
+              <el-input v-model.trim="form.address" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -60,12 +60,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="手机/电话" prop="mobile">
-              <el-input v-model="form.mobile" placeholder="请输入手机/电话号码" />
+              <el-input v-model.trim="form.mobile" placeholder="请输入手机/电话号码" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="支付逗留时长" placeholder="请输入支付逗留时长" prop="payDuration">
-              <el-input v-model="form.payDuration" />
+              <el-input v-model.trim="form.payDuration" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -73,12 +73,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="经度">
-              <el-input v-model="form.longitude" />
+              <el-input v-model.trim="form.longitude" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="纬度">
-              <el-input v-model="form.latitude" />
+              <el-input v-model.trim="form.latitude" />
             </el-form-item>
             <el-link href="https://api.map.baidu.com/lbsapi/getpoint/index.html" target="_blank" class="coord" type="primary" icon="el-icon-thumb">拾取坐标</el-link>
           </el-col>
@@ -87,12 +87,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="总车位数" prop="total">
-              <el-input v-model="form.total" />
+              <el-input v-model.trim="form.total" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="空闲车位数" prop="emptyNum">
-              <el-input v-model="form.emptyNum" />
+              <el-input v-model.trim="form.emptyNum" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -230,7 +230,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="平台识别码" prop="uploadPlatformSn">
-              <el-input v-model="form.uploadPlatformSn" />
+              <el-input v-model.trim="form.uploadPlatformSn" />
             </el-form-item>
           </el-col>
         </el-row>

@@ -11,7 +11,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="系统模块" prop="title" label-width="95px">
             <el-input
-              v-model="queryParams.title"
+              v-model.trim="queryParams.title"
               placeholder="请输入系统模块"
               clearable
               size="small"
@@ -20,7 +20,7 @@
           </el-form-item>
           <el-form-item label="操作人员" prop="operName">
             <el-input
-              v-model="queryParams.operName"
+              v-model.trim="queryParams.operName"
               placeholder="请输入操作人员"
               clearable
               size="small"

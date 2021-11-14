@@ -15,7 +15,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="岗亭名称" prop="name">
             <el-input
-              v-model="queryParams.name"
+              v-model.trim="queryParams.name"
               placeholder="请输入岗亭名称"
               clearable
               size="small"
@@ -81,7 +81,7 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="110px">
         <el-form-item label="岗亭名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入岗亭名称" clearable size="small" />
+          <el-input v-model.trim="form.name" placeholder="请输入岗亭名称" clearable size="small" />
         </el-form-item>
         <el-form-item label="进出车辆类型" prop="carType">
           <el-select

@@ -15,7 +15,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="保安姓名" prop="realName">
             <el-input
-              v-model="queryParams.realName"
+              v-model.trim="queryParams.realName"
               placeholder="请输入保安姓名"
               clearable
               size="small"
@@ -23,7 +23,7 @@
           </el-form-item>
           <el-form-item label="保安手机号码" label-width="96px" prop="mobile">
             <el-input
-              v-model="queryParams.mobile"
+              v-model.trim="queryParams.mobile"
               placeholder="请输入保安手机号码"
               clearable
               size="small"
@@ -76,7 +76,7 @@
       </el-table-column>
       <el-table-column label="操作" align="center" width="360">
         <template slot-scope="scope">
-          <el-button type="primary" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
+          <el-button type="success" icon="el-icon-edit" size="small" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="small" @click="handleDelete(scope.row)">删除</el-button>
           <el-button type="primary" size="small" @click="handleLane(scope.row)">
             <svg-icon icon-class="carLine" />
@@ -108,10 +108,10 @@
     >
       <el-form ref="form" :model="form" label-width="100px" :rules="rules">
         <el-form-item label="姓名" prop="realName">
-          <el-input v-model="form.realName" placeholder="请输入保安姓名" clearable size="small" />
+          <el-input v-model.trim="form.realName" placeholder="请输入保安姓名" clearable size="small" />
         </el-form-item>
         <el-form-item label="手机号码" prop="mobile">
-          <el-input v-model="form.mobile" placeholder="请输入保安手机号码" clearable size="small" />
+          <el-input v-model.trim="form.mobile" placeholder="请输入保安手机号码" clearable size="small" />
         </el-form-item>
         <el-form-item label="上下班时间">
           <el-time-picker

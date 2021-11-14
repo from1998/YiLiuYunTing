@@ -16,7 +16,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="48px">
           <el-form-item label="名称" prop="name">
             <el-input
-              v-model="queryParams.name"
+              v-model.trim="queryParams.name"
               placeholder="请输入优惠券名称"
               size="small"
               style="width:180px"
@@ -261,13 +261,17 @@
           </el-tooltip>
         </el-form-item>
         <el-form-item label="优惠券名称" prop="name">
-          <el-input v-model="form.name" placeholder="商家优惠券名称" clearable size="small" style="width: 330px" />
+          <el-input v-model.trim="form.name" placeholder="商家优惠券名称" clearable size="small" style="width: 330px" />
         </el-form-item>
         <el-form-item label="总数" prop="total">
-          <el-input v-model="form.total" placeholder="发放总数" clearable size="small" style="width: 330px" />
+          <el-tooltip class="item" effect="dark" content="请输入优惠券总数" placement="right">
+            <el-input-number v-model="form.total" :precision="2" :step="1" clearable style="width: 330px" />
+          </el-tooltip>
         </el-form-item>
-        <el-form-item label="剩余" prop="residue">
-          <el-input v-model="form.residue" placeholder="剩余数量" clearable size="small" style="width: 330px" />
+        <el-form-item label="剩余数量" prop="residue">
+          <el-tooltip class="item" effect="dark" content="请输入优惠券剩余数量" placement="right">
+            <el-input-number v-model="form.residue" :precision="2" :step="1" clearable style="width: 330px" />
+          </el-tooltip>
         </el-form-item>
         <el-form-item label="优惠力度" prop="discount">
           <el-tooltip class="item" effect="dark" content="时间劵：单位为分钟;  代金劵：单位是元;  折扣劵：小数,例如9折为0.9" placement="bottom">

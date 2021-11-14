@@ -27,7 +27,7 @@
           </el-form-item>
           <el-form-item label="字典标签" prop="dictLabel">
             <el-input
-              v-model="queryParams.dictLabel"
+              v-model.trim="queryParams.dictLabel"
               placeholder="请输入字典标签"
               clearable
               size="small"
@@ -122,13 +122,13 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典类型" prop="dictType">
-          <el-input v-model="form.dictType" :disabled="true" size="small" />
+          <el-input v-model.trim="form.dictType" :disabled="true" size="small" />
         </el-form-item>
         <el-form-item label="字典名称" prop="dictLabel">
-          <el-input v-model="form.dictLabel" placeholder="请输入字典名称" clearable size="small" />
+          <el-input v-model.trim="form.dictLabel" placeholder="请输入字典名称" clearable size="small" />
         </el-form-item>
         <el-form-item label="字典值" prop="dictValue">
-          <el-input v-model="form.dictValue" placeholder="请输入字典值" clearable size="small" />
+          <el-input v-model.trim="form.dictValue" placeholder="请输入字典值" clearable size="small" />
         </el-form-item>
         <el-form-item label="排序显示" prop="dictSort">
           <el-tooltip class="item" effect="dark" content="提示:数值越小，显示位置越靠前。" placement="right">
@@ -147,7 +147,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="字典备注" prop="remark">
-          <el-input v-model="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
+          <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">

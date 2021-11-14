@@ -71,7 +71,7 @@
         </span>
         <el-input
           ref="username"
-          v-model="loginForm.username"
+          v-model.trim="loginForm.username"
           placeholder="用户名"
           name="username"
           type="text"
@@ -89,7 +89,7 @@
           <el-input
             :key="passwordType"
             ref="password"
-            v-model="loginForm.password"
+            v-model.trim="loginForm.password"
             :type="passwordType"
             placeholder="密码"
             name="password"
@@ -113,7 +113,7 @@
             </span>
             <el-input
               ref="verifyCode"
-              v-model="loginForm.verifyCode"
+              v-model.trim="loginForm.verifyCode"
               placeholder="验证码"
               name="verifyCode"
               type="text"

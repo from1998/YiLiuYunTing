@@ -23,7 +23,7 @@
               <el-option
                 v-for="item in options.status"
                 :key="item.dictValue"
-                :label="item.dictLabel"
+                :label="item.dictValue==='1'?'在线':'离线'"
                 :value="Number(item.dictValue)"
               />
             </el-select>

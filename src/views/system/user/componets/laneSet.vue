@@ -23,7 +23,7 @@
         <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
           <el-form-item label="车道名称" prop="name">
             <el-input
-              v-model="queryParams.name"
+              v-model.trim="queryParams.name"
               placeholder="请输入车道名称"
               clearable
               size="small"
@@ -144,7 +144,7 @@
           <el-col :span="12" :offset="0">
             <!-- 车道名称 -->
             <el-form-item label="车道名称" prop="name">
-              <el-input v-model="form.name" placeholder="请输入车道名称" clearable size="small" />
+              <el-input v-model.trim="form.name" placeholder="请输入车道名称" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
@@ -193,11 +193,11 @@
         <el-row>
           <el-col :span="12" :offset="0">        <!-- 相机识别码 -->
             <el-form-item label="相机识别码" prop="cameraSn">
-              <el-input v-model="form.cameraSn" placeholder="请输入相机识别码" clearable size="small" />
+              <el-input v-model.trim="form.cameraSn" placeholder="请输入相机识别码" clearable size="small" />
             </el-form-item></el-col>
           <el-col :span="12" :offset="0">        <!-- 相机IP -->
             <el-form-item label="相机IP" prop="cameraIp">
-              <el-input v-model="form.cameraIp" placeholder="请输入相机IP" clearable size="small" />
+              <el-input v-model.trim="form.cameraIp" placeholder="请输入相机IP" clearable size="small" />
             </el-form-item></el-col>
         </el-row>
         <el-row>
@@ -255,23 +255,23 @@
           <el-row>
             <el-col :span="12" :offset="0">          <!-- 广告一 -->
               <el-form-item label="广告一">
-                <el-input v-model="form.ggOne" placeholder="请输入广告一" clearable size="small" />
+                <el-input v-model.trim="form.ggOne" placeholder="请输入广告一" clearable size="small" />
               </el-form-item>
             </el-col>
             <el-col :span="12" :offset="0">          <!-- 广告二 -->
               <el-form-item label="广告二">
-                <el-input v-model="form.ggTwo" placeholder="请输入广告二" clearable size="small" />
+                <el-input v-model.trim="form.ggTwo" placeholder="请输入广告二" clearable size="small" />
               </el-form-item></el-col>
           </el-row>
 
           <el-row>
             <el-col :span="12" :offset="0">          <!-- 广告三 -->
               <el-form-item v-show="form.lineCount === 4" label="广告三">
-                <el-input v-model="form.ggThree" placeholder="请输入广告三" clearable size="small" />
+                <el-input v-model.trim="form.ggThree" placeholder="请输入广告三" clearable size="small" />
               </el-form-item></el-col>
             <el-col :span="12" :offset="0">          <!-- 广告四 -->
               <el-form-item v-show="form.lineCount === 4" label="广告四">
-                <el-input v-model="form.ggFour" placeholder="请输入广告四" clearable size="small" />
+                <el-input v-model.trim="form.ggFour" placeholder="请输入广告四" clearable size="small" />
               </el-form-item></el-col>
           </el-row>
         </div>
@@ -315,7 +315,7 @@
       append-to-body
       :close-on-click-modal="false"
     >
-      <el-input v-model="emergencyPhone" clearable size="small" placeholder="请输入应急联系方式" @keyup.enter.native="handleEmergencyConfirm" />
+      <el-input v-model.trim="emergencyPhone" clearable size="small" placeholder="请输入应急联系方式" @keyup.enter.native="handleEmergencyConfirm" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleEmergencyConfirm">确 定</el-button>
         <el-button @click="emergencyOpen = false">取 消</el-button>
