@@ -404,7 +404,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-show="updateFlag">
+        <el-row v-if="updateFlag">
           <el-col :span="12" :offset="0">
             <el-form-item label="起租日期" prop="effectiveTime">
               <el-date-picker
