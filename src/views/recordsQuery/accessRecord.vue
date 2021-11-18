@@ -8,7 +8,7 @@
       </el-row>
       <!-- 表格工具按钮开始 -->
       <el-row>
-        <el-col :span="8" :offset="0">
+        <el-col :span="10" :offset="0">
           <el-form ref="cleanForm" :model="cleanForm" :inline="true">
             <el-form-item>
               <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
@@ -35,7 +35,7 @@
             </el-tooltip>
           </el-form>
         </el-col>
-        <el-col :span="4" :offset="12" style="padding-left:60px">
+        <el-col :span="4" :offset="10" style="padding-left:60px">
           <el-select
             v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
             v-cloak
