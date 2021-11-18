@@ -244,6 +244,7 @@ export default {
       this.resetForm('queryForm')
       this.queryParams.dictType = this.defaultDictType
       this.queryParams.page = 1
+      this.queryParams.size = 10
       this.getDictDataList()
     },
     // 数据表格的多选择框选择时触发

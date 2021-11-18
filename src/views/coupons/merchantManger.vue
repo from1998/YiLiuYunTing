@@ -327,6 +327,8 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      this.queryParams.page = 1
+      this.queryParams.size = 10
       if (this.roleId === 4) {
         this.queryParams.parentId = this.CarList[0].id
       }

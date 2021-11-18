@@ -266,6 +266,7 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.queryParams.page = 1
+      this.queryParams.size = 10
       this.getRoleList()
     },
     // 数据表格的多选择框选择时触发

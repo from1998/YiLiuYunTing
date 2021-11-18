@@ -250,6 +250,8 @@ export default {
     // 重置
     resetQuery() {
       this.resetForm('queryForm')
+      this.queryParams.page = 1
+      this.queryParams.size = 10
       this.getMenuList()
     },
     // 添加

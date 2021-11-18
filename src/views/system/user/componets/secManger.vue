@@ -336,6 +336,8 @@ export default {
     // 重置查询
     resetQuery() {
       this.resetForm('queryForm')
+      this.queryParams.page = 1
+      this.queryParams.size = 10
       this.queryParams.parentId = this.manageridBak
       this.getSecurityList()
     },

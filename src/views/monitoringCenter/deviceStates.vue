@@ -196,6 +196,7 @@ export default {
       this.resetForm('queryForm')
       this.queryParams.managerId = this.manageridBak
       this.queryParams.page = 1
+      this.queryParams.size = 10
       this.getlaneList()
     },
     // 分页size变化时触发

@@ -273,8 +273,9 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = []
       this.queryParams.page = 1
+      this.queryParams.size = 10
+      this.dateRange = []
       this.getUserList()
     },
     // 手机号校验

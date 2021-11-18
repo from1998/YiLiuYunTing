@@ -312,6 +312,7 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.queryParams.page = 1
+      this.queryParams.size = 10
       this.getOrderTable()
     },
     // 分页size变化时触发

@@ -379,6 +379,7 @@ export default {
       this.resetForm('queryForm')
       this.dateRange = []
       this.queryParams.page = 1
+      this.queryParams.size = 10
       this.getUserList()
     },
     // 手机号校验

@@ -300,7 +300,8 @@ export default {
     resetQuery() {
       this.resetForm('queryForm')
       this.dateRange = []
-      this.queryParams.page = 1
+      this.queryParams.pageNum = 1
+      this.queryParams.pageSize = 10
       this.getNoticeList()
     },
     // 数据表格的多选择框选择时触发
