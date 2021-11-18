@@ -10,7 +10,7 @@
       <el-row>
         <el-col :span="10" :offset="0">
           <el-form ref="cleanForm" :model="cleanForm" :inline="true">
-            <el-form-item>
+            <el-form-item v-if="getUserInfo().role === 1">
               <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
             </el-form-item>
             <el-form-item>
