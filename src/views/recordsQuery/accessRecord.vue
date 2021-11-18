@@ -11,6 +11,9 @@
         <el-col :span="8" :offset="0">
           <el-form ref="cleanForm" :model="cleanForm" :inline="true">
             <el-form-item>
+              <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
+            </el-form-item>
+            <el-form-item>
               <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleLeave">清理离场车辆</el-button>
             </el-form-item>
             <el-form-item label="" prop="days">
@@ -125,7 +128,8 @@
     <!-- 表格工具按钮结束 -->
 
     <!-- 数据表格开始 -->
-    <el-table v-loading="loading" border :data="carTableList" stripe>
+    <el-table v-loading="loading" border :data="carTableList" stripe @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="车牌号" align="center" width="126">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -222,6 +226,7 @@
           <el-button type="primary" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
             查看进出场图片
           </el-button>
+          <!-- <el-button v-if="scope.row.role!==1" type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button> -->
         </template>
       </el-table-column>
     </el-table>
@@ -296,7 +301,7 @@
 </template>
 <script>
 // 引入api
-import { getRecordList, cleanLeaveRecord, cleanEnterRecord } from '@/api/monitoringCenter/accessRecord'
+import { getRecordList, cleanLeaveRecord, cleanEnterRecord, delAccessRecord } from '@/api/monitoringCenter/accessRecord'
 import { listAll } from '@/api/coupons/couponsManger'
 
 export default {
@@ -386,6 +391,25 @@ export default {
     // 复制成功的回调函数
     clipboardSuccess(val) {
       this.msgSuccess(`复制成功！`)
+    },
+    // 执行删除
+    handleDelete(row) {
+      const ids = row.id || this.ids
+      this.$confirm('此操作将永久删除该进出场数据, 是否继续?', '警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true
+        delAccessRecord(ids).then(res => {
+          this.msgSuccess(res.msg)
+          this.getAccessList()// 全查询
+        })
+        this.loading = false
+      }).catch(() => {
+        this.msgError('删除已取消')
+        this.loading = false
+      })
     },
     handleParkFocus(val) {
       if (val === '') {
@@ -509,6 +533,11 @@ export default {
       this.queryParams.page = val
       // 重新查询
       this.getAccessList()
+    },
+    // 数据表格的多选择框选择时触发
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.multiple = !selection.length
     },
     handleAccessImg(row) {
       this.title = '进出场图片'

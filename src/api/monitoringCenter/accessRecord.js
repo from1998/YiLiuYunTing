@@ -32,6 +32,13 @@ export function cleanEnterRecord(days) {
     method: 'delete'
   })
 }
+// 删除进出记录
+export function delAccessRecord(ids) {
+  return request({
+    url: '/park/record/del/' + ids,
+    method: 'delete'
+  })
+}
 // 查询车流报表
 export function getCarOrder(data) {
   return request({
