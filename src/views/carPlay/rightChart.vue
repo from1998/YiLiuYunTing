@@ -84,13 +84,14 @@ export default {
     processData(data) {
       const name = []
       const fee = []
-      for (const key in data) {
-        name.push(key)
-        fee.push(data[key].toFixed(2))
+      data.map(val => {
+        name.push(val.name)
+        fee.push(val.amount.toFixed(2))
+      })
+      return {
+        name: name,
+        fee: fee
       }
-      data['name'] = name
-      data['fee'] = fee
-      return data
     },
     renderChart() {
       getRankingData().then(res => {
