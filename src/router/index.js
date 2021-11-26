@@ -380,6 +380,16 @@ export const asyncRoutes = [
         title: '订单记录',
         icon: 'el-icon-s-claim'
       }
+    },
+    {
+      path: 'errorRecord',
+      component: () =>
+                    import ('@/views/recordsQuery/errorRecord'),
+      name: '/recordsQuery/errorRecord',
+      meta: {
+        title: '异常记录',
+        icon: 'el-icon-document-delete'
+      }
     }
     ]
   },
