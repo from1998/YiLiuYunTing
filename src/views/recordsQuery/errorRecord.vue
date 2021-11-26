@@ -1,13 +1,18 @@
 <template>
   <div class="app-container">
+    <el-row v-if="getUserInfo().role === 1 || getUserInfo().role === 3" :gutter="0">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>{{ laneName }}</span>
+      </el-col>
+    </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="7" :offset="17">
+      <el-col :span="7">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
-          <el-form-item label="车牌号" prop="carNumber">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
+          <el-form-item label="车牌号" prop="carnumber">
             <el-input
-              v-model.trim="queryParams.carNumber"
+              v-model.trim="queryParams.carnumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
@@ -19,6 +24,28 @@
           </el-form-item>
         </el-form>
       </el-col>
+      <el-col :span="4" :offset="13">
+        <el-form :inline="true" align="right">
+          <el-form-item>
+            <el-select
+              v-if="getUserInfo().role === 1 || getUserInfo().role === 3"
+              v-cloak
+              v-model="queryParams.parkId"
+              placeholder="请选择您要查看的车场"
+              size="small"
+              clearable
+              @change="handleParkFocus"
+            >
+              <el-option
+                v-for="item in parkCategory"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+      </el-col>
     </el-row>
 
     <!-- 数据表格开始 -->
@@ -27,7 +54,6 @@
       border
       :data="tblCouponsList"
       stripe
-      @selection-change="handleSelectionChnage"
     >
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
@@ -43,18 +69,18 @@
       </el-table-column>
       <el-table-column align="center" label="进场异常次数">
         <template slot-scope="scope">
-          <el-tag type="warning" size="mini" effect="dark">{{ scope.row.accessInMum }}</el-tag>
+          <el-tag type="danger" size="mini" effect="dark">{{ scope.row.accessInMum }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="出场异常次数">
         <template slot-scope="scope">
-          <el-tag type="warning" size="mini" effect="dark">{{ scope.row.accessOutMum }}</el-tag>
+          <el-tag type="danger" size="mini" effect="dark">{{ scope.row.accessOutMum }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleDetail(scope.row.carnumber,'in')"> <i class="el-icon-d-arrow-left" /> 查看进场异常</el-button>
-          <el-button type="primary" size="mini" @click="handleDetail(scope.row.carnumber,'out')"> <i class="el-icon-d-arrow-right" /> 查看出场异常</el-button>
+          <el-button v-show="scope.row.accessInMum!==0" type="primary" size="mini" @click="handleDetail(scope.row.carnumber,'in')"> <i class="el-icon-d-arrow-left" /> 查看进场未出场</el-button>
+          <el-button v-show="scope.row.accessOutMum!==0" type="primary" size="mini" @click="handleDetail(scope.row.carnumber,'out')"> <i class="el-icon-d-arrow-right" /> 查看无进场出场</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,15 +98,15 @@
     />
     <!-- 查看详情 -->
     <el-dialog
-      title="详情"
+      :title="title"
       :visible.sync="userListOpen"
-      width="1000px"
+      width="70vw"
       center
-      append-to-body
       :close-on-click-modal="false"
     >
+      <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDeletes">删除</el-button>
       <!-- 数据表格开始 -->
-      <el-table ref="pickUserTable" v-loading="loading" border :data="appUserList" stripe @selection-change="handleUserSelectionChnage">
+      <el-table ref="pickUserTable" v-loading="loading" border :data="appUserList" stripe style="margin-top:20px" @selection-change="handleUserSelectionChnage">
         <el-table-column
           type="selection"
           width="55"
@@ -93,6 +119,11 @@
             <el-tag v-else type="primary" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
           </template>
         </el-table-column>
+        <el-table-column align="center" label="时间" width="170">
+          <template slot-scope="scope">
+            <el-tag size="medium" type="primary"> <i class="el-icon-time" /> {{ scope.row.time }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="检查情况" align="center">
           <template slot-scope="scope">
             <el-popover v-show="scope.row.checkStatus" trigger="hover" placement="top">
@@ -103,17 +134,21 @@
             </el-popover>
           </template>
         </el-table-column>
+        <!-- RecordCarTypeDic -->
+        <el-table-column label="车位类型" align="center" prop="recordcartype" :formatter="registerTypeFormatter" />
+        <!-- CarRecordStatusDic -->
+        <el-table-column label="记录类型" align="center" prop="status" :formatter="recordTypeFormatter" />
+        <el-table-column align="center" label="支付时间" width="170">
+          <template slot-scope="scope">
+            <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.pay }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="图片" align="center">
           <template slot-scope="scope">
             <el-button v-if="scope.row.file" type="success" icon="el-icon-picture-outline" size="mini" @click="handleAccessImg(scope.row)">
               查看图片
             </el-button>
             <el-button v-else type="info" icon="el-icon-picture-outline-round" size="mini">暂无图片</el-button>
-          </template>
-        </el-table-column>
-        <el-table-column align="center" label="时间">
-          <template slot-scope="scope">
-            <el-tag size="medium" type="primary"> <i class="el-icon-time" /> {{ scope.row.time }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column align="center" label="操作">
@@ -161,14 +196,17 @@
 // 引入api
 import {
   getErrorCarList,
-  deleteTblCoupon,
   getErrorCarByCarNumber,
   getErrorLeavedCarByCarNumber
 } from '@/api/recordsQuery/errorRecord'
+import { delAccessRecord } from '@/api/monitoringCenter/accessRecord'
+import { listAll } from '@/api/coupons/couponsManger'
+
 export default {
   // 定义页面数据
   data() {
     return {
+      laneName: '',
       carnumber: undefined,
       type: undefined,
       carImgSrc: null,
@@ -186,6 +224,7 @@ export default {
       total: 0,
       userTotal: 0,
       // 表格数据
+      parkCategory: [],
       tblCouponsList: [],
       appUserList: [],
       // 弹出层标题
@@ -197,21 +236,51 @@ export default {
       // 查询参数
       queryParams: {
         page: 1,
-        size: 10
+        size: 10,
+        carnumber: undefined,
+        parkId: undefined
       },
       queryUserParams: {
         page: 1,
         size: 10
-      }
+      },
+      laneOptions: [],
+      recordOptions: []
     }
   },
   // 勾子
   created() {
+    // 获取车位类型字典数据
+    this.getDataByType('RecordCarTypeDic').then(res => {
+      this.laneOptions = res.data
+    })
+    // 获取记录类型字典数据
+    this.getDataByType('CarRecordStatusDic').then(res => {
+      this.recordOptions = res.data
+    })
+    // 获取车场列表数据
+    listAll().then(res => {
+      this.parkCategory = res.data
+      this.queryParams.parkId = this.getUserInfo().role === 1 ? '' : res.data[0].id
+    })
     // 查询表格数据
     this.getTblCouponsList()
   },
   // 方法
   methods: {
+    handleParkFocus(val) {
+      if (val === '') {
+        this.laneName = ''
+        this.getTblCouponsList()
+      } else {
+        this.getTblCouponsList()
+        for (const key in this.parkCategory) {
+          if (this.parkCategory[key].id === val) {
+            this.laneName = this.parkCategory[key].name
+          }
+        }
+      }
+    },
     // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
@@ -245,6 +314,11 @@ export default {
       this.userListOpen = true
       this.carnumber = carnumber
       this.type = type
+      if (type === 'in') {
+        this.title = '进场异常详情'
+      } else {
+        this.title = '出场异常详情'
+      }
       this.getAppUsersList(carnumber, type)
     },
     // 获取详情表格
@@ -297,19 +371,10 @@ export default {
       this.resetForm('queryForm')
       this.getTblCouponsList()
     },
-    // 数据表格的多选择框选择时触发
-    handleSelectionChnage(selection) {
-      this.ids = selection.map((item) => item.id)
-      this.single = selection.length !== 1
-      this.multiple = !selection.length
-    },
+    // 详情表格的多选择框选择时触发
     handleUserSelectionChnage(selection) {
-      this.options.usersName = selection.map((item) => {
-        return {
-          'id': item.id,
-          'name': item.userName
-        }
-      })
+      this.ids = selection.map((item) => item.id)
+      this.multiple = !selection.length
     },
     // 分页size变化时触发
     handleSizeChange(src, val) {
@@ -333,7 +398,7 @@ export default {
     },
     // 执行删除
     handleDeletes(row) {
-      const userIds = row.id || this.ids
+      const id = row.id || this.ids
       this.$confirm('此操作将永久删除该异常记录, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -341,11 +406,11 @@ export default {
       })
         .then(() => {
           this.loading = true
-          deleteTblCoupon(userIds)
+          delAccessRecord(id)
             .then((res) => {
               this.loading = false
               this.msgSuccess(res.msg)
-              this.getTblCouponsList() // 全查询
+              this.getAppUsersList(this.carnumber, this.type)
             })
           this.loading = false
         })
@@ -365,6 +430,18 @@ export default {
     reset() {
       this.resetForm('form')
       this.form = {}
+    },
+    // 翻译车位类型
+    registerTypeFormatter(row) {
+      if (row.recordcartype) {
+        return this.selectDictLabel(this.laneOptions, row.recordcartype.toString())
+      }
+    },
+    // 翻译记录类型
+    recordTypeFormatter(row) {
+      if (row.status) {
+        return this.selectDictLabel(this.recordOptions, row.status.toString())
+      }
     }
   }
 }
