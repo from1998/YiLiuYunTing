@@ -278,8 +278,6 @@ export default {
     // 查询表格数据
     getOrderTable() {
       this.loading = true // 打开遮罩
-      console.log(112 % 1440)
-      console.log(112 % 60)
       getOrderList(this.queryParams).then(res => {
         console.log(res)
         this.orderTableList = res.data.list
