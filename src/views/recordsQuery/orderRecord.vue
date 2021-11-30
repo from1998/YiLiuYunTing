@@ -278,6 +278,8 @@ export default {
     // 查询表格数据
     getOrderTable() {
       this.loading = true // 打开遮罩
+      console.log(112 % 1440)
+      console.log(112 % 60)
       getOrderList(this.queryParams).then(res => {
         console.log(res)
         this.orderTableList = res.data.list
@@ -290,8 +292,8 @@ export default {
             val.carNumberFlag = '新'
           }
           if (val.duration > 60) {
-            const days = (val.duration / 1440).toFixed(0)
-            const hours = ((val.duration % 1440) / 60).toFixed(0)
+            const days = parseInt(val.duration / 1440)
+            const hours = parseInt((val.duration % 1440) / 60)
             const minutes = (val.duration % 1440) % 60
             val.durationFormater = hours + '小时' + minutes + '分钟'
             if (val.duration > 1440) {
