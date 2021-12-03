@@ -152,10 +152,6 @@ export default {
         }
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
           const container = document.getElementById('app-container')
-          // const st = document.querySelector('#anbo-ad-st')
-          // if (st) {
-          //   container.removeChild(st)
-          // }
           const script = document.createElement('script')
           script.type = 'text/javascript'
           script.id = 'anbo-ad-st'
@@ -178,7 +174,6 @@ export default {
               document.attachEvent('onWeixinJSBridgeReady', () => {})
             }
           }
-          console.log('wx加载')
         })
       }
       // 加载支付宝支付脚本
@@ -211,6 +206,7 @@ export default {
     },
     // 支付
     handlePay() {
+      this.loading = true
       this.getData()
       const { parkId, carNumber, couponsRecordId } = this.queryParams
       const query = {
@@ -239,6 +235,7 @@ export default {
                 failedOrder(resQuery)
                 this.msgError(res.err_code + res.err_desc + res.err_msg)
               }
+              this.loading = false
             })
         }
         if (this.isAli) {
@@ -260,6 +257,7 @@ export default {
               failedOrder(this.queryParams)
               this.msgError(code + res.memo + res.result)
             }
+            this.loading = false
           })
         }
       })
@@ -277,7 +275,6 @@ export default {
       })
     },
     loadScript(xyUrl, callback) {
-      console.log('调用方法')
       var head = document.getElementsByTagName('head')[0]
       var script = document.createElement('script')
       script.type = 'text/javascript'
@@ -288,7 +285,6 @@ export default {
           this.readyState === 'loaded' ||
           this.readyState === 'complete'
         ) {
-          console.log('调用回调')
           callback && callback()
           script.onload = script.onreadystatechange = null
           if (head && script.parentNode) {

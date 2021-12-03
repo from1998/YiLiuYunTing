@@ -130,10 +130,6 @@ export default {
         // 加载安泊广告脚本
         this.loadScript('https://sdk.anbokeji.net/adv/index.js', () => {
           const container = document.getElementById('app-container')
-          // const st = document.querySelector('#anbo-ad-st')
-          // if (st) {
-          //   container.removeChild(st)
-          // }
           const script = document.createElement('script')
           script.type = 'text/javascript'
           script.id = 'anbo-ad-st'
@@ -188,6 +184,7 @@ export default {
     },
     // 支付
     handlePay() {
+      this.loading = true
       this.getData()
       const { parkId, carNumber, couponsRecordId } = this.queryParams
       const query = {
@@ -216,6 +213,7 @@ export default {
                 failedOrder(resQuery)
                 this.msgError(res.err_code + res.err_desc + res.err_msg)
               }
+              this.loading = false
             })
         }
         if (this.isAli) {
@@ -236,6 +234,7 @@ export default {
               failedOrder(this.queryParams)
               this.msgError(code + res.memo + res.result)
             }
+            this.loading = false
           })
         }
       })

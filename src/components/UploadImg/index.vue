@@ -2,7 +2,7 @@
   <div>
     <el-tooltip class="item" effect="dark" content="文件大小不得超过2MB。" placement="bottom">
       <el-upload
-        :class="{hide:hideUpload}"
+        class="upload-demo"
         :file-list="handHeld"
         :action="uploadPath"
         :data="{sonmerno:sonmerno}"
@@ -95,7 +95,6 @@ export default {
     handleSuccess(res, file, fileList) {
       if (res.code === 200) {
         this.handHeld = fileList
-        this.hideUpload = fileList.length >= this.limitCount
         this.msgSuccess(res.msg)
         this.$emit('imgagePush', res.data)
         const arr = [{ name: res.data.filename, url: res.data.src }]
@@ -132,14 +131,3 @@ export default {
   }
 }
 </script>
-<style lang="scss">
-.hide .el-upload--picture-card {
-    display: none;
-}
-.el-upload--picture-card,.el-upload-list__item is-ready {
-    width: 90px!important;
-    height: 90px!important;
-    cursor: pointer;
-    line-height: 92px!important;
-}
-</style>
