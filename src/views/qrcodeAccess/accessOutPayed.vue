@@ -72,7 +72,7 @@
       <div v-if="isTimeOut">
         <el-row :gutter="0" style="font-size:14px;margin-top:5%">
           <el-col :span="20" :offset="2">
-            <el-button type="primary" round style="width:100%" @click="handlePay">支付</el-button>
+            <el-button type="primary" round style="width:100%" :disabled="payFlag" @click="handlePay">支付</el-button>
           </el-col>
         </el-row>
         <el-row :gutter="0" style="font-size:14px;margin-top:5%">
@@ -102,6 +102,7 @@ export default {
       isAli: '',
       isTimeOut: '',
       loading: false,
+      payFlag: false,
       currentDate: '',
       loadDate: '',
       resDate: {
@@ -184,6 +185,10 @@ export default {
     },
     // 支付
     handlePay() {
+      this.payFlag = true
+      setTimeout(() => {
+        this.payFlag = false
+      }, 2500)
       this.loading = true
       this.getData()
       const { parkId, carNumber, couponsRecordId } = this.queryParams

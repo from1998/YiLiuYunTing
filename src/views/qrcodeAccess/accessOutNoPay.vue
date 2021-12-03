@@ -214,66 +214,61 @@ export default {
       setTimeout(() => {
         this.payFlag = false
       }, 2500)
-      this.msgSuccess(this.loading)
-      if (this.loading) {
-        this.msgError('请勿重复点击。')
-      } else {
-        this.loading = true
-        this.getData()
-        const { parkId, carNumber, couponsRecordId } = this.queryParams
-        const query = {
-          parkId: parkId,
-          carNumber: carNumber,
-          couponsRecordId: couponsRecordId
-        }
-        createOrder(query).then(recieve => {
-          this.queryParams.orderSn = recieve.data.orderSn
-          if (this.isWx) {
-            window.WeixinJSBridge.invoke(
-              'getBrandWCPayRequest',
-              recieve.data.payParams,
-              res => {
-                const { orderSn } = this.queryParams
-                const resQuery = {
-                  parkId: parkId,
-                  orderSn: orderSn
-                }
-                if (res.err_msg === 'get_brand_wcpay_request:ok') {
-                  successedOrder(resQuery)
-                } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
-                  cancleOrder(resQuery)
-                  this.$router.go(0)
-                } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
-                  failedOrder(resQuery)
-                  this.msgError(res.err_code + res.err_desc + res.err_msg)
-                }
-                this.loading = false
-              })
-          }
-          if (this.isAli) {
-            window.AlipayJSBridge.call('tradePay', {
-              tradeNO: recieve.data.payParams
-            }, res => {
-              const code = res.resultCode
-              // 成功代码是9000
-              if (code === '9000') {
-                const parkId = this.queryParams.parkId
-                // delete this.queryParams.parkId
-                successedOrder(parkId, this.queryParams)
-                this.success = true
-              // 取消代码是6001
-              } else if (code === '6001') {
-                cancleOrder(this.queryParams)
-              // 失败代码是4000
-              } else if (code === '4000') {
-                failedOrder(this.queryParams)
-                this.msgError(code + res.memo + res.result)
+      this.loading = true
+      this.getData()
+      const { parkId, carNumber, couponsRecordId } = this.queryParams
+      const query = {
+        parkId: parkId,
+        carNumber: carNumber,
+        couponsRecordId: couponsRecordId
+      }
+      createOrder(query).then(recieve => {
+        this.queryParams.orderSn = recieve.data.orderSn
+        if (this.isWx) {
+          window.WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            recieve.data.payParams,
+            res => {
+              const { orderSn } = this.queryParams
+              const resQuery = {
+                parkId: parkId,
+                orderSn: orderSn
+              }
+              if (res.err_msg === 'get_brand_wcpay_request:ok') {
+                successedOrder(resQuery)
+              } else if (res.err_msg === 'get_brand_wcpay_request:cancel') {
+                cancleOrder(resQuery)
+                this.$router.go(0)
+              } else if (res.err_msg === 'get_brand_wcpay_request:fail') {
+                failedOrder(resQuery)
+                this.msgError(res.err_code + res.err_desc + res.err_msg)
               }
               this.loading = false
             })
-          }
-        })
-      }
+        }
+        if (this.isAli) {
+          window.AlipayJSBridge.call('tradePay', {
+            tradeNO: recieve.data.payParams
+          }, res => {
+            const code = res.resultCode
+            // 成功代码是9000
+            if (code === '9000') {
+              const parkId = this.queryParams.parkId
+              // delete this.queryParams.parkId
+              successedOrder(parkId, this.queryParams)
+              this.success = true
+              // 取消代码是6001
+            } else if (code === '6001') {
+              cancleOrder(this.queryParams)
+              // 失败代码是4000
+            } else if (code === '4000') {
+              failedOrder(this.queryParams)
+              this.msgError(code + res.memo + res.result)
+            }
+            this.loading = false
+          })
+        }
+      })
     },
     // 刷新
     handleRefresh() {
