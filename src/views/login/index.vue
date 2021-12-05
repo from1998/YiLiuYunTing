@@ -106,8 +106,8 @@
       </el-tooltip>
 
       <el-form-item prop="verifyCode">
-        <el-row>
-          <el-col :span="16">
+        <el-row :gutter="0">
+          <el-col :span="16" style="white-space:nowrap;">
             <span class="svg-container">
               <i class="el-icon-info" />
             </span>
