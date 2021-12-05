@@ -281,14 +281,12 @@ export default {
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 带查询参数的编程式导航，query是一个对象，是查询
-              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
               if (this.getUserInfo().role === 1 || this.getUserInfo().role === 3 || this.getUserInfo().role === 4) {
                 this.$router.push('/dashboard')
               } else if (this.getUserInfo().role === 6) {
                 this.$router.push('/monitoringCenter/quickMonitoring')
               }
               // 强制刷新
-              this.$router.go(0)
               this.loading = false
             })
             .catch(() => {
