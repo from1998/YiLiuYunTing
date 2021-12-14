@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '一流云停停车管理',
+      title: '一流云停|停车管理系统',
       logo: require('@/assets/images/logo.png')
     }
   }

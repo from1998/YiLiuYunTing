@@ -1,5 +1,5 @@
 module.exports = {
-  title: '一流云停停车管理系统',
+  title: '一流云停|停车管理系统',
 
   /**
    * @type {boolean} true | false
