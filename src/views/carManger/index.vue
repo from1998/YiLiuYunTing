@@ -100,21 +100,6 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="是否在租" prop="status">
-            <el-select
-              v-model="queryParams.status"
-              placeholder="请选择是否在租"
-              clearable
-              size="small"
-            >
-              <el-option
-                v-for="item in options.status"
-                :key="item.dictValue"
-                :label="item.dictValue==='1'?'在租':'不在租'"
-                :value="Number(item.dictValue)"
-              />
-            </el-select>
-          </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -163,12 +148,12 @@
       </el-table-column>
       <el-table-column label="车辆类型" align="center" prop="carType" :formatter="carTypeFormatter" />
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
-      <!-- <el-table-column label="是否在租" align="center">
+      <el-table-column label="是否在租" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.status===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 在租中</el-tag>
           <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 不在租</el-tag>
         </template>
-      </el-table-column> -->
+      </el-table-column>
       <el-table-column label="当前续租时间" align="center" prop="workTimeDur" width="280">
         <template slot-scope="scope">
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
@@ -664,7 +649,6 @@ export default {
         size: 10,
         carName: undefined,
         userName: undefined,
-        status: undefined,
         registerType: undefined,
         mobile: undefined
       },
