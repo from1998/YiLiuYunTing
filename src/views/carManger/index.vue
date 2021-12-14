@@ -10,7 +10,7 @@
       <el-col :span="19">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-        <el-button type="success" icon="el-icon-coin" size="mini" :disabled="multiple" @click="handleRenew()">续费</el-button>
+        <el-button type="success" icon="el-icon-coin" size="mini" :disabled="single" @click="handleRenew()">续费</el-button>
         <el-button type="primary" icon="el-icon-download" size="mini" @click="handleDownload">模板下载</el-button>
         <el-upload
           v-show="getUserInfo().role === 4"
@@ -56,18 +56,20 @@
       </el-col>
     </el-row>
     <el-row :gutter="0" style="margin-top:20px">
-      <el-col :span="23" :offset="1">
+      <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
-          <el-form-item label="车牌号" prop="carNumber" label-width="120px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
+          <el-form-item label="车牌号" prop="carNumber">
             <el-input
               v-model.trim="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
-          <el-form-item label="姓名" prop="userName" label-width="45px">
+          <el-form-item label="姓名" prop="userName">
             <el-input
               v-model.trim="queryParams.userName"
               placeholder="请输入车主姓名"
@@ -83,7 +85,7 @@
               size="small"
             />
           </el-form-item>
-          <el-form-item label="车位类型" prop="registerType" label-width="70px">
+          <el-form-item label="车位类型" prop="registerType">
             <el-select
               v-model="queryParams.registerType"
               placeholder="请选择车位类型"
@@ -98,7 +100,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="是否在租" prop="status" label-width="70px">
+          <el-form-item label="是否在租" prop="status">
             <el-select
               v-model="queryParams.status"
               placeholder="请选择是否在租"
@@ -413,7 +415,7 @@
                 placeholder="起租日期"
                 style="width:195px"
                 type="date"
-                @change="$forceUpdate()"
+                @change="handleFormOption"
               />
             </el-form-item>
           </el-col>
@@ -511,6 +513,7 @@
                   style="width:157px"
                   type="date"
                   value-format="yyyy-MM-dd HH:mm:ss"
+                  @change="handleRenewOptions"
                 />
               </el-form-item>
             </el-col>
@@ -625,6 +628,7 @@ export default {
       ids: [],
       // 非多个禁用
       multiple: true,
+      single: true,
       // 分页数据总条数
       total: 0,
       // 车位列表数据
@@ -721,6 +725,17 @@ export default {
     this.headers = { 'token': getToken() }
   },
   methods: {
+    // 起租开始时间变动
+    handleFormOption(val) {
+      this.$forceUpdate()
+      this.$set(this.form, 'expireTime', '')
+      this.pickerOptions = setPickOptions(val, '未来')
+    },
+    // 续租开始时间变动
+    handleRenewOptions(val) {
+      this.$set(this.renewform, 'expireTime', '')
+      this.pickerRenewOptions = setPickOptions(val, '续费')
+    },
     // 复制成功的回调函数
     clipboardSuccess() {
       this.msgSuccess(`复制成功！`)
@@ -834,6 +849,7 @@ export default {
     handleSelectionChnage(selection) {
       this.ids = selection.map(item => item.id)
       this.multiple = !selection.length
+      this.single = selection.length !== 1 || selection[0].registerType !== 3
     },
     // 分页size变化时触发
     handleSizeChange(val) {

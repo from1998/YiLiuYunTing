@@ -1,6 +1,39 @@
 <template>
   <div class="login-container">
-    <div v-show="false" @click="controlFormOpen = true">
+    <!-- 云彩 -->
+    <div class="dynamic-area1" />
+    <div class="dynamic-area2" />
+    <!-- 萤火之森 -->
+    <div id="background" class="wall" />
+    <div id="midground" class="wall" />
+    <div id="foreground" class="wall" />
+    <div id="top" class="wall" />
+    <!-- 银河 -->
+    <div class="stars" />
+    <!-- 光影年华 -->
+    <div class="background">
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+      <span />
+    </div>
+    <div v-show="true" @click="handleStyleOpen">
       <el-popover
         placement="top-start"
         title="提示："
@@ -15,12 +48,12 @@
     <el-dialog
       title="样式控制台"
       :visible.sync="controlFormOpen"
-      width="25%"
+      width="21%"
       center
       append-to-body
       :close-on-click-modal="false"
     >
-      <el-form :model="controlForm" label-width="68px">
+      <el-form ref="controlForm" :model="controlForm" label-width="80px" :rules="rules">
         <el-row :gutter="20">
           <el-col :span="12" :offset="0">
             <el-form-item label="粒子效果" prop="particle">
@@ -30,39 +63,45 @@
           <el-col :span="12" :offset="0">
             <el-form-item label="背景类型" prop="bgType">
               <!-- true为动态，false为静态 -->
-              <el-switch v-model="controlForm.bgType" inactive-color="#13ce66" :active-text="controlForm.bgType?'动态':'静态'" />
+              <el-switch v-model="controlForm.bgType" inactive-color="#13ce66" :active-text="controlForm.bgType?'动态':'静态'" @change="bgTypeChange" />
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item v-show="controlForm.bgType" label="背景样式" prop="bgStyle">
-          <el-select
-            v-model="controlForm.dynamicBgStyle"
-            size="small"
-            clearable
-            @change="handlebgStyleChange"
-          >
-            <el-option
-              v-for="item in bgStyleList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.value"
-            />
-          </el-select>
+        <el-tooltip content="提示：背景样式确定后生效。" placement="bottom" effect="dark">
+          <el-form-item label="背景样式" prop="bgStyle">
+            <el-select
+              v-model="controlForm.bgStyle"
+              size="small"
+              clearable
+              style="width:265px"
+            >
+              <el-option
+                v-for="item in bgStyleList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-tooltip>
+        <el-form-item v-if="controlForm.bgStyle === 'diy'" label="图片链接" prop="url">
+          <el-input v-model="controlForm.url" placeholder="请粘贴图片链接(URL)" clearable style="width:265px" />
         </el-form-item>
+
       </el-form>
       <span slot="footer">
-        <el-button @click="controlFormOpen = false">取消</el-button>
-        <el-button type="primary" @click="handleStyleSubmit">确定</el-button>
+        <el-button @click="controlFormOpen = false">关 闭</el-button>
+        <el-button type="primary" @click="handleStyleSubmit">确 定</el-button>
       </span>
     </el-dialog>
 
     <div class="logo">
-      <img src="../../assets/images/logo.png" alt="一流云停停车管理系统">
+      <img src="../../assets/images/logo.png" alt="寻车位后台管理系统">
     </div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">一流云停停车管理系统</h3>
+        <h3 class="title">寻车位后台管理系统</h3>
       </div>
 
       <el-form-item prop="username">
@@ -71,7 +110,7 @@
         </span>
         <el-input
           ref="username"
-          v-model.trim="loginForm.username"
+          v-model="loginForm.username"
           placeholder="用户名"
           name="username"
           type="text"
@@ -89,7 +128,7 @@
           <el-input
             :key="passwordType"
             ref="password"
-            v-model.trim="loginForm.password"
+            v-model="loginForm.password"
             :type="passwordType"
             placeholder="密码"
             name="password"
@@ -106,14 +145,14 @@
       </el-tooltip>
 
       <el-form-item prop="verifyCode">
-        <el-row :gutter="0">
+        <el-row>
           <el-col :span="16" style="white-space:nowrap;">
             <span class="svg-container">
               <i class="el-icon-info" />
             </span>
             <el-input
               ref="verifyCode"
-              v-model.trim="loginForm.verifyCode"
+              v-model="loginForm.verifyCode"
               placeholder="验证码"
               name="verifyCode"
               type="text"
@@ -133,8 +172,7 @@
     </el-form>
     <vue-particles
       v-if="controlForm.particle"
-      color:
-      particles-color
+      color:particles-color
       :particle-opacity="0.7"
       :particles-number="100"
       shape-type="circle"
@@ -155,9 +193,8 @@
 </template>
 
 <script>
-import '@/assets/css/style.css'
 import { v4 as uuidv4 } from 'uuid'
-// uuidv4()// ⇨ '9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d'
+import validate from '@/utils/validate.js'
 
 export default {
   name: 'Login',
@@ -184,26 +221,85 @@ export default {
       }
     }
     return {
-      bgStyleList: [
-        {
-          id: 1,
-          name: '流光溢彩',
-          value: 1
-        }
-      ],
+      // 验证规则
+      validate,
+      rules: {
+        bgStyle: validate.notEmpty,
+        url: validate.notEmpty
+      },
       controlFormOpen: false,
+      controlForm: {},
+      dynamicBgStyleList: [{
+        id: 1,
+        name: '流光溢彩',
+        value: 'gradientRamp'
+      },
+      {
+        id: 2,
+        name: '云之秘境',
+        value: 'cloud'
+      },
+      {
+        id: 3,
+        name: '萤火之森',
+        value: 'fireworm'
+      },
+      {
+        id: 4,
+        name: '银河之星',
+        value: 'milkyWay'
+      },
+      {
+        id: 5,
+        name: '光影年华',
+        value: 'lightLife'
+      }
+      ],
+      staticBgStyleList: [{
+        id: 1,
+        name: '极光之境',
+        value: 'aurora'
+      },
+      {
+        id: 2,
+        name: '樱花小镇',
+        value: 'town'
+      },
+      {
+        id: 3,
+        name: '湖光秋色',
+        value: 'autumn'
+      }, {
+        id: 4,
+        name: '硰之岛屿',
+        value: 'island'
+      },
+      {
+        id: 5,
+        name: '可爱萝莉',
+        value: 'loi'
+      },
+      {
+        id: 6,
+        name: '军装御姐',
+        value: 'uniformSister'
+      },
+      {
+        id: 7,
+        name: '自定义',
+        value: 'diy'
+      },
+      {
+        id: 8,
+        name: '随机美图',
+        value: 'random'
+      }],
       image_verify_code: '',
       loginForm: {
-        username: '',
-        password: '',
+        username: 'admin',
+        password: '123456',
         verifyCode: '',
         uuid: ''
-      },
-      controlForm: {
-        bgType: true,
-        staticBgStyle: '',
-        dynamicBgStyle: '',
-        particle: true
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -214,7 +310,8 @@ export default {
       capsTooltip: false,
       loading: false,
       redirect: undefined,
-      otherQuery: {}
+      otherQuery: {},
+      bgStyleList: []
     }
   },
   watch: {
@@ -228,13 +325,15 @@ export default {
       },
       immediate: true
     }
-    // controlForm: {
-    //   deep: true,
-    //   immediate: true,
-    //   handler(val) {
-    //     this.msgSuccess(val)
-    //   }
-    // }
+  },
+  async created() {
+    this.controlForm = await JSON.parse(localStorage.getItem('styleConfig')) || {
+      bgType: true,
+      bgStyle: 'cloud',
+      particle: false,
+      url: ''
+    }
+    this.importCSS(this.controlForm.bgType, this.controlForm.bgStyle)
   },
   mounted() {
     if (this.loginForm.username === '') {
@@ -245,12 +344,86 @@ export default {
     this.getVerifyCode()
   },
   methods: {
-    handleStyleSubmit() {
-      // this.msgSuccess('ok')
-      this.controlFormOpen = false
+    importCSS(type, path) {
+      if (type) {
+        switch (path) {
+          case 'gradientRamp':
+    import('@/assets/css/gradientRamp.css')
+            break
+          case 'cloud':
+    import('@/assets/css/cloud.css')
+            break
+          case 'fireworm':
+    import('@/assets/css/fireworm.css')
+            break
+          case 'milkyWay':
+    import('@/assets/css/milkyWay.css')
+            break
+          case 'lightLife':
+    import('@/assets/css/lightLife.css')
+            break
+          default:
+    import('@/assets/css/cloud.css')
+            break
+        }
+      } else {
+        switch (path) {
+          case 'aurora':
+    import('@/assets/css/aurora.css')
+            break
+          case 'island':
+    import('@/assets/css/island.css')
+            break
+          case 'loi':
+    import('@/assets/css/loi.css')
+            break
+          case 'autumn':
+    import('@/assets/css/autumn.css')
+            break
+          case 'town':
+    import('@/assets/css/town.css')
+            break
+          case 'uniformSister':
+    import('@/assets/css/uniformSister.css')
+            break
+          case 'diy':
+            this.$nextTick(() => {
+              document.getElementsByClassName('login-container')[0].style.backgroundImage = `url(${this.controlForm.url})`
+            })
+            break
+          case 'random':
+            this.$nextTick(() => {
+              document.getElementsByClassName('login-container')[0].style.backgroundImage = 'url(https://bing.ioliu.cn/v1/rand?w=1920&h=1080)'
+            })
+            break
+          default:
+            break
+        }
+      }
     },
-    handlebgStyleChange(val) {
-      this.msgSuccess(val)
+    handleStyleOpen() {
+      this.controlFormOpen = true
+      this.bgTypeChange(this.controlForm.bgType, 'add')
+    },
+    handleStyleSubmit() {
+      this.$refs['controlForm'].validate((valid) => {
+        if (valid) {
+          localStorage.setItem('styleConfig', JSON.stringify(this.controlForm))
+          this.controlFormOpen = false
+          this.$router.go(0)
+        }
+      })
+    },
+    bgTypeChange(val, type) {
+      if (!type) {
+        this.$set(this.controlForm, 'bgStyle', '')
+      }
+      if (val) {
+        this.bgStyleList = this.dynamicBgStyleList
+      } else {
+        // 将引入的css地址存在cookie中，然后刷新页面，在created函数中取到cookie值加载相应的css文件。这就避免了无法消除css文件的尴尬。当然，如何消除css文件，依然需要找寻办法。
+        this.bgStyleList = this.staticBgStyleList
+      }
     },
     getVerifyCode() {
       this.loginForm.verifyCode = ''
@@ -281,12 +454,14 @@ export default {
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 带查询参数的编程式导航，query是一个对象，是查询
-              if (this.getUserInfo().role === 1 || this.getUserInfo().role === 3 || this.getUserInfo().role === 4) {
-                this.$router.push('/dashboard')
-              } else if (this.getUserInfo().role === 6) {
-                this.$router.push('/monitoringCenter/quickMonitoring')
-              }
+              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              // if (this.getUserInfo().role === 1 || this.getUserInfo().role === 3) {
+              //   this.$router.push('/system/user')
+              // } else if (this.getUserInfo().role === 4) {
+              //   this.$router.push('/share/parkingRelease')
+              // }
               // 强制刷新
+              this.$router.go(0)
               this.loading = false
             })
             .catch(() => {
@@ -315,6 +490,7 @@ export default {
 /* 修复input 背景不协调 和光标变色 */
 /* Detail see https://github.com/PanJiaChen/vue-element-admin/pull/927 */
 
+$bgStyle:path;
 $bg:#283443;
 $light_gray:aqua;
 $cursor: #fff;
@@ -383,16 +559,19 @@ $light_gray:#eee;
   position: fixed;
   top: 1%;
   right: 1%;
-  z-index: 2;
+  z-index: 999;
 }
 .login-container {
   position: relative;
+  background-size: cover;
   min-height: 100%;
   height: 100%;
   width: 100%;
   overflow: hidden;
 .logo {
     padding-top: 10%;
+    position: relative;
+    z-index: 999;
   margin: 0 auto;
   text-align: center;
   width: 100px;
@@ -402,7 +581,7 @@ $light_gray:#eee;
 }
   .login-form {
     position: relative;
-    z-index: 1;
+    z-index: 999;
     width: 520px;
     max-width: 100%;
     padding: 0 35px;
@@ -431,11 +610,10 @@ $light_gray:#eee;
 
   .title-container {
     position: relative;
-
     .title {
       font-size: 26px;
       color: #fff;
-      margin: 0px auto 40px auto;
+      margin: 15px auto 40px auto;
       text-align: center;
       letter-spacing: 0.3em;
       font-family: sans-serif;
