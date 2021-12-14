@@ -163,12 +163,12 @@
       </el-table-column>
       <el-table-column label="车辆类型" align="center" prop="carType" :formatter="carTypeFormatter" />
       <el-table-column label="车位类型" align="center" prop="registerType" :formatter="registerTypeFormatter" />
-      <el-table-column label="是否在租" align="center">
+      <!-- <el-table-column label="是否在租" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.status===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 在租中</el-tag>
           <el-tag v-show="scope.row.status===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 不在租</el-tag>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="当前续租时间" align="center" prop="workTimeDur" width="280">
         <template slot-scope="scope">
           <el-row v-show="scope.row.registerType===3" :gutter="0" style="width:100%">
