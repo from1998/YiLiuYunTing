@@ -931,6 +931,7 @@ export default {
               this.updateFlag = false
             }).catch(() => {
               this.loading = false
+              this.updateFlag = false
             })
           }
         }

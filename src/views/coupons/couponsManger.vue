@@ -132,6 +132,10 @@
         align="center"
       />
       <el-table-column
+        align="parkId"
+        label="车场ID"
+      />
+      <el-table-column
         align="center"
         label="名称"
         width="300"
