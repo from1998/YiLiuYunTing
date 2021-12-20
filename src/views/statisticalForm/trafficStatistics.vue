@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
       <el-row :gutter="0">
-        <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding:5px 0 15px 0">
+        <el-col :span="6" :offset="3" style="text-align:center;font-weight:700;padding:5px 0 15px 0">
           <span>{{ laneName }}</span>
         </el-col>
       </el-row>
@@ -10,7 +10,7 @@
         <el-col :span="2" :offset="1" :gutter="0" style="margin-top:7px">
           <span>车流曲线图</span>
         </el-col>
-        <el-col :span="11" :offset="10">
+        <el-col :span="7" :offset="10">
           <el-form ref="form" :model="form" :inline="true" label-width="44px">
             <el-form-item label="日期" prop="created">
               <el-date-picker
@@ -25,16 +25,19 @@
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :span="4" :offset="0">
+          <el-form align="right">
             <el-select
-              v-cloak
               v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
               v-model="form.parkId"
-              placeholder="请选择车场"
+              placeholder="请选择您要查看的车场"
               size="small"
-              style="padding-left:55px"
               clearable
               @change="handleParkFocus"
             >
+              <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
               <el-option
                 v-for="(item, index) in CarList"
                 :key="index"
@@ -43,6 +46,7 @@
               />
             </el-select>
           </el-form>
+
           <!-- 查询条件结束 -->
         </el-col>
       </el-row>

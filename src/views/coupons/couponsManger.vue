@@ -24,7 +24,7 @@
       </el-col>
       <!-- 查询条件开始 -->
       <el-col
-        :span="14"
+        :span="16"
         :offset="0"
       >
         <el-form
@@ -38,6 +38,7 @@
           >
             <el-input
               v-model.trim="queryParams.name"
+              prefix-icon="el-icon-money"
               placeholder="请输入优惠券名称"
               clearable
               size="small"
@@ -53,6 +54,7 @@
               placeholder="请选择优惠券类型"
               clearable
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -71,6 +73,7 @@
               placeholder="请选择是否开放"
               clearable
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in statusOptions"
                 :key="item.dictValue"
@@ -96,24 +99,27 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
-      <el-col :span="4" :offset="3">
-        <el-select
-          v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
-          v-cloak
-          v-model="queryParams.parkId"
-          placeholder="请选择车场"
-          size="small"
-          style="width:220px;margin-left:55px"
-          clearable
-          @change="handleLaneName"
-        >
-          <el-option
-            v-for="(item, index) in CarList"
-            :key="index"
-            :label="item.name"
-            :value="Number(item.id)"
-          />
-        </el-select>
+      <el-col :span="4" :offset="1">
+        <el-form align="right">
+          <el-select
+            v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
+            v-cloak
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            clearable
+            @change="handleLaneName"
+          >
+            <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form>
+
       </el-col>
 
     </el-row>
@@ -132,7 +138,8 @@
         align="center"
       />
       <el-table-column
-        align="parkId"
+        align="center"
+        prop="parkId"
         label="车场ID"
       />
       <el-table-column
@@ -211,7 +218,7 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="450px"
       center
       append-to-body
       :close-on-click-modal="false"
@@ -219,7 +226,7 @@
       <el-form
         ref="form"
         :model="form"
-        label-width="65px"
+        label-width="50px"
         :rules="rules"
       >
         <el-form-item
@@ -235,7 +242,7 @@
             />
           </el-row>
         </el-form-item>
-        <el-form-item label="优惠劵" prop="category">
+        <el-form-item label="类型" prop="category">
           <el-select
             v-model="form.category"
             style="width:100%"
@@ -255,7 +262,6 @@
           v-if="addFlag && roleId === 1 "
           label="车场"
           prop="parkId"
-          label-width="70px"
         >
           <el-select
             v-model="form.parkId"

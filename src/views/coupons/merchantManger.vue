@@ -12,33 +12,33 @@
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="14" :offset="0">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+      <el-col :span="17" :offset="0">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item label="商户号" prop="username">
             <el-input
               v-model.trim="queryParams.username"
+              prefix-icon="el-icon-s-order"
               placeholder="请输入商户号"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="联系人" prop="realName">
             <el-input
               v-model.trim="queryParams.realName"
+              prefix-icon="el-icon-user-solid"
               placeholder="请输入联系人"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="手机号" prop="mobile">
             <el-input
               v-model.trim="queryParams.mobile"
+              prefix-icon="el-icon-phone"
               placeholder="请输入手机号"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item>
@@ -48,17 +48,18 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
-      <el-col :span="4" :offset="3">
+      <el-col :span="4" :offset="0">
         <el-select
           v-cloak
           v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
           v-model="queryParams.parentId"
-          placeholder="请选择车场"
+          placeholder="请选择您要查看的车场"
           size="small"
           style="width:220px;margin-left:58px"
           clearable
           @change="handleLaneName"
         >
+          <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
           <el-option
             v-for="(item, index) in CarList"
             :key="index"
@@ -148,12 +149,12 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="500px"
+      width="450px"
       center
       append-to-body
       :close-on-click-modal="false"
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="68px">
         <el-form-item
           v-if="roleId === 1 && title === '添加商家' "
           label="车场"

@@ -37,7 +37,6 @@
       <el-col :span="4" :offset="1" style="padding-left:55px">
         <el-select
           v-show="getUserInfo().role === 1 || getUserInfo().role=== 3"
-          v-cloak
           v-model="queryParams.parkId"
           placeholder="请选择您要查看的车场"
           size="small"
@@ -45,6 +44,7 @@
           clearable
           @change="handleLaneName"
         >
+          <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
           <el-option
             v-for="item in options.parkCategory"
             :key="item.id"
@@ -72,6 +72,7 @@
           <el-form-item label="姓名" prop="userName">
             <el-input
               v-model.trim="queryParams.userName"
+              prefix-icon="el-icon-user-solid"
               placeholder="请输入车主姓名"
               clearable
               size="small"
@@ -80,6 +81,7 @@
           <el-form-item label="手机号" prop="mobile">
             <el-input
               v-model.trim="queryParams.mobile"
+              prefix-icon="el-icon-phone"
               placeholder="请输入车主手机号"
               clearable
               size="small"
@@ -92,6 +94,7 @@
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in options.depotCategoryOptions"
                 :key="item.dictValue"
@@ -366,9 +369,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row v-if="form.splitType===2">
-          <el-col :span="12" :offset="0">
+          <el-col v-if="form.splitType===2" :span="12" :offset="0">
             <el-form-item label="开始时间" prop="startSplit">
               <el-time-picker
                 v-model="form.startSplit"
@@ -379,7 +380,7 @@
               />
             </el-form-item>
           </el-col>
-          <el-col :span="12" :offset="0">
+          <el-col v-if="form.splitType===2" :span="12" :offset="0">
             <el-form-item label="结束时间" prop="endSplit">
               <el-time-picker
                 v-model="form.endSplit"
@@ -388,6 +389,44 @@
                 style="width:195px"
                 @change="$forceUpdate()"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="层号" prop="tierNumber">
+              <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" clearable @change="handleNumberFocus">
+                <el-option
+                  v-for="item in options.tierNumber"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="区域号" prop="areaNumber">
+              <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" clearable @change="handleNumberFocus">
+                <el-option
+                  v-for="item in options.areaNumber"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="编号" prop="number">
+              <el-tooltip class="item" effect="dark" content="请先选择层号、区域号,再选择该字段" placement="bottom">
+                <el-select v-model="form.number" placeholder="请选择车位编号" size="small" clearable :disabled="!(form.tierNumber && form.areaNumber)" @change="$forceUpdate()">
+                  <el-option
+                    v-for="item in options.number"
+                    :key="item.id"
+                    :label="item.number"
+                    :value="item.number"
+                  />
+                </el-select>
+              </el-tooltip>
             </el-form-item>
           </el-col>
         </el-row>
@@ -418,49 +457,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="12" :offset="0">
-            <el-form-item label="层号" prop="tierNumber">
-              <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" clearable @change="handleNumberFocus">
-                <el-option
-                  v-for="item in options.tierNumber"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="Number(item.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" :offset="0">
-            <el-form-item label="区域号" prop="areaNumber">
-              <el-select v-model="form.areaNumber" placeholder="请选择车位区域号" size="small" clearable @change="handleNumberFocus">
-                <el-option
-                  v-for="item in options.areaNumber"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="Number(item.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="24" :offset="0">
-            <el-form-item label="编号" prop="number">
-              <el-tooltip class="item" effect="dark" content="请先选择层号、区域号,再选择该字段" placement="bottom">
-                <el-select v-model="form.number" placeholder="请选择车位编号" size="small" clearable @change="$forceUpdate()">
-                  <el-option
-                    v-for="item in options.number"
-                    :key="item.id"
-                    :label="item.number"
-                    :value="item.number"
-                  />
-                </el-select>
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
-
         <el-form-item label="备注" prop="remark">
           <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
@@ -947,6 +943,7 @@ export default {
     // 重置表单
     reset() {
       this.resetForm('form')
+      this.form = {}
       this.resetForm('renewform')
     },
     // 打开续费弹出层

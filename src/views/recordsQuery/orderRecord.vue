@@ -7,29 +7,31 @@
     </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="18" :offset="0">
+      <el-col :span="20" :offset="0">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item label="车牌号" prop="carNumber">
             <el-input
               v-model.trim="queryParams.carNumber"
               placeholder="请输入车牌号"
               clearable
               size="small"
-              style="width:180px"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
           <el-form-item label="订单号" prop="sn">
             <el-input
               v-model.trim="queryParams.sn"
+              prefix-icon="el-icon-s-order"
               placeholder="请输入订单号"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
-          <el-form-item label="订单状态" prop="state" label-width="68px">
-            <el-select v-cloak v-model="queryParams.state" style="width:180px" clearable>
+          <el-form-item label="订单状态" prop="state">
+            <el-select v-cloak v-model="queryParams.state" clearable>
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="(item,index) in options.ordersState"
                 :key="item"
@@ -38,12 +40,11 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item prop="pay" label="支付时间" label-width="68px">
+          <el-form-item prop="pay" label="支付时间">
             <el-date-picker
               v-model="queryParams.pay"
               value-format="yyyy-MM-dd"
               placeholder="请选择支付时间"
-              style="width:175px"
               type="date"
             />
           </el-form-item>
@@ -54,24 +55,26 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
-      <el-col :span="4" :offset="2">
-        <el-select
-          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-          v-cloak
-          v-model="queryParams.parkId"
-          placeholder="请选择您要查看的车场"
-          size="small"
-          clearable
-          style="padding-left:70px"
-          @change="handleParkFocus"
-        >
-          <el-option
-            v-for="item in parkCategory"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"
-          />
-        </el-select>
+      <el-col :span="4" :offset="0">
+        <el-form align="right">
+          <el-select
+            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+            v-cloak
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            clearable
+            @change="handleParkFocus"
+          >
+            <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+            <el-option
+              v-for="item in parkCategory"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form>
       </el-col>
     </el-row>
 

@@ -8,33 +8,24 @@
       </el-col>
       <el-col :span="13" :offset="5">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="角色名称" prop="roleName">
             <el-input
-              v-model.trim="queryParams.roleName"
+              v-model="queryParams.roleName"
+              prefix-icon="el-icon-user-solid"
               placeholder="请输入角色名称"
               clearable
               size="small"
-              style="width:160px"
             />
           </el-form-item>
-          <el-form-item label="权限字符" prop="roleCode">
-            <el-input
-              v-model.trim="queryParams.roleCode"
-              placeholder="请输入权限字符"
-              clearable
-              size="small"
-              style="width:160px"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status" label-width="40px">
+          <el-form-item label="状态" prop="status">
             <el-select
               v-model="queryParams.status"
-              placeholder="可用状态"
+              placeholder="请选择角色状态"
               clearable
               size="small"
-              style="width:160px"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -130,8 +121,10 @@
         <el-form-item label="权限字符" prop="roleCode">
           <el-input v-model.trim="form.roleCode" placeholder="请输入权限字符" clearable size="small" />
         </el-form-item>
-        <el-form-item label="显示顺序" prop="roleSort">
-          <el-input-number v-model="form.roleSort" clearable size="small" />
+        <el-form-item label="排序" prop="roleSort">
+          <el-tooltip class="item" effect="dark" content="提示:数值越小，显示位置越靠前。" placement="right">
+            <el-input-number v-model="form.roleSort" clearable size="small" :min="0" />
+          </el-tooltip>
         </el-form-item>
         <el-form-item label="状态" prop="status">
           <el-radio-group v-model="form.status">
@@ -143,7 +136,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
+          <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入角色备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -183,6 +176,7 @@
 // 引入api
 import { listRoleForPage, addRole, updateRole, getRoleById, deleteRoleByIds, saveRoleMenu } from '@/api/system/role'
 import { selectMenuTree, getMenuIdsByRoleId } from '@/api/system/menu'
+import validate from '@/utils/validate'
 
 import clipboard from '@/directive/clipboard/index.js' // use clipboard by v-directive
 
@@ -193,6 +187,10 @@ export default {
   // 定义页面数据
   data() {
     return {
+      // 表单校验
+      rules: {
+        roleName: validate.notEmpty
+      },
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -219,12 +217,6 @@ export default {
       // 表单数据
       form: {
         status: '1'
-      },
-      // 表单校验
-      rules: {
-        roleName: [
-          { required: true, message: '角色名称不能为空', trigger: 'blur' }
-        ]
       },
       // 是否打开分配权限的弹出层
       selectMenuOpen: false,
@@ -290,11 +282,12 @@ export default {
     handleAdd() {
       this.open = true
       this.reset()
-      this.title = '添加角色信息'
+      this.$set(this.form, 'roleSort', this.total + 1)
+      this.title = '添加角色'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改角色信息'
+      this.title = '修改角色'
       const roleId = row.roleId || this.ids
       // const dictId = row.dictId === undefined ? this.ids[0] : row.dictId
       this.open = true
@@ -366,7 +359,7 @@ export default {
         roleName: undefined,
         roleSort: 0,
         remark: undefined,
-        status: '0'
+        status: '1'
       }
     },
     // 打开分配权限和菜单的弹出层

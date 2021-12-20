@@ -8,15 +8,24 @@
       </el-col>
       <el-col :span="17" :offset="3">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="字典类型" prop="dictType" label-width="115px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
+          <el-form-item label="字典数据名称" prop="dictLabel">
+            <el-input
+              v-model="queryParams.dictLabel"
+              prefix-icon="el-icon-collection-tag"
+              placeholder="请输入字典数据名称"
+              clearable
+              size="small"
+            />
+          </el-form-item>
+          <el-form-item label="字典类型" prop="dictType">
             <el-select
               v-model="queryParams.dictType"
               placeholder="请选择字典类型"
               clearable
               size="small"
-              style="width:240px"
             >
+              <i slot="prefix" class="el-input__icon el-icon-notebook-2" />
               <el-option
                 v-for="dict in typeOptions"
                 :key="dict.dictType"
@@ -25,23 +34,14 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="字典标签" prop="dictLabel">
-            <el-input
-              v-model.trim="queryParams.dictLabel"
-              placeholder="请输入字典标签"
-              clearable
-              size="small"
-              style="width:240px"
-            />
-          </el-form-item>
-          <el-form-item label="状态" prop="status" label-width="40px">
+          <el-form-item label="字典数据状态" prop="status">
             <el-select
               v-model="queryParams.status"
-              placeholder="字典状态"
+              placeholder="请选择字典数据状态"
               clearable
               size="small"
-              style="width:240px"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -57,28 +57,36 @@
         </el-form>
       </el-col>
     </el-row>
-    <!-- 表头按钮结束 -->
 
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="dictDataTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="字典标签" prop="dictLabel" align="center" />
-      <el-table-column label="字典键值" prop="dictValue" align="center" />
-      <el-table-column label="字典排序" prop="dictSort" align="center" />
-      <el-table-column label="状态" align="center">
+      <el-table-column label="字典数据名称" align="center">
+        <template slot-scope="scope">
+          <el-popover trigger="hover" placement="top">
+            <p>提示：点击复制字典标签:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.dictLabel }}</el-tag></p>
+            <div slot="reference" class="name-wrapper">
+              <el-tag v-clipboard:copy="scope.row.dictLabel" v-clipboard:success="clipboardSuccess" type="primary" size="mini" effect="dark"><i class="el-icon-collection-tag" /> {{ scope.row.dictLabel }}</el-tag>
+            </div>
+          </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column label="字典数据值" prop="dictValue" align="center" sortable />
+      <el-table-column label="排序" prop="dictSort" align="center" sortable />
+      <el-table-column label="字典数据状态" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.status==='1'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
           <el-tag v-show="scope.row.status==='2'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="创建时间" width="180">
+      <el-table-column align="center" label="创建时间" width="180" sortable prop="createTime">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        label="备注"
+        label="字典数据备注"
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -122,15 +130,15 @@
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="字典类型" prop="dictType">
-          <el-input v-model.trim="form.dictType" :disabled="true" size="small" />
+          <el-input v-model="form.dictType" :disabled="true" size="small" />
         </el-form-item>
-        <el-form-item label="字典名称" prop="dictLabel">
-          <el-input v-model.trim="form.dictLabel" placeholder="请输入字典名称" clearable size="small" />
+        <el-form-item label="数据名称" prop="dictLabel">
+          <el-input v-model="form.dictLabel" placeholder="请输入字典数据名称" clearable size="small" />
         </el-form-item>
-        <el-form-item label="字典值" prop="dictValue">
-          <el-input v-model.trim="form.dictValue" placeholder="请输入字典值" clearable size="small" />
+        <el-form-item label="数据值" prop="dictValue">
+          <el-input v-model="form.dictValue" placeholder="请输入字典数据值" clearable size="small" />
         </el-form-item>
-        <el-form-item label="排序显示" prop="dictSort">
+        <el-form-item label="排序" prop="dictSort">
           <el-tooltip class="item" effect="dark" content="提示:数值越小，显示位置越靠前。" placement="right">
             <el-input-number v-model="form.dictSort" clearable size="small" :min="0" />
           </el-tooltip>
@@ -142,12 +150,11 @@
               :key="dict.dictValue"
               :label="dict.dictValue"
               :value="dict.dictValue"
-            >{{ dict.dictLabel }}
-            </el-radio>
+            >{{ dict.dictLabel }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="字典备注" prop="remark">
-          <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入字典备注" clearable size="small" />
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入字典数据备注" clearable size="small" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -162,9 +169,18 @@
 <script>
 import { listForPage, addDictData, updateDictData, getDictDataById, deleteDictDataByIds } from '@/api/system/dict/data'
 import { getDictTypeById, selectAllDictType } from '@/api/system/dict/type'
+import validate from '@/utils/validate'
+
 export default {
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        dictLabel: validate.notEmpty,
+        dictValue: validate.notEmpty,
+        status: validate.notEmpty
+      },
       // 遮罩层
       loading: false,
       // 选中数组
@@ -194,16 +210,7 @@ export default {
         status: undefined
       },
       // 表单数据
-      form: {},
-      // 表单校验
-      rules: {
-        dictLabel: [
-          { required: true, message: '字典名称不能为空', trigger: 'blur' }
-        ],
-        dictValue: [
-          { required: true, message: '字典值不能为空', trigger: 'blur' }
-        ]
-      }
+      form: {}
     }
   },
   created() {
@@ -226,6 +233,10 @@ export default {
     })
   },
   methods: {
+    // 复制成功的回调函数
+    clipboardSuccess() {
+      this.msgSuccess('复制成功')
+    },
     // 查询字典数据
     getDictDataList() {
       this.loading = true
@@ -242,9 +253,9 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      this.queryParams.dictType = this.defaultDictType
       this.queryParams.page = 1
       this.queryParams.size = 10
+      this.queryParams.dictType = this.defaultDictType
       this.getDictDataList()
     },
     // 数据表格的多选择框选择时触发
@@ -271,7 +282,7 @@ export default {
         dictLable: undefined,
         dictValue: undefined,
         dictType: undefined,
-        status: '0',
+        status: '1',
         dictSort: 0,
         remark: undefined
       }
@@ -280,12 +291,15 @@ export default {
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
+      this.title = '添加字典数据'
       this.reset()
+      this.$set(this.form, 'dictSort', this.total + 1)
       this.form.dictType = this.defaultDictType
     },
     // 打开修改的弹出层
     handleUpdate(row) {
       this.open = true
+      this.title = '修改字典数据'
       this.reset()
       const dictCode = row.dictCode || this.ids
       // 根据字典数据ID查询字典数据
@@ -296,7 +310,7 @@ export default {
     // 进行删除
     handleDelete(row) {
       const dictCodes = row.dictCode || this.ids
-      this.$confirm('此操作将永久删除该字典数据, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该字典数据, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -304,7 +318,7 @@ export default {
         this.loading = true
         deleteDictDataByIds(dictCodes).then(res => {
           this.loading = false
-          this.msgSuccess(res.msg)
+          this.msgSuccess('删除成功')
           this.getDictDataList()// 全查询
         })
       }).catch(() => {
@@ -320,7 +334,7 @@ export default {
           this.loading = true
           if (this.form.dictCode === undefined) {
             addDictData(this.form).then(res => {
-              this.msgSuccess(res.msg)
+              this.msgSuccess('保存成功')
               this.loading = false
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层
@@ -329,7 +343,7 @@ export default {
             })
           } else { // 做修改
             updateDictData(this.form).then(res => {
-              this.msgSuccess(res.msg)
+              this.msgSuccess('修改成功')
               this.loading = false
               this.getDictDataList()// 列表重新查询
               this.open = false// 关闭弹出层

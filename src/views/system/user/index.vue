@@ -9,18 +9,20 @@
       </el-col>
       <el-col :span="15" :offset="getUserInfo().role === 1?2:9">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
-          <el-form-item label="登陆名称" prop="username" label-width="120px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
+          <el-form-item label="登陆名称" prop="username">
             <el-input
               v-model.trim="queryParams.username"
+              prefix-icon="el-icon-user-solid"
               placeholder="请输入登陆名称"
               clearable
               size="small"
             />
           </el-form-item>
-          <el-form-item label="手机号" prop="mobile" label-width="55px">
+          <el-form-item label="手机号" prop="mobile">
             <el-input
               v-model.trim="queryParams.mobile"
+              prefix-icon="el-icon-phone"
               placeholder="请输入手机号"
               clearable
               size="small"
@@ -33,6 +35,7 @@
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in stateOptions"
                 :key="dict.dictValue"
@@ -130,31 +133,31 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="800px"
+      width="600px"
       center
       append-to-body
       :close-on-click-modal="false"
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-row>
           <el-col :span="12">
             <el-form-item label="登录名称" prop="username">
-              <el-input v-model.trim="form.username" style="width:240px" placeholder="请输入登录名称" clearable size="small" />
+              <el-input v-model.trim="form.username" placeholder="请输入登录名称" clearable size="small" />
             </el-form-item></el-col>
           <el-col :span="12">
             <el-form-item label="真实姓名" prop="realName">
-              <el-input v-model.trim="form.realName" style="width:240px" placeholder="请输入真实姓名" clearable size="small" />
+              <el-input v-model.trim="form.realName" placeholder="请输入真实姓名" clearable size="small" />
             </el-form-item></el-col>
         </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="手机号" prop="mobile">
-              <el-input v-model.trim="form.mobile" style="width:240px" placeholder="请输入手机号" clearable size="small" />
+              <el-input v-model.trim="form.mobile" placeholder="请输入手机号" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model.trim="form.email" style="width:240px" placeholder="请输入用户邮箱" clearable size="small" />
+              <el-input v-model.trim="form.email" placeholder="请输入用户邮箱" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -166,7 +169,6 @@
                 placeholder="状态"
                 clearable
                 size="small"
-                style="width:240px"
               >
                 <el-option
                   v-for="d in stateOptions"
@@ -184,7 +186,6 @@
                 placeholder="角色"
                 clearable
                 size="small"
-                style="width:240px"
               >
                 <el-option
                   v-for="(item, index) in roleOptionsDue"
@@ -195,16 +196,14 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="12" :offset="6">
-            <el-form-item v-if="form.role === 4" label="选择父级账号">
+          <el-col :span="24" :offset="0">
+            <el-form-item v-if="form.role === 4" label="父级账号">
               <el-select
                 v-model="form.parentId"
-                placeholder="父级账号"
+                placeholder="请选择父级账号"
                 clearable
                 size="small"
-                style="width:240px"
+
                 @change="change()"
               >
                 <el-option

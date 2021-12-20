@@ -8,30 +8,25 @@
       </el-col>
       <el-col :span="18">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="40px">
-          <el-form-item label="标题" prop="noticeTitle" label-width="79px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
+          <el-form-item label="标题" prop="noticeTitle">
             <el-input
-              v-model.trim="queryParams.noticeTitle"
+              v-model="queryParams.noticeTitle"
               placeholder="请输入通知公告标题"
               clearable
               size="small"
-            />
-          </el-form-item>
-          <el-form-item label="发布者" prop="createBy" label-width="55px">
-            <el-input
-              v-model.trim="queryParams.createBy"
-              placeholder="请输入发布者"
-              clearable
-              size="small"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="notice" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
           <el-form-item label="类型" prop="noticeType">
             <el-select
               v-model="queryParams.noticeType"
-              placeholder="类型"
+              placeholder="请选择类型"
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in noticeTypeOptions"
                 :key="dict.dictValue"
@@ -43,10 +38,11 @@
           <el-form-item label="状态" prop="status">
             <el-select
               v-model="queryParams.status"
-              placeholder="可用状态"
+              placeholder="请选择状态"
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -67,45 +63,58 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="noticeTableList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="标题" prop="dictType" align="center" :show-overflow-tooltip="true">
+      <el-table-column type="expand" label="备注" width="60px" align="center">
+        <template slot-scope="scope">
+          <div style="margin-left:20px">
+            <el-tag v-if="scope.row.remark" type="info" size="mini" effect="dark"> 备注： {{ scope.row.remark }} </el-tag>
+            <el-tag v-else type="info" size="mini" effect="dark"> <svg-icon icon-class="notice" /> 暂无备注 </el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="标题" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
             <p>提示：点击复制标题:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.noticeTitle }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
-              <el-tag v-clipboard:copy="scope.row.noticeTitle" v-clipboard:success="clipboardSuccess" size="medium" effect="dark">{{ scope.row.noticeTitle }}</el-tag>
+              <el-tag v-clipboard:copy="scope.row.noticeTitle" v-clipboard:success="clipboardSuccess" style="max-width:100%;margin-top:8px;overflow:hidden;text-overflow:ellipsis;" type="info" size="mini" effect="dark"> <svg-icon icon-class="notice" /> {{ scope.row.noticeTitle }}</el-tag>
             </div>
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="内容" align="center" prop="noticeContent" width="300px" />
+      <el-table-column label="内容" align="center">
+        <template slot-scope="scope">
+          <el-tag size="mini" style="max-width:100%;margin-top:8px;overflow:hidden;text-overflow:ellipsis;"> {{ scope.row.noticeContent }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="场景" prop="noticeType" align="center" :formatter="noticeSceneFormatter" />
       <el-table-column label="类型" prop="noticeType" align="center" :formatter="noticeTypeFormatter" />
-      <el-table-column label="状态" prop="status" align="center" :formatter="statusFormatter" />
-      <el-table-column label="发布者" prop="dictType" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制发布者:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.createBy }}</el-tag></p>
-            <div slot="reference" class="name-wrapper">
-              <el-tag v-clipboard:copy="scope.row.createBy" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.createBy }}</el-tag>
-            </div>
-          </el-popover>
+          <el-tag v-show="scope.row.status==='1'" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 正常</el-tag>
+          <el-tag v-show="scope.row.status==='2'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 停用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="发布时间" width="180">
+      <el-table-column label="发布者" align="center">
         <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
+          <el-tag size="mini"> <i class="el-icon-user-solid" /> {{ scope.row.createBy }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="更新者" prop="dictType" align="center" :show-overflow-tooltip="true">
+      <el-table-column label="发布时间" align="center" width="170" sortable prop="createTime">
         <template slot-scope="scope">
-          <el-tag v-clipboard:copy="scope.row.createBy" v-clipboard:success="clipboardSuccess" size="medium"> <i class="el-icon-user-solid" /> {{ scope.row.updateBy }}</el-tag>
+          <el-tag size="mini" type="primary"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="更新时间" width="180">
+      <el-table-column label="更新者" align="center">
         <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.updateTime }}</el-tag>
+          <el-tag size="mini"> <i class="el-icon-user-solid" /> {{ scope.row.updateBy }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="300px">
+      <el-table-column label="更新时间" align="center" width="170" sortable prop="updateTime">
+        <template slot-scope="scope">
+          <el-tag size="mini" type="primary"> <i class="el-icon-time" /> {{ scope.row.updateTime }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" width="320">
         <template slot-scope="scope">
           <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleDelete(scope.row)">删除</el-button>
@@ -131,21 +140,41 @@
     <el-dialog
       :title="title"
       :visible.sync="open"
-      width="800px"
+      width="940px"
       center
       append-to-body
       :close-on-click-modal="false"
     >
-      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+      <el-form ref="form" :model="form" :rules="rules" label-width="50px">
         <el-row>
           <el-col :span="24">
             <el-form-item label="标题" prop="noticeTitle">
-              <el-input v-model.trim="form.noticeTitle" placeholder="请输入通知公告标题" clearable size="small" />
+              <el-input v-model="form.noticeTitle" placeholder="请输入通知公告标题" clearable size="small">
+                <svg-icon slot="prefix" icon-class="notice" style="margin-left:6px" />
+              </el-input>
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="12">
+        <el-row :gutter="30">
+          <el-col :span="8">
+            <el-form-item label="场景" prop="useType">
+              <el-select
+                v-model="form.useType"
+                placeholder="请选择场景"
+                clearable
+                size="small"
+              >
+                <i slot="prefix" class="el-input__icon el-icon-guide" />
+                <el-option
+                  v-for="dict in noticeSceneOptions"
+                  :key="dict.dictValue"
+                  :label="dict.dictLabel"
+                  :value="Number(dict.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="form.status">
                 <el-radio
@@ -157,7 +186,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="类型" prop="noticeType">
               <el-radio-group v-model="form.noticeType">
                 <el-radio
@@ -172,12 +201,11 @@
         </el-row>
         <el-row>
           <el-col :span="24">
-            <el-form-item label="公告内容">
-              <markdown-editor
+            <el-form-item label="内容" prop="noticeContent">
+              <vue-editor
                 ref="noticeContent"
                 v-model="form.noticeContent"
                 height="300px"
-                :options="{hideModeSwitch:true,previewStyle:'tab'}"
               />
             </el-form-item>
           </el-col>
@@ -185,7 +213,7 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model.trim="form.remark" placeholder="请输入备注" clearable size="small" />
+              <el-input v-model="form.remark" placeholder="请输入备注" clearable size="small" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -201,26 +229,42 @@
     <el-dialog
       :title="title"
       :visible.sync="noticeContentOpen"
-      width="800px"
+      width="900px"
       center
       append-to-body
     >
-      <MarkdownEditor ref="noticeContent" v-model="noticeContent" />
+      <vue-editor
+        ref="noticeContent"
+        v-model="noticeContent"
+        @focus="focus($event)"
+      />
     </el-dialog>
     <!-- 公告内容弹出层结束 -->
 
   </div>
 </template>
 <script>
-import MarkdownEditor from '@/components/MarkdownEditor'
-
+import { VueEditor } from 'vue2-editor'
 // 引入api
 import { listNoticeForPage, addNotice, updateNotice, getNoticeById, deleteNoticeByIds } from '@/api/system/notice'
+import validate from '@/utils/validate.js'
+
 export default {
-  components: { MarkdownEditor },
+  components: {
+    VueEditor
+  },
   // 定义页面数据
   data() {
     return {
+      // 验证规则
+      validate,
+      rules: {
+        noticeTitle: validate.notEmpty,
+        useType: validate.notEmpty,
+        status: validate.notEmpty,
+        noticeType: validate.notEmpty,
+        noticeContent: validate.notEmpty
+      },
       // 是否启用遮罩层
       loading: false,
       // 选中数组
@@ -240,6 +284,8 @@ export default {
       statusOptions: [],
       // 公告类型
       noticeTypeOptions: [],
+      // 场景
+      noticeSceneOptions: [],
       // 日期范围
       dateRange: [],
       // 查询参数
@@ -247,18 +293,11 @@ export default {
         pageNum: 1,
         pageSize: 10,
         noticeTitle: undefined,
-        createBy: undefined,
         noticeType: undefined,
         status: undefined
       },
       // 表单数据
       form: {},
-      // 表单校验
-      rules: {
-        noticeTitle: [
-          { required: true, message: '通知公告标题不能为空', trigger: 'blur' }
-        ]
-      },
       // 查看内容的弹出层
       noticeContentOpen: false,
       // 查看内容
@@ -274,19 +313,26 @@ export default {
     this.getDataByType('sys_notice_type').then(res => {
       this.noticeTypeOptions = res.data
     })
+    this.getDataByType('XCW_NoticeUseType').then(res => {
+      this.noticeSceneOptions = res.data
+    })
     // 查询表格数据
     this.getNoticeList()
   },
   // 方法
   methods: {
+    // 获取焦点事件
+    focus(event) {
+      event.enable(false) // 设置富文本编辑器不可编辑
+    },
     // 复制成功的回调函数
     clipboardSuccess() {
-      this.msgSuccess('复制成功！')
+      this.msgSuccess(`复制成功！`)
     },
     // 查询表格数据
     getNoticeList() {
       this.loading = true // 打开遮罩
-      listNoticeForPage(this.addDateRange(this.queryParams, this.dateRange)).then(res => {
+      listNoticeForPage(this.queryParams, this.dateRange).then(res => {
         this.noticeTableList = res.data.list
         this.total = res.data.total
         this.loading = false// 关闭遮罩
@@ -299,9 +345,9 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
+      this.queryParams.page = 1
+      this.queryParams.size = 10
       this.dateRange = []
-      this.queryParams.pageNum = 1
-      this.queryParams.pageSize = 10
       this.getNoticeList()
     },
     // 数据表格的多选择框选择时触发
@@ -321,23 +367,26 @@ export default {
       // 重新查询
       this.getNoticeList()
     },
-    // 翻译状态
-    statusFormatter(row) {
-      return this.selectDictLabel(this.statusOptions, row.status)
-    },
     // 翻译类型
     noticeTypeFormatter(row) {
       return this.selectDictLabel(this.noticeTypeOptions, row.noticeType)
+    },
+    // 翻译场景
+    noticeSceneFormatter(row) {
+      if (row.useType) {
+        return this.selectDictLabel(this.noticeSceneOptions, row.useType.toString())
+      }
     },
     // 打开添加的弹出层
     handleAdd() {
       this.open = true
       this.reset()
-      this.title = '添加通知公告信息'
+      this.form.status = '1'
+      this.title = '添加通知公告'
     },
     // 打开修改的弹出层
     handleUpdate(row) {
-      this.title = '修改通知公告信息'
+      this.title = '修改通知公告'
       const noticeId = row.noticeId || this.ids
       this.open = true
       this.reset()
@@ -351,7 +400,7 @@ export default {
     // 执行删除
     handleDelete(row) {
       const noticeIds = row.noticeId || this.ids
-      this.$confirm('此操作将永久删除该通知公告数据, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该通知公告, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

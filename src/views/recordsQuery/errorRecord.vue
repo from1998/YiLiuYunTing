@@ -7,7 +7,7 @@
     </el-row>
     <!-- 表格工具按钮开始 -->
     <el-row>
-      <el-col :span="7">
+      <el-col :span="10">
         <!-- 查询条件开始 -->
         <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item label="车牌号" prop="carnumber">
@@ -16,7 +16,9 @@
               placeholder="请输入车牌号"
               clearable
               size="small"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -24,26 +26,24 @@
           </el-form-item>
         </el-form>
       </el-col>
-      <el-col :span="4" :offset="13">
+      <el-col :span="4" :offset="10">
         <el-form :inline="true" align="right">
-          <el-form-item>
-            <el-select
-              v-if="getUserInfo().role === 1 || getUserInfo().role === 3"
-              v-cloak
-              v-model="queryParams.parkId"
-              placeholder="请选择您要查看的车场"
-              size="small"
-              clearable
-              @change="handleParkFocus"
-            >
-              <el-option
-                v-for="item in parkCategory"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              />
-            </el-select>
-          </el-form-item>
+          <el-select
+            v-if="getUserInfo().role === 1 || getUserInfo().role === 3"
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            clearable
+            @change="handleParkFocus"
+          >
+            <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+            <el-option
+              v-for="item in parkCategory"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form>
       </el-col>
     </el-row>

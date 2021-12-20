@@ -10,7 +10,7 @@
         <el-col :span="2" :offset="1" :gutter="0" style="margin-top:7px">
           <span>收费曲线图</span>
         </el-col>
-        <el-col :span="11" :offset="10">
+        <el-col :span="7" :offset="10">
           <el-form ref="form" :model="form" :inline="true" label-width="44px">
             <el-form-item label="日期" prop="created">
               <el-date-picker
@@ -25,6 +25,10 @@
               <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
               <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
             </el-form-item>
+          </el-form>
+        </el-col>
+        <el-col :span="4" :offset="0">
+          <el-form align="right">
             <el-select
               v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
               v-cloak
@@ -32,9 +36,9 @@
               placeholder="请选择您要查看的车场"
               size="small"
               clearable
-              style="padding-left:55px"
               @change="handleParkFocus"
             >
+              <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
               <el-option
                 v-for="(item, index) in CarList"
                 :key="index"

@@ -1,29 +1,29 @@
 <template>
   <div class="app-container">
     <!-- 查询条件开始 -->
-    <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="105px">
-      <el-row>
-        <el-col :span="6" :offset="0">
-          <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
-        </el-col>
-        <el-col :span="12" :offset="6">
+    <el-row :gutter="0">
+      <el-col :span="6" :offset="0">
+        <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
+      </el-col>
+      <el-col :span="11" :offset="7">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="菜单名称" prop="menuName">
             <el-input
-              v-model.trim="queryParams.menuName"
+              v-model="queryParams.menuName"
+              prefix-icon="el-icon-s-unfold"
               placeholder="请输入菜单名称"
               clearable
               size="small"
-              style="width:240px"
             />
           </el-form-item>
-          <el-form-item label="状态" prop="status" label-width="40px">
+          <el-form-item label="状态" prop="status">
             <el-select
               v-model="queryParams.status"
-              placeholder="请选择状态"
+              placeholder="请选择菜单状态"
               clearable
               size="small"
-              style="width:200px"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -36,9 +36,8 @@
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
           </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
+        </el-form></el-col>
+    </el-row>
     <!-- 查询条件结束 -->
     <!-- 数据表格开始 -->
     <el-table
@@ -46,6 +45,7 @@
       border
       :data="menuTableList"
       row-key="menuId"
+      lazy
       :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
       stripe
     >
@@ -64,7 +64,7 @@
       <el-table-column align="center" label="组件路径" width="280">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>点击跳转到：{{ scope.row.path }}</p>
+            <p>点击跳转到:<el-tag type="primary" effect="dark" size="mini">{{ scope.row.path }}( {{ scope.row.menuName }} )</el-tag></p>
             <router-link
               v-show="scope.row.menuType==='C'"
               slot="reference"
@@ -79,7 +79,7 @@
         </template>
       </el-table-column>
       <el-table-column label="状态" align="center" prop="status" :formatter="statusFormatter" />
-      <el-table-column align="center" label="创建时间">
+      <el-table-column align="center" label="创建时间" sortable prop="createTime">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.createTime }}</el-tag>
         </template>
@@ -97,7 +97,7 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="350">
+      <el-table-column label="操作" align="center" width="300">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd(scope.row)">添加</el-button>
           <el-button type="success" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>
@@ -141,12 +141,12 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="菜单名称" prop="menuName">
-              <el-input v-model.trim="form.menuName" placeholder="请输入菜单名称" clearable size="small" />
+              <el-input v-model="form.menuName" :placeholder="`请输入菜单名称`" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="路由地址" prop="path">
-              <el-input v-model.trim="form.path" placeholder="请输入路由地址" clearable size="small" />
+              <el-input v-model="form.path" placeholder="请输入路由地址" clearable size="small" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -161,14 +161,13 @@
                   v-for="dict in statusOptions"
                   :key="dict.dictValue"
                   :label="dict.dictValue"
-                  :value="dict.dictValue"
                 >{{ dict.dictLabel }}</el-radio>
               </el-radio-group>
             </el-form-item>
           </el-col>
           <el-col :span="24">
             <el-form-item label="备注" prop="remark">
-              <el-input v-model.trim="form.remark" type="textarea" />
+              <el-input v-model="form.remark" type="textarea" placeholder="请输入菜单备注" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -189,12 +188,22 @@ import Treeselect from '@riophae/vue-treeselect'
 // import the styles
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import { listAllMenus, selectMenuTree, getMenuById, addMenu, updateMenu, deleteMenuById } from '@/api/system/menu'
+import validate from '@/utils/validate'
+
 export default {
   components: {
     Treeselect
   },
   data() {
     return {
+      // 验证规则
+      rules: {
+        menuType: validate.notEmpty,
+        percode: validate.notEmpty,
+        menuName: validate.notEmpty,
+        path: validate.notEmpty,
+        status: validate.notEmpty
+      },
       // 遮罩层
       loading: false,
       // 菜单表的数据
@@ -213,13 +222,7 @@ export default {
         status: undefined
       },
       // 表单数据
-      form: {},
-      // 表单校验
-      rules: {
-        menuName: [
-          { required: true, message: '菜单名称不能为空', tirgger: 'blur' }
-        ]
-      }
+      form: {}
     }
   },
   created() {
@@ -260,10 +263,8 @@ export default {
       this.getTreeselect()
       if (row != null) {
         this.form.parentId = row.menuId
-        if (row.menuType === 'M') {
+        if (row.menuType === 'M' || row.menuType === 'C') {
           this.form.menuType = 'C'
-        } else if (row.menuType === 'C') {
-          this.form.menuType = 'F'
         }
       }
       this.open = true
@@ -309,18 +310,16 @@ export default {
             addMenu(this.form).then(res => {
               this.msgSuccess(res.msg)
               this.loading = false
+              this.getMenuList()// 列表重新查询
               this.open = false// 关闭弹出层
-              this.$router.go(0)
             })
-            this.loading = false
           } else { // 做修改
             updateMenu(this.form).then(res => {
               this.msgSuccess(res.msg)
               this.loading = false
+              this.getMenuList()// 列表重新查询
               this.open = false// 关闭弹出层
-              this.$router.go(0)
             })
-            this.loading = false
           }
         }
       })
@@ -337,20 +336,19 @@ export default {
         path: undefined,
         menuType: 'M',
         remark: undefined,
-        status: '0'
+        status: '1'
       }
     },
     // 删除
     handleDelete(row) {
       const menuId = row.menuId
-      this.$confirm('此操作将永久删除该菜单权限数据, 是否继续?', '提示', {
+      this.$confirm('此操作将删除该菜单, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
         this.loading = true
         deleteMenuById(menuId).then(res => {
-          this.loading = false
           this.msgSuccess(res.msg)
           this.getMenuList()// 全查询
         })

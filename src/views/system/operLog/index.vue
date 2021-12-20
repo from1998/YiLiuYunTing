@@ -4,30 +4,31 @@
     <el-row :gutter="0" style="margin-bottom: 8px;">
       <el-col :span="3">
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
-        <el-button type="warning" icon="el-icon-thumb" size="mini" @click="handleClearInfo">清空</el-button>
+        <el-button type="danger" icon="el-icon-close" size="mini" @click="handleClearInfo">清空</el-button>
       </el-col>
       <el-col :span="21">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="系统模块" prop="title" label-width="95px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
+          <el-form-item label="模块" prop="title">
             <el-input
-              v-model.trim="queryParams.title"
-              placeholder="请输入系统模块"
+              v-model="queryParams.title"
+              placeholder="请输入操作模块"
               clearable
               size="small"
               style="width:160px"
             />
           </el-form-item>
-          <el-form-item label="操作人员" prop="operName">
+          <el-form-item label="人员" prop="operName">
             <el-input
-              v-model.trim="queryParams.operName"
+              v-model="queryParams.operName"
+              prefix-icon="el-icon-user-solid"
               placeholder="请输入操作人员"
               clearable
               size="small"
               style="width:160px"
             />
           </el-form-item>
-          <el-form-item label="操作类型" prop="businessType">
+          <el-form-item label="类型" prop="businessType">
             <el-select
               v-model="queryParams.businessType"
               placeholder="请选择类型"
@@ -43,14 +44,15 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="状态" prop="status" label-width="40px">
+          <el-form-item label="状态" prop="status">
             <el-select
               v-model="queryParams.status"
-              placeholder="请选择状态"
+              placeholder="请选择操作状态"
               clearable
               size="small"
               style="width:160px"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in statusOptions"
                 :key="dict.dictValue"
@@ -60,13 +62,13 @@
             </el-select>
           </el-form-item>
           <el-tooltip class="item" effect="dark" content="默认显示当天的操作记录" placement="bottom">
-            <el-form-item label="操作时间">
+            <el-form-item label="时间">
               <el-date-picker
                 v-model="dateRange"
                 placeholder="请选择操作时间"
                 size="small"
-                style="width:220px"
-                value-format="yyyy-MM-dd HH-mm-ss"
+                style="width:240px"
+                value-format="yyyy-MM-dd"
                 type="daterange"
                 range-separator="-"
                 start-placeholde="开始日期"
@@ -81,6 +83,7 @@
         </el-form>
       </el-col>
     </el-row>
+    <!-- 表头按钮结束 -->
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="operLogTableList" stripe @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
@@ -150,7 +153,7 @@
           <el-tag v-show="scope.row.status==='1'" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 失败</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作时间" align="center" width="180">
+      <el-table-column label="操作时间" align="center" width="180" sortable prop="operTime">
         <template slot-scope="scope">
           <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.operTime }}</el-tag>
         </template>
@@ -179,6 +182,8 @@
 </template>
 <script>
 import { listForPage, deleteOperLogByIds, clearAllOperLog } from '@/api/system/operLog'
+import moment from 'moment'
+
 export default {
   // 声明数据
   data() {
@@ -229,20 +234,11 @@ export default {
   methods: {
     // 复制成功的回调函数
     clipboardSuccess() {
-      this.msgSuccess('复制成功！')
+      this.msgSuccess('复制成功')
     },
     // 默认时间
     timeDefault() {
-      const date = new Date()
-      // 通过时间戳计算
-      let defalutStartTime = date.getTime() // 转化为时间戳
-      let defalutEndTime = date.getTime()
-      const startDateNs = new Date(defalutStartTime)
-      const endDateNs = new Date(defalutEndTime)
-      // 月，日 不够10补0
-      defalutStartTime = startDateNs.getFullYear() + '-' + ((startDateNs.getMonth() + 1) >= 10 ? (startDateNs.getMonth() + 1) : '0' + (startDateNs.getMonth() + 1)) + '-' + (startDateNs.getDate() >= 10 ? startDateNs.getDate() : '0' + startDateNs.getDate())
-      defalutEndTime = endDateNs.getFullYear() + '-' + ((endDateNs.getMonth() + 1) >= 10 ? (endDateNs.getMonth() + 1) : '0' + (endDateNs.getMonth() + 1)) + '-' + (endDateNs.getDate() >= 10 ? endDateNs.getDate() : '0' + endDateNs.getDate())
-      return [defalutStartTime, defalutEndTime]
+      return [moment().format('YYYY-MM-DD'), moment().format('YYYY-MM-DD')]
     },
     // 查询操作日志
     getOperLogList() {
@@ -260,9 +256,9 @@ export default {
     // 重置查询条件
     resetQuery() {
       this.resetForm('queryForm')
-      this.dateRange = this.timeDefault()
       this.queryParams.page = 1
       this.queryParams.size = 10
+      this.dateRange = this.timeDefault()
       this.getOperLogList()
     },
     // 数据表格的多选择框选择时触发
@@ -282,6 +278,10 @@ export default {
       // 重新查询
       this.getOperLogList()
     },
+    // 翻译状态
+    statusFormatter(row) {
+      return this.selectDictLabel(this.statusOptions, row.status)
+    },
     // 翻译操作类型
     businessTypeFormatter(row) {
       return this.selectDictLabel(this.businessTypeOptions, row.businessType)
@@ -289,7 +289,7 @@ export default {
     // 删除
     handleDelete(row) {
       const operIds = row.operId || this.ids
-      this.$confirm('此操作将永久删除操作日志数据, 是否继续?', '提示', {
+      this.$confirm('此操作将删除操作日志, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
@@ -307,7 +307,7 @@ export default {
     },
     // 清空
     handleClearInfo() {
-      this.$confirm('此操作将永久清空操作日志数据, 是否继续?', '提示', {
+      this.$confirm('此操作将永久清空操作日志数据, 是否继续?', '警告', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'

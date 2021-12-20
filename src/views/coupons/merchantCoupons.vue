@@ -7,24 +7,25 @@
     </el-row>
     <el-row style="margin-top:20px">
       <!-- 表格工具按钮开始 -->
-      <el-col v-if="getUserInfo().role !== 7" :span="4" style="width:240px">
+      <el-col v-if="getUserInfo().role !== 7" :span="4">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加商家优惠券</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="14" :offset="0">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="48px">
+      <el-col :span="17" :offset="0">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item label="名称" prop="name">
             <el-input
               v-model.trim="queryParams.name"
+              prefix-icon="el-icon-money"
               placeholder="请输入优惠券名称"
               size="small"
-              style="width:180px"
               clearable
             />
           </el-form-item>
           <el-form-item label="类型" prop="category">
-            <el-select v-cloak v-model="queryParams.category" clearable style="width:180px" placeholder="请选择优惠券类型" size="small">
+            <el-select v-cloak v-model="queryParams.category" clearable placeholder="请选择优惠券类型" size="small">
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -33,8 +34,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="支付方式" prop="payType" label-width="70px">
-            <el-select v-cloak v-model="queryParams.payType" clearable style="width:180px" placeholder="请选择付款方式" size="small">
+          <el-form-item label="支付方式" prop="payType">
+            <el-select v-cloak v-model="queryParams.payType" clearable placeholder="请选择付款方式" size="small">
+              <i slot="prefix" class="el-input__icon el-icon-finished" />
               <el-option
                 v-for="item in payType"
                 :key="item.dictValue"
@@ -50,24 +52,25 @@
         </el-form>
         <!-- 查询条件结束 -->
       </el-col>
-      <el-col :span="3" :offset="3">
-        <el-select
-          v-cloak
-          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-          v-model="queryParams.parkId"
-          placeholder="请选择车场"
-          size="small"
-          style="width:220px;margin-left:26px"
-          clearable
-          @change="handleLaneName"
-        >
-          <el-option
-            v-for="(item, index) in CarList"
-            :key="index"
-            :label="item.name"
-            :value="Number(item.id)"
-          />
-        </el-select>
+      <el-col :span="3" :offset="0">
+        <el-form align="right">
+          <el-select
+            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            clearable
+            @change="handleLaneName"
+          >
+            <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form>
       </el-col>
 
     </el-row>

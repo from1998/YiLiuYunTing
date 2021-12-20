@@ -12,7 +12,7 @@
       <!-- 表格工具按钮开始 -->
       <!-- 查询条件开始 -->
       <el-col :span="7" :offset="17">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="是否在线" prop="isOnLine">
             <el-select
               v-model="queryParams.isOnLine"
@@ -20,6 +20,7 @@
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in options.status"
                 :key="item.dictValue"

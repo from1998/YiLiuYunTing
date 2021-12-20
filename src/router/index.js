@@ -507,7 +507,7 @@ export const lastRoute = [{
     component: () =>
                 import ('@/views/system/dict/data'),
     name: '/dict',
-    meta: { title: '数据字典' }
+    meta: { title: '字典详情' }
   }]
 },
 {

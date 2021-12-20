@@ -8,7 +8,7 @@
       </el-row>
       <!-- 表格工具按钮开始 -->
       <el-row>
-        <el-col :span="10" :offset="0">
+        <el-col :span="12" :offset="0">
           <el-form ref="cleanForm" :model="cleanForm" :inline="true">
             <el-form-item v-if="getUserInfo().role === 1">
               <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
@@ -17,12 +17,14 @@
               <el-button type="danger" icon="el-icon-delete" size="mini" @click="handleLeave">清理离场车辆</el-button>
             </el-form-item>
             <el-form-item label="" prop="days">
-              <el-input
+              <el-input-number
                 v-model.trim="cleanForm.days"
-                placeholder="请输入清理天数"
+                controls-position="right"
                 clearable
-                size="small"
-                style="width:140px"
+                placeholder="请输入清理天数"
+                :min="1"
+                :max="36500"
+                style="width:170px"
               />
             </el-form-item>
             <el-form-item>
@@ -35,30 +37,33 @@
             </el-tooltip>
           </el-form>
         </el-col>
-        <el-col :span="4" :offset="10" style="padding-left:60px">
-          <el-select
-            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-            v-cloak
-            v-model="queryParams.parkId"
-            placeholder="请选择您要查看的车场"
-            size="small"
-            clearable
-            @change="handleParkFocus"
-          >
-            <el-option
-              v-for="item in parkCategory"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            />
-          </el-select>
+        <el-col :span="4" :offset="8">
+          <el-form align="right">
+            <el-select
+              v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+              v-cloak
+              v-model="queryParams.parkId"
+              placeholder="请选择您要查看的车场"
+              size="small"
+              clearable
+              @change="handleParkFocus"
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+              <el-option
+                v-for="item in parkCategory"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              />
+            </el-select>
+          </el-form>
         </el-col>
       </el-row>
     </div>
     <el-row :gutter="0">
       <el-col :span="24" :offset="0">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="58px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true">
           <el-form-item label="车牌号" prop="carnumber">
             <el-input
               v-model.trim="queryParams.carnumber"
@@ -66,10 +71,14 @@
               clearable
               size="small"
               style="width:180px"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
-          <el-form-item label="是否离场" prop="isleave" label-width="70px">
-            <el-select v-cloak v-model="queryParams.isleave" style="width:180px" clearable placeholder="请选择是否离场">
+          <el-form-item label="是否离场" prop="isleave">
+
+            <el-select v-cloak v-model="queryParams.isleave" clearable placeholder="请选择是否离场" style="width:180px">
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -78,8 +87,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="车位类型" prop="recordcartype" label-width="70px">
-            <el-select v-cloak v-model="queryParams.recordcartype" style="width:180px" clearable placeholder="请选择是否离场">
+          <el-form-item label="车位类型" prop="recordcartype">
+            <el-select v-cloak v-model="queryParams.recordcartype" clearable placeholder="请选择车位类型" style="width:180px">
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in laneOptions"
                 :key="item.dictValue"
@@ -88,7 +98,7 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="进场时间范围" label-width="96px">
+          <el-form-item label="进场时间范围">
             <el-date-picker
               v-model="dateRangeIn"
               size="small"
@@ -102,7 +112,7 @@
               @change="timeChange('enterStart','enterEnd',dateRangeIn)"
             />
           </el-form-item>
-          <el-form-item label="出场时间范围" label-width="96px">
+          <el-form-item label="出场时间范围">
             <el-date-picker
               v-model="dateRangeOut"
               size="small"

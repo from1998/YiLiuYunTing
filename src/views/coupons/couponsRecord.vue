@@ -12,14 +12,15 @@
           <el-form-item label="所属商户" prop="merchantIdString">
             <el-input
               v-model.trim="queryParams.merchantIdString"
+              prefix-icon="el-icon-s-order"
               placeholder="请输入所属商户"
               clearable
               size="small"
-              style="width:180px"
             />
           </el-form-item>
           <el-form-item label="优惠类型" prop="category" label-width="70px">
-            <el-select v-cloak v-model="queryParams.category" style="width:180px" placeholder="请选择优惠券类型" clearable>
+            <el-select v-cloak v-model="queryParams.category" placeholder="请选择优惠券类型" clearable>
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in stateOptions"
                 :key="item.dictValue"
@@ -34,8 +35,9 @@
               placeholder="请输入车牌号"
               clearable
               size="small"
-              style="width:180px"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin:0 0 0 6px" />
+            </el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -46,23 +48,26 @@
         <!-- 查询条件结束 -->
       </el-col>
       <!-- 表格工具按钮开始 -->
-      <el-col :span="4" :offset="0" style="padding-left:90px">
-        <el-select
-          v-cloak
-          v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
-          v-model="queryParams.parkId"
-          placeholder="请选择您要查看的车场"
-          size="small"
-          clearable
-          @change="handleParkFocus"
-        >
-          <el-option
-            v-for="(item, index) in CarList"
-            :key="index"
-            :label="item.name"
-            :value="Number(item.id)"
-          />
-        </el-select>
+      <el-col :span="4" :offset="0">
+        <el-form align="right">
+          <el-select
+            v-cloak
+            v-show="getUserInfo().role === 1 || getUserInfo().role === 3"
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            clearable
+            @change="handleParkFocus"
+          >
+            <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+            <el-option
+              v-for="(item, index) in CarList"
+              :key="index"
+              :label="item.name"
+              :value="Number(item.id)"
+            />
+          </el-select>
+        </el-form>
       </el-col>
     </el-row>
 
