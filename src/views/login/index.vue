@@ -454,14 +454,12 @@ export default {
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
               // 带查询参数的编程式导航，query是一个对象，是查询
-              // this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              // if (this.getUserInfo().role === 1 || this.getUserInfo().role === 3) {
-              //   this.$router.push('/system/user')
-              // } else if (this.getUserInfo().role === 4) {
-              //   this.$router.push('/share/parkingRelease')
-              // }
-              // 强制刷新
-              this.$router.go(0)
+              // 保安跳转到快捷监控
+              if (this.getUserInfo().role === 6) {
+                this.$router.push({ path: '/monitoringCenter/quickMonitoring', query: this.otherQuery })
+              } else {
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+              }
               this.loading = false
             })
             .catch(() => {
