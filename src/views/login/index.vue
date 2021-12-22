@@ -458,7 +458,7 @@ export default {
               if (this.getUserInfo().role === 6) {
                 this.$router.push({ path: '/monitoringCenter/quickMonitoring', query: this.otherQuery })
               } else {
-                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                this.$router.push({ path: '/', query: this.otherQuery })
               }
               this.loading = false
             })
