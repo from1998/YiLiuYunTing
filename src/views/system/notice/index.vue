@@ -86,7 +86,6 @@
           <el-tag size="mini" style="max-width:100%;margin-top:8px;overflow:hidden;text-overflow:ellipsis;"> {{ scope.row.noticeContent }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="场景" prop="noticeType" align="center" :formatter="noticeSceneFormatter" />
       <el-table-column label="类型" prop="noticeType" align="center" :formatter="noticeTypeFormatter" />
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
@@ -146,32 +145,12 @@
       :close-on-click-modal="false"
     >
       <el-form ref="form" :model="form" :rules="rules" label-width="50px">
-        <el-row>
-          <el-col :span="24">
+        <el-row :gutter="30">
+          <el-col :span="8">
             <el-form-item label="标题" prop="noticeTitle">
               <el-input v-model="form.noticeTitle" placeholder="请输入通知公告标题" clearable size="small">
                 <svg-icon slot="prefix" icon-class="notice" style="margin-left:6px" />
               </el-input>
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <el-row :gutter="30">
-          <el-col :span="8">
-            <el-form-item label="场景" prop="useType">
-              <el-select
-                v-model="form.useType"
-                placeholder="请选择场景"
-                clearable
-                size="small"
-              >
-                <i slot="prefix" class="el-input__icon el-icon-guide" />
-                <el-option
-                  v-for="dict in noticeSceneOptions"
-                  :key="dict.dictValue"
-                  :label="dict.dictLabel"
-                  :value="Number(dict.dictValue)"
-                />
-              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
@@ -260,7 +239,6 @@ export default {
       validate,
       rules: {
         noticeTitle: validate.notEmpty,
-        useType: validate.notEmpty,
         status: validate.notEmpty,
         noticeType: validate.notEmpty,
         noticeContent: validate.notEmpty

@@ -117,7 +117,7 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>地址: {{ scope.row.email }}</p>
+            <p>地址: <el-tag type="primary" effect="dark" size="mini">{{ scope.row.email }}</el-tag></p>
             <div v-show="scope.row.email" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.email }}</el-tag>
             </div>

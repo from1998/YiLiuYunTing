@@ -1,5 +1,12 @@
 <template>
   <div class="content">
+    <div v-if="tipShow">
+      <br>
+      <span style="padding-left:40px;line-height:20px">
+        <el-tag type="info" size="medium" effect="dark" closable @close="tipShow=false">提示：此页面下的Tabs页面均为手机端扫码进出场使用到的一系列页面，在这里只做展示，不可正常使用。</el-tag>
+      </span>
+      <br>
+    </div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="扫码进场" name="accessIn" lazy>
         <accessIn />
@@ -52,7 +59,8 @@ export default {
         'border-radius': '4px',
         'line-height': '45px', // 请保持与高度一致以垂直居中 Please keep consistent with height to center vertically
         background: '#e7eaf1'// 按钮的背景颜色 The background color of the button
-      }
+      },
+      tipShow: true
     }
   },
   created() {

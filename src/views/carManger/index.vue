@@ -208,7 +208,7 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>车辆地址: {{ scope.row.address }}</p>
+            <p>车辆地址: <el-tag type="primary" effect="dark" size="mini">{{ scope.row.address }}</el-tag></p>
             <div v-show="scope.row.address" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.address }}</el-tag>
             </div>
@@ -221,7 +221,7 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>备注: {{ scope.row.remark }}</p>
+            <p>备注: <el-tag type="primary" effect="dark" size="mini">{{ scope.row.remark }}</el-tag></p>
             <div v-show="scope.row.remark" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.remark }}</el-tag>
             </div>

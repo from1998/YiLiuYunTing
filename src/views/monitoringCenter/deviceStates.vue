@@ -44,7 +44,7 @@
       >
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>车场名称: {{ scope.row.parkName }}</p>
+            <p>车场名称: <el-tag type="primary" effect="dark" size="mini">{{ scope.row.parkName }}</el-tag></p>
             <div v-show="scope.row.parkName" slot="reference" class="name-wrapper">
               <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
             </div>
