@@ -137,14 +137,14 @@ export default {
     // 查询表格数据
     this.getlaneList()
   },
-  mounted() {
-    this.timer = setInterval(() => {
-      this.getlaneList()
-    }, 5000)
-  },
-  beforeDestroy() {
-    clearInterval(this.timer)
-  },
+  // mounted() {
+  //   this.timer = setInterval(() => {
+  //     this.getlaneList()
+  //   }, 5000)
+  // },
+  // beforeDestroy() {
+  //   clearInterval(this.timer)
+  // },
   // 方法
   methods: {
     // 翻译是否状态
