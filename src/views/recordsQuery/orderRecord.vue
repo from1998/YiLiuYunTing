@@ -282,7 +282,6 @@ export default {
     getOrderTable() {
       this.loading = true // 打开遮罩
       getOrderList(this.queryParams).then(res => {
-        console.log(res)
         this.orderTableList = res.data.list
         this.total = res.data.total
         this.orderTableList.map(val => {

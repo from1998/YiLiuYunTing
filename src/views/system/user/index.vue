@@ -315,7 +315,6 @@ export default {
     // 查询所有用户信息
     selectNeedSchedulingUsers().then(res => {
       this.userOptions = res.data
-      console.log(this.userOptions)
     })
     // 查询表格数据
     this.getUserList()

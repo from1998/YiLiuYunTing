@@ -304,8 +304,6 @@ export default {
       listAll().then(res => {
         this.CarList = res.data
         this.queryParams.parentId = this.roleId === 1 ? '' : res.data[0].id
-      }).catch(err => {
-        console.log(err)
       })
     },
     // 翻译类型

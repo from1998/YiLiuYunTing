@@ -544,8 +544,6 @@ export default {
       listAll().then(res => {
         this.CarList = res.data
         this.queryParams.parkId = this.roleId === 1 ? '' : res.data[0].id
-      }).catch(err => {
-        console.log(err)
       })
     },
     // 发放确定按钮
@@ -604,15 +602,11 @@ export default {
         id: this.form.parkId
       }).then(res => {
         this.listCoupons = res.data.data
-      }).catch(err => {
-        console.log(err)
       })
       selectMerchantByParkId({
         id: this.form.parkId
       }).then(res => {
         this.shopList = res.data
-      }).catch(err => {
-        console.log(err)
       })
     },
 

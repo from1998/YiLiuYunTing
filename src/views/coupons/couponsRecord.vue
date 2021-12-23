@@ -269,8 +269,6 @@ export default {
       listAll().then(res => {
         this.CarList = res.data
         this.queryParams.parkId = this.roleId === 1 ? '' : res.data[0].id
-      }).catch(err => {
-        console.log(err)
       })
     },
     // 查询表格数据

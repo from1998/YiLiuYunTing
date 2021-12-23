@@ -153,7 +153,6 @@ export default {
               document.attachEvent('onWeixinJSBridgeReady', () => {})
             }
           }
-          console.log('wx加载')
         })
       }
       // 加载支付宝支付脚本

@@ -54,8 +54,6 @@ export default {
   },
   methods: {
     validateNewPassword(rule, value, callback) {
-      console.log(value)
-      console.log(this.form.password)
       if (value === this.form.password) {
         callback(new Error('新密码不能与当前密码相同!'))
       } else {
