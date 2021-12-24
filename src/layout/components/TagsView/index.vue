@@ -15,6 +15,12 @@
         {{ tag.title }}
         <span v-if="!isAffix(tag)" class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
+      <meting-js
+        id="2667808564"
+        server="netease"
+        type="playlist"
+        fixed="true"
+      />
     </scroll-pane>
     <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">刷新</li>
@@ -28,7 +34,10 @@
 <script>
 import ScrollPane from './ScrollPane'
 import path from 'path'
-
+import bus from '@/utils/bus.js'
+import load from '@/components/Tinymce/dynamicLoadScript'
+const APlayer = 'https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js'
+const Meting = 'https://cdn.jsdelivr.net/npm/meting@2/dist/Meting.min.js'
 export default {
   components: { ScrollPane },
   data() {
@@ -64,6 +73,13 @@ export default {
   mounted() {
     this.initTags()
     this.addTags()
+    bus.$on('musicOpen', () => {
+      import('@/assets/css/APlayer.min.css')
+      load(APlayer, () => {
+        load(Meting, () => {
+        })
+      })
+    })
   },
   methods: {
     isActive(route) {

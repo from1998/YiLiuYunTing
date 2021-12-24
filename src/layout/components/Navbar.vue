@@ -6,6 +6,11 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
+        <el-tooltip content="音乐" effect="dark" placement="bottom">
+          <div id="music-container" class="right-menu-item hover-effect">
+            <svg-icon icon-class="music" @click="musicOpen" />
+          </div>
+        </el-tooltip>
         <el-tooltip content="点击查看历史上的今天" effect="dark" placement="bottom">
           <div id="time-container" class="right-menu-item" style="cursor:pointer" @click="handleHistoryNow">
             {{ Utils() }}
@@ -96,7 +101,7 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 // import Search from '@/components/HeaderSearch'
-
+import bus from '@/utils/bus.js'
 export default {
   components: {
     Breadcrumb,
@@ -125,8 +130,11 @@ export default {
     this.username = await this.getUserInfo().realName
   },
   methods: {
-    handleHistoryNow() {
+    musicOpen() {
       debugger
+      bus.$emit('musicOpen')
+    },
+    handleHistoryNow() {
       const date = new Date()
       const month = date.getMonth() + 1 // 获取当前月份(0-11,0代表1月)
       const day = date.getDate() // 获取当前日(1-31)

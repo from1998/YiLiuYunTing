@@ -64,7 +64,12 @@
           <el-tag v-show="scope.row.haveScreen===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 有屏</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="是否显示余位" align="center" prop="remainder" :formatter="statusFormatter" />
+      <el-table-column label="是否显示余位" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.remainder===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 不显示</el-tag>
+          <el-tag v-show="scope.row.remainder===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 显示</el-tag>
+        </template>
+      </el-table-column>
     </el-table>
     <!-- 分页控件开始 -->
     <el-pagination
@@ -147,12 +152,6 @@ export default {
   // },
   // 方法
   methods: {
-    // 翻译是否状态
-    statusFormatter(row, column, cellValue) {
-      if (cellValue !== null) {
-        return this.selectDictLabel(this.options.status, cellValue.toString())
-      }
-    },
     // 翻译车道类型
     typeFormatter(row) {
       if (row.type) {

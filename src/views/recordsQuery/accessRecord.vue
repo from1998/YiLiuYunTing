@@ -286,9 +286,10 @@
       <el-header height="30px" style="padding:15px 0 30px;font-weight:700">
         <el-row :gutter="0">
           <el-col :span="4" :offset="0" :gutter="0">
-            <el-button type="warning" round size="mini" style="cursor:default;height:18px;line-height:17px;padding-top:0">
-              出场图片
-            </el-button>
+            <!-- <el-button type="warning" round size="mini" style="cursor:default;height:18px;line-height:17px;padding-top:0"> -->
+            <el-tag type="warning" round size="mini" effect="dark">出场图片</el-tag>
+
+            <!-- </el-button> -->
           </el-col>
         </el-row>
       </el-header>
