@@ -6,9 +6,9 @@
 
     <div class="right-menu">
       <template v-if="device!=='mobile'">
-        <el-tooltip content="音乐" effect="dark" placement="bottom">
+        <el-tooltip :content="musicOpenFlag?'退出音乐':'开启音乐'" effect="dark" placement="bottom">
           <div id="music-container" class="right-menu-item hover-effect">
-            <svg-icon icon-class="music" @click="musicOpen" />
+            <svg-icon icon-class="music" @click="musicOpen(musicOpenFlag)" />
           </div>
         </el-tooltip>
         <el-tooltip content="点击查看历史上的今天" effect="dark" placement="bottom">
@@ -115,6 +115,7 @@ export default {
     return {
       username: '',
       dialogVisible: false,
+      musicOpenFlag: false,
       // noticeDialogVisible: false,
       notes: localStorage.getItem('notes')
     }
@@ -130,9 +131,16 @@ export default {
     this.username = await this.getUserInfo().realName
   },
   methods: {
-    musicOpen() {
-      debugger
-      bus.$emit('musicOpen')
+    musicOpen(val) {
+      if (val) {
+        this.musicOpenFlag = false
+        document.getElementById('music-container').firstElementChild.style.color = '#5a5e66'
+        bus.$emit('musicOpen', false)
+      } else {
+        this.musicOpenFlag = true
+        document.getElementById('music-container').firstElementChild.style.color = '#F00'
+        bus.$emit('musicOpen', true)
+      }
     },
     handleHistoryNow() {
       const date = new Date()
