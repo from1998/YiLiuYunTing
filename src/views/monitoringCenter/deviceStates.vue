@@ -1,19 +1,15 @@
 <template>
   <div class="container">
     <!-- 标题 -->
-    <el-header class="container" height="40px" style="padding:25px 0 45px;font-size:30px;font-weight:700;text-align:center;background-color: #fff;">
-      <el-row>
-        <el-col :span="4" :offset="10">
-          设备状态
-        </el-col>
-      </el-row>
-    </el-header>
-    <!-- <el-row> -->
-    <!-- 表格工具按钮开始 -->
-    <!-- 查询条件开始 -->
-    <!-- <el-col :span="7" :offset="17">
+    <el-row :gutter="0" style="margin:20px auto">
+      <el-col :span="6" :offset="9" style="text-align:center;font-weight:700;padding-top:5px">
+        <span>{{ laneName }}</span>
+      </el-col>
+      <!-- 表格工具按钮开始 -->
+      <!-- 查询条件开始 -->
+      <el-col :span="7" :offset="2">
         <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
-          <el-form-item label="是否在线" prop="isOnLine">
+          <!-- <el-form-item label="是否在线" prop="isOnLine">
             <el-select
               v-model="queryParams.isOnLine"
               placeholder="请选择是否在线"
@@ -28,14 +24,31 @@
                 :value="Number(item.dictValue)"
               />
             </el-select>
-          </el-form-item>
-          <el-form-item>
+          </el-form-item> -->
+          <el-select
+            v-model="queryParams.parkId"
+            placeholder="请选择您要查看的车场"
+            size="small"
+            style="width:220px"
+            clearable
+            @change="handleLaneName"
+          >
+            <svg-icon slot="prefix" icon-class="car" style="margin:10px 0 0 6px" />
+            <el-option
+              v-for="item in options.parkCategory"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+              @change="handleParkFocus"
+            />
+          </el-select>
+        <!-- <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
             <el-button type="danger" icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
-          </el-form-item>
+          </el-form-item> -->
         </el-form>
-      </el-col> -->
-    <!-- </el-row> -->
+      </el-col>
+    </el-row>
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="laneList" stripe>
       <el-table-column
@@ -90,6 +103,7 @@
 import {
   getLaneByMid
 } from '@/api/system/carSetting'
+import { listAll } from '@/api/coupons/couponsManger'
 
 export default {
   name: 'LaneSet',
@@ -108,16 +122,19 @@ export default {
       total: 0,
       // 表格数据
       laneList: [],
+      laneName: '',
       // 查询参数
       queryParams: {
         page: 1,
         size: 10,
-        isOnLine: ''
+        parkId: undefined
       },
+      parkId: undefined,
       // 遍历数据
       options: {
         // 是否状态
-        status: []
+        status: [],
+        parkCategory: []
       }
     }
   },
@@ -139,6 +156,11 @@ export default {
     this.getDataByType('yesOrNo').then(res => {
       this.options.status = res.data
     })
+    // 获取车场列表数据
+    listAll().then(res => {
+      this.options.parkCategory = res.data
+      this.parkId = res.data[0].id
+    })
     // 查询表格数据
     this.getlaneList()
   },
@@ -152,6 +174,22 @@ export default {
   // },
   // 方法
   methods: {
+    handleParkFocus() {
+      this.getlaneList()
+    },
+    handleLaneName(val) {
+      if (val === '') {
+        this.laneName = ''
+        this.getlaneList()
+      } else {
+        this.getlaneList()
+        for (const key in this.options.parkCategory) {
+          if (this.options.parkCategory[key].id === val) {
+            this.laneName = this.options.parkCategory[key].name
+          }
+        }
+      }
+    },
     // 翻译车道类型
     typeFormatter(row) {
       if (row.type) {
