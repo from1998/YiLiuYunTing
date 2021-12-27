@@ -11,6 +11,7 @@
       server="netease"
       type="playlist"
       list-folded="true"
+      autoplay="true"
     />
     <el-tooltip placement="top" content="返回顶部">
       <back-to-top :custom-style="myBackToTopStyle" :visibility-height="0" :back-position="0" transition-name="fade" />
