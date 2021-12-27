@@ -33,10 +33,21 @@ const steps = [
     }
   },
   {
+    element: '#music-container',
+    popover: {
+      title: '音乐',
+      description: '开启或关闭音乐播放器',
+      position: 'left',
+      closeBtnText: '跳过指引', // Text on the close button
+      nextBtnText: '下一步', // Next button text
+      prevBtnText: '上一步'
+    }
+  },
+  {
     element: '#time-container',
     popover: {
       title: '日期与时间',
-      description: '指示当前日期与时间',
+      description: '指示当前日期与时间，您还可以查看历史上的今天',
       position: 'left',
       closeBtnText: '跳过指引', // Text on the close button
       nextBtnText: '下一步', // Next button text
@@ -48,17 +59,6 @@ const steps = [
     popover: {
       title: '天气',
       description: '指示当前所在地气温、天气状态',
-      position: 'left',
-      closeBtnText: '跳过指引', // Text on the close button
-      nextBtnText: '下一步', // Next button text
-      prevBtnText: '上一步'
-    }
-  },
-  {
-    element: '#notices-container',
-    popover: {
-      title: '通知公告',
-      description: '在这里查看系统推送的通知公告',
       position: 'left',
       closeBtnText: '跳过指引', // Text on the close button
       nextBtnText: '下一步', // Next button text
@@ -92,6 +92,17 @@ const steps = [
     popover: {
       title: '切换尺寸',
       description: '切换全局尺寸',
+      position: 'left',
+      closeBtnText: '跳过指引', // Text on the close button
+      nextBtnText: '下一步', // Next button text
+      prevBtnText: '上一步'
+    }
+  },
+  {
+    element: '.avatar-container',
+    popover: {
+      title: '个人中心',
+      description: '查看用户名、更新密码、查看操作指引',
       position: 'left',
       closeBtnText: '跳过指引', // Text on the close button
       nextBtnText: '下一步', // Next button text
