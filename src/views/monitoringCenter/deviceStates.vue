@@ -70,6 +70,12 @@
       <el-table-column label="相机品牌" align="center" prop="cameraBrandType" :formatter="cameraBrandTypeFormatter" />
       <el-table-column label="相机识别码" align="center" prop="cameraSn" width="180" />
       <el-table-column label="相机IP" align="center" prop="cameraIp" />
+      <el-table-column label="是否在线" align="center">
+        <template slot-scope="scope">
+          <el-tag v-show="scope.row.isOnLine===1" type="success" size="mini" effect="dark"><i class="el-icon-check" /> 在线</el-tag>
+          <el-tag v-show="scope.row.isOnLine===0" type="danger" size="mini" effect="dark"><i class="el-icon-close" /> 离线</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="控制卡类型" align="center" prop="controllerCard" :formatter="controllerCardFormatter" width="180" />
       <el-table-column label="是否有屏" align="center">
         <template slot-scope="scope">
