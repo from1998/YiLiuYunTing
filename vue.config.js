@@ -21,8 +21,6 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 
 // 设置项目的访问端口
 const port = process.env.port || process.env.npm_config_port || 80 // dev port
-const CompressionPlugin = require('compression-webpack-plugin')
-const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**

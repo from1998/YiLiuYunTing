@@ -457,6 +457,9 @@ export default {
               // 保安跳转到快捷监控
               if (this.getUserInfo().role === 6) {
                 this.$router.push({ path: '/monitoringCenter/quickMonitoring', query: this.otherQuery })
+                // 商家跳转到优惠券管理
+              } else if (this.getUserInfo().role === 7) {
+                this.$router.push({ path: '/coupons/merchantCoupons', query: this.otherQuery })
               } else {
                 this.$router.push({ path: '/', query: this.otherQuery })
               }
