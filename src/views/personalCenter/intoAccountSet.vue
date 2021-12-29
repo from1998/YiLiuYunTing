@@ -104,6 +104,7 @@ export default {
       await getDepotRegister(this.form.id).then(res => {
         if (res.code === 200 && res.data !== null) {
           this.form.legalpersonphone = res.data.legalpersonphone
+          this.form.merchantphone = res.data.merchantphone
           this.cardBindState = res.data.isbind
           this.isautowithdraw = res.data.isautowithdraw
         }

@@ -64,7 +64,7 @@
       <el-table-column align="center" label="订单编号">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
-            <p>提示：点击复制订单编号{{ scope.row.sn }}</p>
+            <p>提示：点击复制订单编号：<el-tag type="primary" effect="dark" size="mini">{{ scope.row.sn }}</el-tag></p>
             <div slot="reference" class="name-wrapper">
               <el-tag v-clipboard:copy="scope.row.sn" v-clipboard:success="clipboardSuccess" size="medium"> {{ scope.row.sn }}</el-tag>
             </div>
