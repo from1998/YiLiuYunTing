@@ -382,7 +382,7 @@ export default {
         notEmpty: validate.notEmpty
       },
       // 个人信息查询返回值
-      resData: '',
+      resData: false,
       flag: false,
       // 用户id
       id: '',
@@ -515,7 +515,7 @@ export default {
       this.loading = true // 打开遮罩
       this.id = await this.getUserInfo().id
       await getDepotRegister(this.id).then(res => {
-        this.resData = res.data
+        this.resData = res.data.registerstatus
         if (res.code === 200 && res.data !== null) {
           this.options.registerInfo = res.data
           this.form = Object.assign(this.form, res.data)

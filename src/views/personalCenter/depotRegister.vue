@@ -140,7 +140,9 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
-          this.flag = true
+          if (res.data.registerstatus) {
+            this.flag = true
+          }
         }
         this.loading = false // 关闭遮罩
       })
