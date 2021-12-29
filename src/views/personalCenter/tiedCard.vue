@@ -191,7 +191,6 @@ export default {
     },
     onSubmit() {
       this.$refs['form'].validate((valid) => {
-        this.msgSuccess(valid)
         if (valid) {
           this.loading = true // 打开遮罩
           bindCard(this.form).then(res => {
@@ -206,8 +205,6 @@ export default {
       sponsorRemit(this.form).then(res => {
         this.msgSuccess(res.msg)
         this.form.seqno = res.data
-      }).catch((res) => {
-        this.msgError(res.msg)
       })
       const TIME_COUNT = 6
       if (!this.timer) {
