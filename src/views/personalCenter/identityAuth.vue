@@ -12,7 +12,7 @@
     <!-- 主体 -->
     <el-container class="container">
 
-      <div v-show="!resData" class="error">
+      <div v-show="resData!==0 && !resData" class="error">
         <el-row :gutter="20">
           <el-button
             type="warning"
@@ -29,7 +29,7 @@
         </el-row>
       </div>
 
-      <el-form v-show="resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
+      <el-form v-show="resData === 0 || resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
@@ -522,7 +522,9 @@ export default {
           if (res.data.idvaliditybegin && res.data.idvalidity) {
             this.handletime()
           }
-          // this.flag = true
+          if (res.data.registerstatus === 1 || res.data.registerstatus === 3) {
+            this.flag = true
+          }
           window.sessionStorage.setItem('sonmerno', res.data.sonmerno)
         }
         this.loading = false // 关闭遮罩
