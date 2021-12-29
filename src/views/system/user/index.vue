@@ -66,7 +66,11 @@
           </el-popover>
         </template>
       </el-table-column>
-      <el-table-column label="真实姓名" align="center" prop="realName" />
+      <el-table-column label="真实姓名" align="center">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="mini" effect="dark"><i class="el-icon-user-solid" /> {{ scope.row.realName }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="手机号码" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
