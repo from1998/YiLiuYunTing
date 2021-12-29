@@ -7,7 +7,7 @@
       <el-tag v-show="options.registerInfo.registerstatus===1" type="success" icon="el-icon-success" effect="dark" size="mini">已认证</el-tag>
       <el-tag v-show="options.registerInfo.registerstatus===2" type="info" icon="el-icon-info" effect="dark" size="mini">未认证</el-tag>
       <el-tag v-show="options.registerInfo.registerstatus===3" type="warning" icon="el-icon-warning" effect="dark" size="mini">审核中</el-tag>
-      <el-tag v-show="options.registerInfo.registerstatus===0" type="error" icon="el-icon-error" effect="dark" size="mini">认证失败</el-tag>
+      <el-tag v-show="options.registerInfo.registerstatus===0" type="danger" icon="el-icon-error" effect="dark" size="mini">认证失败</el-tag>
     </el-header>
     <!-- 主体 -->
     <el-container class="container">

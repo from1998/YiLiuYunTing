@@ -95,6 +95,7 @@ export default {
     handleSuccess(res, file, fileList) {
       if (res.code === 200) {
         this.handHeld = fileList
+        this.hideUpload = false
         this.msgSuccess(res.msg)
         this.$emit('imgagePush', res.data)
         const arr = [{ name: res.data.filename, url: res.data.src }]

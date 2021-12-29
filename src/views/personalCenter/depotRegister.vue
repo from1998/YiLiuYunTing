@@ -140,7 +140,7 @@ export default {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
-          if (res.data.registerstatus) {
+          if (res.data.registerstatus !== null) {
             this.flag = true
             this.codeShow = true
           }
