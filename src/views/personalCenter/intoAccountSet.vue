@@ -9,7 +9,7 @@
       <el-form ref="form" :model="form" label-width="140px" style="width:500px" label-position="left" :rules="rules">
         <el-row>
           <el-form-item label="车场注册手机号码">
-            <el-input v-model="form.merchantphone" disabled />
+            <el-input v-model="form.phone" disabled />
           </el-form-item>
         </el-row>
         <el-row>
@@ -104,7 +104,7 @@ export default {
       await getDepotRegister(this.form.id).then(res => {
         if (res.code === 200 && res.data !== null) {
           this.form.legalpersonphone = res.data.legalpersonphone
-          this.form.merchantphone = res.data.merchantphone
+          this.form.phone = res.data.phone
           this.cardBindState = res.data.isbind
           this.isautowithdraw = res.data.isautowithdraw
         }

@@ -58,8 +58,8 @@
         </el-row>
         <el-row>
           <el-col :span="12">
-            <el-form-item label="手机号码" prop="legalpersonphone">
-              <el-input v-model="options.registerInfo.legalpersonphone" disabled />
+            <el-form-item label="手机号码" prop="phone">
+              <el-input v-model="options.registerInfo.phone" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -363,7 +363,7 @@ export default {
       // 验证规则
       validate,
       rules: {
-        legalpersonphone: validate.phone,
+        phone: validate.phone,
         merchantphone: validate.phone,
         idnumber: validate.idNumber,
         address: validate.notEmpty,

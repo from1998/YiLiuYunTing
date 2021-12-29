@@ -33,8 +33,8 @@
           <el-input v-model="form.idnumber" placeholder="请输入身份证号码" :disabled="flag" />
         </el-form-item>
         <!-- 手机号码 -->
-        <el-form-item label="手机号码" prop="legalpersonphone">
-          <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" :disabled="flag" />
+        <el-form-item label="手机号码" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入手机号码" :disabled="flag" />
         </el-form-item>
         <!-- 企业名称 -->
         <el-form-item v-if="form.type===1" label="企业名称" prop="merchantname">
@@ -96,7 +96,7 @@ export default {
       // 验证规则
       validate,
       rules: {
-        legalpersonphone: validate.phone,
+        phone: validate.phone,
         idnumber: validate.idNumber,
         type: validate.notEmpty,
         legalpersonname: validate.notEmpty,
@@ -117,7 +117,7 @@ export default {
         type: '',
         legalpersonname: '',
         idnumber: '',
-        legalpersonphone: '',
+        phone: '',
         merchantname: '',
         registersmscode: ''
       },
