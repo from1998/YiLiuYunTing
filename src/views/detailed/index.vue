@@ -4,7 +4,7 @@
     <el-row :gutter="0" style="margin-bottom: 8px;">
       <el-col :span="15" :offset="9">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="分润对象" prop="parkId">
             <el-select
               v-model="queryParams.managerId"
@@ -12,6 +12,7 @@
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-user-solid" />
               <el-option
                 v-for="dict in userList"
                 :key="dict.realName"
@@ -27,6 +28,7 @@
               clearable
               size="small"
             >
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
               <el-option
                 v-for="dict in parkList"
                 :key="dict.id"
@@ -42,6 +44,7 @@
               clearable
               size="small"
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="dict in list"
                 :key="dict.value"
@@ -268,6 +271,7 @@ export default {
 
     // 条件查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getUserList()
     },
     // 重置查询条件

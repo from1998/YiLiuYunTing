@@ -657,6 +657,7 @@ export default {
     },
     // 条件查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getMerchantCouponsList()
     },
     // 重置查询条件

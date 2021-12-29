@@ -5,16 +5,17 @@
     </el-header>
     <el-row>
       <!-- 表格工具按钮开始 -->
-      <el-col :span="6">
+      <el-col :span="5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
         <el-button type="success" icon="el-icon-edit" size="mini" :disabled="single" @click="handleUpdate">修改</el-button>
         <el-button type="danger" icon="el-icon-delete" size="mini" :disabled="multiple" @click="handleDelete">删除</el-button>
       </el-col>
       <!-- 查询条件开始 -->
-      <el-col :span="17" :offset="1">
-        <el-form ref="queryForm" :model="queryParams" :inline="true">
+      <el-col :span="19" :offset="0">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="层号" prop="tierNumber">
             <el-select v-model="queryParams.tierNumber" placeholder="请选择车位层号" size="small" clearable>
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
               <el-option
                 v-for="item in options.tierNumber"
                 :key="item.dictValue"
@@ -25,6 +26,7 @@
           </el-form-item>
           <el-form-item label="区域号" prop="areaNumber">
             <el-select v-model="queryParams.areaNumber" placeholder="请选择车位区域号" size="small" clearable>
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
               <el-option
                 v-for="item in options.areaNumber"
                 :key="item.dictValue"
@@ -38,8 +40,9 @@
               v-model.trim="queryParams.number"
               placeholder="请输入车位编号"
               clearable
-              size="small"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -206,6 +209,7 @@ export default {
     },
     // 查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getPortList()
     },
     // 重置查询

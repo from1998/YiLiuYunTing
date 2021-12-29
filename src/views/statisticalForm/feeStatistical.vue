@@ -228,6 +228,7 @@ export default {
     },
     // 条件查询
     handleQuery() {
+      this.form.page = 1
       this.getTimeList()
     },
     // 重置查询条件

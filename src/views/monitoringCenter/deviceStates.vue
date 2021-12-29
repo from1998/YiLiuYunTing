@@ -227,6 +227,7 @@ export default {
     },
     // 查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getlaneList()
     },
     // 重置查询

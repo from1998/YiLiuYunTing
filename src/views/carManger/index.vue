@@ -815,6 +815,7 @@ export default {
     },
     // 条件查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getList()
     },
     // 重置条件查询

@@ -248,6 +248,7 @@ export default {
     },
     // 条件查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getDictDataList()
     },
     // 重置查询条件

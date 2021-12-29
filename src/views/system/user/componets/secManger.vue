@@ -12,18 +12,20 @@
       </el-col>
       <!-- 查询条件开始 -->
       <el-col :span="14" :offset="4">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
-          <el-form-item label="保安姓名" prop="realName">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
+          <el-form-item label="姓名" prop="realName">
             <el-input
               v-model.trim="queryParams.realName"
+              prefix-icon="el-icon-user-solid"
               placeholder="请输入保安姓名"
               clearable
               size="small"
             />
           </el-form-item>
-          <el-form-item label="保安手机号码" label-width="96px" prop="mobile">
+          <el-form-item label="手机号码" prop="mobile">
             <el-input
               v-model.trim="queryParams.mobile"
+              prefix-icon="el-icon-phone"
               placeholder="请输入保安手机号码"
               clearable
               size="small"
@@ -331,6 +333,7 @@ export default {
     },
     // 查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getSecurityList()
     },
     // 重置查询

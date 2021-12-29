@@ -4,14 +4,14 @@
       <el-col :span="4" :offset="10" style="text-align:center">
         车道设置
       </el-col>
-      <el-col :span="3" :offset="7">
+      <el-col :span="3" :offset="7" align="right">
         <el-button type="success" size="mini" @click="handleAccess(sn,'pre')">
           <svg-icon icon-class="qrcode" />
           预付款二维码
         </el-button>
       </el-col>
     </el-header>
-    <el-row>
+    <el-row :gutter="0">
       <!-- 表格工具按钮开始 -->
       <el-col :span="5">
         <el-button type="primary" icon="el-icon-plus" size="mini" @click="handleAdd">添加</el-button>
@@ -20,17 +20,20 @@
       </el-col>
       <!-- 查询条件开始 -->
       <el-col :span="18" :offset="1">
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="车道名称" prop="name">
             <el-input
               v-model.trim="queryParams.name"
               placeholder="请输入车道名称"
               clearable
               size="small"
-            />
+            >
+              <svg-icon slot="prefix" style="margin-left:6px" icon-class="carLine" />
+            </el-input>
           </el-form-item>
           <el-form-item label="所属岗亭" prop="workstationId">
             <el-select v-model="queryParams.workstationId" placeholder="请选择所属岗亭" size="small" clearable>
+              <svg-icon slot="prefix" style="margin-left:6px" icon-class="gangting" />
               <el-option
                 v-for="item in options.watchhouseName"
                 :key="item.id"
@@ -46,6 +49,7 @@
               clearable
               size="small"
             >
+              <svg-icon slot="prefix" style="margin-left:6px" icon-class="carLine" />
               <el-option
                 v-for="item in options.laneCategory"
                 :key="item.dictValue"
@@ -65,7 +69,7 @@
     <el-table v-loading="loading" border :data="laneList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="40" align="center" />
       <el-table-column label="车道名称" align="center" prop="name" />
-      <el-table-column label="车道类型" align="type">
+      <el-table-column label="车道类型" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.type===1" type="success" size="mini" effect="dark"><i class="el-icon-right" /> 入口</el-tag>
           <el-tag v-show="scope.row.type===2" type="warning" size="mini" effect="dark"><i class="el-icon-back" /> 出口</el-tag>
@@ -503,6 +507,7 @@ export default {
     },
     // 查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getlaneList()
     },
     // 重置查询

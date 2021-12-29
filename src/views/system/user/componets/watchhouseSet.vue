@@ -12,23 +12,24 @@
       </el-col>
       <el-col :span="16" :offset="2">
         <!-- 查询条件开始 -->
-        <el-form ref="queryForm" :model="queryParams" :inline="true" label-width="68px">
+        <el-form ref="queryForm" :model="queryParams" :inline="true" align="right">
           <el-form-item label="岗亭名称" prop="name">
             <el-input
               v-model.trim="queryParams.name"
               placeholder="请输入岗亭名称"
               clearable
               size="small"
-              style="width:240px"
-            />
+            >
+              <svg-icon slot="prefix" icon-class="gangting" style="margin-left:6px" />
+            </el-input>
           </el-form-item>
-          <el-form-item label="进出车辆类型" prop="carType" label-width="96px">
+          <el-form-item label="进出车辆类型" prop="carType">
             <el-select
               v-model="queryParams.carType"
-              style="width:240px"
               placeholder="请选择进出车辆类型"
               clearable
             >
+              <i slot="prefix" class="el-input__icon el-icon-guide" />
               <el-option
                 v-for="item in carTypeOptions"
                 :key="item.value"
@@ -47,7 +48,7 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="watchhouseList" stripe @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="岗亭ID" align="center" prop="id" width="50" />
+      <el-table-column label="岗亭ID" align="center" prop="id" width="80" />
       <el-table-column label="车场名称" align="center" prop="parkName" />
       <el-table-column label="岗亭名称" align="center" prop="name" />
       <el-table-column label="进出车辆类型" align="center" prop="carTypeName" width="620" />
@@ -178,6 +179,7 @@ export default {
     },
     // 查询
     handleQuery() {
+      this.queryParams.page = 1
       // getWorkStationLikeName(this.queryParams).then(res => {
       //   this.watchhouseList = res.data.list
       //   this.total = res.data.total

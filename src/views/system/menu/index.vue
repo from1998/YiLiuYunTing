@@ -248,6 +248,7 @@ export default {
     },
     // 查询
     handleQuery() {
+      this.queryParams.page = 1
       this.getMenuList()
     },
     // 重置
