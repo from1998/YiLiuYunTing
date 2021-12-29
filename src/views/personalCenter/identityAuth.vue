@@ -12,7 +12,7 @@
     <!-- 主体 -->
     <el-container class="container">
 
-      <div v-show="!resData" class="error">
+      <!-- <div v-show="!resData" class="error">
         <el-row :gutter="20">
           <el-button
             type="warning"
@@ -27,9 +27,9 @@
           </p>
           <el-button type="primary" class="goBack" @click="goDepotRegister">转到车场注册</el-button>
         </el-row>
-      </div>
+      </div> -->
 
-      <el-form v-show="resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
+      <el-form v-show="!resData" :model="form" label-width="150px" style="width:1200px" :disabled="flag" :rules="rules">
         <el-row>
           <el-col :span="12">
             <!-- 注册类型 -->
@@ -332,7 +332,7 @@
         </el-row>
         <el-row class="container">
           <el-form-item>
-            <el-button type="primary" class="btn" :disabled="options.registerInfo.registerstatus!==2?'true':'false'" @click="onSubmit">提交</el-button>
+            <el-button type="primary" class="btn" :disabled="options.registerInfo.registerstatus!==2?true:false" @click="onSubmit">提交</el-button>
           </el-form-item>
         </el-row>
       </el-form>
@@ -375,7 +375,6 @@ export default {
         businesslicencevalidity: validate.notEmpty,
         sonmerno: validate.notEmpty,
         businesslicenceno: validate.notEmpty,
-        IDCardExpiryTime: validate.notEmpty,
         merchantnamesimple: validate.notEmpty,
         businesslicencetype: validate.notEmpty,
         businessscope: validate.notEmpty,
