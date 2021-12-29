@@ -142,6 +142,7 @@ export default {
           this.form = res.data
           if (res.data.registerstatus) {
             this.flag = true
+            this.codeShow = false
           }
         }
         this.loading = false // 关闭遮罩
