@@ -265,7 +265,7 @@
 
 import { getDepotById, addDepotInfo, updateDepotInfo } from '@/api/system/carSetting'
 
-import area from '@/assets/json/citys.json'
+import area from '@/assets/json/pca-code.json'
 
 import validate from '@/utils/validate'
 
