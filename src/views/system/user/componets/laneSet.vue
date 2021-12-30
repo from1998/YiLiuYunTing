@@ -442,10 +442,11 @@ export default {
         // 相机品牌
         cameraBrandType: [],
         // 所属岗亭
-        watchhouseName: [],
-        // 车场sn
-        sn: ''
-      }
+        watchhouseName: []
+      },
+      parkName: '',
+      // 车场sn
+      sn: ''
     }
   },
   // 勾子
@@ -500,6 +501,7 @@ export default {
         this.options.watchhouseName = res.data.workStation
         this.total = res.data.total
         this.sn = res.data.sn
+        this.parkName = res.data.workStation[0].parkName
         this.loading = false// 关闭遮罩
       }).catch(() => {
         this.loading = false// 关闭遮罩
@@ -661,7 +663,7 @@ export default {
     // 生成车道
     createLane(text) {
       if (text === undefined) {
-        text = '预付款'
+        text = this.parkName
       }
       const canvas = document.getElementById('laneCanvas')
       canvas.width = 500
