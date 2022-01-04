@@ -186,52 +186,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.popTop {
-  position: relative;
-
-  .popTitle {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .close {
-    position: absolute;
-    top: 0;
-    right: 0;
-  }
-}
-
-.popContent {
-  box-sizing: border-box;
-  padding: 20px;
-  min-height: 125px;
-  display: flex;
-  justify-content: center;
-}
-
-.popFooter {
-  display: flex;
-
-  .btn {
-    font-size: 14px;
-    color: #222222;
-    flex: 1;
-    padding: 14px 0;
-    background: #EFEFEF;
-    font-weight: bold;
-  }
-
-  .cancelBtn {
-    flex: 1;
-  }
-
-  .confirmBtn {
-    flex: 1;
-    background: #FF2343;
-    color: #fff;
-  }
-}
-
 .license-plate {
   padding: 10px;
   .cph-wrap {
@@ -335,11 +289,11 @@ export default {
       background: #fff;
       border-radius: 4px;
       box-shadow: 0 1px 2px #666;
-      width: calc(10% - 4px);
+      width: calc(10% - 5px);
       text-align: center;
-      height: 46px;
-      line-height: 46px;
-      margin: 0 2px 8px;
+      height: 2.875rem;
+      line-height: 2.875rem;
+      margin: 0 .15625rem .65rem;
       font-size: 16px;
     }
 
