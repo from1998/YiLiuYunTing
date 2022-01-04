@@ -160,6 +160,7 @@ export default {
       this.resData.park.xAxisData = this.leaveMap
       this.resData.park.seriesData[0].data = this.enterMap
       this.resData.park.seriesData[1].data = this.leaveData
+      this.resData.park.seriesData[2].data = this.zfbMap
       this.parkChart.setOption(this.setOptions(this.resData.park))
     }
   }
