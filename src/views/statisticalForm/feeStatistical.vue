@@ -190,16 +190,16 @@ export default {
         this.getleaveMap()
       })
     },
-    getleaveMap() {
+    async getleaveMap() {
       for (var p in this.listData2.gfMap) {
-        this.time.push(p) // 时间
-        this.gfMap.push(this.listData2.gfMap[p]) // gfMap 值
+        await this.time.push(p) // 时间
+        await this.gfMap.push(this.listData2.gfMap[p]) // gfMap 值
       }
       for (var e in this.listData2.wxMap) {
-        this.wxMap.push(this.listData2.wxMap[e]) // 微信 值
+        await this.wxMap.push(this.listData2.wxMap[e]) // 微信 值
       }
       for (var item in this.listData2.zfbMap) {
-        this.zfbMap.push(this.listData2.zfbMap[item]) // 支付宝 值
+        await this.zfbMap.push(this.listData2.zfbMap[item]) // 支付宝 值
       }
       this.$refs.linestack.renderChart()
     },
