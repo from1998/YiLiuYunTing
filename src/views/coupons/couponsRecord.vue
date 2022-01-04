@@ -268,7 +268,7 @@ export default {
     getCarList() {
       listAll().then(res => {
         this.CarList = res.data
-        this.queryParams.parkId = this.roleId === 1 ? '' : res.data[0].id
+        this.queryParams.parkId = this.roleId === 1 ? '' : (res.data && res.data[0].id)
       })
     },
     // 查询表格数据
