@@ -38,11 +38,32 @@
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <el-button v-if="pay" type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
-        <el-button v-if="!pay" type="primary" round style="width:100%" @click="handleSubmit">领取</el-button>
+        <el-button v-if="!pay" type="primary" round style="width:100%" @click="submitOpen=true">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
     <div class="advwrap" />
+    <!-- 领取弹出层开始 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="submitOpen"
+      width="80%"
+      center
+      append-to-body
+      :show-close="false"
+      :close-on-click-modal="false"
+    >
+      <el-row :gutter="0">
+        <el-col :span="24" :offset="0" style="text-align:center;font-size:1.2rem">
+          <svg-icon icon-class="info" style="color:aaa" />
+          确定领取优惠券？
+        </el-col>
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="delHistory">确 定</el-button>
+        <el-button @click="submitOpen=false">取 消</el-button>
+      </span>
+    </el-dialog>
     <!-- 删除弹出层开始 -->
     <el-dialog
       title="提示"
@@ -60,7 +81,7 @@
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="delHistory">确 定</el-button>
+        <el-button type="primary" @click="handleSubmit">确 定</el-button>
         <el-button @click="delHistoryopen=false">取 消</el-button>
       </span>
     </el-dialog>
@@ -80,6 +101,7 @@ export default {
       pay: '',
       parkName: '',
       merchantCouponsName: '',
+      submitOpen: false,
       delHistoryopen: false,
       delId: '',
       loading: false,
@@ -171,6 +193,7 @@ export default {
     },
     handleSubmit() {
       this.$refs.keyBoard.confirmBtnFn()
+      this.submitOpen = false
     },
     postCarNumber(val) {
       this.carNumber = val
