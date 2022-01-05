@@ -69,26 +69,6 @@
     </el-header>
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="feeTableList" stripe>
-      <el-table-column align="center" label="日期" width="200">
-        <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.created }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="微信">
-        <template slot-scope="scope">
-          <el-tag type="success" size="medium">￥{{ scope.row.wx }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="官方">
-        <template slot-scope="scope">
-          <el-tag type="danger" size="medium">￥{{ scope.row.gf }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="支付宝">
-        <template slot-scope="scope">
-          <el-tag type="primary" size="medium">￥{{ scope.row.zfb }}</el-tag>
-        </template>
-      </el-table-column>
       <el-table-column
         align="center"
         label="车场名称"
@@ -97,9 +77,29 @@
           <el-popover trigger="hover" placement="top">
             <p>车场名称: {{ scope.row.parkName }}</p>
             <div slot="reference" class="name-wrapper">
-              <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
+              <el-tag size="mini" effect="dark" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;margin-top:8px">{{ scope.row.parkName }}</el-tag>
             </div>
           </el-popover>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="日期" width="200">
+        <template slot-scope="scope">
+          <el-tag size="mini"> <i class="el-icon-time" /> {{ scope.row.created }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="微信">
+        <template slot-scope="scope">
+          <el-tag type="success" size="mini">￥{{ scope.row.wx }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="官方">
+        <template slot-scope="scope">
+          <el-tag type="danger" size="mini">￥{{ scope.row.gf }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="支付宝">
+        <template slot-scope="scope">
+          <el-tag type="primary" size="mini">￥{{ scope.row.zfb }}</el-tag>
         </template>
       </el-table-column>
     </el-table>

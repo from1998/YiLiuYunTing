@@ -1,5 +1,5 @@
 module.exports = {
-  title: '一流云停|停车管理系统',
+  title: '智慧城市视频共享数据交互平台',
 
   /**
    * @type {boolean} true | false

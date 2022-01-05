@@ -10,10 +10,6 @@ import echarts from 'echarts'
 export default {
   name: 'LineStack',
   props: {
-    listData: {
-      type: Object,
-      default: null
-    },
     leaveMap: {
       type: Array,
       default: null
@@ -53,11 +49,6 @@ export default {
               name: this.parkName[1],
               data: this.leaveData,
               color: '#FF0000'
-            },
-            {
-              name: this.parkName[2],
-              data: this.zfbMap,
-              color: '#409eff'
             }
           ]
         }
@@ -112,7 +103,31 @@ export default {
             },
             dataView: {
               show: true,
-              title: '切换到数据视图'
+              readOnly: false,
+              title: '数据视图'
+            },
+            optionToContent: function(opt) {
+              debugger
+              console.log(opt)
+              const axisData = opt.xAxis[0].data // 坐标数据
+              const series = opt.series // 折线图数据
+              let tdHeads = '<td  >时间</td>' // 表头
+              let tdBodys = '' // 数据
+              series.forEach(function(item) {
+                // 组装表头
+                tdHeads += `<td >${item.name}</td>`
+              })
+              let table = `<table border="1" ><tbody><tr>${tdHeads} </tr>`
+              for (let i = 0, l = axisData.length; i < l; i++) {
+                for (let j = 0; j < series.length; j++) {
+                  // 组装表数据
+                  tdBodys += `<td>${series[j].data[i]}</td>`
+                }
+                table += `<tr><td >${axisData[i]}</td>${tdBodys}</tr>`
+                tdBodys = ''
+              }
+              table += '</tbody></table>'
+              return table
             }
           }
         },
@@ -160,7 +175,13 @@ export default {
       this.resData.park.xAxisData = this.leaveMap
       this.resData.park.seriesData[0].data = this.enterMap
       this.resData.park.seriesData[1].data = this.leaveData
-      this.resData.park.seriesData[2].data = this.zfbMap
+      if (this.zfbMap) {
+        this.resData.park.seriesData[2] = {
+          name: this.parkName[2],
+          data: this.zfbMap,
+          color: '#409eff'
+        }
+      }
       this.parkChart.setOption(this.setOptions(this.resData.park))
     }
   }

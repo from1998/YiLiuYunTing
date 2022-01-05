@@ -68,6 +68,14 @@
     </el-header>
     <!-- 数据表格 -->
     <el-table v-loading="loading" border :data="trafficTableList" stripe>
+      <el-table-column
+        align="center"
+        label="车场名称"
+      >
+        <template slot-scope="scope">
+          <el-tag size="mini" effect="dark" style="max-width:100%;overflow:hidden;text-overflow:ellipsis;margin-top:8px">{{ scope.row.parkName }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.carNumberFlag==='临'" type="warning" size="mini" effect="dark"><svg-icon icon-class="car" /> {{ scope.row.carnumber }}</el-tag>
@@ -77,20 +85,12 @@
       </el-table-column>
       <el-table-column label="进场时间" align="center">
         <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.entered }}</el-tag>
+          <el-tag size="mini"> <i class="el-icon-time" /> {{ scope.row.entered }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="出场时间" align="center">
         <template slot-scope="scope">
-          <el-tag size="medium"> <i class="el-icon-time" /> {{ scope.row.leaved }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="车场名称"
-      >
-        <template slot-scope="scope">
-          <el-tag size="medium" style="width:100%;overflow:hidden;text-overflow:ellipsis;">{{ scope.row.parkName }}</el-tag>
+          <el-tag size="mini"> <i class="el-icon-time" /> {{ scope.row.leaved }}</el-tag>
         </template>
       </el-table-column>
     </el-table>
