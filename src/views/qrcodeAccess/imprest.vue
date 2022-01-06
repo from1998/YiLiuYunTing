@@ -188,11 +188,8 @@ export default {
       this.delId = id
     },
     handleQuery() {
-      const res = this.$refs.keyBoard.confirmBtnFn()
-      this.msgSuccess(res)
-      if (res) {
-        this.postQuery()
-      }
+      this.$refs.keyBoard.confirmBtnFn()
+      this.postQuery()
     },
     handleInput(val) {
       this.$refs.keyBoard.sonFun(val)
@@ -211,7 +208,6 @@ export default {
         }
       } else {
         this.msgError('请输入正确的车牌号')
-        return false
       }
     },
     postQuery() {
