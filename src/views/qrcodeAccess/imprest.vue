@@ -188,8 +188,10 @@ export default {
       this.delId = id
     },
     handleQuery() {
-      this.$refs.keyBoard.confirmBtnFn()
-      this.postQuery()
+      const res = this.$refs.keyBoard.confirmBtnFn()
+      if (res) {
+        this.postQuery()
+      }
     },
     handleInput(val) {
       this.$refs.keyBoard.sonFun(val)
@@ -205,6 +207,8 @@ export default {
       if (plateNumber.test(val)) {
         if (!this.pay) {
           this.submitOpen = true
+        } else {
+          return false
         }
       } else {
         this.msgError('请输入正确的车牌号')
