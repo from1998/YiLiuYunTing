@@ -196,6 +196,10 @@ export default {
       getNoPayData(this.queryParams).then(res => {
         if (res.code === 200) {
           Object.assign(this.resDate, res.data)
+          // 金额为0则免费放行
+          if (this.resDate.money === '0') {
+            this.freeFlag = true
+          }
           this.isWx = res.data.baseData.isWx
           this.isAli = res.data.baseData.isAli
           // 优惠券ID

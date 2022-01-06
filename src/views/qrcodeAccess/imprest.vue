@@ -38,7 +38,7 @@
     <el-row :gutter="0" style="font-size:14px;margin-top:5%">
       <el-col :span="20" :offset="2">
         <el-button v-if="pay" type="primary" round style="width:100%" @click="handleQuery">查询</el-button>
-        <el-button v-if="!pay" type="primary" round style="width:100%" @click="handlesubmitOpen">领取</el-button>
+        <el-button v-if="!pay" type="primary" round style="width:100%" @click="$refs.keyBoard.confirmBtnFn()">领取</el-button>
       </el-col>
     </el-row>
     <div id="anbo-ad-st" />
@@ -47,16 +47,18 @@
     <el-dialog
       title="提示"
       :visible.sync="submitOpen"
-      width="80%"
+      width="70%"
       center
       append-to-body
       :show-close="false"
       :close-on-click-modal="false"
     >
       <el-row :gutter="0">
-        <el-col :span="24" :offset="0" style="text-align:center;font-size:1.2rem">
+        <el-col :span="24" :offset="0" style="text-align:center;font-size:0.9rem">
           <svg-icon icon-class="info" style="color:aaa" />
-          确定领取{{ carNumber }}优惠券？
+          <span style="color:#409EFF">【{{ carNumber }}】</span>,确定领券？
+          <br><br>
+          <span style="font-size:12px;color:#f00">提示：自动抵扣，无需使用。</span>
         </el-col>
       </el-row>
       <span slot="footer" class="dialog-footer">
@@ -187,19 +189,29 @@ export default {
     },
     handleQuery() {
       this.$refs.keyBoard.confirmBtnFn()
+      this.postQuery()
     },
     handleInput(val) {
       this.$refs.keyBoard.sonFun(val)
     },
-    handlesubmitOpen() {
-      this.submitOpen = true
-    },
     handleSubmit() {
-      this.$refs.keyBoard.confirmBtnFn()
+      this.postQuery()
       this.submitOpen = false
     },
     postCarNumber(val) {
+      // 分离，这个只做传递，请求发送单独封装
       this.carNumber = val
+      const plateNumber = /^([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}(([0-9]{5}[DF])|([DF]([A-HJ-NP-Z0-9])[0-9]{4})))|([京津沪渝冀豫云辽黑湘皖鲁新苏浙赣鄂桂甘晋蒙陕吉闽贵粤青藏川宁琼使领A-Z]{1}[A-Z]{1}[A-HJ-NP-Z0-9]{4}[A-HJ-NP-Z0-9挂学警港澳]{1})$/
+      if (plateNumber.test(val)) {
+        if (!this.pay) {
+          this.submitOpen = true
+        }
+      } else {
+        this.msgError('请输入正确的车牌号')
+      }
+    },
+    postQuery() {
+      // 在这里校验传递过来的车牌号
       this.loading = true // 打开遮罩
       if (this.pay) {
         getCarDetails(this.parkId, { 'carNumber': this.carNumber }).then(res => {
