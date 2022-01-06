@@ -189,6 +189,7 @@ export default {
     },
     handleQuery() {
       const res = this.$refs.keyBoard.confirmBtnFn()
+      this.msgSuccess(res)
       if (res) {
         this.postQuery()
       }
