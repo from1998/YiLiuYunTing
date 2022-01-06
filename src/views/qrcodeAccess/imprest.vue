@@ -208,11 +208,10 @@ export default {
       if (plateNumber.test(val)) {
         if (!this.pay) {
           this.submitOpen = true
-        } else {
-          return false
         }
       } else {
         this.msgError('请输入正确的车牌号')
+        return false
       }
     },
     postQuery() {
