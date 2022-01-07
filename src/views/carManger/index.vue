@@ -304,7 +304,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
-            <el-form-item label="手机号" prop="mobile">
+            <el-form-item label="手机号">
               <el-input v-model.trim="form.mobile" placeholder="请输入车主手机号" clearable size="small" />
             </el-form-item>
           </el-col>
@@ -312,7 +312,7 @@
 
         <el-row>
           <el-col :span="12" :offset="0">
-            <el-form-item label="车辆地址" prop="address">
+            <el-form-item label="车辆地址">
               <el-input v-model.trim="form.address" placeholder="请输入车辆地址" clearable size="small" />
             </el-form-item>
           </el-col>
@@ -594,8 +594,6 @@ export default {
       validate,
       rules: {
         carNumber: validate.carNumber,
-        address: validate.notEmpty,
-        mobile: validate.phone,
         carType: validate.notEmpty,
         registerType: validate.notEmpty,
         splitType: validate.notEmpty,
@@ -728,7 +726,7 @@ export default {
         this.msgSuccess(res.msg)
         this.getList()
       } else {
-        this.msgErroe(res.msg)
+        this.msgError(res.msg)
       }
     },
     handleError(res) {
