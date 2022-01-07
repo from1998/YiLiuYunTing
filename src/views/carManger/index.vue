@@ -732,7 +732,7 @@ export default {
       }
     },
     handleError(res) {
-      this.msgErroe(res.msg)
+      this.msgError(res.msg)
       this.getList()
     },
     handleLaneName(val) {
