@@ -117,6 +117,11 @@
     <!-- 数据表格开始 -->
     <el-table v-loading="loading" border :data="carTableList" @selection-change="handleSelectionChnage">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="expand" label="车场" width="60px" align="center">
+        <template slot-scope="scope">
+          <el-tag size="medium" style="margin-left:2%"> <svg-icon slot="prefix" icon-class="car" style="margin-left:6px" /> {{ scope.row.park.name }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="车牌号" align="center">
         <template slot-scope="scope">
           <el-popover trigger="hover" placement="top">
@@ -1028,3 +1033,17 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .demo-table-expand {
+    font-size: 0;
+  }
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 25%;
+  }
+</style>
