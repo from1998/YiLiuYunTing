@@ -8,9 +8,10 @@
 </template>
 
 <script>
-import echarts from 'echarts' // 引入echarts
+import * as echarts from 'echarts'// 引入echarts
 import jsonp from 'jsonp' // 引入jsonp
 import '@/assets/js/china' // 引入中国地图
+// import anhui from 'echarts/map/json/province/anhui.json' // 引入省份地图
 
 const option = {
   tooltip: { // 提示信息
@@ -72,12 +73,16 @@ export default {
       myChart: ''
     }
   },
+  created() {
+    this.getData()
+  },
   mounted() { // 生命周期
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart'))
-    // 使用刚指定的配置项和数据显示图表。
-    // myChart.setOption(option);
-    this.getData()
+    debugger
+    this.myChart.on('mapselectchanged', (params) => {
+      this.handlePark(params.name)
+    })
   },
   methods: {
     // 真实数据
@@ -91,6 +96,9 @@ export default {
         // 使用刚指定的配置项和数据显示图表。
         this.myChart.setOption(option)
       })
+    },
+    handlePark(name) {
+      console.log(name)
     }
   }
 

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import echarts from 'echarts' // 引入echarts
+import * as echarts from 'echarts'// 引入echarts
 import { getRankingData } from '@/api/carPlay/rightChart'
 
 const colorArray = [{
@@ -141,54 +141,52 @@ export default {
               data: data.fee,
               barCategoryGap: '30%',
               // 颜色
+              label: {
+                show: true,
+                position: 'right',
+                color: 'aqua',
+                valueAnimation: true
+              },
               itemStyle: {
-                normal: {
-                  label: {
-                    show: true,
-                    position: 'right',
-                    color: 'aqua',
-                    valueAnimation: true
-                  },
-                  // 提供的工具函数生成渐变颜色
-                  color: function(params) {
-                    const num = colorArray.length
-                    return {
-                      type: 'linear',
-                      colorStops: [{
-                        offset: 0,
-                        color: colorArray[params.dataIndex % num].bottom
-                      }, {
-                        offset: 1,
-                        color: colorArray[params.dataIndex % num].top
-                      }, {
-                        offset: 0,
-                        color: colorArray[params.dataIndex % num].bottom
-                      }, {
-                        offset: 1,
-                        color: colorArray[params.dataIndex % num].top
-                      }, {
-                        offset: 0,
-                        color: colorArray[params.dataIndex % num].bottom
-                      }, {
-                        offset: 1,
-                        color: colorArray[params.dataIndex % num].top
-                      }, {
-                        offset: 0,
-                        color: colorArray[params.dataIndex % num].bottom
-                      }, {
-                        offset: 1,
-                        color: colorArray[params.dataIndex % num].top
-                      }, {
-                        offset: 0,
-                        color: colorArray[params.dataIndex % num].bottom
-                      }, {
-                        offset: 1,
-                        color: colorArray[params.dataIndex % num].top
-                      }]
-                    }
-                  },
-                  barBorderRadius: 70
-                }
+                // 提供的工具函数生成渐变颜色
+                color: function(params) {
+                  const num = colorArray.length
+                  return {
+                    type: 'linear',
+                    colorStops: [{
+                      offset: 0,
+                      color: colorArray[params.dataIndex % num].bottom
+                    }, {
+                      offset: 1,
+                      color: colorArray[params.dataIndex % num].top
+                    }, {
+                      offset: 0,
+                      color: colorArray[params.dataIndex % num].bottom
+                    }, {
+                      offset: 1,
+                      color: colorArray[params.dataIndex % num].top
+                    }, {
+                      offset: 0,
+                      color: colorArray[params.dataIndex % num].bottom
+                    }, {
+                      offset: 1,
+                      color: colorArray[params.dataIndex % num].top
+                    }, {
+                      offset: 0,
+                      color: colorArray[params.dataIndex % num].bottom
+                    }, {
+                      offset: 1,
+                      color: colorArray[params.dataIndex % num].top
+                    }, {
+                      offset: 0,
+                      color: colorArray[params.dataIndex % num].bottom
+                    }, {
+                      offset: 1,
+                      color: colorArray[params.dataIndex % num].top
+                    }]
+                  }
+                },
+                borderRadius: 70
               }
             }
           ]

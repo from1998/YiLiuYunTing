@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'// 引入echarts
 
 export default {
   name: 'LineStack',

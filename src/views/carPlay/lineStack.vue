@@ -15,7 +15,7 @@
 
 <script>
 import { getLineData } from '@/api/carPlay/lineStack'
-import echarts from 'echarts' // 引入echarts
+import * as echarts from 'echarts'// 引入echarts
 
 export default {
   name: 'LineStack',
@@ -57,12 +57,8 @@ export default {
         arr.push({
           name: item.name,
           type: 'line',
-          itemStyle: {
-            normal: {
-              lineStyle: {
-                color: item.color
-              }
-            }
+          lineStyle: {
+            color: item.color
           },
           markPoint: {
             data: [

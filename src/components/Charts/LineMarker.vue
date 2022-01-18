@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import echarts from 'echarts'
+import * as echarts from 'echarts'// 引入echarts
 import resize from './mixins/resize'
 
 export default {
