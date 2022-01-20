@@ -58,7 +58,7 @@
 
         <el-row class="footer">
           <el-button v-show="form.registerstatus === null" type="primary" @click="onSubmit">提交</el-button>
-          <el-button v-show="form.registerstatus !== null" disabled type="primary">已提交{{ form }}</el-button>
+          <el-button v-show="form.registerstatus !== null" disabled type="primary">已提交</el-button>
           <el-button v-show="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
           <el-button v-show="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
           <el-button v-show="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
