@@ -237,8 +237,8 @@
         <!-- 营业执照是否长期 -->
         <el-row v-if="options.registerInfo.type!==2">
           <el-col :span="12">
-            <el-form-item label="营业执照是否长期" prop="licenseLongtime">
-              <el-radio-group v-model="form.licenseLongtime">
+            <el-form-item label="营业执照是否长期" prop="longtimeorno">
+              <el-radio-group v-model="form.longtimeorno">
                 <el-radio
                   v-for="item in options.stateOptions"
                   :key="item.dictValue"
@@ -428,7 +428,7 @@ export default {
         idvalidity: '',
         idvaliditybegin: '',
         // 营业执照是否长期
-        licenseLongtime: 1,
+        longtimeorno: 1,
         // 商户全称
         merchantname: '',
         // 商户简称
