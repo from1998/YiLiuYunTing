@@ -26,7 +26,7 @@
           </el-col>
           <!-- 如果已绑卡，则验证码可用 -->
           <el-col v-show="cardBindState===1" :span="5" class="verifyCode">
-            <el-tooltip class="item" effect="dark" content="验证码将发送到车场注册手机号码。" placement="bottom">
+            <el-tooltip class="item" effect="dark" content="验证码将发送到银行预留手机号码。" placement="bottom">
               <el-button type="primary" size="medium" :disabled="codeShow?false:true" @click="getVerificationCode">
                 <span v-if="codeShow">获取验证码</span>
                 <span v-if="!codeShow" class="count">{{ count }}秒后重试</span>
@@ -126,7 +126,7 @@ export default {
     getVerificationCode() {
       autoWithdrawSms(this.form.id).then(res => {
         this.msgSuccess(res.msg)
-        this.form.seqno = res.data
+        this.$set(this.form, 'seqno', res.data)
       })
       const TIME_COUNT = 60
       if (!this.timer) {
