@@ -2,7 +2,7 @@
   <el-container>
     <!-- 标题 -->
     <el-header class="container" height="46px" style="padding:25px 0 45px;font-weight:700">
-      车场注册
+      收费账户注册
     </el-header>
     <!-- 主体 -->
     <el-container class="container">
