@@ -263,7 +263,7 @@ export const asyncRoutes = [
                     import ('@/views/personalCenter/depotRegister'),
       name: '/personalCenter/depotRegister',
       meta: {
-        title: '车场注册',
+        title: '收费账户注册',
         icon: 'el-icon-document'
       }
     },
