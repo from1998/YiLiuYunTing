@@ -52,8 +52,8 @@
           <el-input v-model="form.cardno" placeholder="请输入银行卡号码" clearable />
         </el-form-item>
         <div v-if="form.cardtype===0">
-          <el-form-item label="银行预留手机号码" prop="legalpersonphone">
-            <el-input v-model="form.legalpersonphone" placeholder="请输入银行预留手机号码" clearable />
+          <el-form-item label="银行预留手机号码" prop="phone">
+            <el-input v-model="form.phone" placeholder="请输入银行预留手机号码" clearable />
           </el-form-item>
           <el-form-item label="持卡人姓名" prop="legalpersonname">
             <el-input v-model="form.legalpersonname" placeholder="请输入持卡人姓名" clearable />
@@ -112,7 +112,7 @@ export default {
       // 验证规则
       validate,
       rules: {
-        legalpersonphone: validate.phone,
+        phone: validate.phone,
         idnumber: validate.idNumber,
         sonmerno: validate.notEmpty,
         legalpersonname: validate.notEmpty,
@@ -140,7 +140,7 @@ export default {
         cardtype: '',
         bankno: '',
         cardno: '',
-        legalpersonphone: '',
+        phone: '',
         idnumber: '',
         legalpersonname: '',
         // 企业打款金额

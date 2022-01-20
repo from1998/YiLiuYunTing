@@ -8,69 +8,71 @@
 </template>
 
 <script>
+import C2Pin from 'c2pin' // 引入字符串转拼音
 import * as echarts from 'echarts'// 引入echarts
 import jsonp from 'jsonp' // 引入jsonp
 import '@/assets/js/china' // 引入中国地图
-// import anhui from 'echarts/map/json/province/anhui.json' // 引入省份地图
+// import 'echarts/map/js/province/anhui.js' // 引入省份地图
 
-const option = {
-  tooltip: { // 提示信息
-    trigger: 'item', // 类型
-    // 地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
-    formatter: '地区：{b}<br/>停车场数量：{c} 个'
-  },
-  series: [ // 数据
-    {
-      type: 'map', // 图表的类型
-      map: 'china',
-      // data:[
-      //     {name: '北京', value: 200},
-      // ],
-      label: { // 图形上的文本标签，可用于说明图形的一些数据信息
-        show: true,
-        color: 'aqua'
-      },
-      zoom: 1.26, // 当前视角的缩放比例。
-      itemStyle: { // 地图区域的多边形 图形样式。
-        borderColor: 'blue'
-      },
-      emphasis: { // 高亮状态下的设置
-        label: { // 图形上的文本标签，可用于说明图形的一些数据信息
-          color: '#F00',
-          fontSize: 12
-        },
-        itemStyle: { // 地图区域的多边形 图形样式。
-          areaColor: 'green'
-        }
-      }
-    }
-  ],
-  visualMap: { // 视觉地图
-    type: 'piecewise', // 分段型
-    show: true,
-    textStyle: {
-      color: 'aqua'
-    },
-    pieces: [
-      { min: 10000 }, // 不指定 max，表示 max 为无限大（Infinity）。
-      { min: 1000, max: 9999 },
-      { min: 100, max: 999 },
-      { min: 10, max: 99 },
-      { min: 1, max: 9 },
-      { value: 0 } // 不指定 min，表示 min 为无限大（-Infinity）。
-    ],
-    inRange: { // 范围
-      color: ['#33FFCC', '#0099FF', '#009966', '#3366CC', '#333399', '#003300']
-    },
-    itemWidth: 10,
-    itemHeight: 10
-  }
-}
 export default {
   name: 'ChinaMap',
   data() {
     return {
-      myChart: ''
+      myChart: '',
+      province: '',
+      option: {
+        tooltip: { // 提示信息
+          trigger: 'item', // 类型
+          // 地图 : {a}（系列名称），{b}（区域名称），{c}（合并数值）, {d}（无）
+          formatter: '地区：{b}<br/>停车场数量：{c} 个'
+        },
+        series: [ // 数据
+          {
+            type: 'map', // 图表的类型
+            map: 'china',
+            // data:[
+            //     {name: '北京', value: 200},
+            // ],
+            label: { // 图形上的文本标签，可用于说明图形的一些数据信息
+              show: true,
+              color: 'aqua'
+            },
+            zoom: 1.26, // 当前视角的缩放比例。
+            itemStyle: { // 地图区域的多边形 图形样式。
+              borderColor: 'blue'
+            },
+            emphasis: { // 高亮状态下的设置
+              label: { // 图形上的文本标签，可用于说明图形的一些数据信息
+                color: '#F00',
+                fontSize: 12
+              },
+              itemStyle: { // 地图区域的多边形 图形样式。
+                areaColor: 'green'
+              }
+            }
+          }
+        ],
+        visualMap: { // 视觉地图
+          type: 'piecewise', // 分段型
+          show: true,
+          textStyle: {
+            color: 'aqua'
+          },
+          pieces: [
+            { min: 10000 }, // 不指定 max，表示 max 为无限大（Infinity）。
+            { min: 1000, max: 9999 },
+            { min: 100, max: 999 },
+            { min: 10, max: 99 },
+            { min: 1, max: 9 },
+            { value: 0 } // 不指定 min，表示 min 为无限大（-Infinity）。
+          ],
+          inRange: { // 范围
+            color: ['#33FFCC', '#0099FF', '#009966', '#3366CC', '#333399', '#003300']
+          },
+          itemWidth: 10,
+          itemHeight: 10
+        }
+      }
     }
   },
   created() {
@@ -79,9 +81,8 @@ export default {
   mounted() { // 生命周期
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart'))
-    debugger
-    this.myChart.on('mapselectchanged', (params) => {
-      this.handlePark(params.name)
+    this.myChart.on('click', (params) => {
+      this.handlePark(params)
     })
   },
   methods: {
@@ -92,13 +93,17 @@ export default {
           return
         }
         var lists = data.data.list.map(item => { return { name: item.name, value: item.value } })
-        option.series[0].data = lists
+        this.option.series[0].data = lists
         // 使用刚指定的配置项和数据显示图表。
-        this.myChart.setOption(option)
+        this.myChart.setOption(this.option)
       })
     },
-    handlePark(name) {
-      console.log(name)
+    handlePark(val) {
+      this.province = C2Pin.fullChar(val.name)
+      // 待定
+      // require('../../../node_modules/_echarts@5.2.2@echarts/')
+      // this.option.series.map = anhui
+      // this.getData()
     }
   }
 

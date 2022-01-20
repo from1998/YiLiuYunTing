@@ -33,8 +33,8 @@
           <el-input v-model="form.idnumber" placeholder="请输入身份证号码" :disabled="flag" />
         </el-form-item>
         <!-- 手机号码 -->
-        <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号码" :disabled="flag" />
+        <el-form-item label="手机号码" prop="legalpersonphone">
+          <el-input v-model="form.legalpersonphone" placeholder="请输入手机号码" :disabled="flag" />
         </el-form-item>
         <!-- 企业名称 -->
         <el-form-item v-if="form.type===1" label="企业名称" prop="merchantname">
@@ -58,7 +58,7 @@
 
         <el-row class="footer">
           <el-button v-show="form.registerstatus === null" type="primary" @click="onSubmit">提交</el-button>
-          <el-button v-show="form.registerstatus !== null" disabled type="primary">已提交</el-button>
+          <el-button v-show="form.registerstatus !== null" disabled type="primary">已提交{{ form }}</el-button>
           <el-button v-show="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="confirmAgreement">确认协议</el-button>
           <el-button v-show="form.registerstatus === 2 && form.isconfirmprotocol !== 1" type="primary" @click="syncAgreement">同步协议</el-button>
           <el-button v-show="form.isconfirmprotocol === 1" type="primary" disabled>已确认协议</el-button>
@@ -96,7 +96,7 @@ export default {
       // 验证规则
       validate,
       rules: {
-        phone: validate.phone,
+        legalpersonphone: validate.phone,
         idnumber: validate.idNumber,
         type: validate.notEmpty,
         legalpersonname: validate.notEmpty,
@@ -117,9 +117,10 @@ export default {
         type: '',
         legalpersonname: '',
         idnumber: '',
-        phone: '',
+        legalpersonphone: '',
         merchantname: '',
-        registersmscode: ''
+        registersmscode: '',
+        registerstatus: null
       },
       categoryOptions: []
     }
@@ -145,6 +146,7 @@ export default {
             this.codeShow = true
           }
         }
+        console.log(this.form)
         this.loading = false // 关闭遮罩
       })
     },
