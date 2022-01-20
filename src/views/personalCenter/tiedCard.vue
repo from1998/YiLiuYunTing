@@ -51,10 +51,10 @@
         <el-form-item label="银行卡号码" prop="cardno">
           <el-input v-model="form.cardno" placeholder="请输入银行卡号码" clearable />
         </el-form-item>
+        <el-form-item label="银行预留手机号码" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入银行预留手机号码" clearable />
+        </el-form-item>
         <div v-if="form.cardtype===0">
-          <el-form-item label="银行预留手机号码" prop="phone">
-            <el-input v-model="form.phone" placeholder="请输入银行预留手机号码" clearable />
-          </el-form-item>
           <el-form-item label="持卡人姓名" prop="legalpersonname">
             <el-input v-model="form.legalpersonname" placeholder="请输入持卡人姓名" clearable />
           </el-form-item>
