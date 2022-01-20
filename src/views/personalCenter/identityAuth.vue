@@ -290,7 +290,7 @@
               <el-input v-show="false" v-model="form.businesslicencecopysrc" />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col v-if="form.businesslicencetype === 0" :span="6">
             <el-form-item label="税务登记证副本" prop="notEmpty">
               <upload-img v-if="options.registerInfo.registerstatus===2 || options.registerInfo.registerstatus===0" @imgagePush="imageAccept('taxregistrationcopy','taxregistrationcopysrc',$event)" />
               <el-image
@@ -303,7 +303,7 @@
               <el-input v-show="false" v-model="form.taxregistrationcopysrc" />
             </el-form-item>
           </el-col>
-          <el-col :span="6">
+          <el-col v-if="form.businesslicencetype === 0" :span="6">
             <el-form-item label="组织结构代码证副本" prop="notEmpty">
               <upload-img v-if="options.registerInfo.registerstatus===2 || options.registerInfo.registerstatus===0" @imgagePush="imageAccept('organizationcodecopy','organizationcodecopysrc',$event)" />
               <el-image
@@ -372,7 +372,6 @@ export default {
         longtimeornoper: validate.notEmpty,
         typeofid: validate.notEmpty,
         merchantname: validate.notEmpty,
-        businesslicencevalidity: validate.notEmpty,
         sonmerno: validate.notEmpty,
         businesslicenceno: validate.notEmpty,
         merchantnamesimple: validate.notEmpty,

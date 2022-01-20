@@ -2,6 +2,7 @@
   <div>
     <el-tooltip class="item" effect="dark" content="文件大小不得超过2MB。" placement="bottom">
       <el-upload
+        :class="{hide:hideUpload}"
         class="upload-demo"
         :file-list="handHeld"
         :action="uploadPath"
