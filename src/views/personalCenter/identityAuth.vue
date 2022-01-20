@@ -209,7 +209,7 @@
         </el-row>
         <!-- 营业执照类型与所属行业 -->
         <el-row v-if="options.registerInfo.type!==2">
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="营业执照类型" prop="businesslicencetype">
               <el-select v-model="form.businesslicencetype" placeholder="请选择营业执照类型" clearable>
                 <el-option
@@ -221,7 +221,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col :span="8">
             <el-form-item label="所属行业" prop="industry">
               <el-select v-model="form.industry" placeholder="请选择所属行业" clearable>
                 <el-option
@@ -233,10 +233,19 @@
               </el-select>
             </el-form-item>
           </el-col>
-        </el-row>
-        <!-- 营业执照是否长期 -->
-        <el-row v-if="options.registerInfo.type!==2">
-          <el-col :span="12">
+          <el-col :span="8">
+            <el-form-item label="经营范围" prop="businessscope">
+              <el-input v-model="form.businessscope" placeholder="请输入经营范围" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="注册资本(万元)" prop="registeredcapital">
+              <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
+                <el-input-number v-model="form.registeredcapital" :precision="0" :step="1" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-form-item label="营业执照是否长期" prop="longtimeorno">
               <el-radio-group v-model="form.longtimeorno">
                 <el-radio
@@ -249,7 +258,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <el-col :span="12">
+          <el-col v-if="form.longtimeorno" :span="8">
             <el-form-item label="营业执照有效日期" prop="businesslicencevalidity">
               <el-date-picker
                 v-model="form.businesslicencevalidity"
@@ -257,21 +266,6 @@
                 type="date"
                 placeholder="选择日期"
               />
-            </el-form-item>
-          </el-col>
-        </el-row>
-        <!-- 注册资本与经营范围 -->
-        <el-row v-if="options.registerInfo.type!==2">
-          <el-col :span="12">
-            <el-form-item label="注册资本(万元)" prop="registeredcapital">
-              <el-tooltip class="item" effect="dark" content="请输入注册资本(万元)" placement="right">
-                <el-input-number v-model="form.registeredcapital" :precision="0" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="经营范围" prop="businessscope">
-              <el-input v-model="form.businessscope" placeholder="请输入经营范围" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -376,6 +370,7 @@ export default {
         businesslicenceno: validate.notEmpty,
         merchantnamesimple: validate.notEmpty,
         businesslicencetype: validate.notEmpty,
+        businesslicencevalidity: validate.notEmpty,
         businessscope: validate.notEmpty,
         registeredcapital: validate.notEmpty,
         notEmpty: validate.notEmpty
