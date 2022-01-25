@@ -435,7 +435,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="updateFlag && form.registerType!==12">
+        <el-row v-if="updateFlag && form.registerType===3">
           <el-col :span="12" :offset="0">
             <el-form-item label="起租日期" prop="effectiveTime">
               <el-date-picker
@@ -450,6 +450,33 @@
           </el-col>
           <el-col :span="12" :offset="0">
             <el-form-item label="截至日期" prop="expireTime">
+              <el-date-picker
+                v-model="form.expireTime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                placeholder="截至日期"
+                style="width:195px"
+                type="date"
+                :picker-options="pickerOptions"
+                @change="$forceUpdate()"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row v-if="updateFlag && form.registerType!==12 && form.registerType!==3">
+          <el-col :span="12" :offset="0">
+            <el-form-item label="起租日期">
+              <el-date-picker
+                v-model="form.effectiveTime"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                placeholder="起租日期"
+                style="width:195px"
+                type="date"
+                @change="handleFormOption"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="截至日期">
               <el-date-picker
                 v-model="form.expireTime"
                 value-format="yyyy-MM-dd HH:mm:ss"
