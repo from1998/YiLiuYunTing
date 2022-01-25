@@ -11,6 +11,12 @@
           <span style="color:red">暂无此车辆信息</span>
         </el-col>
       </el-row>
+      <el-row :gutter="0" style="font-size:14px;">
+        <el-col :span="20" :offset="2">
+          提示:
+          <span style="color:red">共享车辆请在寻车位App内支付。</span>
+        </el-col>
+      </el-row>
       <el-row :gutter="0" style="font-size:14px;margin-top:2%;">
         <el-col :span="20" :offset="2">
           如果是 <span style="color:red">无牌车</span> 请到出口处扫码支付
