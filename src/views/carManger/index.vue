@@ -397,6 +397,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
+            <el-form-item v-if="form.registerType===3" label="月租费用" prop="carMoney">
+              <el-input-number v-model="form.carMoney" :precision="2" :step="1" clearable size="small" :min="0.01" style="width:195px" placeholder="请输入月租费用" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
             <el-form-item label="层号" prop="tierNumber">
               <el-select v-model="form.tierNumber" placeholder="请选择车位层号" size="small" clearable @change="handleNumberFocus">
                 <el-option
@@ -462,7 +467,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row v-if="updateFlag && form.registerType!==12 && form.registerType!==3">
+        <!-- <el-row v-if="updateFlag && form.registerType!==12 && form.registerType!==3">
           <el-col :span="12" :offset="0">
             <el-form-item label="起租日期">
               <el-date-picker
@@ -488,7 +493,7 @@
               />
             </el-form-item>
           </el-col>
-        </el-row>
+        </el-row> -->
         <el-form-item label="备注" prop="remark">
           <el-input v-model.trim="form.remark" type="textarea" placeholder="请输入备注" clearable size="small" />
         </el-form-item>
@@ -627,6 +632,7 @@ export default {
       rules: {
         carNumber: validate.carNumber,
         carType: validate.notEmpty,
+        carMoney: validate.notEmpty,
         registerType: validate.notEmpty,
         splitType: validate.notEmpty,
         effectiveTime: validate.notEmpty,
