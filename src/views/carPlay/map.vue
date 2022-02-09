@@ -3,7 +3,8 @@
     <dv-decoration-7 class="mapTitle">
       <span>全国车场分布图</span>
     </dv-decoration-7>
-    <div id="chart" style="width: 100%;height:100%;" />
+    <div v-show="!flag" id="chart" style="width: 100%;height:100%;" />
+    <div v-show="flag" id="provChart" style="width: 100%;height:100%;" />
   </div>
 </template>
 
@@ -12,13 +13,15 @@ import C2Pin from 'c2pin' // 引入字符串转拼音
 import * as echarts from 'echarts'// 引入echarts
 import jsonp from 'jsonp' // 引入jsonp
 import '@/assets/js/china' // 引入中国地图
-// import 'echarts/map/js/province/anhui.js' // 引入省份地图
+import '@/assets/js/province/anhui' // 引入安徽省地图
 
 export default {
   name: 'ChinaMap',
   data() {
     return {
+      flag: false,
       myChart: '',
+      myProvChart: '',
       province: '',
       option: {
         tooltip: { // 提示信息
@@ -81,6 +84,7 @@ export default {
   mounted() { // 生命周期
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart'))
+    this.myProvChart = echarts.init(document.getElementById('provChart'))
     this.myChart.on('click', (params) => {
       this.handlePark(params)
     })
@@ -100,6 +104,14 @@ export default {
     },
     handlePark(val) {
       this.province = C2Pin.fullChar(val.name)
+      this.msgSuccess(this.province)
+      debugger
+      this.flag = !this.flag
+      this.option.series[0].map = 'anhui'
+      this.option.series[0].data = []
+      // 使用刚指定的配置项和数据显示图表。
+      this.myProvChart.setOption(this.option)
+      // this.$router.go(0)
       // 待定
       // require('../../../node_modules/_echarts@5.2.2@echarts/')
       // this.option.series.map = anhui
