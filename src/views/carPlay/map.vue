@@ -105,7 +105,6 @@ export default {
     handlePark(val) {
       this.province = C2Pin.fullChar(val.name)
       this.msgSuccess(this.province)
-      debugger
       this.flag = !this.flag
       this.option.series[0].map = 'anhui'
       this.option.series[0].data = []

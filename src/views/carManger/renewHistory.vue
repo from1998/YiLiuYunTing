@@ -23,6 +23,11 @@
           <el-tag type="danger" size="medium">￥{{ scope.row.amount }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="支付方式" align="center">
+        <template slot-scope="scope">
+          <el-tag type="danger" size="medium">￥{{ scope.row.remark }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" width="280">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" size="mini" @click="handleUpdate(scope.row)">修改</el-button>

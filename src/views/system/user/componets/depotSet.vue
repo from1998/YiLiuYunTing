@@ -103,7 +103,7 @@
           <el-col :span="12">
             <el-form-item label="固定车过期提醒" prop="fixedCarOverDue">
               <el-tooltip class="item" effect="dark" content="请输入过期提醒天数" placement="right">
-                <el-input-number v-model="form.fixedCarOverDue" :precision="0" :step="1" />
+                <el-input-number v-model="form.fixedCarOverDue" :precision="0" :step="1" style="width:195px" />
               </el-tooltip>
             </el-form-item>
           </el-col>
@@ -174,28 +174,6 @@
             </el-form-item>
           </el-col>
         </el-row> -->
-        <!-- 无记录临时出场与出场费 -->
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="无记录临时出场" prop="noRecordTempCarOut">
-              <el-select v-model="form.noRecordTempCarOut" placeholder="请选择类型">
-                <el-option
-                  v-for="item in options.noRecord"
-                  :key="item.dictValue"
-                  :label="item.dictLabel"
-                  :value="Number(item.dictValue)"
-                />
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item v-if="form.noRecordTempCarOut === 5" label="无记录临时出场费用">
-              <el-tooltip class="item" effect="dark" content="请输入费用" placement="right">
-                <el-input-number v-model="form.noRecordTempCarOutAmount" :precision="2" :step="1" />
-              </el-tooltip>
-            </el-form-item>
-          </el-col>
-        </el-row>
         <!-- 进出场超时处理 -->
         <!-- <el-row>
           <el-col :span="12">
@@ -240,8 +218,27 @@
             </el-form-item>
           </el-col>
         </el-row> -->
-        <!-- 空闲车位计数与自动清理天数 -->
         <el-row>
+          <!-- 无记录临时出场与出场费 -->
+          <el-col :span="12">
+            <el-form-item label="无记录临时出场" prop="noRecordTempCarOut">
+              <el-select v-model="form.noRecordTempCarOut" placeholder="请选择类型">
+                <el-option
+                  v-for="item in options.noRecord"
+                  :key="item.dictValue"
+                  :label="item.dictLabel"
+                  :value="Number(item.dictValue)"
+                />
+              </el-select>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item v-if="form.noRecordTempCarOut === 5" label="无记录临时出场费用">
+              <el-tooltip class="item" effect="dark" content="请输入费用" placement="right">
+                <el-input-number v-model="form.noRecordTempCarOutAmount" :precision="2" :step="1" style="width:195px" />
+              </el-tooltip>
+            </el-form-item>
+          </el-col>
           <el-col :span="12">
             <el-form-item label="空闲车位计数类型" prop="freeCarSiteCount">
               <el-select v-model="form.freeCarSiteCount" placeholder="请选择类型">
@@ -261,9 +258,6 @@
               </el-tooltip>
             </el-form-item>
           </el-col> -->
-        </el-row>
-        <!-- 黄蓝牌车是否禁止入场 -->
-        <el-row>
           <el-col :span="12">
             <el-form-item label="黄牌车禁止入场" prop="yellowCarIn">
               <el-radio-group v-model="form.yellowCarIn">
@@ -288,10 +282,9 @@
                   {{ item.dictLabel }}
                 </el-radio>
               </el-radio-group>
-            </el-form-item></el-col>
-        </el-row>
-        <!-- 无牌车是否收费及是否开启高峰放行-->
-        <el-row>
+            </el-form-item>
+          </el-col>
+          <!-- 无牌车是否收费及是否开启高峰放行-->
           <el-col :span="12">
             <el-form-item label="无牌车是否收费" prop="noNumberCarCharge">
               <el-radio-group v-model="form.noNumberCarCharge">
@@ -318,38 +311,7 @@
               </el-radio-group>
             </el-form-item>
           </el-col>
-          <!-- <el-col :span="12">
-            <el-form-item label="是否开启高峰放行">
-              <el-radio-group v-model="form.isFreePeriod">
-                <el-radio
-                  v-for="item in options.status"
-                  :key="item.dictValue"
-                  :label="Number(item.dictValue)"
-                >
-                  {{ item.dictLabel }}
-                </el-radio>
-              </el-radio-group>
-            </el-form-item>
-          </el-col> -->
-        </el-row>
-        <!-- 高峰时间段 -->
-        <!-- <el-row>
-          <el-col :span="12">
-            <el-form-item v-if="form.isFreePeriod === 1" label="高峰时间段">
-              <el-date-picker
-                v-model="convert.businessHours"
-                value-format="yyyy-MM-dd HH-mm-ss"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                @change="timeChange(convert.businessHours)"
-              />
-            </el-form-item>
-          </el-col>
-        </el-row> -->
-        <!-- 是否开启多位多车及其规则 -->
-        <el-row>
+          <!-- 是否开启多位多车及其规则 -->
           <el-col :span="12">
             <el-form-item label="是否开启多位多车" prop="fixedCarMoreSiteMoreCar">
               <el-radio-group v-model="form.fixedCarMoreSiteMoreCar">
@@ -376,6 +338,36 @@
             </el-form-item>
           </el-col>
         </el-row>
+
+        <!-- <el-col :span="12">
+            <el-form-item label="是否开启高峰放行">
+              <el-radio-group v-model="form.isFreePeriod">
+                <el-radio
+                  v-for="item in options.status"
+                  :key="item.dictValue"
+                  :label="Number(item.dictValue)"
+                >
+                  {{ item.dictLabel }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col> -->
+        <!-- 高峰时间段 -->
+        <!-- <el-row>
+          <el-col :span="12">
+            <el-form-item v-if="form.isFreePeriod === 1" label="高峰时间段">
+              <el-date-picker
+                v-model="convert.businessHours"
+                value-format="yyyy-MM-dd HH-mm-ss"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                @change="timeChange(convert.businessHours)"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row> -->
         <!-- 特殊车辆允许 -->
         <el-form-item label="特殊车辆允许" prop="specialPass">
           <el-checkbox-group v-model="form.specialPass">

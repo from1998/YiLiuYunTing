@@ -23,9 +23,9 @@
             <i class="el-icon-warning-outline" style="font-size: 40px;" />
           </el-button>
           <p>
-            车场未注册，无法进行身份认证。
+            收费账户未注册，无法进行身份认证。
           </p>
-          <el-button type="primary" class="goBack" @click="goDepotRegister">转到车场注册</el-button>
+          <el-button type="primary" class="goBack" @click="goDepotRegister">转到收费账户注册</el-button>
         </el-row>
       </div>
 

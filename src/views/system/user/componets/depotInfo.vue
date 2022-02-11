@@ -33,9 +33,9 @@
                 v-model="convert.region"
                 :options="addressOptions"
                 :props="{ expandTrigger: 'hover' }"
-                label-width="260px"
                 filterable
                 clearable
+                style="width:225px"
                 @change="handleChange(addressOptions,$event)"
               />
             </el-form-item>
@@ -48,7 +48,7 @@
         </el-row>
         <!-- 车场类型 -->
         <el-form-item label="类型" prop="lotType">
-          <el-select v-cloak v-model="form.lotType" placeholder="请选择车场类型">
+          <el-select v-cloak v-model="form.lotType" placeholder="请选择车场类型" style="width:225px">
             <el-option
               v-for="item in categoryOptions"
               :key="item.dictValue"
@@ -57,6 +57,37 @@
             />
           </el-select>
         </el-form-item>
+        <el-row v-if="getUserInfo().role === 1 || getUserInfo().role === 4">
+          <el-col :span="12">
+            <el-form-item label="税号" prop="taxpayerNum">
+              <el-input v-model.trim="form.taxpayerNum" :disabled="getUserInfo().role === 4?true:false" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="税收分类编码" prop="taxClassificationCode">
+              <el-input v-model.trim="form.taxClassificationCode" :disabled="getUserInfo().role === 4?true:false" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="税率(百分比)" prop="taxRateValue">
+              <el-input-number v-model="form.taxRateValue" :precision="0" :step="1" :disabled="getUserInfo().role === 4?true:false" style="width:225px" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否含税" prop="includeTaxFlag">
+              <el-radio-group v-model="form.includeTaxFlag">
+                <el-radio
+                  v-for="item in stateOptions"
+                  :key="item.dictValue"
+                  :label="item.dictValue"
+                  :disabled="getUserInfo().role === 4?true:false"
+                >
+                  {{ item.dictValue==='1'?'含税':'不含税' }}
+                </el-radio>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="手机/电话" prop="mobile">
@@ -158,12 +189,12 @@
         <el-row v-if="getUserInfo().role === 1 || getUserInfo().role === 4">
           <el-col :span="12">
             <el-form-item label="手续费(千分比)" prop="commissionCharge">
-              <el-input-number v-model="form.commissionCharge" :precision="0" :step="1" :disabled="getUserInfo().role === 4?true:false" />
+              <el-input-number v-model="form.commissionCharge" :precision="0" :step="1" :disabled="getUserInfo().role === 4?true:false" style="width:225px" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="停车费分成比(0-10)" prop="parkFeeCharge">
-              <el-input-number v-model="form.parkFeeCharge" :precision="0" :step="1" :max="10" :min="0" :disabled="getUserInfo().role === 4?true:false" />
+              <el-input-number v-model="form.parkFeeCharge" :precision="0" :step="1" :max="10" :min="0" :disabled="getUserInfo().role === 4?true:false" style="width:225px" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -201,7 +232,22 @@
         <!-- 上传监管平台与上传平台 -->
         <el-row>
           <el-col :span="12">
-            <el-form-item label="是否上传监管平台" prop="isUploadData">
+            <el-form-item label="营业时间">
+              <el-time-picker
+                v-model="convert.businessHours"
+                is-range
+                range-separator="至"
+                start-placeholder="开始时间"
+                end-placeholder="结束时间"
+                placeholder="选择时间范围"
+                value-format="HH-mm-ss"
+                style="width:260px"
+                @change="timeChange(convert.businessHours)"
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="是否上传监管平台" prop="isUploadData" label-width="180px">
               <el-radio-group v-model="form.isUploadData">
                 <el-radio
                   v-for="item in stateOptions"
@@ -234,18 +280,6 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="营业时间">
-          <el-time-picker
-            v-model="convert.businessHours"
-            is-range
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            placeholder="选择时间范围"
-            value-format="HH-mm-ss"
-            @change="timeChange(convert.businessHours)"
-          />
-        </el-form-item>
         <el-row :gutter="30">
           <el-form-item>
             <div class="footer">
