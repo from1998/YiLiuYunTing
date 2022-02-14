@@ -24,7 +24,7 @@ export default {
   },
   data() {
     return {
-      title: '智慧城市 | 数据交互',
+      title: '一流云停 | 停车管理',
       logo: require('@/assets/images/logo.png')
     }
   }

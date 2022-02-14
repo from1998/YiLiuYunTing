@@ -96,12 +96,12 @@
     </el-dialog>
 
     <div class="logo">
-      <img src="../../assets/images/logo.png" alt="智慧城市视频共享数据交互平台">
+      <img src="../../assets/images/logo.png" alt="一流云停停车管理系统">
     </div>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" autocomplete="on" label-position="left">
 
       <div class="title-container">
-        <h3 class="title">智慧城市视频共享数据交互平台</h3>
+        <h3 class="title">一流云停停车管理系统</h3>
       </div>
 
       <el-form-item prop="username">

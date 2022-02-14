@@ -3,7 +3,7 @@
     <dv-decoration-8 class="header-left-decoration" />
     <dv-decoration-5 class="header-center-decoration" />
     <dv-decoration-8 class="header-right-decoration" :reverse="true" />
-    <dv-decoration-11 style="width:500px;height:80px;" class="center-title">智慧城市视频共享数据交互平台</dv-decoration-11>
+    <dv-decoration-11 style="width:510px;height:80px;" class="center-title">一流云停 | 停车管理系统</dv-decoration-11>
   </div>
 </template>
 
@@ -37,7 +37,7 @@ export default {
   .center-title {
     position: absolute;
     color: aqua;
-    font-size: 33px;
+    font-size: 40px;
     font-weight: 900;
     font-family:STXingkai,STKaiti,KaiTi,KaiTi_GB2312,SimSun,'Microsoft YaHei';
     left: 50%;
