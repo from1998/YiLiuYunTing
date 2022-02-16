@@ -170,6 +170,10 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">登 录</el-button>
     </el-form>
+    <div class="footer">
+      <el-link type="info" :underline="false" style="cursor:default">Copyright ©2014-2022 安徽多威尔智能科技股份有限公司 SINA Corporation, All Rights Reserved.</el-link>
+      <el-link type="info" href="https://beian.miit.gov.cn" target="_blank">皖ICP备20007096号-1</el-link>
+    </div>
     <vue-particles
       v-if="controlForm.particle"
       color:particles-color
@@ -579,6 +583,12 @@ $light_gray:#eee;
   img {
     width: 100%;
   }
+}
+.footer {
+position: absolute;
+bottom: 1%;
+left: 50%;
+transform: translateX(-50%);
 }
   .login-form {
     position: relative;
