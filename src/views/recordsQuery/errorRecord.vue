@@ -410,6 +410,7 @@ export default {
           delAccessRecord(id)
             .then((res) => {
               this.loading = false
+              this.userListOpen = false
               this.msgSuccess(res.msg)
               this.getAppUsersList(this.carnumber, this.type)
             })
