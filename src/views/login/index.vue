@@ -589,6 +589,7 @@ position: absolute;
 bottom: 1%;
 left: 50%;
 transform: translateX(-50%);
+z-index: 999;
 }
   .login-form {
     position: relative;
