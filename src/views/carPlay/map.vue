@@ -106,7 +106,7 @@ export default {
       this.province = C2Pin.fullChar(val.name)
       this.msgSuccess(this.province)
       this.flag = !this.flag
-      this.option.series[0].map = 'anhui'
+      this.option.series[0].map = val.name
       this.option.series[0].data = []
       // 使用刚指定的配置项和数据显示图表。
       this.myProvChart.setOption(this.option)
@@ -136,6 +136,9 @@ export default {
   }
 }
 #chart {
+  margin: 0 auto;
+}
+#provChart {
   margin: 0 auto;
 }
 </style>

@@ -885,6 +885,7 @@ export default {
       this.open = true
       this.reset()
       this.title = '添加车辆'
+      this.updateFlag = false
     },
     // 打开修改的弹出层
     handleUpdate(row) {
@@ -974,7 +975,6 @@ export default {
     cancel() {
       this.open = false
       this.loading = false
-      this.updateFlag = false
       this.title = ''
     },
     // 重置表单
