@@ -122,6 +122,7 @@
           <el-tag type="danger" size="medium">￥{{ scope.row.amount }}</el-tag>
         </template>
       </el-table-column>
+      <el-table-column label="支付方式" align="center" prop="paytype" :formatter="leaveTypeFormatter" />
       <el-table-column label="支付平台" align="center">
         <template slot-scope="scope">
           <el-tag v-show="scope.row.platform===1" type="warning" size="mini" effect="dark"><i class="el-icon-coin" /> 官方</el-tag>
@@ -254,6 +255,12 @@ export default {
     paytypeFormatter(row) {
       if (row.skutype) {
         return this.formatterDict(this.options.orderSkuType, row.skutype.toString())
+      }
+    },
+    // 翻译出场支付方式
+    leaveTypeFormatter(row) {
+      if (row.paytype) {
+        return this.formatterDict(this.options.payType, row.paytype.toString())
       }
     },
     // 翻译类型

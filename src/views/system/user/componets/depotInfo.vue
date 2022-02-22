@@ -29,7 +29,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="地区">
-              <el-cascader
+              <!-- <el-cascader
                 v-model="convert.region"
                 :options="addressOptions"
                 :props="{ expandTrigger: 'hover' }"
@@ -37,7 +37,8 @@
                 clearable
                 style="width:225px"
                 @change="handleChange(addressOptions,$event)"
-              />
+              /> -->
+              <el-cascader v-model="convert.region" :props="props" style="width:225px" @change="handleChange" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -297,9 +298,7 @@
 </template>
 <script>
 
-import { getDepotById, addDepotInfo, updateDepotInfo } from '@/api/system/carSetting'
-
-import area from '@/assets/json/pca-code.json'
+import { getDepotById, addDepotInfo, updateDepotInfo, getProvData } from '@/api/system/carSetting'
 
 import validate from '@/utils/validate'
 
@@ -312,6 +311,28 @@ export default {
   },
   data() {
     return {
+      props: {
+        lazy: true,
+        lazyLoad(node, resolve) {
+          const { level } = node
+          let { value } = node
+          if (value === undefined) {
+            value = 0
+          }
+          getProvData(value).then(res => {
+            if (res.data) {
+              const nodes = res.data.map(e => {
+                return {
+                  value: e.id,
+                  label: e.name,
+                  leaf: level >= 2
+                }
+              })
+              resolve(nodes)
+            }
+          })
+        }
+      },
       // 验证规则
       validate,
       rules: {
@@ -408,8 +429,7 @@ export default {
         // 营业时间
         startHours: '00-00-00',
         endHours: '23-59-59'
-      },
-      addressOptions: area
+      }
     }
   },
   created() {
@@ -443,11 +463,11 @@ export default {
       this.loading = true // 打开遮罩
       await getDepotById({
         managerId: this.form.managerId
-      }).then(res => {
+      }).then(async res => {
         this.resdata = res.data
         if (res.data !== null) {
           this.form = res.data
-          this.handleRegion(this.addressOptions)
+          await this.handleRegion(res.data.areaList)
           this.handletime()
           this.form.commissionCharge = this.form.commissionCharge * 1000
           this.form.parkFeeCharge = this.form.parkFeeCharge * 10
@@ -494,30 +514,16 @@ export default {
       })
     },
     handleRegion(opt) {
-      this.convert.region = [this.form.provinceName, this.form.cityName, this.form.areaName]
-      this.convert.region = this.convert.region.map(function(value) {
-        for (var itm of opt) {
-          if (itm.label === value) {
-            opt = itm.children
-            return itm.value
-          }
-        }
-        return null
+      opt.map(item => {
+        this.convert.region.push(Number(item.id))
       })
+      return this.convert.region
     },
-    handleChange(opt, val) {
-      const vals = val.map(function(value) {
-        for (var itm of opt) {
-          if (itm.value === value) {
-            opt = itm.children
-            return itm.label
-          }
-        }
-        return null
-      })
-      this.form.provinceName = vals[0]
-      this.form.cityName = vals[1]
-      this.form.areaName = vals[2]
+    handleChange(val) {
+      console.log(val)
+      this.form.provinceName = val[0]
+      this.form.cityName = val[1]
+      this.form.areaName = val[2]
     },
     handletime() {
       this.convert.businessHours = [this.form.startHours, this.form.endHours]

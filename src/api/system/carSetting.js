@@ -1,5 +1,14 @@
 import request from '@/utils/request'
 // --------------------------------------车场信息
+
+// 获取省市区数据
+export function getProvData(code) {
+  return request({
+    url: '/ylyt/park/province?parentid=' + code,
+    method: 'get'
+  })
+}
+
 // 获取svg地图
 export function getSvg(url) {
   return request({

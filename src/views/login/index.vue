@@ -332,8 +332,8 @@ export default {
   },
   async created() {
     this.controlForm = await JSON.parse(localStorage.getItem('styleConfig')) || {
-      bgType: true,
-      bgStyle: 'cloud',
+      bgType: false,
+      bgStyle: 'island',
       particle: false,
       url: ''
     }
@@ -526,7 +526,7 @@ $cursor: #fff;
       -webkit-appearance: none;
       border-radius: 0px;
       padding: 12px 5px 12px 15px;
-      color: aqua;
+      color: #fff;
       height: 47px;
       caret-color: $cursor;
 

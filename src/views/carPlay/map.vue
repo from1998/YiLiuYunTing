@@ -9,9 +9,11 @@
 </template>
 
 <script>
+import { getMapData } from '@/api/carPlay/map'
+
 import C2Pin from 'c2pin' // 引入字符串转拼音
 import * as echarts from 'echarts'// 引入echarts
-import jsonp from 'jsonp' // 引入jsonp
+// import jsonp from 'jsonp' // 引入jsonp
 import '@/assets/js/china' // 引入中国地图
 import '@/assets/js/province/anhui' // 引入安徽省地图
 
@@ -79,7 +81,7 @@ export default {
     }
   },
   created() {
-    this.getData()
+    this.getData('myChart')
   },
   mounted() { // 生命周期
     // 基于准备好的dom，初始化echarts实例
@@ -91,30 +93,40 @@ export default {
   },
   methods: {
     // 真实数据
-    getData() {
-      jsonp('https://interface.sina.cn/news/wap/fymap2020_data.d.json?_=1580892522427', (err, data) => {
-        if (err) {
-          return
-        }
-        var lists = data.data.list.map(item => { return { name: item.name, value: item.value } })
-        this.option.series[0].data = lists
+    getData(chart, name) {
+      // jsonp('https://interface.sina.cn/news/wap/fymap2020_data.d.json?_=1580892522427', (err, data) => {
+      //   if (err) {
+      //     return
+      //   }
+      //   var lists = data.data.list.map(item => {
+      //     if (name === item.name) {
+      //       item.city.map(item => {
+      //         return { name: item.name, value: item.zerodays }
+      //       })
+      //     } else {
+      //       return { name: item.name, value: item.value }
+      //     }
+      //   })
+      //   this.option.series[0].data = lists
+      // 使用刚指定的配置项和数据显示图表。
+      //   this[chart].setOption(this.option)
+      // })
+      getMapData().then(res => {
         // 使用刚指定的配置项和数据显示图表。
-        this.myChart.setOption(this.option)
+        // this[chart].setOption(this.option)
+        this.msgSuccess(res.data)
+        console.log(res.data)
       })
     },
-    handlePark(val) {
+    async handlePark(val) {
       this.province = C2Pin.fullChar(val.name)
       this.msgSuccess(this.province)
       this.flag = !this.flag
       this.option.series[0].map = val.name
-      this.option.series[0].data = []
-      // 使用刚指定的配置项和数据显示图表。
-      this.myProvChart.setOption(this.option)
-      // this.$router.go(0)
-      // 待定
-      // require('../../../node_modules/_echarts@5.2.2@echarts/')
-      // this.option.series.map = anhui
-      // this.getData()
+      this.option.series[0].data = await this.getData('myProvChart', val.name)
+      this.msgSuccess(this.option.series[0].data)
+      // // 使用刚指定的配置项和数据显示图表。
+      // this.myProvChart.setOption(this.option)
     }
   }
 
