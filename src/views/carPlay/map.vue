@@ -13,7 +13,6 @@ import { getMapData } from '@/api/carPlay/map'
 
 import C2Pin from 'c2pin' // 引入字符串转拼音
 import * as echarts from 'echarts'// 引入echarts
-// import jsonp from 'jsonp' // 引入jsonp
 import '@/assets/js/china' // 引入中国地图
 import '@/assets/js/province/anhui' // 引入安徽省地图
 
@@ -93,29 +92,12 @@ export default {
   },
   methods: {
     // 真实数据
-    getData(chart, name) {
-      // jsonp('https://interface.sina.cn/news/wap/fymap2020_data.d.json?_=1580892522427', (err, data) => {
-      //   if (err) {
-      //     return
-      //   }
-      //   var lists = data.data.list.map(item => {
-      //     if (name === item.name) {
-      //       item.city.map(item => {
-      //         return { name: item.name, value: item.zerodays }
-      //       })
-      //     } else {
-      //       return { name: item.name, value: item.value }
-      //     }
-      //   })
-      //   this.option.series[0].data = lists
-      // 使用刚指定的配置项和数据显示图表。
-      //   this[chart].setOption(this.option)
-      // })
-      getMapData().then(res => {
+    getData(chart, id) {
+      getMapData(id).then(res => {
+        this.option.series[0].data = res.data
         // 使用刚指定的配置项和数据显示图表。
-        // this[chart].setOption(this.option)
+        this[chart].setOption(this.option)
         this.msgSuccess(res.data)
-        console.log(res.data)
       })
     },
     async handlePark(val) {

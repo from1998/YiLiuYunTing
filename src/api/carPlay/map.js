@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getMapData() {
+export function getMapData(code) {
   return request({
-    url: '/ylyt/park/bigCarNumberByCity',
+    url: '/ylyt/park/provinceParkNum?parentid=' + code,
     method: 'get'
   })
 }
