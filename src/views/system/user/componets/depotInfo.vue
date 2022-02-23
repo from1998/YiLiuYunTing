@@ -477,6 +477,7 @@ export default {
     },
     onSubmit() {
       this.$refs['depotForm'].validate((valid) => {
+        delete this.form.areaList
         if (valid) {
           if (this.resdata === null) {
             this.loading = true // 打开遮罩
