@@ -111,15 +111,13 @@ export default {
           smooth: true,
           type: 'line',
           itemStyle: {
-            normal: {
+            color: '#3888fa',
+            lineStyle: {
               color: '#3888fa',
-              lineStyle: {
-                color: '#3888fa',
-                width: 2
-              },
-              areaStyle: {
-                color: '#f3f8ff'
-              }
+              width: 2
+            },
+            areaStyle: {
+              color: '#f3f8ff'
             }
           },
           markPoint: {

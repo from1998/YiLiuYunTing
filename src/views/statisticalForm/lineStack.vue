@@ -69,10 +69,8 @@ export default {
           name: item.name,
           type: 'line',
           itemStyle: {
-            normal: {
-              lineStyle: {
-                color: item.color
-              }
+            lineStyle: {
+              color: item.color
             }
           },
           markPoint: {
@@ -154,17 +152,13 @@ export default {
           axisLabel: {
             interval: 0,
             rotate: 40,
-            textStyle: {
-              color: '#3888fa'
-            }
+            color: '#3888fa'
           }
         },
         yAxis: {
           type: 'value',
           axisLabel: {
-            textStyle: {
-              color: '#3888fa'
-            }
+            color: '#3888fa'
           }
         },
         series: seriesData

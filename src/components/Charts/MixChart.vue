@@ -168,17 +168,15 @@ export default {
           barMaxWidth: 35,
           barGap: '10%',
           itemStyle: {
-            normal: {
-              color: 'rgba(255,144,128,1)',
-              label: {
-                show: true,
-                textStyle: {
-                  color: '#fff'
-                },
-                position: 'insideTop',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
+            color: 'rgba(255,144,128,1)',
+            label: {
+              show: true,
+              textStyle: {
+                color: '#fff'
+              },
+              position: 'insideTop',
+              formatter(p) {
+                return p.value > 0 ? p.value : ''
               }
             }
           },
@@ -203,15 +201,13 @@ export default {
           type: 'bar',
           stack: 'total',
           itemStyle: {
-            normal: {
-              color: 'rgba(0,191,183,1)',
-              barBorderRadius: 0,
-              label: {
-                show: true,
-                position: 'top',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
+            color: 'rgba(0,191,183,1)',
+            barBorderRadius: 0,
+            label: {
+              show: true,
+              position: 'top',
+              formatter(p) {
+                return p.value > 0 ? p.value : ''
               }
             }
           },
@@ -236,15 +232,13 @@ export default {
           symbolSize: 10,
           symbol: 'circle',
           itemStyle: {
-            normal: {
-              color: 'rgba(252,230,48,1)',
-              barBorderRadius: 0,
-              label: {
-                show: true,
-                position: 'top',
-                formatter(p) {
-                  return p.value > 0 ? p.value : ''
-                }
+            color: 'rgba(252,230,48,1)',
+            barBorderRadius: 0,
+            label: {
+              show: true,
+              position: 'top',
+              formatter(p) {
+                return p.value > 0 ? p.value : ''
               }
             }
           },

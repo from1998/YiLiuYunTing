@@ -48,7 +48,6 @@ export const constantRoutes = [
     hidden: true,
     component: () =>
         import ('@/views/qrcodeAccess/accessIn'),
-    name: '/qrcodeAccess/accessIn',
     meta: {
       title: '扫码进场',
       icon: 'el-icon-d-arrow-left'
@@ -59,7 +58,6 @@ export const constantRoutes = [
     hidden: true,
     component: () =>
         import ('@/views/qrcodeAccess/accessOutNoPay'),
-    name: '/qrcodeAccess/accessOutNoPay',
     meta: {
       title: '扫码出场',
       icon: 'el-icon-d-arrow-right'
@@ -70,7 +68,6 @@ export const constantRoutes = [
     hidden: true,
     component: () =>
         import ('@/views/qrcodeAccess/accessOutPayed'),
-    name: '/qrcodeAccess/accessOutPayed',
     meta: {
       title: '扫码出场',
       icon: 'el-icon-d-arrow-right'
@@ -81,7 +78,6 @@ export const constantRoutes = [
     hidden: true,
     component: () =>
         import ('@/views/qrcodeAccess/imprest'),
-    name: '/qrcodeAccess/imprest',
     meta: {
       title: '预付款',
       icon: 'money'
@@ -92,7 +88,6 @@ export const constantRoutes = [
     hidden: true,
     component: () =>
         import ('@/views/qrcodeAccess/queryFails'),
-    name: '/qrcodeAccess/queryFails',
     meta: {
       title: '查询失败',
       icon: 'el-icon-close'
