@@ -193,7 +193,6 @@ export default {
           Object.assign(this.resDate, res.data)
           // 金额为0则免费放行
           if (this.resDate.money === 0) {
-            this.msgSuccess(typeof this.resDate.money)
             this.freeFlag = true
           }
           this.isWx = res.data.baseData.isWx
