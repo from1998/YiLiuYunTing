@@ -90,7 +90,7 @@
     </div>
     <div v-if="freeFlag">
       <el-row :gutter="0">
-        <el-col :span="12" :offset="6" style="text-align:center;margin-top:7%;">
+        <el-col :span="12" :offset="6" style="text-align:center;margin-top:17%;">
           <i class="el-icon-finished" style="font-size:16vw;color:#409EFF" />
         </el-col>
       </el-row>
