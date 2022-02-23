@@ -14,7 +14,6 @@ import { getMapData } from '@/api/carPlay/map'
 import C2Pin from 'c2pin' // 引入字符串转拼音
 import * as echarts from 'echarts'// 引入echarts
 import '@/assets/js/china' // 引入中国地图
-import '@/assets/js/province/anhui' // 引入安徽省地图
 
 export default {
   name: 'ChinaMap',
@@ -39,7 +38,7 @@ export default {
             // ],
             label: { // 图形上的文本标签，可用于说明图形的一些数据信息
               show: true,
-              color: 'aqua'
+              color: '#00F'
             },
             zoom: 1.26, // 当前视角的缩放比例。
             itemStyle: { // 地图区域的多边形 图形样式。
@@ -80,35 +79,33 @@ export default {
     }
   },
   created() {
-    this.getData('myChart')
+    this.getData('myChart', 0)
   },
   mounted() { // 生命周期
     // 基于准备好的dom，初始化echarts实例
     this.myChart = echarts.init(document.getElementById('chart'))
     this.myProvChart = echarts.init(document.getElementById('provChart'))
     this.myChart.on('click', (params) => {
-      this.handlePark(params)
+      this.handlePark(params.data)
     })
   },
   methods: {
     // 真实数据
     getData(chart, id) {
       getMapData(id).then(res => {
-        this.option.series[0].data = res.data
+        this.$set(this.option.series[0], 'data', res.data)
         // 使用刚指定的配置项和数据显示图表。
         this[chart].setOption(this.option)
-        this.msgSuccess(res.data)
       })
     },
-    async handlePark(val) {
+    handlePark(val) {
       this.province = C2Pin.fullChar(val.name)
-      this.msgSuccess(this.province)
+      require(`@/assets/js/province/${this.province}`)
       this.flag = !this.flag
-      this.option.series[0].map = val.name
-      this.option.series[0].data = await this.getData('myProvChart', val.name)
-      this.msgSuccess(this.option.series[0].data)
-      // // 使用刚指定的配置项和数据显示图表。
-      // this.myProvChart.setOption(this.option)
+      delete this.option.series[0].zoom
+      this.$set(this.option.series[0], 'map', val.name)
+      // 数据取到了，但是二次渲染视图未更新
+      this.getData('myProvChart', val.id)
     }
   }
 
@@ -134,5 +131,7 @@ export default {
 }
 #provChart {
   margin: 0 auto;
+  width: 500px!important;
+  height: 500px!important;
 }
 </style>
