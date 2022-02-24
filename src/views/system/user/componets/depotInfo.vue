@@ -459,9 +459,9 @@ export default {
     clipboardSuccess() {
       this.msgSuccess('复制成功！')
     },
-    async init() {
+    init() {
       this.loading = true // 打开遮罩
-      await getDepotById({
+      getDepotById({
         managerId: this.form.managerId
       }).then(async res => {
         this.resdata = res.data
@@ -469,8 +469,6 @@ export default {
           this.form = res.data
           await this.handleRegion(res.data.areaList)
           this.handletime()
-          this.form.commissionCharge = this.form.commissionCharge * 1000
-          this.form.parkFeeCharge = this.form.parkFeeCharge * 10
         }
         this.loading = false // 关闭遮罩
       })
