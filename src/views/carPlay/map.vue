@@ -96,6 +96,9 @@ export default {
     getData(chart, id) {
       getMapData(id).then(res => {
         this.$set(this.option.series[0], 'data', res.data)
+        if (id === 0) {
+          this.option.series[0].data.push({ name: '南海诸岛', value: 0 }, { name: '钓鱼岛', value: 0 })
+        }
         // 使用刚指定的配置项和数据显示图表。
         this[chart].setOption(this.option)
       })
@@ -105,6 +108,14 @@ export default {
       this.mapTitle = '全国'
     },
     handlePark(val) {
+      if (!val.id) {
+        this.$message({
+          message: '该地区无下级地图，不予展示。',
+          type: 'warning',
+          center: true,
+          showClose: true
+        })
+      }
       this.province = C2Pin.fullChar(val.name)
       require(`@/assets/js/province/${this.province}`)
       this.flag = !this.flag
