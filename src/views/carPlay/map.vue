@@ -1,9 +1,9 @@
 <template>
   <div style="width: 100%;height:100%;  position: relative;">
     <dv-decoration-7 class="mapTitle">
-      <span>全国车场分布图</span>
+      <span>{{ mapTitle }}车场分布图</span>
     </dv-decoration-7>
-    <el-button v-show="flag" id="backHome" round type="primary" icon="el-icon-position" size="mini" @click="flag = !flag">返回主界面</el-button>
+    <el-button v-show="flag" id="backHome" round type="primary" icon="el-icon-position" size="mini" @click="handleBackHome">返回主界面</el-button>
     <div v-show="!flag" id="chart" style="width: 100%;height:100%;" />
     <div v-show="flag" id="provChart" />
   </div>
@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       flag: false,
+      mapTitle: '全国',
       myChart: '',
       myProvChart: '',
       province: '',
@@ -99,10 +100,15 @@ export default {
         this[chart].setOption(this.option)
       })
     },
+    handleBackHome() {
+      this.flag = !this.flag
+      this.mapTitle = '全国'
+    },
     handlePark(val) {
       this.province = C2Pin.fullChar(val.name)
       require(`@/assets/js/province/${this.province}`)
       this.flag = !this.flag
+      this.mapTitle = val.name
       delete this.option.series[0].zoom
       this.$set(this.option.series[0], 'map', val.name)
       // 数据取到了，但是二次渲染视图未更新,这是因为取到的数据大部分都与地图上的系列名对不上。对的上才能显示，比如青海大部分地区。
