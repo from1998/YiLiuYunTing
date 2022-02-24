@@ -3,8 +3,9 @@
     <dv-decoration-7 class="mapTitle">
       <span>全国车场分布图</span>
     </dv-decoration-7>
+    <el-button v-show="flag" id="backHome" round type="primary" icon="el-icon-position" size="mini" @click="flag = !flag">返回主界面</el-button>
     <div v-show="!flag" id="chart" style="width: 100%;height:100%;" />
-    <div v-show="flag" id="provChart" style="width: 100%;height:100%;" />
+    <div v-show="flag" id="provChart" />
   </div>
 </template>
 
@@ -38,7 +39,7 @@ export default {
             // ],
             label: { // 图形上的文本标签，可用于说明图形的一些数据信息
               show: true,
-              color: '#00F'
+              color: '#903B1C'
             },
             zoom: 1.26, // 当前视角的缩放比例。
             itemStyle: { // 地图区域的多边形 图形样式。
@@ -104,7 +105,7 @@ export default {
       this.flag = !this.flag
       delete this.option.series[0].zoom
       this.$set(this.option.series[0], 'map', val.name)
-      // 数据取到了，但是二次渲染视图未更新
+      // 数据取到了，但是二次渲染视图未更新,这是因为取到的数据大部分都与地图上的系列名对不上。对的上才能显示，比如青海大部分地区。
       this.getData('myProvChart', val.id)
     }
   }
@@ -126,12 +127,17 @@ export default {
     margin-left: 0.3em;
   }
 }
+#backHome {
+position: absolute;
+  top: 2%;
+  right: 1%;
+}
 #chart {
   margin: 0 auto;
 }
 #provChart {
   margin: 0 auto;
-  width: 500px!important;
-  height: 500px!important;
+  width: 520px!important;
+  height: 520px!important;
 }
 </style>
