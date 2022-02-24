@@ -96,6 +96,18 @@ export const constantRoutes = [
 ]
 export const asyncRoutes = [
   {
+    path: '/Demo',
+    component: Layout,
+    redirect: '/Demo/index',
+    name: '/Demo',
+    children: [{
+      path: 'index',
+      name: '/Demo/index',
+      component: () => import ('@/views/Demo/index'),
+      meta: { title: 'Demo', icon: 'el-icon-s-help' }
+    }]
+  },
+  {
     path: '/',
     component: Layout,
     redirect: '/dashboard',

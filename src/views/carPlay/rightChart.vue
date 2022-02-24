@@ -22,13 +22,17 @@
           <span>收费排名</span>
         </dv-decoration-7>
       </div>
-      <div id="chart-container" />
+      <el-button v-if="!flag" id="monitor" round type="primary" icon="el-icon-video-camera-solid" size="mini" @click="handleMonitor">实时监控</el-button>
+      <el-button v-if="flag" id="monitor" round type="primary" icon="el-icon-s-marketing" size="mini" @click="handleMonitor">返回收费排名</el-button>
+      <div v-show="!flag" id="chart-container" />
+      <Video v-if="flag" id="video" />
     </dv-border-box-4>
   </div>
 </template>
 
 <script>
 import * as echarts from 'echarts'// 引入echarts
+import Video from '@/components/Video'
 import { getRankingData } from '@/api/carPlay/rightChart'
 
 const colorArray = [{
@@ -53,8 +57,12 @@ const colorArray = [{
 
 export default {
   name: 'RightChart',
+  components: {
+    Video
+  },
   data() {
     return {
+      flag: false,
       myChart: '',
       GMV: '',
       option: {}
@@ -80,6 +88,9 @@ export default {
     clearInterval(this.timer)
   },
   methods: {
+    handleMonitor() {
+      this.flag = !this.flag
+    },
     // 处理接收到的数据
     processData(data) {
       const name = []
@@ -273,5 +284,14 @@ export default {
     height: 100%;
     box-sizing: border-box;
   }
+  #video {
+margin-top: 2%;
+width: 90%!important;
+  }
+  #monitor {
+position: absolute;
+  top: 0%;
+  right: 1%;
+}
 }
 </style>
