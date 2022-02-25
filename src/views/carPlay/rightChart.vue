@@ -22,7 +22,7 @@
           <span>收费排名</span>
         </dv-decoration-7>
       </div>
-      <el-button v-if="!flag" id="monitor" round type="primary" icon="el-icon-video-camera-solid" size="mini" @click="handleMonitor">实时监控</el-button>
+      <el-button v-if="!flag" id="monitor" round type="success" icon="el-icon-video-camera-solid" size="mini" @click="handleMonitor">实时监控</el-button>
       <el-button v-if="flag" id="monitor" round type="primary" icon="el-icon-s-marketing" size="mini" @click="handleMonitor">返回收费排名</el-button>
       <div v-show="!flag" id="chart-container" />
       <Video v-if="flag" id="video" />
