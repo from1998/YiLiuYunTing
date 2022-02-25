@@ -361,7 +361,7 @@ export default {
       loading: false,
       // SubmitTitle: '提交',
       // 返回数据
-      resdata: [],
+      flag: [],
       // 字典数据
       dictDatas: [],
       // 是否状态
@@ -463,12 +463,12 @@ export default {
       this.loading = true // 打开遮罩
       getDepotById({
         managerId: this.form.managerId
-      }).then(async res => {
-        this.resdata = res.data
-        if (res.data !== null) {
+      }).then(res => {
+        this.flag = !!res.data
+        if (this.flag) {
+          this.convert.region = [Number(res.data.provinceName), Number(res.data.cityName), Number(res.data.areaName)]
+          this.convert.businessHours = [res.data.startHours, res.data.endHours]
           this.form = res.data
-          await this.handleRegion(res.data.areaList)
-          this.handletime()
         }
         this.loading = false // 关闭遮罩
       })
@@ -477,7 +477,7 @@ export default {
       this.$refs['depotForm'].validate((valid) => {
         delete this.form.areaList
         if (valid) {
-          if (this.resdata === null) {
+          if (this.flag === null) {
             this.loading = true // 打开遮罩
             addDepotInfo(this.form).then(res => {
               this.msgSuccess(res.msg)
@@ -512,20 +512,16 @@ export default {
         this.msgError('重置已取消')
       })
     },
-    handleRegion(opt) {
-      opt.map(item => {
-        this.convert.region.push(Number(item.id))
-      })
-      return this.convert.region
-    },
+    // handleRegion(opt) {
+    //   opt.map(item => {
+    //     this.convert.region.push(item.id)
+    //   })
+    //   return this.convert.region
+    // },
     handleChange(val) {
-      console.log(val)
       this.form.provinceName = val[0]
       this.form.cityName = val[1]
       this.form.areaName = val[2]
-    },
-    handletime() {
-      this.convert.businessHours = [this.form.startHours, this.form.endHours]
     },
     timeChange(val) {
       this.form.startHours = val[0]
