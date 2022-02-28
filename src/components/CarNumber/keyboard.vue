@@ -131,7 +131,7 @@ export default {
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
         'Z', 'X', 'C', 'V', 'B', 'N', 'M'
       ],
-      specials: ['警', '学', '挂', '领', '使', '港', '澳'],
+      specials: ['临', '警', '学', '挂', '领', '使', '港', '澳'],
       cph: [],
       newCph: [],
       shadow: new Array(8),
