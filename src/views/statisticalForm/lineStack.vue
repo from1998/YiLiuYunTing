@@ -105,8 +105,6 @@ export default {
               title: '数据视图'
             },
             optionToContent: function(opt) {
-              debugger
-              console.log(opt)
               const axisData = opt.xAxis[0].data // 坐标数据
               const series = opt.series // 折线图数据
               let tdHeads = '<td  >时间</td>' // 表头
