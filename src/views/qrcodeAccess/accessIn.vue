@@ -17,7 +17,8 @@
       </el-col>
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:10%">
-      <el-col :span="22" :offset="2">{{ `进场信息：${message}` }}
+      <el-col :span="22" :offset="2">
+        <span style="color:#F00">{{ `进场信息：${message}` }}</span>
       </el-col>
     </el-row>
     <el-row :gutter="0" style="font-size:14px;margin-top:10%">
