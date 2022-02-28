@@ -268,8 +268,15 @@
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
-            <el-form-item label="优惠券名称" prop="name">
+            <el-form-item label="名称" prop="name">
               <el-input v-model.trim="form.name" placeholder="请输入商家优惠券名称" clearable size="small" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12" :offset="0">
+            <el-form-item label="优惠力度" prop="discount">
+              <el-tooltip class="item" effect="dark" content="时间劵：单位为分钟;  代金劵：单位是元;  折扣劵：小数,例如9折为0.9" placement="bottom">
+                <el-input v-model="form.discount" placeholder="请输入优惠力度" clearable size="small" />
+              </el-tooltip>
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
@@ -279,7 +286,7 @@
               </el-tooltip>
             </el-form-item>
           </el-col>
-          <el-col :span="12" :offset="0">
+          <el-col :span="12" :offset="0" style="float:left">
             <el-form-item label="剩余数量" prop="residue">
               <el-tooltip class="item" effect="dark" content="请输入优惠券剩余数量" placement="bottom">
                 <el-input-number v-model="form.residue" :precision="0" :step="1" :min="0" clearable />
@@ -287,10 +294,20 @@
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
-            <el-form-item label="优惠力度" prop="discount">
-              <el-tooltip class="item" effect="dark" content="时间劵：单位为分钟;  代金劵：单位是元;  折扣劵：小数,例如9折为0.9" placement="bottom">
-                <el-input v-model="form.discount" placeholder="请输入优惠力度" clearable size="small" />
-              </el-tooltip>
+            <el-form-item label="付款方式" prop="payType">
+              <el-select
+                v-model="form.payType"
+                placeholder="请选择付款方式"
+                clearable
+                size="small"
+              >
+                <el-option
+                  v-for="d in payType"
+                  :key="d.dictValue"
+                  :label="d.dictLabel"
+                  :value="Number(d.dictValue)"
+                />
+              </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="12" :offset="0">
@@ -363,23 +380,6 @@
               <el-tooltip class="item" effect="dark" content="请输入有效天数" placement="bottom">
                 <el-input-number v-model="form.days" :precision="0" :step="1" :min="1" />
               </el-tooltip>
-            </el-form-item>
-          </el-col>
-          <el-col :span="12" :offset="0">
-            <el-form-item label="付款方式" prop="payType">
-              <el-select
-                v-model="form.payType"
-                placeholder="请选择付款方式"
-                clearable
-                size="small"
-              >
-                <el-option
-                  v-for="d in payType"
-                  :key="d.dictValue"
-                  :label="d.dictLabel"
-                  :value="Number(d.dictValue)"
-                />
-              </el-select>
             </el-form-item>
           </el-col>
         </el-row>
