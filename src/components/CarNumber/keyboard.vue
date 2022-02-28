@@ -21,7 +21,7 @@
               v-for="(item,index) in specials"
               :key="index"
               class="specials"
-              :class="{'kspecials': activeIndex < 7}"
+              :class="{'kspecials': activeIndex < 6}"
             >{{ item }}</span>
           </div>
           <div class="close">
@@ -123,7 +123,7 @@ export default {
         '京', '津', '沪', '渝', '冀', '豫', '云', '辽', '黑',
         '湘', '皖', '鲁', '新', '苏', '浙', '赣', '鄂', '桂',
         '甘', '晋', '蒙', '陕', '吉', '闽', '贵',
-        '粤', '青', '藏', '川', '宁', '琼'
+        '粤', '青', '藏', '川', '宁', '琼', '临'
       ],
       numbers: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
       letters: [
@@ -131,7 +131,7 @@ export default {
         'A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L',
         'Z', 'X', 'C', 'V', 'B', 'N', 'M'
       ],
-      specials: ['临', '警', '学', '挂', '领', '使', '港', '澳'],
+      specials: ['警', '学', '挂', '领', '使', '港', '澳'],
       cph: [],
       newCph: [],
       shadow: new Array(8),
